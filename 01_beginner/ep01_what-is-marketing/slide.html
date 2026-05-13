@@ -7,1276 +7,1260 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <style>
 /* ================================================================
-   RESET & ROOT
+   RESET & VARIABLES
 ================================================================ */
 :root {
-  --bg:         #0b0b18;
-  --slide-bg:   #13132a;
-  --surface:    #1e1e38;
-  --surface2:   #252545;
-  --accent:     #7c6fff;
-  --accent2:    #ff6b8a;
-  --green:      #4ade80;
-  --red:        #f87171;
-  --blue:       #60a5fa;
-  --yellow:     #fbbf24;
-  --text:       #eeeef8;
-  --muted:      #8888aa;
-  --border:     #2a2a50;
+  --bg:       #0b0b1a;
+  --slide-bg: #111128;
+  --surf:     #1c1c3a;
+  --surf2:    #24244a;
+  --border:   #2e2e58;
+  --accent:   #7c6fff;
+  --acc2:     #ff6b8a;
+  --green:    #4ade80;
+  --red:      #f87171;
+  --blue:     #60a5fa;
+  --yellow:   #fbbf24;
+  --text:     #eeeef8;
+  --muted:    #7878a8;
+  --muted2:   #9898c0;
 }
 * { margin:0; padding:0; box-sizing:border-box; }
-
 body {
-  background: #000;
-  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', 'Meiryo', sans-serif;
-  color: var(--text);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  overflow-x: hidden;
+  background:#000;
+  font-family:'Noto Sans JP','Hiragino Kaku Gothic ProN','Meiryo',sans-serif;
+  color:var(--text);
+  display:flex; flex-direction:column; align-items:center;
+  min-height:100vh; overflow-x:hidden;
 }
 
 /* ================================================================
-   STAGE  —  16:9 fixed aspect ratio
+   16:9 STAGE
 ================================================================ */
-#stage-outer {
-  position: relative;
-  width: 100%;
-  max-width: 1280px;
-  background: #000;
-}
+#stage-wrap { position:relative; width:100%; max-width:1280px; }
 #stage {
-  position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 */
-  background: var(--slide-bg);
-  overflow: hidden;
+  position:relative; width:100%; padding-top:56.25%;
+  background:var(--slide-bg); overflow:hidden;
 }
 
 /* ================================================================
    SLIDES
 ================================================================ */
 .slide {
-  position: absolute;
-  inset: 0;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  padding: 4% 6%;
-  background: var(--slide-bg);
-  overflow: hidden;
+  position:absolute; inset:0; display:none;
+  flex-direction:column; overflow:hidden;
 }
-.slide.active { display: flex; }
+.slide.active { display:flex; }
 
-/* slide transition overlay */
-#transition {
-  position: absolute;
-  inset: 0;
-  background: #000;
-  opacity: 0;
-  pointer-events: none;
-  z-index: 50;
-  transition: opacity 0.3s ease;
+/* slide number badge (top-right corner) */
+.slide-num {
+  position:absolute; top:3.5%; right:4%;
+  font-size:clamp(8px,1vw,13px); color:var(--muted);
+  font-weight:500; letter-spacing:.5px; z-index:10;
 }
-#transition.flash { opacity: 1; }
 
-/* ================================================================
-   PROGRESS BAR
-================================================================ */
-#progress-bar {
-  width: 100%;
-  max-width: 1280px;
-  height: 4px;
-  background: #222;
+/* step dots (bottom-right corner) */
+.step-dots {
+  position:absolute; bottom:3.5%; right:4%;
+  display:flex; gap:5px; z-index:10;
 }
-#progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  width: 0%;
-  transition: width 0.5s linear;
+.step-dot {
+  width:clamp(5px,.6vw,8px); height:clamp(5px,.6vw,8px);
+  border-radius:50%; background:var(--border);
+  transition:background .3s;
 }
+.step-dot.done { background:var(--accent); }
+.step-dot.active { background:var(--acc2); }
+
+/* crossfade overlay */
+#flash {
+  position:absolute; inset:0; background:#000; opacity:0;
+  pointer-events:none; z-index:100;
+  transition:opacity .25s ease;
+}
+#flash.on { opacity:1; }
 
 /* ================================================================
-   CONTROLS
+   STEP ELEMENT SYSTEM
+   All animated elements start hidden; JS adds reveal class
 ================================================================ */
-#controls {
-  width: 100%;
-  max-width: 1280px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 14px;
-  background: #0a0a16;
-  border-top: 1px solid var(--border);
-  flex-wrap: wrap;
-}
-#controls button {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-  padding: 5px 14px;
-  border-radius: 4px;
-  cursor: pointer;
-  font-size: 13px;
-  font-family: inherit;
-}
-#controls button:hover { background: var(--surface2); }
-#btn-play { background: var(--accent) !important; border-color: var(--accent) !important; font-weight:700; }
-#btn-hide {
-  margin-left: auto;
-  font-size: 12px;
-  color: var(--muted) !important;
-}
-#timer-display {
-  font-size: 13px;
-  color: var(--muted);
-  min-width: 90px;
-  text-align: center;
-  font-variant-numeric: tabular-nums;
-}
-#slide-counter {
-  font-size: 13px;
-  color: var(--muted);
-  min-width: 50px;
-}
+.se { opacity:0; } /* step-element: hidden by default */
+
+@keyframes fadeIn  { from{opacity:0}                          to{opacity:1} }
+@keyframes slideUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:none} }
+@keyframes slideL  { from{opacity:0;transform:translateX(28px)}  to{opacity:1;transform:none} }
+@keyframes slideR  { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:none} }
+@keyframes scaleIn { from{opacity:0;transform:scale(.9)}       to{opacity:1;transform:scale(1)} }
+@keyframes popIn   { from{opacity:0;transform:scale(.8)}       to{opacity:1;transform:scale(1)} }
+
+.rv-fade  { animation:fadeIn  .6s ease           forwards }
+.rv-up    { animation:slideUp .55s cubic-bezier(.4,0,.2,1) forwards }
+.rv-left  { animation:slideL  .55s cubic-bezier(.4,0,.2,1) forwards }
+.rv-right { animation:slideR  .55s cubic-bezier(.4,0,.2,1) forwards }
+.rv-scale { animation:scaleIn .65s cubic-bezier(.34,1.56,.64,1) forwards }
+.rv-pop   { animation:popIn   .5s  cubic-bezier(.34,1.56,.64,1) forwards }
 
 /* ================================================================
-   NARRATION PANEL
+   SHARED LAYOUT HELPERS
 ================================================================ */
-#narration-panel {
-  width: 100%;
-  max-width: 1280px;
-  background: #080812;
-  border-top: 1px solid var(--border);
-  padding: 14px 24px 18px;
-  transition: max-height 0.3s ease, opacity 0.3s ease;
-  max-height: 200px;
-  overflow: hidden;
+.pad   { padding:5.5% 6.5%; }          /* standard slide padding   */
+.pad-t { padding:3.5% 6.5% 4%; }       /* reduced top (more content)*/
+
+/* section header */
+.sh {
+  font-size:clamp(13px,1.9vw,24px);
+  font-weight:700; color:var(--accent);
+  border-left:4px solid var(--accent);
+  padding-left:.65em; margin-bottom:.75em;
 }
-#narration-panel.hidden { max-height: 0; opacity: 0; padding: 0; }
-.narration-label {
-  font-size: 10px;
-  color: var(--accent);
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  font-weight: 700;
-  margin-bottom: 6px;
-}
-#narration-text {
-  font-size: 13px;
-  line-height: 1.8;
-  color: #aab0cc;
+.sh-sm {
+  font-size:clamp(10px,1.3vw,16px);
+  color:var(--muted2); margin-bottom:.5em;
 }
 
-/* ================================================================
-   ANIMATIONS  (reset on slide activate)
-================================================================ */
-@keyframes fadeIn   { from{opacity:0}             to{opacity:1} }
-@keyframes slideUp  { from{opacity:0;transform:translateY(20px)}  to{opacity:1;transform:none} }
-@keyframes slideLeft{ from{opacity:0;transform:translateX(28px)}  to{opacity:1;transform:none} }
-@keyframes slideRight{from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:none} }
-@keyframes scaleIn  { from{opacity:0;transform:scale(0.92)}       to{opacity:1;transform:scale(1)} }
-@keyframes pulseGlow{
-  0%,100%{box-shadow:0 0 0 0 rgba(124,111,255,0)}
-  50%{box-shadow:0 0 24px 4px rgba(124,111,255,0.4)}
-}
+/* body text sizes */
+.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
+.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
+.t-md { font-size:clamp(13px,1.85vw,24px);                 line-height:1.6;  }
+.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
+.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
 
-.a-fade   { opacity:0; animation: fadeIn  0.6s ease forwards; }
-.a-up     { opacity:0; animation: slideUp 0.6s ease forwards; }
-.a-left   { opacity:0; animation: slideLeft 0.6s ease forwards; }
-.a-right  { opacity:0; animation: slideRight 0.6s ease forwards; }
-.a-scale  { opacity:0; animation: scaleIn 0.7s ease forwards; }
+/* accent colors */
+.c-accent { color:var(--accent); }
+.c-acc2   { color:var(--acc2);   }
+.c-green  { color:var(--green);  }
+.c-red    { color:var(--red);    }
+.c-blue   { color:var(--blue);   }
+.c-muted  { color:var(--muted2); }
+.fw9 { font-weight:900; }
+.fw7 { font-weight:700; }
 
-/* delay helpers */
-.d0  { animation-delay: 0s }
-.d1  { animation-delay: 0.5s }
-.d2  { animation-delay: 1.2s }
-.d3  { animation-delay: 2.0s }
-.d4  { animation-delay: 3.0s }
-.d5  { animation-delay: 4.2s }
-.d6  { animation-delay: 5.5s }
-.d7  { animation-delay: 7.0s }
-.d8  { animation-delay: 8.5s }
-
-/* ================================================================
-   SHARED TYPOGRAPHY & LAYOUT HELPERS
-================================================================ */
-.h-accent {
-  font-size: clamp(12px, 1.8vw, 24px);
-  font-weight: 700;
-  color: var(--accent);
-  border-left: 4px solid var(--accent);
-  padding-left: 0.7em;
-  margin-bottom: 0.7em;
-}
-.body-lg  { font-size: clamp(13px, 1.9vw, 25px); line-height:1.65; }
-.body-md  { font-size: clamp(12px, 1.6vw, 21px); line-height:1.65; }
-.body-sm  { font-size: clamp(10px, 1.3vw, 17px); line-height:1.65; color: var(--muted); }
-.text-c   { color: var(--muted); }
-.mt-s { margin-top:0.5em }
-.mt-m { margin-top:0.9em }
-.mt-l { margin-top:1.4em }
-
+/* surface cards */
 .card {
-  background: var(--surface);
-  border-radius: 10px;
-  padding: 0.9em 1.2em;
-  border: 1px solid var(--border);
+  background:var(--surf); border:1px solid var(--border);
+  border-radius:10px; padding:.8em 1.1em;
 }
-.card-accent { border-left: 4px solid var(--accent); }
-.card-green  { border-left: 4px solid var(--green); }
-.card-red    { border-left: 4px solid var(--red); }
+.card-l  { border-left:4px solid var(--accent); border-radius:0 10px 10px 0; }
+.card-lb { border-left:4px solid var(--blue);   border-radius:0 10px 10px 0; }
+.card-g  { border-left:4px solid var(--green);  border-radius:0 10px 10px 0; }
+.card-r  { border-top:3px solid var(--red);     border-radius:0 0 10px 10px; }
+.card-gr { border-top:3px solid var(--green);   border-radius:0 0 10px 10px; }
 
-.two-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5%;
-  align-items: start;
-}
-.three-col {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 2%;
-}
+/* two-column grid */
+.cols2 { display:grid; grid-template-columns:1fr 1fr; gap:2.5%; }
 
-.tag {
-  display: inline-block;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.7em;
-  font-weight: 700;
-  padding: 0.2em 0.6em;
-  border-radius: 4px;
-  margin-right: 0.5em;
-  vertical-align: middle;
-}
-.tag-muted { background: var(--surface2); color: var(--muted); }
+/* margin helpers */
+.mt-s { margin-top:.45em; }
+.mt-m { margin-top:.85em; }
+.mt-l { margin-top:1.3em; }
+.mb-s { margin-bottom:.45em; }
 
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 0.7em 0;
+/* icon circles */
+.ic {
+  width:clamp(18px,2.1vw,27px); height:clamp(18px,2.1vw,27px);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:.7em; font-weight:900; flex-shrink:0; margin-top:2px;
 }
+.ic-red   { background:var(--red);    color:#fff; }
+.ic-acc   { background:var(--accent); color:#fff; }
+.ic-green { background:var(--green);  color:#000; }
 
-/* episode badge */
-.ep-badge {
-  display: inline-block;
-  background: var(--surface2);
-  color: var(--muted);
-  font-size: clamp(9px, 1.2vw, 14px);
-  padding: 0.3em 0.8em;
-  border-radius: 20px;
-  margin-bottom: 0.5em;
-}
+/* row flex helper */
+.row { display:flex; align-items:flex-start; gap:.7em; }
 
 /* ================================================================
    SLIDE 1 — TITLE
 ================================================================ */
 #s1 {
-  background: radial-gradient(ellipse 80% 70% at 70% 40%, #1a1260 0%, var(--slide-bg) 65%);
-  justify-content: flex-start;
-  padding-top: 9%;
+  background: radial-gradient(ellipse 90% 75% at 65% 45%, #1c1260 0%, var(--slide-bg) 68%);
+  align-items:center; justify-content:center; text-align:center;
 }
-#s1 .main-title {
-  font-size: clamp(24px, 4.5vw, 58px);
-  font-weight: 900;
-  line-height: 1.15;
-  color: #fff;
+#s1-ep-badge {
+  display:inline-block;
+  background:var(--surf2); border:1px solid var(--border);
+  color:var(--muted2); border-radius:20px;
+  padding:.3em 1.1em; margin-bottom:.6em;
+  font-size:clamp(9px,1.2vw,14px);
 }
-#s1 .main-subtitle {
-  font-size: clamp(15px, 2.6vw, 34px);
-  font-weight: 700;
-  color: var(--accent);
-  margin-top: 0.3em;
+#s1-title {
+  font-size:clamp(26px,5vw,64px); font-weight:900;
+  line-height:1.1; color:#fff; letter-spacing:-.02em;
 }
-#s1 .deco-line {
-  width: 60px; height: 4px;
-  background: linear-gradient(90deg, var(--accent), var(--accent2));
-  border-radius: 2px;
-  margin-top: 1em;
+#s1-subtitle {
+  color:var(--accent); font-size:clamp(15px,2.5vw,32px);
+  font-weight:700; margin-top:.4em;
+}
+#s1-deco {
+  width:clamp(50px,5vw,70px); height:4px;
+  background:linear-gradient(90deg,var(--accent),var(--acc2));
+  border-radius:2px; margin:.9em auto 0;
 }
 
 /* ================================================================
    SLIDE 2 — MISCONCEPTIONS
 ================================================================ */
-#s2 .q-title {
-  font-size: clamp(14px, 2.2vw, 28px);
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.6em;
+#s2-q-title {
+  font-size:clamp(15px,2.3vw,29px); font-weight:700; color:#fff;
+  margin-bottom:.55em;
 }
-#s2 .ng-item {
-  display: flex;
-  align-items: center;
-  gap: 0.7em;
-  font-size: clamp(13px, 1.9vw, 24px);
-  padding: 0.35em 0;
-  color: var(--muted);
+.ng-row {
+  display:flex; align-items:center; gap:.7em;
+  padding:.3em 0;
+  font-size:clamp(13px,2vw,25px); color:var(--muted2);
 }
-#s2 .ng-icon {
-  width: clamp(18px, 2.2vw, 28px);
-  height: clamp(18px, 2.2vw, 28px);
-  background: var(--red);
-  border-radius: 50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size: 0.75em;
-  font-weight: 900;
-  color: #fff;
-  flex-shrink: 0;
+#s2-conc {
+  display:flex; align-items:center; gap:.7em;
+  background:var(--surf); border-radius:9px;
+  padding:.65em 1.1em; margin-top:.9em;
+  font-size:clamp(12px,1.75vw,22px);
 }
-#s2 .conclusion {
-  margin-top: 1em;
-  background: var(--surface);
-  border-radius: 8px;
-  padding: 0.7em 1.2em;
-  display: flex;
-  align-items: center;
-  gap: 0.7em;
-  font-size: clamp(12px, 1.7vw, 22px);
-}
-#s2 .arr { color: var(--accent); font-size: 1.3em; font-weight: 900; }
+.arr { color:var(--accent); font-size:1.2em; font-weight:900; flex-shrink:0; }
 
 /* ================================================================
    SLIDE 3 — AMA DEFINITION
 ================================================================ */
-#s3 .en-def {
-  background: var(--surface);
-  border-radius: 8px;
-  padding: 0.8em 1.2em;
-  font-size: clamp(9px, 1.25vw, 15px);
-  color: #7070a0;
-  font-style: italic;
-  line-height: 1.6;
-  margin-bottom: 0.8em;
+#s3-en {
+  background:var(--surf); border-radius:8px;
+  padding:.75em 1.1em;
+  font-size:clamp(9px,1.2vw,15px);
+  color:#6868a0; font-style:italic; line-height:1.65;
 }
-#s3 .en-def em { color: #9898cc; font-style:normal; }
-#s3 .ja-points {
-  background: var(--surface);
-  border-left: 4px solid var(--accent);
-  border-radius: 0 8px 8px 0;
-  padding: 0.8em 1.2em;
+#s3-en em { color:#9898c8; font-style:normal; }
+#s3-ja {
+  padding:.8em 1.2em;
+  font-size:clamp(14px,2.1vw,27px); font-weight:700;
+  line-height:1.55; color:#fff;
 }
-#s3 .ja-label {
-  font-size: clamp(9px, 1.2vw, 14px);
-  color: var(--accent);
-  font-weight:700;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 0.4em;
+#s3-ja .hl { color:var(--acc2); }
+#s3-note {
+  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
 }
-#s3 .ja-text {
-  font-size: clamp(12px, 1.8vw, 23px);
-  font-weight: 700;
-  line-height: 1.6;
-  color: #fff;
-}
-#s3 .hl { color: var(--accent2); }
-#s3 .conclusion-line {
-  margin-top: 0.8em;
-  font-size: clamp(10px, 1.4vw, 18px);
-  color: var(--muted);
-}
-#s3 .conclusion-line span { color: var(--accent); font-weight:700; }
+#s3-note span { color:var(--accent); font-weight:700; }
 
 /* ================================================================
    SLIDE 4 — DRUCKER QUOTE
 ================================================================ */
 #s4 {
-  background: radial-gradient(ellipse 70% 60% at 30% 50%, #0d1030 0%, var(--slide-bg) 65%);
+  background:radial-gradient(ellipse 80% 70% at 35% 55%, #0c1035 0%, var(--slide-bg) 65%);
+  justify-content:center;
 }
-#s4 .quote-wrap {
-  background: var(--surface);
-  border-left: 5px solid var(--accent);
-  border-radius: 0 12px 12px 0;
-  padding: 1.2em 1.8em;
-  animation: pulseGlow 3s ease-in-out 1.5s infinite;
+#s4-quote {
+  background:var(--surf);
+  border-left:5px solid var(--accent);
+  border-radius:0 14px 14px 0;
+  padding:1.1em 1.7em;
 }
-#s4 .q-text {
-  font-size: clamp(16px, 2.8vw, 36px);
-  font-weight: 900;
-  line-height: 1.4;
-  color: #fff;
+#s4-qt { font-size:clamp(18px,3vw,38px); font-weight:900; line-height:1.4; }
+#s4-qt em { color:var(--accent); font-style:normal; }
+#s4-qs { font-size:clamp(9px,1.3vw,16px); color:var(--muted2); margin-top:.65em; }
+#s4-supp1, #s4-supp2 {
+  font-size:clamp(12px,1.75vw,22px); color:var(--muted2); padding-left:.3em;
 }
-#s4 .q-text em { color: var(--accent); font-style:normal; }
-#s4 .q-source {
-  font-size: clamp(10px, 1.4vw, 17px);
-  color: var(--muted);
-  margin-top: 0.7em;
-}
-#s4 .supplement {
-  margin-top: 1em;
-  font-size: clamp(11px, 1.6vw, 21px);
-  color: var(--muted);
-  padding-left: 0.5em;
-}
-#s4 .supplement strong { color: var(--text); }
+#s4-supp1 strong, #s4-supp2 strong { color:var(--text); }
 
 /* ================================================================
    SLIDE 5 — COMPARISON
 ================================================================ */
-#s5 .col-head {
-  font-size: clamp(12px, 1.7vw, 22px);
-  font-weight: 700;
-  margin-bottom: 0.5em;
-  display: flex; align-items: center; gap: 0.4em;
+.col-hd {
+  font-size:clamp(12px,1.7vw,22px); font-weight:700;
+  display:flex; align-items:center; gap:.4em;
+  margin-bottom:.45em;
 }
-#s5 .col-bad-wrap  { background: var(--surface); border-top:3px solid var(--red);   border-radius: 0 0 10px 10px; padding:0.9em 1.1em; }
-#s5 .col-good-wrap { background: var(--surface); border-top:3px solid var(--green); border-radius: 0 0 10px 10px; padding:0.9em 1.1em; }
-#s5 .comp-item {
-  font-size: clamp(11px, 1.5vw, 19px);
-  padding: 0.25em 0;
-  color: var(--muted);
-  display: flex; align-items: flex-start; gap: 0.5em;
+.col-body { padding:.8em 1em; }
+.citem {
+  display:flex; align-items:flex-start; gap:.5em;
+  font-size:clamp(11px,1.55vw,20px);
+  color:var(--muted2); padding:.22em 0;
 }
-#s5 .comp-item .dot { color: var(--accent); margin-top:2px; flex-shrink:0; }
-#s5 .comp-arrow {
-  text-align: center;
-  font-size: clamp(12px, 1.6vw, 20px);
-  color: var(--muted);
-  margin-top: 0.8em;
+.citem .dot { color:var(--accent); flex-shrink:0; margin-top:1px; }
+#s5-arrow {
+  font-size:clamp(11px,1.55vw,20px);
+  color:var(--muted2); text-align:center; margin-top:.8em;
 }
-#s5 .comp-arrow strong { color: var(--accent); }
+#s5-arrow strong { color:var(--accent); }
 
 /* ================================================================
    SLIDE 6 — 4 FUNCTIONS
 ================================================================ */
-#s6 .fn-item {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.8em;
-  padding: 0.55em 0.8em;
-  border-radius: 8px;
-  margin-bottom: 0.4em;
-  background: var(--surface);
-  font-size: clamp(12px, 1.7vw, 22px);
+.fn-card {
+  display:flex; align-items:flex-start; gap:.75em;
+  background:var(--surf); border:1px solid var(--border);
+  border-radius:9px; padding:.55em .9em; margin-bottom:.4em;
+  font-size:clamp(12px,1.7vw,22px);
 }
-#s6 .fn-num {
-  background: var(--accent);
-  color: #fff;
-  width: clamp(20px, 2.2vw, 28px);
-  height: clamp(20px, 2.2vw, 28px);
-  border-radius: 50%;
-  display: flex; align-items:center; justify-content:center;
-  font-weight: 900;
-  font-size: 0.8em;
-  flex-shrink: 0;
-  margin-top: 2px;
+.fn-num {
+  background:var(--accent); color:#fff; border-radius:50%;
+  width:clamp(20px,2.2vw,28px); height:clamp(20px,2.2vw,28px);
+  display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:.78em; flex-shrink:0; margin-top:2px;
 }
-#s6 .fn-label { font-weight: 700; color: #fff; }
-#s6 .fn-desc  { color: var(--muted); font-size:0.85em; }
-#s6 .note {
-  margin-top: 0.7em;
-  font-size: clamp(10px,1.4vw,17px);
-  color: var(--muted);
+.fn-label { font-weight:700; color:#fff; }
+.fn-desc  { color:var(--muted2); font-size:.84em; }
+#s6-note {
+  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
   text-align:right;
 }
-#s6 .note strong { color: var(--accent); }
+#s6-note strong { color:var(--accent); }
 
 /* ================================================================
-   SLIDE 7 — STARBUCKS EXAMPLE
+   SLIDE 7 — STARBUCKS
 ================================================================ */
-#s7 .price-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  background: var(--surface2);
-  border-radius: 8px;
-  padding: 0.4em 1em;
-  font-size: clamp(13px, 2vw, 26px);
-  font-weight: 700;
-  margin-bottom: 0.5em;
+#s7-price {
+  display:inline-flex; align-items:center; gap:.6em;
+  background:var(--surf2); border-radius:8px;
+  padding:.4em 1em; margin-bottom:.4em;
+  font-size:clamp(13px,2vw,26px); font-weight:700;
 }
-#s7 .price-badge .price { color: var(--accent2); font-size:1.2em; }
-#s7 .price-sub {
-  font-size: clamp(9px, 1.2vw, 14px);
-  color: var(--muted);
-  margin-bottom: 0.6em;
+#s7-price .price { color:var(--acc2); font-size:1.15em; }
+#s7-why {
+  font-size:clamp(13px,1.9vw,25px);
+  font-weight:700; color:#fff; margin-bottom:.45em;
 }
-#s7 .why-q {
-  font-size: clamp(13px, 2vw, 26px);
-  font-weight: 700;
-  color: #fff;
-  margin-bottom: 0.5em;
+.f-row {
+  display:flex; align-items:flex-start; gap:.6em;
+  font-size:clamp(11px,1.55vw,20px);
+  padding:.27em 0; color:var(--muted2);
 }
-#s7 .factor {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6em;
-  font-size: clamp(11px, 1.55vw, 20px);
-  padding: 0.3em 0;
-  color: var(--muted);
-}
-#s7 .factor-num {
-  color: var(--accent);
-  font-weight: 700;
-  min-width: 1.4em;
-  flex-shrink: 0;
-}
-#s7 .factor strong { color: var(--text); }
-#s7 .verdict {
-  margin-top: 0.7em;
-  background: var(--surface);
-  border-left: 4px solid var(--green);
-  border-radius: 0 8px 8px 0;
-  padding: 0.6em 1em;
-  font-size: clamp(11px, 1.6vw, 21px);
-  font-weight: 700;
-  color: var(--green);
+.f-num { color:var(--accent); font-weight:700; min-width:1.4em; flex-shrink:0; }
+.f-row strong { color:var(--text); }
+#s7-verdict {
+  background:var(--surf);
+  border-left:4px solid var(--green);
+  border-radius:0 9px 9px 0;
+  padding:.55em 1em; margin-top:.7em;
+  font-size:clamp(11px,1.6vw,21px);
+  font-weight:700; color:var(--green);
 }
 
 /* ================================================================
    SLIDE 8 — ICEBERG
 ================================================================ */
-#s8 .iceberg-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0;
-  margin-top: 0.5em;
+.ice-wrap {
+  display:flex; flex-direction:column; align-items:center; gap:0;
+  flex:1; justify-content:center;
 }
-#s8 .ice-above {
-  background: linear-gradient(135deg, #2a3580, #1a2560);
-  border-radius: 10px 10px 0 0;
-  padding: 0.7em 2em;
-  text-align: center;
-  width: 50%;
-  font-size: clamp(11px, 1.5vw, 19px);
-  font-weight: 700;
+.ice-above {
+  background:linear-gradient(135deg,#253a90,#172070);
+  border-radius:10px 10px 0 0; padding:.7em 2em;
+  text-align:center; width:48%;
+  font-size:clamp(11px,1.55vw,20px); font-weight:700;
 }
-#s8 .ice-above .label { color: var(--muted); font-size:0.8em; margin-bottom:0.2em; }
-#s8 .waterline {
-  width: 88%;
-  border-top: 2px dashed #4466aa;
-  position: relative;
-  margin: 2px 0;
+.ice-above .lbl { color:var(--muted2); font-size:.78em; margin-bottom:.2em; font-weight:400; }
+.ice-wl {
+  width:86%; border-top:2px dashed #3050a0; position:relative;
+  padding-top:3px;
 }
-#s8 .waterline-label {
-  position: absolute;
-  right: 0; top: -1.2em;
-  font-size: clamp(8px, 1vw, 12px);
-  color: #4466aa;
+.ice-wl-lbl {
+  position:absolute; right:0; top:-1.3em;
+  font-size:clamp(8px,1vw,12px); color:#3050a0;
 }
-#s8 .ice-below {
-  background: linear-gradient(160deg, #1a2560, #0d1540);
-  border-radius: 0 0 14px 14px;
-  padding: 0.9em 2.5em 1.2em;
-  text-align: center;
-  width: 84%;
-  font-size: clamp(10px, 1.4vw, 18px);
-  line-height: 1.8;
+.ice-below {
+  background:linear-gradient(175deg,#172070,#0c1050);
+  border-radius:0 0 16px 16px; padding:.9em 2.5em 1.2em;
+  text-align:center; width:82%;
+  font-size:clamp(10px,1.45vw,19px); line-height:1.8;
 }
-#s8 .ice-below .label { color: var(--muted); font-size:0.8em; margin-bottom:0.3em; }
-#s8 .ice-below strong { color: var(--accent); }
-#s8 .caption {
-  margin-top: 0.8em;
-  text-align: center;
-  font-size: clamp(11px, 1.55vw, 20px);
-  color: var(--muted);
+.ice-below .lbl { color:var(--muted2); font-size:.78em; margin-bottom:.3em; font-weight:400; }
+.ice-below strong { color:var(--accent); }
+#s8-cap {
+  text-align:center;
+  font-size:clamp(11px,1.6vw,21px); color:var(--muted2);
 }
-#s8 .caption strong { color: var(--accent); }
+#s8-cap strong { color:var(--accent); }
 
 /* ================================================================
    SLIDE 9 — TIMELINE
 ================================================================ */
-#s9 .tl-wrap {
-  position: relative;
-  padding-left: 1.5em;
-  margin-top: 0.3em;
+.tl-wrap {
+  position:relative; padding-left:1.5em; flex:1; padding-top:.2em;
 }
-#s9 .tl-wrap::before {
-  content: '';
-  position: absolute;
-  left: 6px; top: 8px; bottom: 8px;
-  width: 2px;
-  background: var(--border);
-  border-radius: 1px;
+.tl-wrap::before {
+  content:''; position:absolute;
+  left:7px; top:10px; bottom:10px;
+  width:2px; background:var(--border); border-radius:1px;
 }
-#s9 .tl-item {
-  position: relative;
-  display: flex;
-  gap: 1em;
-  margin-bottom: 0.55em;
-  font-size: clamp(11px, 1.55vw, 20px);
+.tl-item {
+  position:relative; display:flex; gap:1em;
+  margin-bottom:.55em;
+  font-size:clamp(11px,1.55vw,20px);
 }
-#s9 .tl-item::before {
-  content: '';
-  position: absolute;
-  left: -1.16em; top: 7px;
-  width: 10px; height: 10px;
-  background: var(--accent);
-  border-radius: 50%;
-  border: 2px solid var(--bg);
+.tl-item::before {
+  content:''; position:absolute;
+  left:-1.17em; top:7px;
+  width:clamp(8px,.9vw,12px); height:clamp(8px,.9vw,12px);
+  background:var(--accent); border-radius:50%;
+  border:2px solid var(--bg);
 }
-#s9 .tl-era {
-  color: var(--accent);
-  font-weight: 700;
-  min-width: 8.5em;
-  flex-shrink: 0;
+.tl-era  { color:var(--accent); font-weight:700; min-width:8em; flex-shrink:0; }
+.tl-desc { color:var(--muted2); line-height:1.45; }
+.tl-desc strong { color:var(--text); }
+#s9-conc {
+  background:var(--surf); border-radius:9px;
+  padding:.6em 1em; text-align:center;
+  font-size:clamp(11px,1.6vw,21px); color:var(--muted2);
 }
-#s9 .tl-desc { color: var(--muted); line-height:1.4; }
-#s9 .tl-desc strong { color: var(--text); }
-#s9 .tl-conclusion {
-  margin-top: 0.7em;
-  padding: 0.6em 1em;
-  background: var(--surface);
-  border-radius: 8px;
-  font-size: clamp(11px, 1.55vw, 20px);
-  text-align: center;
-}
-#s9 .tl-conclusion strong { color: var(--accent); }
+#s9-conc strong { color:var(--accent); }
 
 /* ================================================================
    SLIDE 10 — LEVITT QUOTE
 ================================================================ */
 #s10 {
-  background: radial-gradient(ellipse 70% 60% at 60% 40%, #0d1830 0%, var(--slide-bg) 65%);
+  background:radial-gradient(ellipse 80% 70% at 60% 45%, #0e1a32 0%, var(--slide-bg) 65%);
+  justify-content:center;
 }
-#s10 .drill-quote {
-  background: var(--surface);
-  border-left: 5px solid var(--blue);
-  border-radius: 0 12px 12px 0;
-  padding: 1.2em 1.8em;
+#s10-quote {
+  background:var(--surf);
+  border-left:5px solid var(--blue);
+  border-radius:0 14px 14px 0;
+  padding:1.1em 1.7em;
 }
-#s10 .dq-text {
-  font-size: clamp(16px, 2.8vw, 36px);
-  font-weight: 900;
-  line-height: 1.4;
-  color: #fff;
+#s10-qt { font-size:clamp(18px,3vw,38px); font-weight:900; line-height:1.4; }
+#s10-qt em { color:var(--blue); font-style:normal; }
+#s10-qs { font-size:clamp(9px,1.3vw,16px); color:var(--muted2); margin-top:.65em; }
+#s10-supp1, #s10-supp2 {
+  font-size:clamp(12px,1.75vw,22px); color:var(--muted2);
 }
-#s10 .dq-text em { color: var(--blue); font-style:normal; }
-#s10 .dq-source {
-  font-size: clamp(9px, 1.3vw, 16px);
-  color: var(--muted);
-  margin-top: 0.7em;
-}
-#s10 .drill-supplement {
-  margin-top: 1em;
-  font-size: clamp(11px, 1.6vw, 21px);
-  color: var(--muted);
-  line-height: 1.6;
-}
-#s10 .drill-supplement strong { color: var(--text); }
-#s10 .drill-supplement em { color: var(--accent); font-style:normal; }
+#s10-supp1 strong { color:var(--text); }
+#s10-supp2 em { color:var(--accent); font-style:normal; }
 
 /* ================================================================
    SLIDE 11 — SUMMARY
 ================================================================ */
-#s11 .sum-item {
-  background: var(--surface);
-  border-radius: 10px;
-  padding: 0.7em 1.1em;
-  margin-bottom: 0.5em;
-  display: flex;
-  align-items: flex-start;
-  gap: 0.7em;
-  font-size: clamp(12px, 1.7vw, 22px);
+.sum-item {
+  display:flex; align-items:flex-start; gap:.65em;
+  background:var(--surf); border:1px solid var(--border);
+  border-radius:10px; padding:.65em 1em;
+  font-size:clamp(12px,1.75vw,22px);
 }
-#s11 .sum-icon {
-  color: var(--green);
-  font-size: 1.1em;
-  flex-shrink: 0;
-  margin-top: 1px;
-}
-#s11 .sum-main { font-weight: 700; color: #fff; }
-#s11 .sum-sub  { color: var(--muted); font-size: 0.85em; margin-top: 0.15em; }
+.sum-icon { color:var(--green); font-size:1.05em; flex-shrink:0; margin-top:1px; }
+.sum-main { font-weight:700; color:#fff; }
+.sum-sub  { color:var(--muted2); font-size:.82em; margin-top:.12em; }
 
 /* ================================================================
    SLIDE 12 — NEXT EPISODE
 ================================================================ */
 #s12 {
-  background: radial-gradient(ellipse 80% 60% at 40% 50%, #0e1f10 0%, var(--slide-bg) 65%);
+  background:radial-gradient(ellipse 80% 65% at 40% 50%, #0c1f10 0%, var(--slide-bg) 65%);
+  align-items:center; justify-content:center;
 }
-#s12 .next-card {
-  background: var(--surface);
-  border-radius: 14px;
-  padding: 1.3em 1.8em;
-  border: 1px solid var(--border);
+#s12-card {
+  background:var(--surf); border:1px solid var(--border);
+  border-radius:14px; padding:1.3em 1.8em; width:76%;
 }
-#s12 .next-lbl {
-  font-size: clamp(9px, 1.2vw, 14px);
-  color: var(--green);
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 2px;
-  margin-bottom: 0.3em;
+.next-lbl {
+  font-size:clamp(9px,1.2vw,14px); color:var(--green);
+  font-weight:700; text-transform:uppercase; letter-spacing:2px;
+  margin-bottom:.3em;
 }
-#s12 .next-title {
-  font-size: clamp(15px, 2.3vw, 30px);
-  font-weight: 900;
-  color: #fff;
-  margin-bottom: 0.6em;
-  line-height: 1.3;
+.next-title {
+  font-size:clamp(16px,2.4vw,31px); font-weight:900;
+  color:#fff; line-height:1.25; margin-bottom:.65em;
 }
-#s12 .next-point {
-  display: flex;
-  align-items: flex-start;
-  gap: 0.6em;
-  font-size: clamp(11px, 1.55vw, 20px);
-  color: var(--muted);
-  padding: 0.2em 0;
+.next-pt {
+  display:flex; align-items:flex-start; gap:.55em;
+  font-size:clamp(11px,1.55vw,20px); color:var(--muted2);
+  padding:.18em 0;
 }
-#s12 .next-point::before { content: '·'; color: var(--accent); font-size:1.4em; line-height:1; }
-#s12 .cta {
-  margin-top: 1.2em;
-  text-align: center;
-  font-size: clamp(12px, 1.7vw, 22px);
-  font-weight: 700;
-  color: var(--accent2);
+.next-pt::before { content:'·'; color:var(--accent); font-size:1.3em; line-height:1; }
+#s12-cta {
+  margin-top:1.1em; text-align:center;
+  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
 }
+
+/* ================================================================
+   PROGRESS BAR
+================================================================ */
+#prog-bar { width:100%; max-width:1280px; height:4px; background:#1a1a30; }
+#prog-fill {
+  height:100%; width:0%;
+  background:linear-gradient(90deg,var(--accent),var(--acc2));
+  transition:width .4s linear;
+}
+
+/* ================================================================
+   CONTROL BAR
+================================================================ */
+#ctrl {
+  width:100%; max-width:1280px;
+  display:flex; align-items:center; flex-wrap:wrap; gap:6px;
+  padding:8px 12px;
+  background:#080814; border-top:1px solid #1a1a30;
+  font-size:13px;
+}
+#ctrl button {
+  font-family:inherit; font-size:13px;
+  background:var(--surf); color:var(--text);
+  border:1px solid var(--border);
+  padding:5px 12px; border-radius:5px;
+  cursor:pointer; white-space:nowrap;
+  transition:background .15s, border-color .15s;
+}
+#ctrl button:hover { background:var(--surf2); }
+#ctrl button:active { transform:scale(.97); }
+
+#btn-play  { background:var(--accent)!important; border-color:var(--accent)!important; font-weight:700; }
+#btn-step  {
+  background:var(--surf2)!important;
+  border:1px solid var(--accent)!important;
+  color:var(--accent)!important;
+  font-weight:700;
+}
+#btn-step:hover { background:var(--accent)!important; color:#fff!important; }
+
+.ctrl-sep { width:1px; height:22px; background:var(--border); margin:0 2px; }
+.ctrl-info { color:var(--muted2); font-size:12px; white-space:nowrap; }
+#step-label { color:var(--acc2); font-weight:700; }
+#btn-narr { margin-left:auto; color:var(--muted)!important; font-size:12px; }
+
+/* ================================================================
+   NARRATION PANEL
+================================================================ */
+#narr-panel {
+  width:100%; max-width:1280px;
+  background:#060610; border-top:1px solid #1a1a30;
+  padding:14px 22px 18px;
+  overflow:hidden; max-height:220px;
+  transition:max-height .3s, padding .3s, opacity .3s;
+}
+#narr-panel.hide { max-height:0; padding-top:0; padding-bottom:0; opacity:0; }
+.narr-lbl { font-size:10px; color:var(--accent); text-transform:uppercase; letter-spacing:2px; font-weight:700; margin-bottom:6px; }
+#narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
 </style>
 </head>
 <body>
 
-<!-- ===== STAGE ===== -->
-<div id="stage-outer">
+<!-- ==================== STAGE ==================== -->
+<div id="stage-wrap">
 <div id="stage">
-  <div id="transition"></div>
+  <div id="flash"></div>
 
-  <!-- ===================================================
-       SLIDE 1: Title  (0-30s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 1: Title  (0–30s)  /  4 steps
+  ────────────────────────────────────────────── -->
   <section class="slide active" id="s1">
-    <div class="ep-badge a-fade d0">第1回 / YouTubeマーケティング講座</div>
-    <div class="main-title a-fade d0">そもそも<br>マーケティングとは？</div>
-    <div class="main-subtitle a-up d1">「売れる仕組み」の正体</div>
-    <div class="deco-line a-fade d2"></div>
+    <div class="slide-num">01 / 12</div>
+    <div class="step-dots" id="sd1"></div>
+
+    <div id="s1-ep-badge" class="se">第1回&ensp;/&ensp;YouTubeマーケティング講座</div>
+    <div id="s1-title"    class="se t-xl" style="color:#fff;letter-spacing:-.02em;">
+      そもそも<br>マーケティングとは？
+    </div>
+    <div id="s1-subtitle" class="se" style="font-size:clamp(15px,2.5vw,32px);font-weight:700;color:var(--accent);margin-top:.4em;">
+      「売れる仕組み」の正体
+    </div>
+    <div id="s1-deco" class="se" style="width:clamp(50px,5vw,70px);height:4px;background:linear-gradient(90deg,var(--accent),var(--acc2));border-radius:2px;margin-top:.9em;"></div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 2: Misconceptions  (30-90s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 2: Misconceptions  (30–90s)  /  5 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s2">
-    <div class="h-accent a-fade d0">マーケティングって、何だと思いますか？</div>
-    <div class="q-title a-up d0">よくある答え ——</div>
+    <div class="slide-num">02 / 12</div>
+    <div class="step-dots" id="sd2"></div>
+    <div class="pad" style="display:flex;flex-direction:column;height:100%;justify-content:center;">
 
-    <div class="ng-item a-left d1">
-      <div class="ng-icon">✕</div>
-      <span>SNS投稿・運用すること</span>
-    </div>
-    <div class="ng-item a-left d2">
-      <div class="ng-icon">✕</div>
-      <span>チラシを配ること</span>
-    </div>
-    <div class="ng-item a-left d3">
-      <div class="ng-icon">✕</div>
-      <span>広告を出すこと</span>
-    </div>
+      <div id="s2-q" class="sh se">マーケティングって、何だと思いますか？</div>
 
-    <div class="conclusion a-up d4">
-      <span class="arr">→</span>
-      <span>これらはすべて <strong>「マーケティングの手段」</strong> の一部に過ぎない</span>
+      <div id="s2-ng1" class="ng-row se">
+        <div class="ic ic-red">✕</div>
+        <span>SNS投稿・運用すること</span>
+      </div>
+      <div id="s2-ng2" class="ng-row se">
+        <div class="ic ic-red">✕</div>
+        <span>チラシを配ること</span>
+      </div>
+      <div id="s2-ng3" class="ng-row se">
+        <div class="ic ic-red">✕</div>
+        <span>広告を出すこと</span>
+      </div>
+
+      <div id="s2-conc" class="se">
+        <span class="arr">→</span>
+        <span class="t-md">これらはすべて <strong style="color:#fff;">「マーケティングの手段」</strong> の一部に過ぎない</span>
+      </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 3: AMA Definition  (90-150s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 3: AMA Definition  (90–150s)  /  5 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s3">
-    <div class="h-accent a-fade d0">マーケティングとは？（公式定義）</div>
-    <div class="body-sm a-fade d0" style="margin-bottom:0.5em;">アメリカ・マーケティング協会（AMA）2017年改訂版</div>
+    <div class="slide-num">03 / 12</div>
+    <div class="step-dots" id="sd3"></div>
+    <div class="pad" style="display:flex;flex-direction:column;height:100%;justify-content:center;">
 
-    <div class="en-def a-fade d1">
-      "Marketing is the activity, set of institutions, and processes for
-      <em>creating, communicating, delivering, and exchanging</em>
-      offerings that have value for customers, clients, partners, and society at large."
-    </div>
+      <div id="s3-hd" class="sh se">マーケティングとは？（公式定義）</div>
+      <div id="s3-src" class="sh-sm se">アメリカ・マーケティング協会（AMA）2017年改訂版</div>
 
-    <div class="ja-points a-up d2">
-      <div class="ja-label">日本語の要点</div>
-      <div class="ja-text">
-        顧客・社会にとって価値ある「提供物」を<br>
-        <span class="hl">創り</span>・<span class="hl">伝え</span>・<span class="hl">届け</span>・<span class="hl">交換する</span> ための活動
+      <div id="s3-en" class="se">
+        "Marketing is the activity, set of institutions, and processes for
+        <em>creating, communicating, delivering, and exchanging</em>
+        offerings that have value for customers, clients, partners, and society at large."
       </div>
-    </div>
 
-    <div class="conclusion-line a-fade d3">
-      つまり広告は最後の「<span>伝える</span>」のひとつに過ぎない
+      <div id="s3-ja" class="card card-l se mt-m">
+        <div class="sh-sm" style="color:var(--accent);margin-bottom:.35em;">日本語の要点</div>
+        <div style="font-size:clamp(14px,2.1vw,27px);font-weight:700;line-height:1.5;color:#fff;">
+          顧客・社会にとって価値ある「提供物」を<br>
+          <span class="hl" style="color:var(--acc2);">創り</span>・<span class="hl" style="color:var(--acc2);">伝え</span>・<span class="hl" style="color:var(--acc2);">届け</span>・<span class="hl" style="color:var(--acc2);">交換する</span> ための活動
+        </div>
+      </div>
+
+      <div id="s3-note" class="t-sm se mt-s">
+        → 広告は最後の「<span style="color:var(--accent);font-weight:700;">伝える</span>」のひとつに過ぎない
+      </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 4: Drucker Quote  (150-210s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 4: Drucker  (150–210s)  /  4 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s4">
-    <div class="h-accent a-fade d0">ドラッカーの名言</div>
+    <div class="slide-num">04 / 12</div>
+    <div class="step-dots" id="sd4"></div>
+    <div class="pad" style="display:flex;flex-direction:column;height:100%;justify-content:center;gap:.9em;">
 
-    <div class="quote-wrap a-scale d1">
-      <div class="q-text">
-        "マーケティングの目的は、<br>
-        　<em>販売を不要にすることである</em>。"
-      </div>
-      <div class="q-source">
-        ― ピーター・ドラッカー（経営学者）　『マネジメント』（1973）
-      </div>
-    </div>
+      <div id="s4-hd" class="sh se">ドラッカーの名言</div>
 
-    <div class="supplement a-up d3">
-      顧客を深く理解すれば、<strong>製品・サービスは自然に売れる状態になる</strong>
-    </div>
-    <div class="supplement a-up d4" style="margin-top:0.4em;">
-      → これが「売る」と <strong>「売れる仕組みを作る」</strong> の根本的な違い
+      <div id="s4-quote" class="card card-l se" style="padding:1.1em 1.6em;">
+        <div id="s4-qt" style="font-size:clamp(19px,3.1vw,40px);font-weight:900;line-height:1.4;">
+          "マーケティングの目的は、<br>
+          &ensp;<em style="color:var(--accent);font-style:normal;">販売を不要にすることである</em>。"
+        </div>
+        <div id="s4-qs" class="t-xs" style="margin-top:.7em;">
+          ― ピーター・ドラッカー（経営学者）　『マネジメント』（1973）
+        </div>
+      </div>
+
+      <div id="s4-supp1" class="t-md c-muted se">
+        顧客を深く理解すれば、<strong style="color:var(--text);">製品・サービスは自然に売れる状態になる</strong>
+      </div>
+      <div id="s4-supp2" class="t-md c-muted se">
+        → これが「売る」と <strong style="color:var(--text);">「売れる仕組みを作る」</strong> の根本的な違い
+      </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 5: "Sell" vs "Create system"  (210-270s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 5: Comparison  (210–270s)  /  4 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s5">
-    <div class="h-accent a-fade d0">「売る」vs「売れる仕組みを作る」</div>
-    <div class="two-col" style="margin-top:0.3em;">
-      <div class="a-right d1">
-        <div class="col-head" style="color:var(--red);">❌ 旧来の発想</div>
-        <div class="col-bad-wrap">
-          <div class="comp-item"><span class="dot">▸</span>「どうやって売るか」が出発点</div>
-          <div class="comp-item"><span class="dot">▸</span>商品ありき</div>
-          <div class="comp-item"><span class="dot">▸</span>一方的に押し込む (Push)</div>
-          <div class="comp-item"><span class="dot">▸</span>短期的な売上が目標</div>
+    <div class="slide-num">05 / 12</div>
+    <div class="step-dots" id="sd5"></div>
+    <div class="pad-t" style="display:flex;flex-direction:column;height:100%;justify-content:center;">
+
+      <div id="s5-hd" class="sh se">「売る」vs「売れる仕組みを作る」</div>
+
+      <div class="cols2">
+        <div id="s5-bad" class="se">
+          <div class="col-hd" style="color:var(--red);">❌&ensp;旧来の発想</div>
+          <div class="card card-r col-body">
+            <div class="citem"><span class="dot">▸</span>「どうやって売るか」が出発点</div>
+            <div class="citem"><span class="dot">▸</span>商品ありき</div>
+            <div class="citem"><span class="dot">▸</span>一方的に押し込む（Push）</div>
+            <div class="citem"><span class="dot">▸</span>短期的な売上が目標</div>
+          </div>
+        </div>
+        <div id="s5-good" class="se">
+          <div class="col-hd" style="color:var(--green);">✅&ensp;マーケティング思考</div>
+          <div class="card card-gr col-body">
+            <div class="citem"><span class="dot">▸</span>「なぜ選ばれるか」が出発点</div>
+            <div class="citem"><span class="dot">▸</span>顧客ありき</div>
+            <div class="citem"><span class="dot">▸</span>自然に引き寄せる（Pull）</div>
+            <div class="citem"><span class="dot">▸</span>長期的な関係構築が目的</div>
+          </div>
         </div>
       </div>
-      <div class="a-left d2">
-        <div class="col-head" style="color:var(--green);">✅ マーケティング思考</div>
-        <div class="col-good-wrap">
-          <div class="comp-item"><span class="dot">▸</span>「なぜ選ばれるか」が出発点</div>
-          <div class="comp-item"><span class="dot">▸</span>顧客ありき</div>
-          <div class="comp-item"><span class="dot">▸</span>自然に引き寄せる (Pull)</div>
-          <div class="comp-item"><span class="dot">▸</span>長期的な関係構築が目的</div>
-        </div>
+
+      <div id="s5-arrow" class="se" style="font-size:clamp(11px,1.6vw,21px);color:var(--muted2);text-align:center;margin-top:.8em;">
+        → この方向の違いが、<strong style="color:var(--accent);">すべての戦略の出発点</strong>になる
       </div>
-    </div>
-    <div class="comp-arrow a-up d3">
-      → この方向の違いが、<strong>すべての戦略の出発点</strong>になる
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 6: 4 Functions  (270-330s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 6: 4 Functions  (270–330s)  /  6 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s6">
-    <div class="h-accent a-fade d0">マーケティングが担う4つの機能</div>
-    <div class="body-sm a-fade d0" style="margin-bottom:0.6em;">Kotler &amp; Keller, 2016 を基に</div>
+    <div class="slide-num">06 / 12</div>
+    <div class="step-dots" id="sd6"></div>
+    <div class="pad-t" style="display:flex;flex-direction:column;height:100%;justify-content:center;">
 
-    <div class="fn-item a-up d1">
-      <div class="fn-num">①</div>
-      <div><div class="fn-label">市場を理解する</div><div class="fn-desc">誰が・何を・なぜ求めているか を調査</div></div>
-    </div>
-    <div class="fn-item a-up d2">
-      <div class="fn-num">②</div>
-      <div><div class="fn-label">戦略を設計する</div><div class="fn-desc">ターゲット・ポジションを決める</div></div>
-    </div>
-    <div class="fn-item a-up d3">
-      <div class="fn-num">③</div>
-      <div><div class="fn-label">価値を創造する</div><div class="fn-desc">製品・価格・流通を設計する</div></div>
-    </div>
-    <div class="fn-item a-up d4">
-      <div class="fn-num">④</div>
-      <div><div class="fn-label">価値を伝える</div><div class="fn-desc">広告・PR・コンテンツで届ける　← ここだけが「マーケ」ではない</div></div>
-    </div>
+      <div id="s6-hd" class="se">
+        <div class="sh">マーケティングが担う4つの機能</div>
+        <div class="sh-sm mb-s">Kotler &amp; Keller, 2016 を基に</div>
+      </div>
 
-    <div class="note a-fade d5">
-      <strong>広告は最後のステップ</strong>。土台がなければ効果は出ない
+      <div id="s6-fn1" class="fn-card se">
+        <div class="fn-num">①</div>
+        <div><div class="fn-label">市場を理解する</div><div class="fn-desc">誰が・何を・なぜ求めているか を調査する</div></div>
+      </div>
+      <div id="s6-fn2" class="fn-card se">
+        <div class="fn-num">②</div>
+        <div><div class="fn-label">戦略を設計する</div><div class="fn-desc">ターゲット・ポジションを決める</div></div>
+      </div>
+      <div id="s6-fn3" class="fn-card se">
+        <div class="fn-num">③</div>
+        <div><div class="fn-label">価値を創造する</div><div class="fn-desc">製品・価格・流通を設計する</div></div>
+      </div>
+      <div id="s6-fn4" class="fn-card se">
+        <div class="fn-num">④</div>
+        <div><div class="fn-label">価値を伝える</div><div class="fn-desc">広告・PR・コンテンツで届ける　← ここだけが「マーケ」ではない</div></div>
+      </div>
+
+      <div id="s6-note" class="se" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);text-align:right;margin-top:.5em;">
+        <strong style="color:var(--accent);">広告は最後のステップ</strong>。土台がなければ効果は出ない
+      </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 7: Starbucks Example  (330-405s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 7: Starbucks  (330–405s)  /  8 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s7">
-    <div class="h-accent a-fade d0">具体例：スターバックスはなぜ高くても売れる？</div>
+    <div class="slide-num">07 / 12</div>
+    <div class="step-dots" id="sd7"></div>
+    <div class="pad-t" style="display:flex;flex-direction:column;height:100%;justify-content:center;">
 
-    <div class="price-badge a-fade d0">
-      <span>☕ コーヒー1杯</span>
-      <span class="price">600〜700円</span>
-      <span class="body-sm">（コンビニの約5〜7倍）</span>
-    </div>
+      <div id="s7-hd" class="sh se">具体例：スターバックスはなぜ高くても売れる？</div>
 
-    <div class="why-q a-fade d1">それでも世界中で売れる理由 ——</div>
+      <div id="s7-price" class="se">
+        <span>☕&ensp;コーヒー1杯</span>
+        <span class="price">600〜700円</span>
+        <span class="t-xs">（コンビニの約5〜7倍）</span>
+      </div>
 
-    <div class="factor a-left d2"><span class="factor-num">①</span><span><strong>市場理解：</strong>「カフェで過ごす時間」に価値を感じる層がいる</span></div>
-    <div class="factor a-left d3"><span class="factor-num">②</span><span><strong>戦略設計：</strong>「サードプレイス（第3の居場所）」として競合と差別化</span></div>
-    <div class="factor a-left d4"><span class="factor-num">③</span><span><strong>価値創造：</strong>空間・接客・カスタマイズ体験がすべてセット</span></div>
-    <div class="factor a-left d5"><span class="factor-num">④</span><span><strong>価値伝達：</strong>ブランドストーリー・SNS・カップデザイン</span></div>
+      <div id="s7-why" class="se">それでも世界中で売れる理由 ——</div>
 
-    <div class="verdict a-up d6">
-      → 高くても「選ばれる理由」が4つの機能すべてで設計されている
+      <div id="s7-f1" class="f-row se"><span class="f-num">①</span><span><strong>市場理解：</strong>「カフェで過ごす時間」に価値を感じる層がいる</span></div>
+      <div id="s7-f2" class="f-row se"><span class="f-num">②</span><span><strong>戦略設計：</strong>「サードプレイス（第3の居場所）」として競合と差別化</span></div>
+      <div id="s7-f3" class="f-row se"><span class="f-num">③</span><span><strong>価値創造：</strong>店舗空間・接客・カスタマイズ体験がすべてセット</span></div>
+      <div id="s7-f4" class="f-row se"><span class="f-num">④</span><span><strong>価値伝達：</strong>ブランドストーリー・SNS・カップデザイン</span></div>
+
+      <div id="s7-verdict" class="se">
+        → 高くても「選ばれる理由」が4つの機能すべてで設計されている
+      </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 8: Iceberg  (405-450s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 8: Iceberg  (405–450s)  /  5 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s8">
-    <div class="h-accent a-fade d0">マーケティング ≠ 広告・宣伝</div>
+    <div class="slide-num">08 / 12</div>
+    <div class="step-dots" id="sd8"></div>
+    <div class="pad" style="display:flex;flex-direction:column;height:100%;">
 
-    <div class="iceberg-container">
-      <div class="ice-above a-fade d1">
-        <div class="label">👁 見えている部分（水面上）</div>
-        <strong>広告・宣伝・SNS投稿</strong>
+      <div id="s8-hd" class="sh se">マーケティング ≠ 広告・宣伝</div>
+
+      <div class="ice-wrap">
+        <div id="s8-above" class="ice-above se">
+          <div class="lbl">👁 見えている部分（水面上）</div>
+          <strong>広告・宣伝・SNS投稿</strong>
+        </div>
+        <div id="s8-wl" class="ice-wl se">
+          <span class="ice-wl-lbl">── 水面 ──</span>
+        </div>
+        <div id="s8-below" class="ice-below se">
+          <div class="lbl">水面下（マーケティングの本体）</div>
+          <strong>顧客理解 &nbsp;/&nbsp; 戦略設計</strong><br>
+          商品・価格・流通の設計<br>
+          ブランド・文化・体験設計
+        </div>
       </div>
 
-      <div class="waterline a-fade d2">
-        <span class="waterline-label">── 水面 ──</span>
+      <div id="s8-cap" class="se mt-m" style="text-align:center;font-size:clamp(11px,1.6vw,21px);color:var(--muted2);">
+        水面下の土台があって、初めて広告が <strong style="color:var(--accent);">機能する</strong>
       </div>
-
-      <div class="ice-below a-fade d3">
-        <div class="label">水面下（マーケティングの本体）</div>
-        <strong>顧客理解 &nbsp;/&nbsp; 戦略設計</strong><br>
-        商品・価格・流通の設計<br>
-        ブランド・文化・体験設計
-      </div>
-    </div>
-
-    <div class="caption a-up d4">
-      水面下の土台があって、初めて広告が <strong>機能する</strong>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 9: Timeline  (450-495s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 9: Timeline  (450–495s)  /  6 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s9">
-    <div class="h-accent a-fade d0">現代のマーケティングの変化</div>
+    <div class="slide-num">09 / 12</div>
+    <div class="step-dots" id="sd9"></div>
+    <div class="pad-t" style="display:flex;flex-direction:column;height:100%;justify-content:center;">
 
-    <div class="tl-wrap">
-      <div class="tl-item a-left d1">
-        <div class="tl-era">1950〜80年代</div>
-        <div class="tl-desc"><strong>大量生産・大量広告</strong>の時代。テレビCM・新聞広告が主役</div>
-      </div>
-      <div class="tl-item a-left d2">
-        <div class="tl-era">1990〜2000年代</div>
-        <div class="tl-desc"><strong>インターネット登場</strong>。ウェブ広告・メールマーケティング</div>
-      </div>
-      <div class="tl-item a-left d3">
-        <div class="tl-era">2010年代〜</div>
-        <div class="tl-desc"><strong>SNS・スマホ普及</strong>。顧客自身が情報発信者になる時代</div>
-      </div>
-      <div class="tl-item a-left d4">
-        <div class="tl-era">現在</div>
-        <div class="tl-desc"><strong>AI・データ活用</strong>。個別最適化（パーソナライゼーション）</div>
-      </div>
-    </div>
+      <div id="s9-hd" class="sh se">現代のマーケティングの変化</div>
 
-    <div class="tl-conclusion a-up d5">
-      手段は変わっても本質は不変 ―― <strong>「顧客を理解し、価値を届ける」</strong>
+      <div class="tl-wrap">
+        <div id="s9-t1" class="tl-item se"><div class="tl-era">1950〜80年代</div><div class="tl-desc"><strong>大量生産・大量広告</strong>の時代。テレビCM・新聞広告が主役</div></div>
+        <div id="s9-t2" class="tl-item se"><div class="tl-era">1990〜2000年代</div><div class="tl-desc"><strong>インターネット登場</strong>。ウェブ広告・メールマーケティング</div></div>
+        <div id="s9-t3" class="tl-item se"><div class="tl-era">2010年代〜</div><div class="tl-desc"><strong>SNS・スマホ普及</strong>。顧客自身が情報発信者になる時代</div></div>
+        <div id="s9-t4" class="tl-item se"><div class="tl-era">現在</div><div class="tl-desc"><strong>AI・データ活用</strong>。個別最適化（パーソナライゼーション）</div></div>
+      </div>
+
+      <div id="s9-conc" class="se mt-m">
+        手段は変わっても本質は不変 ―― <strong>「顧客を理解し、価値を届ける」</strong>
+      </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 10: Levitt Quote  (495-530s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 10: Levitt  (495–530s)  /  4 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s10">
-    <div class="h-accent a-fade d0">レビットの「マーケティング近視眼」</div>
+    <div class="slide-num">10 / 12</div>
+    <div class="step-dots" id="sd10"></div>
+    <div class="pad" style="display:flex;flex-direction:column;height:100%;justify-content:center;gap:.9em;">
 
-    <div class="drill-quote a-scale d1">
-      <div class="dq-text">
-        "顧客は<em>ドリル</em>が欲しいのではない。<br>
-        　<em>穴</em>が欲しいのだ。"
-      </div>
-      <div class="dq-source">
-        ― Theodore Levitt, "Marketing Myopia"&ensp;/&ensp;Harvard Business Review（1960）
-      </div>
-    </div>
+      <div id="s10-hd" class="sh se">レビットの「マーケティング近視眼」</div>
 
-    <div class="drill-supplement a-up d2">
-      売るべきは <strong>「商品のスペック」</strong> ではなく、<br>
-      顧客が得る <em>「結果・体験・感情」</em>
-    </div>
-    <div class="drill-supplement a-up d3" style="margin-top:0.4em;">
-      → 第4回でさらに深く掘り下げます
+      <div id="s10-quote" class="card card-lb se" style="padding:1.1em 1.6em;">
+        <div id="s10-qt" style="font-size:clamp(19px,3.1vw,40px);font-weight:900;line-height:1.4;">
+          "顧客は<em style="color:var(--blue);font-style:normal;">ドリル</em>が欲しいのではない。<br>
+          &ensp;<em style="color:var(--blue);font-style:normal;">穴</em>が欲しいのだ。"
+        </div>
+        <div class="t-xs" style="margin-top:.65em;">
+          ― Theodore Levitt, "Marketing Myopia"&ensp;/&ensp;Harvard Business Review（1960）
+        </div>
+      </div>
+
+      <div id="s10-supp1" class="t-md c-muted se">
+        売るべきは <strong style="color:var(--text);">「商品のスペック」</strong> ではなく、顧客が得る「結果・体験・感情」
+      </div>
+      <div id="s10-supp2" class="t-sm se">
+        → 第4回でさらに深く掘り下げます
+      </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 11: Summary  (530-580s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 11: Summary  (530–580s)  /  5 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s11">
-    <div class="h-accent a-fade d0">今日のまとめ</div>
+    <div class="slide-num">11 / 12</div>
+    <div class="step-dots" id="sd11"></div>
+    <div class="pad-t" style="display:flex;flex-direction:column;height:100%;justify-content:center;">
 
-    <div class="sum-item a-up d1">
-      <div class="sum-icon">✅</div>
-      <div>
-        <div class="sum-main">マーケティング ≠ 広告・宣伝</div>
-        <div class="sum-sub">→ 顧客に価値を届ける「仕組み全体」を指す</div>
+      <div id="s11-hd" class="sh se">今日のまとめ</div>
+
+      <div id="s11-it1" class="sum-item se">
+        <div class="sum-icon">✅</div>
+        <div><div class="sum-main">マーケティング ≠ 広告・宣伝</div><div class="sum-sub">→ 顧客に価値を届ける「仕組み全体」を指す</div></div>
       </div>
-    </div>
-    <div class="sum-item a-up d2">
-      <div class="sum-icon">✅</div>
-      <div>
-        <div class="sum-main">本質は「売る」ではなく「売れる状態を作る」</div>
-        <div class="sum-sub">→ ドラッカー：「販売を不要にすること」</div>
+      <div id="s11-it2" class="sum-item se">
+        <div class="sum-icon">✅</div>
+        <div><div class="sum-main">本質は「売る」ではなく「売れる状態を作る」</div><div class="sum-sub">→ ドラッカー：「販売を不要にすること」</div></div>
       </div>
-    </div>
-    <div class="sum-item a-up d3">
-      <div class="sum-icon">✅</div>
-      <div>
-        <div class="sum-main">4つの機能：理解 → 戦略 → 創造 → 伝達</div>
-        <div class="sum-sub">→ 広告は最後の「伝達」に過ぎない</div>
+      <div id="s11-it3" class="sum-item se">
+        <div class="sum-icon">✅</div>
+        <div><div class="sum-main">4つの機能：理解 → 戦略 → 創造 → 伝達</div><div class="sum-sub">→ 広告は最後の「伝達」に過ぎない</div></div>
       </div>
-    </div>
-    <div class="sum-item a-up d4">
-      <div class="sum-icon">✅</div>
-      <div>
-        <div class="sum-main">手段は変わっても本質は不変</div>
-        <div class="sum-sub">→ 「顧客を深く理解し、価値を届ける」</div>
+      <div id="s11-it4" class="sum-item se">
+        <div class="sum-icon">✅</div>
+        <div><div class="sum-main">手段は変わっても本質は不変</div><div class="sum-sub">→ 「顧客を深く理解し、価値を届ける」</div></div>
       </div>
     </div>
   </section>
 
-  <!-- ===================================================
-       SLIDE 12: Next Episode  (580-600s)
-  =================================================== -->
+  <!-- ──────────────────────────────────────────
+       SLIDE 12: Next Episode  (580–600s)  /  3 steps
+  ────────────────────────────────────────────── -->
   <section class="slide" id="s12">
-    <div class="next-card a-scale d0">
+    <div class="slide-num">12 / 12</div>
+    <div class="step-dots" id="sd12"></div>
+
+    <div id="s12-card" class="se">
       <div class="next-lbl">▶ 次回</div>
       <div class="next-title">誰に何を売る？<br>「3C分析」と「STP分析」の超基本</div>
-      <div class="next-point a-fade d1">市場を正しく「見る」2つのフレームワーク</div>
-      <div class="next-point a-fade d2">なぜ「全員に売ろうとする」のが失敗するか</div>
-      <div class="next-point a-fade d3">具体例：コンビニコーヒー市場で実践</div>
+      <div id="s12-pts" class="se">
+        <div class="next-pt">市場を正しく「見る」2つのフレームワーク</div>
+        <div class="next-pt">なぜ「全員に売ろうとする」のが失敗するか</div>
+        <div class="next-pt">具体例：コンビニコーヒー市場で実践</div>
+      </div>
     </div>
-    <div class="cta a-up d4">
+    <div id="s12-cta" class="se">
       チャンネル登録 &amp; 高評価をぜひお願いします！
     </div>
   </section>
 
 </div><!-- /stage -->
-</div><!-- /stage-outer -->
+</div><!-- /stage-wrap -->
 
 <!-- Progress Bar -->
-<div id="progress-bar"><div id="progress-fill"></div></div>
+<div id="prog-bar"><div id="prog-fill"></div></div>
 
 <!-- Controls -->
-<div id="controls">
-  <button id="btn-restart" title="最初から">⏮</button>
-  <button id="btn-prev">◀ Prev</button>
-  <button id="btn-play">▶ Play</button>
-  <button id="btn-next">Next ▶</button>
-  <span id="timer-display">0:00 / 10:00</span>
-  <span id="slide-counter">Slide 1 / 12</span>
-  <button id="btn-hide">ナレーション 隠す/表示</button>
+<div id="ctrl">
+  <button id="btn-restart" title="最初に戻す (R)">⏮</button>
+  <button id="btn-prev"    title="前のスライド (←)">◀ 前へ</button>
+  <button id="btn-play"    title="自動再生 (Space)">▶ 自動再生</button>
+  <button id="btn-next"    title="次のスライドへ (→)">次へ ▶</button>
+  <div class="ctrl-sep"></div>
+  <button id="btn-step"    title="次のアニメーション (Enter)">→ 次のアニメーション</button>
+  <div class="ctrl-sep"></div>
+  <span class="ctrl-info" id="timer-disp">0:00 / 10:00</span>
+  <span class="ctrl-info" id="slide-disp">Slide 1 / 12</span>
+  <span class="ctrl-info"><span id="step-label">Step&nbsp;—</span></span>
+  <button id="btn-narr">ナレーション 表示/隠す (H)</button>
 </div>
 
 <!-- Narration Panel -->
-<div id="narration-panel">
-  <div class="narration-label">📢 ナレーション（読み上げ原稿）</div>
-  <div id="narration-text"></div>
+<div id="narr-panel">
+  <div class="narr-lbl">📢 ナレーション（読み上げ原稿）</div>
+  <div id="narr-text"></div>
 </div>
 
 <script>
 /* ================================================================
-   SLIDE DATA
+   STEP TABLE
+   Each entry = one "次のアニメーション" click
+   si  : slide index (0-based)
+   t   : absolute auto-advance time (seconds from start)
+   ids : element IDs to reveal
+   anim: animation class to add
 ================================================================ */
-const SLIDES = [
-  {
-    id: 's1', startSec: 0, endSec: 30,
-    narration: `こんにちは。このチャンネルでは、マーケティングを基礎から実践まで体系的に学んでいきます。
-第1回のテーマは「そもそもマーケティングとは何か」。
-聞き慣れた言葉ですが、正しく説明できる人は意外と少ないんです。
-通勤や寝る前の10分で、ぜひ一緒に確認していきましょう。`
-  },
-  {
-    id: 's2', startSec: 30, endSec: 90,
-    narration: `マーケティングと聞いて、何を思い浮かべますか？
-「SNS運用」「チラシ配り」「広告を打つこと」——よく挙がるのはこのあたりですよね。
-でも実は、これらはどれも「マーケティングの手段」であって、マーケティングそのものではありません。
-手段だけを学んでも、なぜか成果につながらない——その理由が、今日わかります。`
-  },
-  {
-    id: 's3', startSec: 90, endSec: 150,
-    narration: `マーケティングの世界標準の定義を見てみましょう。
-アメリカ・マーケティング協会、AMAが定めた定義です。
-難しく聞こえますが、要点はシンプルです。
-「顧客にとって価値があるものを作り、伝え、届け、交換する——その一連の活動すべて」
-これがマーケティングです。
-つまり広告は最後の「伝える」のひとつに過ぎないわけです。`
-  },
-  {
-    id: 's4', startSec: 150, endSec: 210,
-    narration: `経営学の父、ピーター・ドラッカーはこんな言葉を残しています。
-「マーケティングの目的は、販売を不要にすることである」——
-一見、逆説的に聞こえますよね。でもこれが本質です。
-本当に優れたマーケティングができれば、セールスや説得なしでも、
-商品が「自然に選ばれる状態」を作り出せる。
-これが「売る」と「売れる仕組みを作る」の根本的な違いです。`
-  },
-  {
-    id: 's5', startSec: 210, endSec: 270,
-    narration: `わかりやすく並べて比べてみましょう。
-旧来の発想は「どうやって売るか」が出発点です。商品ありきで、いかに顧客を説得するかを考える。
-一方、マーケティング思考は「なぜ選ばれるか」が出発点。顧客が何を求めているかを先に理解して、
-その答えとして商品・サービスを設計します。
-引き寄せる、つまり英語でいう「プル」の発想です。
-この根本的な方向の違いが、すべての戦略の出発点になります。`
-  },
-  {
-    id: 's6', startSec: 270, endSec: 330,
-    narration: `コトラーの教科書的な整理をすると、マーケティングには大きく4つの機能があります。
-まず「市場を理解すること」——誰が何に困っていて、何を求めているかを調べる。
-次に「戦略を設計する」——どの顧客層に、どんな立ち位置で売るかを決める。
-そして「価値を創造する」——商品・価格・届け方を設計する。
-最後に「価値を伝える」——これが広告やSNSですね。
-重要なのは、広告は最後のステップだということ。土台がなければ広告を打っても効果が出ないのはこのためです。`
-  },
-  {
-    id: 's7', startSec: 330, endSec: 405,
-    narration: `具体例で理解しましょう。スターバックスのコーヒーは1杯600〜700円ほど。
-コンビニコーヒーの5〜7倍の価格です。それでも世界中で売れ続けています。
-なぜでしょう？スタバはコーヒーを売っているわけではないんです。
-「第3の居場所」——家でも職場でもない、自分だけの落ち着ける時間と空間を売っています。
-この価値を先に設計して、それに合わせて空間・接客・メニューすべてを作り込んでいる。
-価格ではなく、体験そのものに価値がある。これが「売れる仕組み」の設計です。`
-  },
-  {
-    id: 's8', startSec: 405, endSec: 450,
-    narration: `これを氷山に例えると、広告・宣伝は水面上に見える部分。
-でも水面下には、顧客理解・戦略設計・商品開発・価格設計・流通設計——
-これだけの土台があって、初めて広告が機能するんです。
-多くの人が「マーケティング＝広告」と思うのは、水面上しか見ていないから。
-この講座では、水面下の本質からしっかり積み上げていきます。`
-  },
-  {
-    id: 's9', startSec: 450, endSec: 495,
-    narration: `マーケティングの手段は時代とともに大きく変わってきました。
-50〜80年代はテレビCMや新聞広告の時代。企業が一方的に情報を届ける形でした。
-インターネットの登場で双方向になり、SNSの普及で今度は顧客自身が情報発信者になった。
-そして今はAIとデータを使った個別最適化の時代に入っています。
-手段は変わり続けますが、本質は変わっていません。
-「顧客を深く理解して、価値を届ける」——この一点です。`
-  },
-  {
-    id: 's10', startSec: 495, endSec: 530,
-    narration: `もう一つ、マーケティングの古典的な教えをご紹介します。
-ハーバード・ビジネス・レビューに掲載されたレビットの論文の一節です。
-「顧客はドリルが欲しいのではない。穴が欲しいのだ」——
-この言葉は60年以上経った今でも語り継がれています。
-売るべきは商品そのものではなく、顧客がその商品を通じて得る「結果」や「体験」。
-この考え方は第4回でさらに深く掘り下げます。`
-  },
-  {
-    id: 's11', startSec: 530, endSec: 580,
-    narration: `今日のポイントを整理しましょう。
-一つ目。マーケティングは広告・宣伝ではなく、顧客に価値を届ける仕組み全体のことです。
-二つ目。本質は「売ること」ではなく、ドラッカーの言葉通り「売れる状態を作ること」です。
-三つ目。マーケティングには4つの機能があり、広告は最後のステップに過ぎません。
-四つ目。手段は時代で変わりますが、「顧客理解と価値提供」という本質は変わらない。
-この土台を持つだけで、マーケティングの見方がガラッと変わるはずです。`
-  },
-  {
-    id: 's12', startSec: 580, endSec: 600,
-    narration: `次回は「3C分析」と「STP分析」をテーマに、市場を正しく見るための2大フレームワークを解説します。
-「全員に売ろうとする」がなぜ失敗するのか、具体例を交えてわかりやすく話していきます。
-よかったらチャンネル登録と高評価をお願いします。次回もお楽しみに！`
-  }
+const STEPS = [
+  // Slide 1 (0-30s)
+  {si:0,  t:0,    ids:['s1-ep-badge'],          anim:'rv-fade'},
+  {si:0,  t:0.7,  ids:['s1-title'],             anim:'rv-up'},
+  {si:0,  t:1.6,  ids:['s1-subtitle'],          anim:'rv-up'},
+  {si:0,  t:2.5,  ids:['s1-deco'],              anim:'rv-fade'},
+  // Slide 2 (30-90s)
+  {si:1,  t:30,   ids:['s2-q'],                 anim:'rv-fade'},
+  {si:1,  t:30.8, ids:['s2-ng1'],               anim:'rv-left'},
+  {si:1,  t:32.5, ids:['s2-ng2'],               anim:'rv-left'},
+  {si:1,  t:34,   ids:['s2-ng3'],               anim:'rv-left'},
+  {si:1,  t:38,   ids:['s2-conc'],              anim:'rv-up'},
+  // Slide 3 (90-150s)
+  {si:2,  t:90,   ids:['s3-hd','s3-src'],       anim:'rv-fade'},
+  {si:2,  t:91.5, ids:['s3-en'],                anim:'rv-fade'},
+  {si:2,  t:94,   ids:['s3-ja'],                anim:'rv-up'},
+  {si:2,  t:98,   ids:['s3-note'],              anim:'rv-fade'},
+  // Slide 4 (150-210s)
+  {si:3,  t:150,  ids:['s4-hd'],                anim:'rv-fade'},
+  {si:3,  t:151.5,ids:['s4-quote'],             anim:'rv-scale'},
+  {si:3,  t:156,  ids:['s4-supp1'],             anim:'rv-up'},
+  {si:3,  t:159,  ids:['s4-supp2'],             anim:'rv-up'},
+  // Slide 5 (210-270s)
+  {si:4,  t:210,  ids:['s5-hd'],                anim:'rv-fade'},
+  {si:4,  t:211.5,ids:['s5-bad'],               anim:'rv-right'},
+  {si:4,  t:215,  ids:['s5-good'],              anim:'rv-left'},
+  {si:4,  t:220,  ids:['s5-arrow'],             anim:'rv-up'},
+  // Slide 6 (270-330s)
+  {si:5,  t:270,  ids:['s6-hd'],                anim:'rv-fade'},
+  {si:5,  t:272,  ids:['s6-fn1'],               anim:'rv-up'},
+  {si:5,  t:275,  ids:['s6-fn2'],               anim:'rv-up'},
+  {si:5,  t:278,  ids:['s6-fn3'],               anim:'rv-up'},
+  {si:5,  t:281,  ids:['s6-fn4'],               anim:'rv-up'},
+  {si:5,  t:285,  ids:['s6-note'],              anim:'rv-fade'},
+  // Slide 7 (330-405s)
+  {si:6,  t:330,  ids:['s7-hd'],                anim:'rv-fade'},
+  {si:6,  t:331.5,ids:['s7-price'],             anim:'rv-fade'},
+  {si:6,  t:334,  ids:['s7-why'],               anim:'rv-up'},
+  {si:6,  t:337,  ids:['s7-f1'],                anim:'rv-left'},
+  {si:6,  t:340,  ids:['s7-f2'],                anim:'rv-left'},
+  {si:6,  t:343,  ids:['s7-f3'],                anim:'rv-left'},
+  {si:6,  t:346,  ids:['s7-f4'],                anim:'rv-left'},
+  {si:6,  t:352,  ids:['s7-verdict'],           anim:'rv-up'},
+  // Slide 8 (405-450s)
+  {si:7,  t:405,  ids:['s8-hd'],                anim:'rv-fade'},
+  {si:7,  t:407,  ids:['s8-above'],             anim:'rv-fade'},
+  {si:7,  t:410,  ids:['s8-wl'],                anim:'rv-fade'},
+  {si:7,  t:413,  ids:['s8-below'],             anim:'rv-up'},
+  {si:7,  t:418,  ids:['s8-cap'],               anim:'rv-fade'},
+  // Slide 9 (450-495s)
+  {si:8,  t:450,  ids:['s9-hd'],                anim:'rv-fade'},
+  {si:8,  t:452,  ids:['s9-t1'],                anim:'rv-left'},
+  {si:8,  t:455,  ids:['s9-t2'],                anim:'rv-left'},
+  {si:8,  t:458,  ids:['s9-t3'],                anim:'rv-left'},
+  {si:8,  t:461,  ids:['s9-t4'],                anim:'rv-left'},
+  {si:8,  t:466,  ids:['s9-conc'],              anim:'rv-up'},
+  // Slide 10 (495-530s)
+  {si:9,  t:495,  ids:['s10-hd'],               anim:'rv-fade'},
+  {si:9,  t:497,  ids:['s10-quote'],            anim:'rv-scale'},
+  {si:9,  t:503,  ids:['s10-supp1'],            anim:'rv-up'},
+  {si:9,  t:506,  ids:['s10-supp2'],            anim:'rv-fade'},
+  // Slide 11 (530-580s)
+  {si:10, t:530,  ids:['s11-hd'],               anim:'rv-fade'},
+  {si:10, t:532,  ids:['s11-it1'],              anim:'rv-up'},
+  {si:10, t:536,  ids:['s11-it2'],              anim:'rv-up'},
+  {si:10, t:540,  ids:['s11-it3'],              anim:'rv-up'},
+  {si:10, t:544,  ids:['s11-it4'],              anim:'rv-up'},
+  // Slide 12 (580-600s)
+  {si:11, t:580,  ids:['s12-card'],             anim:'rv-scale'},
+  {si:11, t:582,  ids:['s12-pts'],              anim:'rv-fade'},
+  {si:11, t:585,  ids:['s12-cta'],              anim:'rv-up'},
 ];
 
-const TOTAL = 600; // 10 minutes
+/* ================================================================
+   SLIDE METADATA
+================================================================ */
+const SLIDES_META = [
+  {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
+  {id:'s2',  start:30,  end:90,  dotContainerId:'sd2'},
+  {id:'s3',  start:90,  end:150, dotContainerId:'sd3'},
+  {id:'s4',  start:150, end:210, dotContainerId:'sd4'},
+  {id:'s5',  start:210, end:270, dotContainerId:'sd5'},
+  {id:'s6',  start:270, end:330, dotContainerId:'sd6'},
+  {id:'s7',  start:330, end:405, dotContainerId:'sd7'},
+  {id:'s8',  start:405, end:450, dotContainerId:'sd8'},
+  {id:'s9',  start:450, end:495, dotContainerId:'sd9'},
+  {id:'s10', start:495, end:530, dotContainerId:'sd10'},
+  {id:'s11', start:530, end:580, dotContainerId:'sd11'},
+  {id:'s12', start:580, end:600, dotContainerId:'sd12'},
+];
+
+const NARRATIONS = [
+  `こんにちは。このチャンネルでは、マーケティングを基礎から実践まで体系的に学んでいきます。\n第1回のテーマは「そもそもマーケティングとは何か」。\n聞き慣れた言葉ですが、正しく説明できる人は意外と少ないんです。\n通勤や寝る前の10分で、ぜひ一緒に確認していきましょう。`,
+  `マーケティングと聞いて、何を思い浮かべますか？\n「SNS運用」「チラシ配り」「広告を打つこと」——よく挙がるのはこのあたりですよね。\nでも実は、これらはどれも「マーケティングの手段」であって、マーケティングそのものではありません。\n手段だけを学んでも、なぜか成果につながらない——その理由が、今日わかります。`,
+  `マーケティングの世界標準の定義を見てみましょう。\nアメリカ・マーケティング協会、AMAが定めた定義です。\n要点はシンプルです。「顧客にとって価値があるものを作り、伝え、届け、交換する——その一連の活動すべて」\nこれがマーケティングです。つまり広告は最後の「伝える」のひとつに過ぎないわけです。`,
+  `経営学の父、ピーター・ドラッカーはこんな言葉を残しています。\n「マーケティングの目的は、販売を不要にすることである」——\n一見、逆説的に聞こえますよね。でもこれが本質です。\n本当に優れたマーケティングができれば、商品が「自然に選ばれる状態」を作り出せる。\nこれが「売る」と「売れる仕組みを作る」の根本的な違いです。`,
+  `わかりやすく並べて比べてみましょう。\n旧来の発想は「どうやって売るか」が出発点。商品ありきで顧客を説得しようとする。\n一方、マーケティング思考は「なぜ選ばれるか」が出発点。顧客を先に理解し、その答えとして商品を設計します。\n引き寄せる、つまり「プル」の発想です。この方向の違いが、すべての戦略の出発点になります。`,
+  `コトラーの整理をすると、マーケティングには大きく4つの機能があります。\n①市場を理解する ②戦略を設計する ③価値を創造する ④価値を伝える。\n重要なのは、広告は最後のステップだということ。\n①〜③の土台がなければ広告を打っても効果が出ないのはこのためです。`,
+  `具体例で理解しましょう。スターバックスのコーヒーは1杯600〜700円ほど。\nコンビニコーヒーの5〜7倍。それでも世界中で売れ続けています。\nスタバは「第3の居場所」——家でも職場でもない時間と空間を売っています。\nこの価値を先に設計して、空間・接客・メニューすべてを作り込んでいる。\n体験そのものに価値がある。これが「売れる仕組み」の設計です。`,
+  `これを氷山に例えると、広告・宣伝は水面上に見える部分。\n水面下には、顧客理解・戦略設計・商品開発・価格設計・流通設計——\nこれだけの土台があって、初めて広告が機能します。\n多くの人が「マーケティング＝広告」と思うのは、水面上しか見ていないから。\nこの講座では、水面下の本質からしっかり積み上げていきます。`,
+  `マーケティングの手段は時代とともに大きく変わってきました。\n50〜80年代はテレビCM・新聞広告の時代。インターネットで双方向になり、\nSNSの普及で顧客自身が情報発信者になった。今はAIと個別最適化の時代です。\n手段は変わり続けますが、本質は変わっていません。\n「顧客を深く理解して、価値を届ける」——この一点です。`,
+  `ハーバード・ビジネス・レビューに掲載されたレビットの論文の一節です。\n「顧客はドリルが欲しいのではない。穴が欲しいのだ」——\nこの言葉は60年以上経った今でも語り継がれています。\n売るべきは商品そのものではなく、顧客がその商品を通じて得る「結果」や「体験」。\nこの考え方は第4回でさらに深く掘り下げます。`,
+  `今日のポイントを整理しましょう。\n①マーケティングは広告・宣伝ではなく、顧客に価値を届ける仕組み全体のことです。\n②本質は「売ること」ではなく「売れる状態を作ること」。\n③マーケティングには4つの機能があり、広告は最後のステップです。\n④手段は変わりますが、「顧客理解と価値提供」という本質は変わらない。\nこの土台を持つだけで、マーケティングの見方がガラッと変わるはずです。`,
+  `次回は「3C分析」と「STP分析」をテーマに、市場を正しく見るための2大フレームワークを解説します。\n「全員に売ろうとする」がなぜ失敗するのか、具体例を交えてわかりやすく話していきます。\nチャンネル登録と高評価をぜひお願いします。次回もお楽しみに！`,
+];
+
+const TOTAL_SECS = 600;
+
+/* ================================================================
+   DERIVED LOOKUPS
+================================================================ */
+// first step index for each slide
+const SLIDE_FIRST_STEP = Array(SLIDES_META.length).fill(-1);
+// total steps per slide
+const SLIDE_STEP_COUNT = Array(SLIDES_META.length).fill(0);
+STEPS.forEach((s, i) => {
+  if (SLIDE_FIRST_STEP[s.si] === -1) SLIDE_FIRST_STEP[s.si] = i;
+  SLIDE_STEP_COUNT[s.si]++;
+});
 
 /* ================================================================
    STATE
 ================================================================ */
 let state = {
-  slide: 0,
-  elapsed: 0,
-  playing: false,
-  lastTick: null,
-  animTimer: null
+  slide:    0,        // current slide index
+  cursor:   0,        // next step to activate (0-based index in STEPS)
+  elapsed:  0,        // seconds elapsed
+  playing:  false,
+  lastRAF:  null,
 };
 
 /* ================================================================
-   DOM REFS
+   BUILD STEP DOTS
 ================================================================ */
-const $stage       = document.getElementById('stage');
-const $transition  = document.getElementById('transition');
-const $progressFill= document.getElementById('progress-fill');
-const $timerDisplay= document.getElementById('timer-display');
-const $slideCounter= document.getElementById('slide-counter');
-const $narration   = document.getElementById('narration-text');
-const $narPanel    = document.getElementById('narration-panel');
-const $btnPlay     = document.getElementById('btn-play');
-const $btnPrev     = document.getElementById('btn-prev');
-const $btnNext     = document.getElementById('btn-next');
-const $btnRestart  = document.getElementById('btn-restart');
-const $btnHide     = document.getElementById('btn-hide');
-
-/* ================================================================
-   HELPERS
-================================================================ */
-function fmt(sec) {
-  const m = Math.floor(sec / 60);
-  const s = Math.floor(sec % 60);
-  return `${m}:${s.toString().padStart(2,'0')}`;
-}
-
-function getSlideForTime(t) {
-  for (let i = SLIDES.length - 1; i >= 0; i--) {
-    if (t >= SLIDES[i].startSec) return i;
+SLIDES_META.forEach((sm, si) => {
+  const container = document.getElementById(sm.dotContainerId);
+  if (!container) return;
+  const count = SLIDE_STEP_COUNT[si];
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    d.dataset.si = si;
+    d.dataset.stepLocal = i;
+    container.appendChild(d);
   }
-  return 0;
-}
+});
 
-/* ================================================================
-   SLIDE ACTIVATION
-================================================================ */
-function activateSlide(idx, transition = true) {
-  if (idx < 0 || idx >= SLIDES.length) return;
-
-  const prev = document.querySelector('.slide.active');
-  const next = document.getElementById(SLIDES[idx].id);
-  if (!next) return;
-
-  if (transition && prev && prev !== next) {
-    $transition.classList.add('flash');
-    setTimeout(() => $transition.classList.remove('flash'), 300);
-  }
-
-  if (prev) prev.classList.remove('active');
-  next.classList.remove('active');
-
-  // Reset animations: remove and re-add all animation classes
-  const animated = next.querySelectorAll('[class*="a-"]');
-  animated.forEach(el => {
-    const saved = el.className;
-    el.style.animation = 'none';
-    void el.offsetWidth; // reflow
-    el.style.animation = '';
+function updateDots() {
+  // for current slide, mark dots done/active
+  const si = state.slide;
+  const first = SLIDE_FIRST_STEP[si];
+  const count = SLIDE_STEP_COUNT[si];
+  const container = document.getElementById(SLIDES_META[si].dotContainerId);
+  if (!container) return;
+  const dots = container.querySelectorAll('.step-dot');
+  const revealed = state.cursor - first; // how many steps already activated on this slide
+  dots.forEach((dot, i) => {
+    dot.classList.remove('done','active');
+    if (i < revealed - 1) dot.classList.add('done');
+    else if (i === revealed - 1) dot.classList.add('active');
   });
-
-  next.classList.add('active');
-  state.slide = idx;
-
-  // Update narration
-  $narration.textContent = SLIDES[idx].narration;
-
-  // Update counter
-  $slideCounter.textContent = `Slide ${idx + 1} / ${SLIDES.length}`;
 }
 
 /* ================================================================
-   TICKER
+   STEP ACTIVATION
 ================================================================ */
-function tick() {
-  if (!state.playing) return;
+function activateStep(idx) {
+  if (idx < 0 || idx >= STEPS.length) return;
+  const step = STEPS[idx];
+  step.ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.remove(
+      'rv-fade','rv-up','rv-left','rv-right','rv-scale','rv-pop'
+    );
+    void el.offsetWidth; // reflow to restart animation
+    el.classList.add(step.anim);
+  });
+}
 
-  const now = performance.now();
-  const dt = state.lastTick ? (now - state.lastTick) / 1000 : 0;
-  state.lastTick = now;
+/* Reset all elements of a slide to hidden */
+function resetSlideElements(si) {
+  const first = SLIDE_FIRST_STEP[si];
+  const count = SLIDE_STEP_COUNT[si];
+  if (first === -1) return;
+  for (let i = first; i < first + count; i++) {
+    STEPS[i].ids.forEach(id => {
+      const el = document.getElementById(id);
+      if (!el) return;
+      el.classList.remove(
+        'rv-fade','rv-up','rv-left','rv-right','rv-scale','rv-pop'
+      );
+    });
+  }
+}
 
-  state.elapsed = Math.min(state.elapsed + dt, TOTAL);
+/* Fully reveal all steps of a slide (for going back) */
+function revealAllSteps(si) {
+  const first = SLIDE_FIRST_STEP[si];
+  const count = SLIDE_STEP_COUNT[si];
+  if (first === -1) return;
+  for (let i = first; i < first + count; i++) {
+    activateStep(i);
+  }
+}
 
-  const pct = (state.elapsed / TOTAL) * 100;
-  $progressFill.style.width = pct + '%';
-  $timerDisplay.textContent = `${fmt(state.elapsed)} / ${fmt(TOTAL)}`;
+/* ================================================================
+   SLIDE SWITCHING
+================================================================ */
+const $flash = document.getElementById('flash');
 
-  const targetSlide = getSlideForTime(state.elapsed);
-  if (targetSlide !== state.slide) {
-    activateSlide(targetSlide);
+function switchSlide(newSi, showFirst = true) {
+  if (newSi === state.slide && !showFirst) return;
+
+  // flash transition
+  $flash.classList.add('on');
+  setTimeout(() => $flash.classList.remove('on'), 250);
+
+  // hide all slides, show target
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById(SLIDES_META[newSi].id);
+  if (target) target.classList.add('active');
+
+  state.slide = newSi;
+
+  // reset elements, set cursor
+  resetSlideElements(newSi);
+  state.cursor = SLIDE_FIRST_STEP[newSi] !== -1
+    ? SLIDE_FIRST_STEP[newSi]
+    : state.cursor;
+
+  if (showFirst && SLIDE_FIRST_STEP[newSi] !== -1) {
+    activateStep(state.cursor);
+    state.cursor++;
   }
 
-  if (state.elapsed >= TOTAL) {
-    state.playing = false;
-    $btnPlay.textContent = '▶ Play';
+  updateUI();
+}
+
+/* ================================================================
+   STEP CURSOR ADVANCE (manual "次のアニメーション")
+================================================================ */
+function advanceStep() {
+  if (state.cursor >= STEPS.length) return; // all done
+
+  const nextStep = STEPS[state.cursor];
+
+  // If next step is on a different slide, switch slide first
+  if (nextStep.si !== state.slide) {
+    // before switching: fully show remaining steps on current slide
+    // (optional – here we skip to next slide cleanly)
+    switchSlide(nextStep.si, false);
+    // then activate first step
+    activateStep(state.cursor);
+    state.cursor++;
+    state.elapsed = nextStep.t;
+    updateUI();
     return;
   }
 
+  activateStep(state.cursor);
+  state.cursor++;
+  state.elapsed = nextStep.t;
+
+  // sync progress display
+  $progFill.style.width = (state.elapsed / TOTAL_SECS * 100) + '%';
+  updateUI();
+}
+
+/* ================================================================
+   UI UPDATE
+================================================================ */
+const $progFill   = document.getElementById('prog-fill');
+const $timerDisp  = document.getElementById('timer-disp');
+const $slideDisp  = document.getElementById('slide-disp');
+const $stepLabel  = document.getElementById('step-label');
+const $narrText   = document.getElementById('narr-text');
+const $btnPlay    = document.getElementById('btn-play');
+const $btnStep    = document.getElementById('btn-step');
+
+function fmt(s) {
+  const m = Math.floor(s/60), sec = Math.floor(s%60);
+  return `${m}:${sec.toString().padStart(2,'0')}`;
+}
+
+function updateUI() {
+  const si = state.slide;
+  $slideDisp.textContent = `Slide ${si+1} / ${SLIDES_META.length}`;
+
+  const first = SLIDE_FIRST_STEP[si];
+  const count = SLIDE_STEP_COUNT[si];
+  const localDone = state.cursor - first;
+  $stepLabel.textContent = `Step ${Math.min(localDone, count)} / ${count}`;
+
+  $narrText.textContent = NARRATIONS[si] || '';
+
+  // update btn-step label
+  if (state.cursor >= STEPS.length) {
+    $btnStep.textContent = '✓ 完了';
+    $btnStep.disabled = true;
+  } else {
+    const ns = STEPS[state.cursor];
+    if (ns.si !== si) {
+      $btnStep.textContent = `▷ スライド${ns.si+1}へ`;
+    } else {
+      $btnStep.textContent = `→ 次のアニメーション`;
+    }
+    $btnStep.disabled = false;
+  }
+
+  updateDots();
+}
+
+/* ================================================================
+   AUTO-PLAY TICKER
+================================================================ */
+function tick(now) {
+  if (!state.playing) return;
+  const dt = state._lastNow ? (now - state._lastNow) / 1000 : 0;
+  state._lastNow = now;
+  state.elapsed = Math.min(state.elapsed + dt, TOTAL_SECS);
+
+  $progFill.style.width = (state.elapsed / TOTAL_SECS * 100) + '%';
+  $timerDisp.textContent = `${fmt(state.elapsed)} / ${fmt(TOTAL_SECS)}`;
+
+  // activate pending steps
+  while (state.cursor < STEPS.length && STEPS[state.cursor].t <= state.elapsed) {
+    const step = STEPS[state.cursor];
+    // slide switch?
+    if (step.si !== state.slide) {
+      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+      const t = document.getElementById(SLIDES_META[step.si].id);
+      if (t) t.classList.add('active');
+      state.slide = step.si;
+      resetSlideElements(step.si);
+      updateUI();
+    }
+    activateStep(state.cursor);
+    state.cursor++;
+    updateUI();
+  }
+
+  if (state.elapsed >= TOTAL_SECS) {
+    state.playing = false;
+    state._lastNow = null;
+    $btnPlay.textContent = '▶ 自動再生';
+    return;
+  }
   requestAnimationFrame(tick);
 }
 
@@ -1286,59 +1270,75 @@ function tick() {
 $btnPlay.addEventListener('click', () => {
   if (state.playing) {
     state.playing = false;
-    state.lastTick = null;
-    $btnPlay.textContent = '▶ Play';
+    state._lastNow = null;
+    $btnPlay.textContent = '▶ 自動再生';
   } else {
     state.playing = true;
-    state.lastTick = null;
-    $btnPlay.textContent = '⏸ Pause';
-    requestAnimationFrame(tick);
+    $btnPlay.textContent = '⏸ 一時停止';
+    requestAnimationFrame(t => { state._lastNow = t; tick(t); });
   }
 });
 
-$btnPrev.addEventListener('click', () => {
+document.getElementById('btn-step').addEventListener('click', advanceStep);
+
+document.getElementById('btn-next').addEventListener('click', () => {
+  const next = Math.min(SLIDES_META.length - 1, state.slide + 1);
+  state.elapsed = SLIDES_META[next].start;
+  $progFill.style.width = (state.elapsed / TOTAL_SECS * 100) + '%';
+  $timerDisp.textContent = `${fmt(state.elapsed)} / ${fmt(TOTAL_SECS)}`;
+  switchSlide(next, true);
+});
+
+document.getElementById('btn-prev').addEventListener('click', () => {
   const prev = Math.max(0, state.slide - 1);
-  state.elapsed = SLIDES[prev].startSec;
-  $progressFill.style.width = (state.elapsed / TOTAL * 100) + '%';
-  $timerDisplay.textContent = `${fmt(state.elapsed)} / ${fmt(TOTAL)}`;
-  activateSlide(prev);
+  state.elapsed = SLIDES_META[prev].start;
+  $progFill.style.width = (state.elapsed / TOTAL_SECS * 100) + '%';
+  $timerDisp.textContent = `${fmt(state.elapsed)} / ${fmt(TOTAL_SECS)}`;
+  switchSlide(prev, true);
 });
 
-$btnNext.addEventListener('click', () => {
-  const next = Math.min(SLIDES.length - 1, state.slide + 1);
-  state.elapsed = SLIDES[next].startSec;
-  $progressFill.style.width = (state.elapsed / TOTAL * 100) + '%';
-  $timerDisplay.textContent = `${fmt(state.elapsed)} / ${fmt(TOTAL)}`;
-  activateSlide(next);
+document.getElementById('btn-restart').addEventListener('click', () => {
+  state.playing = false; state._lastNow = null; state.elapsed = 0;
+  $btnPlay.textContent = '▶ 自動再生';
+  $progFill.style.width = '0%';
+  $timerDisp.textContent = `0:00 / ${fmt(TOTAL_SECS)}`;
+  // reset all slides
+  for (let si = 0; si < SLIDES_META.length; si++) resetSlideElements(si);
+  document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
+  document.getElementById('s1').classList.add('active');
+  state.slide = 0;
+  state.cursor = 0;
+  activateStep(0); state.cursor = 1;
+  updateUI();
 });
 
-$btnRestart.addEventListener('click', () => {
-  state.elapsed = 0;
-  state.playing = false;
-  state.lastTick = null;
-  $btnPlay.textContent = '▶ Play';
-  $progressFill.style.width = '0%';
-  $timerDisplay.textContent = `0:00 / ${fmt(TOTAL)}`;
-  activateSlide(0);
-});
-
-$btnHide.addEventListener('click', () => {
-  $narPanel.classList.toggle('hidden');
+document.getElementById('btn-narr').addEventListener('click', () => {
+  document.getElementById('narr-panel').classList.toggle('hide');
 });
 
 /* keyboard shortcuts */
 document.addEventListener('keydown', e => {
-  if (e.code === 'Space') { e.preventDefault(); $btnPlay.click(); }
-  if (e.code === 'ArrowRight') $btnNext.click();
-  if (e.code === 'ArrowLeft')  $btnPrev.click();
-  if (e.code === 'KeyR')       $btnRestart.click();
-  if (e.code === 'KeyH')       $btnHide.click();
+  const tag = document.activeElement.tagName;
+  if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+  if (e.code === 'Space')  { e.preventDefault(); $btnPlay.click(); }
+  if (e.code === 'Enter')  { e.preventDefault(); advanceStep(); }
+  if (e.code === 'ArrowRight') document.getElementById('btn-next').click();
+  if (e.code === 'ArrowLeft')  document.getElementById('btn-prev').click();
+  if (e.code === 'KeyR')       document.getElementById('btn-restart').click();
+  if (e.code === 'KeyH')       document.getElementById('btn-narr').click();
 });
 
 /* ================================================================
    INIT
 ================================================================ */
-activateSlide(0, false);
+(function init() {
+  // activate first step of slide 1
+  resetSlideElements(0);
+  activateStep(0);
+  state.cursor = 1;
+  $timerDisp.textContent = `0:00 / ${fmt(TOTAL_SECS)}`;
+  updateUI();
+})();
 </script>
 </body>
 </html>
