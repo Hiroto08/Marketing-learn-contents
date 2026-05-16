@@ -14,6 +14,10 @@ if [ ! -f "$DURATIONS_JSON" ]; then
   exit 1
 fi
 
+# スライド表示後に音声を開始するオフセット（ms）
+# スライドが完全に表示されてから読み上げが始まるよう調整
+AUDIO_OFFSET_MS=500
+
 # durations.json からスライド数・開始時刻・合計時間を取得
 read -r NUM_SLIDES TOTAL_SECS STARTS_CSV <<< "$(python3 - "$DURATIONS_JSON" <<'PYEOF'
 import json, sys
@@ -52,7 +56,7 @@ for i in $(seq 0 $((NUM_SLIDES - 1))); do
   IDX=$(printf "%02d" "$i")
   FILE="$OUT_DIR/audio_${IDX}.${AUDIO_EXT}"
   START="${SLIDE_STARTS[$i]}"
-  DELAY_MS=$(python3 -c "print(int(float('$START') * 1000))")
+  DELAY_MS=$(python3 -c "print(int(float('$START') * 1000) + $AUDIO_OFFSET_MS)")
 
   INPUTS="$INPUTS -i $FILE"
   FILTER="${FILTER}[$i:a]adelay=${DELAY_MS}|${DELAY_MS}[a${i}];"
