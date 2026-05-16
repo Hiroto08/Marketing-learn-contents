@@ -6,7 +6,10 @@ Priority: VOICEVOX (localhost:50021) → Google TTS → open_jtalk
 VOICEVOX speakers (style_id):
   1 = ずんだもん（ノーマル）
   2 = 四国めたん（ノーマル）
- 13 = 青山龍星（ノーマル）← デフォルト・落ち着いた男性声
+ 11 = 玄野武宏（ノーマル）← デフォルト・落ち着いた大人の男性声
+ 13 = 青山龍星（ノーマル）
+ 30 = No.7（アナウンス）
+ 31 = No.7（読み聞かせ）
 
 Usage:
   python3 gen_audio.py <slide.html> <out_dir> [speaker_id]
@@ -21,8 +24,8 @@ import subprocess
 
 
 VOICEVOX_URL = "http://localhost:50021"
-DEFAULT_SPEAKER = 13   # 青山龍星 ノーマル（落ち着いた男性声）
-SPEED_SCALE = 1.05     # わずかに速め（教育コンテンツ推奨）
+DEFAULT_SPEAKER = 11   # 玄野武宏 ノーマル（落ち着いた大人の男性声）
+SPEED_SCALE = 1.0      # 等速（VOICEVOXは自然なペースで設計されているため補正不要）
 
 
 def extract_narrations(slide_html_path: str) -> list[str]:
