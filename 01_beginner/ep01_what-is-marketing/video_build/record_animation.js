@@ -68,8 +68,7 @@ function formatTime(ms) {
   const fileUrl = `file://${path.resolve(slideHtmlPath)}`;
 
   console.log('Loading slide_record.html ...');
-  await page.goto(fileUrl);
-  await page.waitForLoadState('networkidle');
+  await page.goto(fileUrl, { waitUntil: 'load', timeout: 60000 });
 
   // フォント・アイコン読み込みの完全待機（ローカル FA でも念のため）
   await page.waitForTimeout(3000);
