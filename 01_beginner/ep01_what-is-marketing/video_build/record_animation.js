@@ -40,9 +40,10 @@ if (fs.existsSync(durationsPath)) {
   console.warn(`durations.json not found at ${durationsPath} — using original SLIDES_META timing`);
 }
 
-// 総録画時間を計算
+// 総録画時間を計算（各スライドの tail 時間を加算）
+const nSlides = audioDurations ? Object.keys(audioDurations).length : 12;
 const totalSecs = audioDurations
-  ? Math.ceil(Object.values(audioDurations).reduce((a, b) => a + b, 0)) + 3
+  ? Math.ceil(Object.values(audioDurations).reduce((a, b) => a + b, 0)) + (nSlides * SLIDE_TAIL_SEC) + 3
   : 605;
 
 console.log(`Total recording time: ${totalSecs}s`);
