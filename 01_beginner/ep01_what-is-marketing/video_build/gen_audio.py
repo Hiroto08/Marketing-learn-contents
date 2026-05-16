@@ -245,8 +245,9 @@ _BULLET_PREFIXES = (
 
 
 _SHORT_TEXT_CHARS   = 10    # これ未満の字数はトリム不要（open_jtalk の間がちょうどよい）
-_SLOW_THRESHOLD_CPS = 5.5   # これ以下（字/秒）なら atempo で補正
-_ATEMPO_MAX         = 1.6   # 最大加速倍率
+_SLOW_THRESHOLD_CPS = 4.0   # これ以下（字/秒）なら atempo で補正（明らかな異常のみ対象）
+_ATEMPO_MAX         = 1.4   # 最大加速倍率（控えめにして自然なテンポを保つ）
+_SPEECH_RATE        = "0.85" # open_jtalk 発話速度（0.85=15%スロー、教育コンテンツ向け）
 
 
 def _jtalk_synthesize(text: str, out_path: str) -> bool:
@@ -259,7 +260,7 @@ def _jtalk_synthesize(text: str, out_path: str) -> bool:
          "-ow", raw_path,
          "-s", "48000",
          "-p", "200",
-         "-r", "1.0",
+         "-r", _SPEECH_RATE,
          "-a", "0.55",
          "-b", "0.0"],
         input=text,
