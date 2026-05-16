@@ -668,6 +668,39 @@ body {
 }
 #narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
 </style>
+
+<style id="record-mode">
+/* === 録画モード: コントロール・ナレーション非表示、ステージ全画面 === */
+html, body {
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  background: #0b0b1a !important;
+  width: 1280px !important;
+  height: 720px !important;
+}
+#stage-wrap {
+  max-width: 1280px !important;
+  width: 1280px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+#stage {
+  padding-top: 0 !important;
+  height: 720px !important;
+  width: 1280px !important;
+}
+.slide {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 1280px !important;
+  height: 720px !important;
+}
+#ctrl        { display: none !important; }
+#narr-panel  { display: none !important; }
+#btn-narr    { display: none !important; }
+#flash       { display: none !important; }
+</style>
 </head>
 <body>
 

@@ -3,54 +3,59 @@
 #
 # 生成物: out/ep01_animation.mp4
 #   - Playwright でスライドのアニメーション再生をそのまま録画
-#   - SLIDES_META のタイミングに合わせた読み上げ音声を合成
+#   - 音声は durations.json のタイミングに完全同期
+#   - コントロールパネル・ナレーション表示なし
+#   - Font Awesome アイコンはローカル参照（CDN 不要）
 #
-# 音声は事前に gen_audio.py で生成済みであること（out/audio_XX.wav/.mp3）
-# 未生成の場合は先に実行する:
-#   python3 gen_audio.py ../slide.html out [speaker_id]
+# 前提: gen_audio.py で out/audio_XX.wav 生成済みであること
 #
-# Usage:
-#   bash build_animation.sh [total_secs]
-#   total_secs: 録画秒数（デフォルト: 605 = スライド600秒+余白5秒）
+# Usage: bash build_animation.sh
 
 set -e
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 EP_DIR="$(dirname "$SCRIPT_DIR")"
 OUT="$SCRIPT_DIR/out"
-TOTAL="${1:-605}"
+RECORD_HTML="$EP_DIR/slide_record.html"
 
 export NODE_PATH=/opt/node22/lib/node_modules
 export PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers
 
 echo "============================================"
-echo "  ep01 Animation Video Builder"
-echo "  Total duration: ${TOTAL}s"
+echo "  ep01 Animation Video Builder v2"
 echo "  Output: $OUT"
 echo "============================================"
 
 mkdir -p "$OUT"
 
-# ── Step 1: 音声が未生成なら生成 ──────────────────────────────────────────────
+# ── Step 0: 音声が未生成なら生成 ──────────────────────────────────────────────
 if ! ls "$OUT"/audio_00.wav "$OUT"/audio_00.mp3 2>/dev/null | grep -q .; then
   echo ""
-  echo "Step 0: Generating narration audio first..."
+  echo "Step 0: Generating narration audio..."
   python3 "$SCRIPT_DIR/gen_audio.py" "$EP_DIR/slide.html" "$OUT"
 fi
 
+# ── Step 1: 録画用 HTML を生成（コントロール・ナレーションなし）────────────────
+echo ""
+echo "Step 1/4: Generating slide_record.html ..."
+python3 "$SCRIPT_DIR/make_record_html.py" "$EP_DIR/slide.html" "$RECORD_HTML"
+
 # ── Step 2: アニメーション録画 ───────────────────────────────────────────────
 echo ""
-echo "Step 1/3: Recording slide animation (${TOTAL}s) ..."
+echo "Step 2/4: Recording slide animation ..."
 echo "  ※ 実時間での録画のためしばらくかかります"
-node "$SCRIPT_DIR/record_animation.js" "$EP_DIR/slide.html" "$OUT" "$TOTAL"
+node "$SCRIPT_DIR/record_animation.js" \
+  "$RECORD_HTML" \
+  "$OUT" \
+  "$OUT/durations.json"
 
-# ── Step 3: ナレーション音声をタイミングに合わせてミックス ───────────────────
+# ── Step 3: 音声ミックス（durations.json タイミング準拠）─────────────────────
 echo ""
-echo "Step 2/3: Mixing narration audio ..."
+echo "Step 3/4: Mixing narration audio ..."
 bash "$SCRIPT_DIR/mix_audio.sh" "$OUT"
 
 # ── Step 4: 動画 + 音声を結合 ────────────────────────────────────────────────
 echo ""
-echo "Step 3/3: Combining video and audio ..."
+echo "Step 4/4: Combining video and audio ..."
 
 WEBM="$OUT/slides_animation.webm"
 AUDIO="$OUT/narration_mixed.wav"
@@ -75,8 +80,3 @@ echo ""
 echo "Animation video : $OUTPUT"
 echo "Duration        : $DUR"
 echo "Size            : $SIZE"
-echo ""
-echo "使い方:"
-echo "  1. ep01_animation.mp4 を再生してアニメーションとナレーションを確認"
-echo "  2. 各スライドの尺を参考に自分の声でナレーションを収録"
-echo "  3. 動画編集ソフトで音声トラックを差し替えて完成"

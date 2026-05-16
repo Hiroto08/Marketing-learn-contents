@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 """
 Generate narration audio for ep01 slides.
-Priority: VOICEVOX (localhost:50021) → Google TTS
+Priority: VOICEVOX (localhost:50021) → Google TTS → open_jtalk
 
 VOICEVOX speakers (style_id):
   1 = ずんだもん（ノーマル）
   2 = 四国めたん（ノーマル）
-  3 = ずんだもん（あまあま）
- 13 = 青山龍星（ノーマル）— 落ち着いた男性声・教育コンテンツ向け
+ 13 = 青山龍星（ノーマル）← デフォルト・落ち着いた男性声
 
 Usage:
   python3 gen_audio.py <slide.html> <out_dir> [speaker_id]
@@ -56,6 +55,71 @@ def get_audio_duration(path: str) -> float:
 
 
 # ──────────────────────────────────────────────────────────────────────────────
+# TTS テキスト前処理（読み仮名・イントネーション修正）
+# ──────────────────────────────────────────────────────────────────────────────
+
+def clean_for_tts(text: str) -> str:
+    """
+    open_jtalk / VOICEVOX 向けに読み間違いが起きやすい表記を修正する。
+
+    修正方針:
+      - 英字略語 → カタカナに展開（MeCab が letter-by-letter で読むのを防ぐ）
+      - 数字の範囲表現「〜」→「から」
+      - ダッシュ「——」→ 自然な読点「、」
+      - 行区切り（\\n）→ 句点「。」に変換して連続した1文として送る
+      - 括弧記号・丸数字 → 読みやすい表現に展開
+    """
+    t = text
+
+    # ── 改行 → 句点変換（1行ずつ音声合成ではなく全体を1入力として送るため）──
+    t = t.replace("\n", "。 ")
+
+    # ── ダッシュ類 ──
+    t = t.replace("——", "、").replace("―", "、").replace("─", "、")
+
+    # ── 英字略語（アルファベット → カタカナ）──
+    ABBR = {
+        "AMA":  "エーエムエー",
+        "SNS":  "エスエヌエス",
+        "AI":   "エーアイ",
+        "PR":   "ピーアール",
+        "HBR":  "エイチビーアール",
+        "HBS":  "エイチビーエス",
+        "JTBD": "ジェイティービーディー",
+        "STP":  "エスティーピー",
+        "KPI":  "ケーピーアイ",
+    }
+    for abbr, kana in ABBR.items():
+        # 前後が単語境界（スペース、句読点、括弧など）の場合のみ置換
+        t = re.sub(r'(?<![A-Za-z])' + abbr + r'(?![A-Za-z])', kana, t)
+
+    # ── 数字の範囲「〜」→「から」──
+    t = re.sub(r'(\d)\s*〜\s*(\d)', r'\1から\2', t)
+    t = re.sub(r'(\d)\s*～\s*(\d)', r'\1から\2', t)
+
+    # ── 丸数字 → 読み出し ──
+    MARU = {"①": "いちつめ、", "②": "ふたつめ、", "③": "みっつめ、", "④": "よっつめ、",
+            "⑤": "いつつめ、", "⑥": "むっつめ、"}
+    for k, v in MARU.items():
+        t = t.replace(k, v)
+
+    # ── 引用括弧 → 読み上げ時は除去（前後に自然なポーズが入るよう句点付与）──
+    t = t.replace("「", "").replace("」", "")
+    t = t.replace("『", "").replace("』", "")
+
+    # ── 年号・数字の自然な読み方補助 ──
+    # 「1960年代」等は MeCab が処理するが念のため明示的な読みを入れない
+    # （誤変換を避けるため過剰な変換は行わない）
+
+    # ── その他記号クリーニング ──
+    t = re.sub(r'[（）\(\)]', '', t)   # 括弧除去
+    t = re.sub(r'\s{2,}', ' ', t)      # 連続スペース圧縮
+    t = t.strip()
+
+    return t
+
+
+# ──────────────────────────────────────────────────────────────────────────────
 # VOICEVOX
 # ──────────────────────────────────────────────────────────────────────────────
 
@@ -80,9 +144,10 @@ def try_voicevox(texts: list[str], out_dir: str, speaker: int) -> bool:
         slide_no = i + 1
         print(f"  [VOICEVOX] Slide {slide_no:02d}/{len(texts)} ...", end="", flush=True)
         try:
+            clean = clean_for_tts(text)
             r = requests.post(
                 f"{VOICEVOX_URL}/audio_query",
-                params={"text": text, "speaker": speaker},
+                params={"text": clean, "speaker": speaker},
                 timeout=60,
             )
             r.raise_for_status()
@@ -133,10 +198,7 @@ def try_gtts(texts: list[str], out_dir: str) -> bool:
         slide_no = i + 1
         print(f"  [gtts] Slide {slide_no:02d}/{len(texts)} ...", end="", flush=True)
 
-        clean = (text
-                 .replace("——", "。")
-                 .replace("「", "").replace("」", "")
-                 .replace("『", "").replace("』", ""))
+        clean = clean_for_tts(text)
         mp3_path = os.path.join(out_dir, f"audio_{i:02d}.mp3")
         try:
             tts = gTTS(text=clean, lang="ja", slow=False)
@@ -176,12 +238,7 @@ def try_openjtalk(texts: list[str], out_dir: str) -> bool:
         slide_no = i + 1
         print(f"  [open_jtalk] Slide {slide_no:02d}/{len(texts)} ...", end="", flush=True)
 
-        # 改行を句点+スペースに変換し全文を1つの入力として送る
-        clean = (text
-                 .replace("\n", "。 ")
-                 .replace("——", "。")
-                 .replace("①", "一つ目、").replace("②", "二つ目、")
-                 .replace("③", "三つ目、").replace("④", "四つ目、"))
+        clean = clean_for_tts(text)
 
         wav_path = os.path.join(out_dir, f"audio_{i:02d}.wav")
 
