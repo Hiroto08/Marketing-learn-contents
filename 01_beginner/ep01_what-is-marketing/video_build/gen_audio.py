@@ -111,6 +111,11 @@ def clean_for_tts(text: str) -> str:
     # 「1960年代」等は MeCab が処理するが念のため明示的な読みを入れない
     # （誤変換を避けるため過剰な変換は行わない）
 
+    # ── MeCab プロソディ異常回避 ──
+    # 「〜のかと考える/思う」など間接疑問句の後に読点を補うことで
+    # open_jtalk が異常に長い合成をするのを防ぐ
+    t = re.sub(r'(のか|だろうか|ないか)と(考え|思|感じ)', r'\1、と\2', t)
+
     # ── その他記号クリーニング ──
     t = re.sub(r'[（）\(\)]', '', t)   # 括弧除去
     t = re.sub(r'\s{2,}', ' ', t)      # 連続スペース圧縮
@@ -223,47 +228,159 @@ def try_gtts(texts: list[str], out_dir: str) -> bool:
 
 JTALK_VOICE = "/usr/share/hts-voice/nitech-jp-atr503-m001/nitech_jp_atr503_m001.htsvoice"
 JTALK_DIC = "/var/lib/mecab/dic/open-jtalk/naist-jdic"
+SENT_GAP_SEC  = 0.28   # 。区切りの文間ギャップ（秒）
+PARA_GAP_SEC  = 0.45   # \n 区切りの段落間ギャップ（秒）
+
+
+def _jtalk_synthesize(text: str, out_path: str) -> bool:
+    """open_jtalk で1文を合成して out_path に書き出す。"""
+    result = subprocess.run(
+        ["open_jtalk",
+         "-m", JTALK_VOICE,
+         "-x", JTALK_DIC,
+         "-ow", out_path,
+         "-s", "48000",
+         "-p", "200",    # フレーム周期
+         "-r", "1.0",    # 発話速度（標準）
+         "-a", "0.55",
+         "-b", "0.0"],
+        input=text,
+        text=True,
+        capture_output=True,
+    )
+    return result.returncode == 0
+
+
+def _make_silence(path: str, duration: float) -> None:
+    """指定秒の無音 WAV を生成する。"""
+    subprocess.run(
+        ["ffmpeg", "-y", "-f", "lavfi",
+         "-i", "anullsrc=channel_layout=mono:sample_rate=48000",
+         "-t", str(duration), path],
+        capture_output=True,
+    )
+
+
+def _concat_wavs(parts_and_gaps: list, out_path: str) -> None:
+    """(wavpath | gap_sec) のリストを順に結合して out_path に書き出す。
+    parts_and_gaps は [str, float, str, float, str, ...] の交互リスト。
+    """
+    import tempfile
+    tmp_dir = tempfile.mkdtemp(prefix="_concat_")
+    inputs_seq = []
+    gap_cache: dict[float, str] = {}
+
+    for item in parts_and_gaps:
+        if isinstance(item, float):
+            key = round(item, 3)
+            if key not in gap_cache:
+                gp = os.path.join(tmp_dir, f"gap_{key}.wav")
+                _make_silence(gp, item)
+                gap_cache[key] = gp
+            inputs_seq.append(gap_cache[key])
+        else:
+            inputs_seq.append(item)
+
+    input_args = []
+    for f in inputs_seq:
+        input_args += ["-i", f]
+
+    n = len(inputs_seq)
+    filter_str = "".join(f"[{i}:a]" for i in range(n)) + f"concat=n={n}:v=0:a=1[out]"
+
+    subprocess.run(
+        ["ffmpeg", "-y"] + input_args + [
+            "-filter_complex", filter_str,
+            "-map", "[out]",
+            out_path,
+        ],
+        capture_output=True,
+    )
+    import shutil as _sh; _sh.rmtree(tmp_dir, ignore_errors=True)
+
+
+def _split_to_segments(text: str) -> list[tuple[str, float]]:
+    """テキストを (合成テキスト, 直後のギャップ秒) のリストに分割する。
+
+    分割ルール:
+      - \\n  → 段落区切り（PARA_GAP_SEC）
+      - 。！？ → 文末（SENT_GAP_SEC）
+      - それ以外は前の文に結合
+    最後の要素のギャップは 0.0（末尾は不要）。
+    """
+    # まず段落（\n）で分割
+    paragraphs = [p.strip() for p in text.split('\n') if p.strip()]
+    segments: list[tuple[str, float]] = []
+
+    for pi, para in enumerate(paragraphs):
+        # 段落内を 。！？ で分割
+        parts = re.split(r'(?<=[。！？])', para)
+        parts = [p.strip() for p in parts if p.strip()]
+
+        for si, part in enumerate(parts):
+            is_last_in_para = (si == len(parts) - 1)
+            is_last_para    = (pi == len(paragraphs) - 1)
+
+            if is_last_in_para and not is_last_para:
+                gap = PARA_GAP_SEC
+            elif is_last_in_para and is_last_para:
+                gap = 0.0
+            else:
+                gap = SENT_GAP_SEC
+
+            clean = clean_for_tts(part)
+            if clean:
+                segments.append((clean, gap))
+
+    return segments
 
 
 def try_openjtalk(texts: list[str], out_dir: str) -> bool:
-    """open_jtalk コマンドで日本語音声を生成する（オフライン・Nitech HTS 音声）。"""
+    """open_jtalk で 。\\n ごとに分割合成し制御されたギャップで結合する。"""
     if not os.path.exists(JTALK_VOICE):
         print("  open_jtalk voice not found — run: apt install hts-voice-nitech-jp-atr503-m001")
         return False
 
-    print("  Using open_jtalk (Nitech HTS voice, offline) ...")
+    print(f"  Using open_jtalk (per-sentence, sent={SENT_GAP_SEC}s para={PARA_GAP_SEC}s gap) ...")
+    import tempfile
+    tmp_dir = tempfile.mkdtemp(prefix="jtalk_")
     durations = {}
 
     for i, text in enumerate(texts):
         slide_no = i + 1
         print(f"  [open_jtalk] Slide {slide_no:02d}/{len(texts)} ...", end="", flush=True)
 
-        clean = clean_for_tts(text)
+        segments = _split_to_segments(text)
+        if not segments:
+            print(" SKIP (empty)")
+            continue
 
         wav_path = os.path.join(out_dir, f"audio_{i:02d}.wav")
 
-        result = subprocess.run(
-            ["open_jtalk",
-             "-m", JTALK_VOICE,
-             "-x", JTALK_DIC,
-             "-ow", wav_path,
-             "-s", "48000",
-             "-p", "200",    # フレーム周期
-             "-r", "0.85",   # 発話速度（1.0=標準、小さいほど遅い）
-             "-a", "0.55",
-             "-b", "0.0"],
-            input=clean,
-            text=True,
-            capture_output=True,
-        )
-
-        if result.returncode != 0:
-            print(f" ERROR: {result.stderr[:120]}")
-            return False
+        if len(segments) == 1:
+            ok = _jtalk_synthesize(segments[0][0], wav_path)
+            if not ok:
+                print(" ERROR: open_jtalk failed")
+                return False
+        else:
+            # 各セグメントを合成してギャップ付きで結合
+            parts_and_gaps: list = []
+            for j, (sent, gap) in enumerate(segments):
+                pf = os.path.join(tmp_dir, f"s{i:02d}_{j:02d}.wav")
+                if not _jtalk_synthesize(sent, pf):
+                    print(f" ERROR: open_jtalk failed on segment {j}")
+                    return False
+                parts_and_gaps.append(pf)
+                if gap > 0:
+                    parts_and_gaps.append(gap)
+            _concat_wavs(parts_and_gaps, wav_path)
 
         dur = get_audio_duration(wav_path)
         durations[i] = dur
-        print(f" {dur:.1f}s ✓")
+        print(f" {len(segments)}seg / {dur:.1f}s ✓")
+
+    import shutil
+    shutil.rmtree(tmp_dir, ignore_errors=True)
 
     with open(os.path.join(out_dir, "durations.json"), "w") as f:
         json.dump({"engine": "open_jtalk", "durations": durations}, f, indent=2)
