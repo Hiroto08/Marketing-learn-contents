@@ -233,12 +233,13 @@ PARA_GAP_SEC  = 0.45   # \n 区切りの段落間ギャップ（秒）
 
 
 def _jtalk_synthesize(text: str, out_path: str) -> bool:
-    """open_jtalk で1文を合成して out_path に書き出す。"""
+    """open_jtalk で1文を合成し、先頭・末尾の無音をトリムして out_path に書き出す。"""
+    raw_path = out_path + ".raw.wav"
     result = subprocess.run(
         ["open_jtalk",
          "-m", JTALK_VOICE,
          "-x", JTALK_DIC,
-         "-ow", out_path,
+         "-ow", raw_path,
          "-s", "48000",
          "-p", "200",    # フレーム周期
          "-r", "1.0",    # 発話速度（標準）
@@ -248,7 +249,23 @@ def _jtalk_synthesize(text: str, out_path: str) -> bool:
         text=True,
         capture_output=True,
     )
-    return result.returncode == 0
+    if result.returncode != 0:
+        return False
+
+    # 先頭・末尾の無音をトリム（areverse trick で両端を除去）
+    trim_filter = (
+        "silenceremove=start_periods=1:start_duration=0.02:start_threshold=-40dB,"
+        "areverse,"
+        "silenceremove=start_periods=1:start_duration=0.02:start_threshold=-40dB,"
+        "areverse"
+    )
+    r = subprocess.run(
+        ["ffmpeg", "-y", "-i", raw_path, "-af", trim_filter, out_path],
+        capture_output=True,
+    )
+    if os.path.exists(raw_path):
+        os.remove(raw_path)
+    return r.returncode == 0 and os.path.exists(out_path)
 
 
 def _make_silence(path: str, duration: float) -> None:
