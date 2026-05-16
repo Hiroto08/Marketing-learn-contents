@@ -107,13 +107,17 @@ def clean_for_tts(text: str) -> str:
     t = t.replace("「", "").replace("」", "")
     t = t.replace("『", "").replace("』", "")
 
-    # ── 年号・数字の自然な読み方補助 ──
-    # 「1960年代」等は MeCab が処理するが念のため明示的な読みを入れない
-    # （誤変換を避けるため過剰な変換は行わない）
+    # ── 4桁年号を2桁に省略 ──
+    # open_jtalk は 1973年 を全桁読もうとして極端に遅くなるため 73年 に短縮
+    t = re.sub(r'\b(19|20)(\d{2})(年(?:代)?)', r'\2\3', t)
+
+    # ── open_jtalk が遅くなる構文パターンを簡略化 ──
+    t = t.replace("の時代に入っています", "の時代です")
+    t = re.sub(r'のはこのためです', 'からです', t)
+    t = re.sub(r'いくら(.{2,20})ても(.{2,20})から', r'\1ても\2から', t)
 
     # ── MeCab プロソディ異常回避 ──
-    # 「〜のかと考える/思う」など間接疑問句の後に読点を補うことで
-    # open_jtalk が異常に長い合成をするのを防ぐ
+    # 間接疑問句の後に読点を補い、異常に長い合成を防ぐ
     t = re.sub(r'(のか|だろうか|ないか)と(考え|思|感じ)', r'\1、と\2', t)
 
     # ── その他記号クリーニング ──
@@ -232,8 +236,13 @@ SENT_GAP_SEC  = 0.28   # 。区切りの文間ギャップ（秒）
 PARA_GAP_SEC  = 0.45   # \n 区切りの段落間ギャップ（秒）
 
 
+_SHORT_TEXT_CHARS   = 10    # これ未満の字数はトリム不要（open_jtalk の間がちょうどよい）
+_SLOW_THRESHOLD_CPS = 5.5   # これ以下（字/秒）なら atempo で補正
+_ATEMPO_MAX         = 1.6   # 最大加速倍率
+
+
 def _jtalk_synthesize(text: str, out_path: str) -> bool:
-    """open_jtalk で1文を合成し、先頭・末尾の無音をトリムして out_path に書き出す。"""
+    """open_jtalk で1文を合成し、無音トリム＋速度異常補正をして out_path に書き出す。"""
     raw_path = out_path + ".raw.wav"
     result = subprocess.run(
         ["open_jtalk",
@@ -241,8 +250,8 @@ def _jtalk_synthesize(text: str, out_path: str) -> bool:
          "-x", JTALK_DIC,
          "-ow", raw_path,
          "-s", "48000",
-         "-p", "200",    # フレーム周期
-         "-r", "1.0",    # 発話速度（標準）
+         "-p", "200",
+         "-r", "1.0",
          "-a", "0.55",
          "-b", "0.0"],
         input=text,
@@ -252,20 +261,46 @@ def _jtalk_synthesize(text: str, out_path: str) -> bool:
     if result.returncode != 0:
         return False
 
-    # 先頭・末尾の無音をトリム（areverse trick で両端を除去）
+    n_chars = len(text)
+
+    # 短いフレーズ（挨拶・番号付けなど）は open_jtalk の間隔をそのまま使う
+    if n_chars < _SHORT_TEXT_CHARS:
+        os.rename(raw_path, out_path)
+        return True
+
+    # 先頭・末尾の無音をトリム（-50dB: 自然な立ち上がりを保持しつつ無音を除去）
     trim_filter = (
-        "silenceremove=start_periods=1:start_duration=0.02:start_threshold=-40dB,"
+        "silenceremove=start_periods=1:start_duration=0.02:start_threshold=-50dB,"
         "areverse,"
-        "silenceremove=start_periods=1:start_duration=0.02:start_threshold=-40dB,"
+        "silenceremove=start_periods=1:start_duration=0.02:start_threshold=-50dB,"
         "areverse"
     )
+    trimmed_path = out_path + ".trim.wav"
     r = subprocess.run(
-        ["ffmpeg", "-y", "-i", raw_path, "-af", trim_filter, out_path],
+        ["ffmpeg", "-y", "-i", raw_path, "-af", trim_filter, trimmed_path],
         capture_output=True,
     )
     if os.path.exists(raw_path):
         os.remove(raw_path)
-    return r.returncode == 0 and os.path.exists(out_path)
+    if r.returncode != 0 or not os.path.exists(trimmed_path):
+        return False
+
+    # 異常に遅いセグメントを atempo で補正
+    dur = get_audio_duration(trimmed_path)
+    cps = n_chars / dur if dur > 0 else 999
+    if cps < _SLOW_THRESHOLD_CPS:
+        factor = min(_ATEMPO_MAX, _SLOW_THRESHOLD_CPS / cps)
+        r2 = subprocess.run(
+            ["ffmpeg", "-y", "-i", trimmed_path,
+             "-af", f"atempo={factor:.4f}", out_path],
+            capture_output=True,
+        )
+        if os.path.exists(trimmed_path):
+            os.remove(trimmed_path)
+        return r2.returncode == 0 and os.path.exists(out_path)
+
+    os.rename(trimmed_path, out_path)
+    return True
 
 
 def _make_silence(path: str, duration: float) -> None:
