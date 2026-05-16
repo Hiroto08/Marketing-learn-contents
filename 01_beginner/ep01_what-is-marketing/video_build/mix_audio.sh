@@ -15,21 +15,24 @@ if [ ! -f "$DURATIONS_JSON" ]; then
 fi
 
 # スライド表示後に音声を開始するオフセット（ms）
-# スライドが完全に表示されてから読み上げが始まるよう調整
 AUDIO_OFFSET_MS=3000
 
+# スライドの読み上げ終了後、次のスライドへ移るまでの待機時間（秒）
+SLIDE_TAIL_SEC=2.0
+
 # durations.json からスライド数・開始時刻・合計時間を取得
-read -r NUM_SLIDES TOTAL_SECS STARTS_CSV <<< "$(python3 - "$DURATIONS_JSON" <<'PYEOF'
+read -r NUM_SLIDES TOTAL_SECS STARTS_CSV <<< "$(python3 - "$DURATIONS_JSON" "$SLIDE_TAIL_SEC" <<'PYEOF'
 import json, sys
 with open(sys.argv[1]) as f:
     d = json.load(f)
+tail = float(sys.argv[2])
 durs = d["durations"]
 n = len(durs)
 starts = []
 t = 0.0
 for i in range(n):
     starts.append(t)
-    t += durs[str(i)]
+    t += durs[str(i)] + tail
 total = int(t) + 3
 starts_csv = ",".join(f"{s:.3f}" for s in starts)
 print(n, total, starts_csv)

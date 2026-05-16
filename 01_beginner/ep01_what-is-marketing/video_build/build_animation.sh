@@ -64,7 +64,7 @@ OUTPUT="$OUT/ep01_animation.mp4"
 ffmpeg -y \
   -i "$WEBM" \
   -i "$AUDIO" \
-  -c:v libx264 -preset fast -crf 18 \
+  -c:v libx264 -preset slow -crf 15 \
   -c:a aac -b:a 192k \
   -shortest \
   "$OUTPUT" 2>/dev/null

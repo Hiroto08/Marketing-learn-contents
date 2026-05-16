@@ -27,6 +27,9 @@ if (!slideHtmlPath || !outDir) {
 
 fs.mkdirSync(outDir, { recursive: true });
 
+// 読み上げ終了後、次スライドへ遷移するまでの待機時間（mix_audio.sh の SLIDE_TAIL_SEC と同値）
+const SLIDE_TAIL_SEC = 2.0;
+
 // ── durations.json から各スライドの音声長を読み込む ──────────────────────────
 let audioDurations = null;
 if (fs.existsSync(durationsPath)) {
@@ -89,14 +92,14 @@ function formatTime(ms) {
 
   // ── SLIDES_META と STEPS のタイミングを音声長に合わせて再計算 ──────────────
   if (audioDurations) {
-    await page.evaluate((durs) => {
-      // 各スライドの新しい開始時刻を音声長から積算
+    await page.evaluate(({ durs, tailSec }) => {
+      // 各スライドの新しい開始時刻を音声長＋tail から積算
       const newStarts = [];
       let t = 0;
       for (let i = 0; i < SLIDES_META.length; i++) {
         newStarts.push(t);
         const origDur = SLIDES_META[i].end - SLIDES_META[i].start;
-        t += (durs[i] !== undefined ? durs[i] : origDur);
+        t += (durs[i] !== undefined ? durs[i] : origDur) + tailSec;
       }
 
       // STEPS の絶対時刻をシフト（スライド内の相対位置は保持）
@@ -107,18 +110,19 @@ function formatTime(ms) {
         step.t = newStarts[si] + relTime;                 // 新しい絶対時刻
       });
 
-      // SLIDES_META の start/end を更新
+      // SLIDES_META の start/end を更新（tail分だけ長く表示してから次スライドへ）
       SLIDES_META.forEach((meta, i) => {
         const origDur = meta.end - meta.start;
         const newDur = durs[i] !== undefined ? durs[i] : origDur;
         meta.start = newStarts[i];
-        meta.end   = newStarts[i] + newDur;
+        meta.end   = newStarts[i] + newDur + tailSec;
       });
 
       console.log('Timing synced:', SLIDES_META.map(m => `${m.start.toFixed(1)}-${m.end.toFixed(1)}`).join(' | '));
-    }, Object.fromEntries(
-      Object.entries(audioDurations).map(([k, v]) => [parseInt(k), v])
-    ));
+    }, {
+      durs: Object.fromEntries(Object.entries(audioDurations).map(([k, v]) => [parseInt(k), v])),
+      tailSec: SLIDE_TAIL_SEC,
+    });
     console.log('SLIDES_META timing synced to audio durations.');
   }
 

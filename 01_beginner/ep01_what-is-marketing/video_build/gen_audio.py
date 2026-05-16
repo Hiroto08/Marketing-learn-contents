@@ -245,8 +245,8 @@ _BULLET_PREFIXES = (
 
 
 _SHORT_TEXT_CHARS   = 10    # これ未満の字数はトリム不要（open_jtalk の間がちょうどよい）
-_SLOW_THRESHOLD_CPS = 4.0   # これ以下（字/秒）なら atempo で補正（明らかな異常のみ対象）
-_ATEMPO_MAX         = 1.4   # 最大加速倍率（控えめにして自然なテンポを保つ）
+_SLOW_THRESHOLD_CPS = 0.0   # atempo補正は無効（全セグメントを同一速度で統一）
+_ATEMPO_MAX         = 1.4   # 最大加速倍率（参照のみ、現在は使用しない）
 _SPEECH_RATE        = "0.85" # open_jtalk 発話速度（0.85=15%スロー、教育コンテンツ向け）
 
 
