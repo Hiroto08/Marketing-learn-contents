@@ -16,7 +16,7 @@ fi
 
 # スライド表示後に音声を開始するオフセット（ms）
 # スライドが完全に表示されてから読み上げが始まるよう調整
-AUDIO_OFFSET_MS=1000
+AUDIO_OFFSET_MS=3000
 
 # durations.json からスライド数・開始時刻・合計時間を取得
 read -r NUM_SLIDES TOTAL_SECS STARTS_CSV <<< "$(python3 - "$DURATIONS_JSON" <<'PYEOF'

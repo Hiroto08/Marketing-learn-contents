@@ -232,8 +232,16 @@ def try_gtts(texts: list[str], out_dir: str) -> bool:
 
 JTALK_VOICE = "/usr/share/hts-voice/nitech-jp-atr503-m001/nitech_jp_atr503_m001.htsvoice"
 JTALK_DIC = "/var/lib/mecab/dic/open-jtalk/naist-jdic"
-SENT_GAP_SEC  = 0.28   # 。区切りの文間ギャップ（秒）
-PARA_GAP_SEC  = 0.45   # \n 区切りの段落間ギャップ（秒）
+SENT_GAP_SEC   = 0.28   # 。区切りの文間ギャップ（秒）
+PARA_GAP_SEC   = 0.45   # \n 区切りの段落間ギャップ（秒）
+BULLET_GAP_SEC = 0.90   # 箇条書き項目の前に入れる長めのギャップ（秒）
+
+# 箇条書き項目の先頭パターン（clean_for_tts 適用後の形）
+_BULLET_PREFIXES = (
+    "いちつめ", "ふたつめ", "みっつめ", "よっつめ", "いつつめ", "むっつめ",
+    "一つ目", "二つ目", "三つ目", "四つ目", "五つ目", "六つ目",
+    "まず", "次に", "そして", "最後",
+)
 
 
 _SHORT_TEXT_CHARS   = 10    # これ未満の字数はトリム不要（open_jtalk の間がちょうどよい）
@@ -351,21 +359,24 @@ def _concat_wavs(parts_and_gaps: list, out_path: str) -> None:
     import shutil as _sh; _sh.rmtree(tmp_dir, ignore_errors=True)
 
 
+def _is_bullet(text: str) -> bool:
+    """箇条書き項目の先頭かどうかを判定する。"""
+    return any(text.startswith(p) for p in _BULLET_PREFIXES)
+
+
 def _split_to_segments(text: str) -> list[tuple[str, float]]:
     """テキストを (合成テキスト, 直後のギャップ秒) のリストに分割する。
 
     分割ルール:
       - \\n  → 段落区切り（PARA_GAP_SEC）
       - 。！？ → 文末（SENT_GAP_SEC）
-      - それ以外は前の文に結合
-    最後の要素のギャップは 0.0（末尾は不要）。
+      - 箇条書き項目の直前 → BULLET_GAP_SEC（長めの間）
+    最後の要素のギャップは 0.0。
     """
-    # まず段落（\n）で分割
     paragraphs = [p.strip() for p in text.split('\n') if p.strip()]
     segments: list[tuple[str, float]] = []
 
     for pi, para in enumerate(paragraphs):
-        # 段落内を 。！？ で分割
         parts = re.split(r'(?<=[。！？])', para)
         parts = [p.strip() for p in parts if p.strip()]
 
@@ -373,12 +384,20 @@ def _split_to_segments(text: str) -> list[tuple[str, float]]:
             is_last_in_para = (si == len(parts) - 1)
             is_last_para    = (pi == len(paragraphs) - 1)
 
-            if is_last_in_para and not is_last_para:
-                gap = PARA_GAP_SEC
-            elif is_last_in_para and is_last_para:
+            # 次のセグメントが箇条書き項目なら長めのギャップを設定
+            next_part = parts[si + 1] if si + 1 < len(parts) else None
+            next_para_first = paragraphs[pi + 1].split('。')[0] if pi + 1 < len(paragraphs) else None
+
+            if is_last_in_para and is_last_para:
                 gap = 0.0
+            elif is_last_in_para:
+                # 段落をまたぐ場合：次の段落の先頭が箇条書きなら長い間
+                next_first_clean = clean_for_tts(next_para_first or "")
+                gap = BULLET_GAP_SEC if _is_bullet(next_first_clean) else PARA_GAP_SEC
             else:
-                gap = SENT_GAP_SEC
+                # 同段落内：次の文が箇条書きなら長い間
+                next_clean = clean_for_tts(next_part or "")
+                gap = BULLET_GAP_SEC if _is_bullet(next_clean) else SENT_GAP_SEC
 
             clean = clean_for_tts(part)
             if clean:
