@@ -711,7 +711,7 @@ body {
 
 /* ── Positioning map ─────────────────────────────── */
 .pos-svg{display:block;max-width:500px;width:100%;margin:.1em auto;max-height:clamp(145px,19vh,190px);}
-.venn-svg{width:clamp(200px,50vw,480px);height:auto;display:block;margin:.4em auto;max-height:clamp(140px,18vh,185px);}
+.venn-svg{width:100%;height:auto;display:block;}
 
 /* ── Flow chart ──────────────────────────────────── */
 .flow-wrap{display:flex;flex-direction:column;gap:.35em;width:100%;}
@@ -803,12 +803,18 @@ body {
   <!-- S3: 3C Overview 90-120s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
-    <div class="pad" style="justify-content:center;">
-      <div id="s3-hd" class="sh se">3C 分析とは</div>
-      <div id="s3-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
-        <i class="fa-solid fa-user-tie" style="color:var(--accent);"></i>大前研一『ストラテジック・マインド』1982年 提唱
+    <div class="pad" style="flex-direction:row;align-items:center;gap:2.5em;">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:.7em;">
+        <div id="s3-hd" class="sh se">3C 分析とは</div>
+        <div id="s3-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
+          <i class="fa-solid fa-user-tie" style="color:var(--accent);"></i>大前研一『ストラテジック・マインド』1982年 提唱
+        </div>
+        <div id="s3-desc" class="se" style="display:flex;align-items:center;gap:.5em;margin-top:.6em;">
+          <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
+          <span class="t-md">3つの視点を揃えることで、<strong style="color:#fff;">戦略が成立する条件</strong>を見極める</span>
+        </div>
       </div>
-      <div id="s3-venn" class="se">
+      <div id="s3-venn" class="se" style="flex:1.4;display:flex;align-items:center;justify-content:center;">
         <svg class="venn-svg" viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
           <circle cx="230" cy="105" r="93" fill="rgba(124,111,255,0.13)" stroke="rgba(124,111,255,0.55)" stroke-width="2"/>
           <circle cx="296" cy="195" r="93" fill="rgba(96,165,250,0.11)"  stroke="rgba(96,165,250,0.5)"   stroke-width="2"/>
@@ -822,10 +828,6 @@ body {
           <text x="230" y="167" text-anchor="middle" fill="#fff"  font-size="14" font-weight="700" font-family="sans-serif">KSF</text>
           <text x="230" y="183" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="11" font-family="sans-serif">戦略の勝ち筋</text>
         </svg>
-      </div>
-      <div id="s3-desc" class="se" style="display:flex;align-items:center;gap:.5em;">
-        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
-        <span class="t-md">3つの視点を揃えることで、<strong style="color:#fff;">戦略が成立する条件</strong>を見極める</span>
       </div>
     </div>
   </section>
