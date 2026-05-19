@@ -687,13 +687,13 @@ body {
 </style>
 <style id="ep-css">
 /* ── Dart board ──────────────────────────────────── */
-.dart-wrap{display:flex;align-items:center;justify-content:center;gap:clamp(1em,3vw,3em);margin:.8em 0;}
+.dart-wrap{display:flex;align-items:center;justify-content:center;gap:clamp(2em,5vw,5em);margin:1em 0;}
 .dart-half{text-align:center;}
-.dart-label{font-size:clamp(11px,1.6vw,19px);font-weight:700;margin-bottom:.4em;}
+.dart-label{font-size:clamp(13px,1.8vw,22px);font-weight:700;margin-bottom:.5em;}
 .dart-label.bad{color:var(--red);}
 .dart-label.good{color:var(--green);}
-.dart-svg{width:clamp(100px,15vw,175px);height:clamp(100px,15vw,175px);}
-.dart-vs{font-size:clamp(16px,2.2vw,30px);font-weight:900;color:var(--muted2);}
+.dart-svg{width:clamp(160px,22vw,260px);height:clamp(160px,22vw,260px);}
+.dart-vs{font-size:clamp(18px,2.5vw,34px);font-weight:900;color:var(--muted2);}
 
 /* ── 3C Venn ─────────────────────────────────────── */
 .venn-svg{width:clamp(200px,55vw,500px);height:auto;display:block;margin:.5em auto;}
@@ -710,7 +710,7 @@ body {
 .ksf-center .kc-sub{font-size:.72em;color:var(--accent);margin-top:.3em;}
 
 /* ── Positioning map ─────────────────────────────── */
-.pos-svg{display:block;max-width:500px;width:100%;margin:.1em auto;max-height:clamp(145px,19vh,190px);}
+.pos-svg{display:block;width:100%;height:auto;}
 .venn-svg{width:100%;height:auto;display:block;}
 
 /* ── Flow chart ──────────────────────────────────── */
@@ -956,21 +956,24 @@ body {
   <!-- S9: Targeting + Positioning 350-420s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
-    <div class="pad" style="justify-content:center;gap:.3em;">
-      <div id="s9-t-hd" class="se" style="font-size:clamp(13px,1.9vw,24px);font-weight:800;color:rgba(96,165,250,1);">T：Targeting（ターゲット選定）</div>
-      <div id="s9-t-body" class="se">
-        <div class="card" style="padding:.4em .9em;">
-          <div class="t-sm c-muted" style="display:flex;flex-wrap:wrap;gap:.2em 1.5em;">
-            <span>① 規模と成長性</span><span>② 収益性</span><span>③ 競合状況</span><span>④ 自社との適合性</span>
-          </div>
-          <div class="t-sm" style="display:flex;align-items:center;gap:.4em;margin-top:.3em;">
-            <i class="fa-solid fa-arrow-right" style="color:var(--green);"></i>
-            中小・スタートアップは <strong style="color:var(--green);">「集中型」</strong>（1セグメントに絞り込む）が有効
+    <div class="pad" style="flex-direction:row;align-items:center;gap:2em;">
+      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:.6em;">
+        <div id="s9-t-hd" class="se" style="font-size:clamp(14px,2vw,26px);font-weight:800;color:rgba(96,165,250,1);">T：Targeting（ターゲット選定）</div>
+        <div id="s9-t-body" class="se">
+          <div class="card" style="padding:.5em 1em;">
+            <div class="t-sm c-muted" style="display:flex;flex-wrap:wrap;gap:.2em 1.5em;">
+              <span>① 規模と成長性</span><span>② 収益性</span><span>③ 競合状況</span><span>④ 自社との適合性</span>
+            </div>
+            <div class="t-sm" style="display:flex;align-items:center;gap:.4em;margin-top:.4em;">
+              <i class="fa-solid fa-arrow-right" style="color:var(--green);"></i>
+              中小・スタートアップは <strong style="color:var(--green);">「集中型」</strong>（1セグメントに絞り込む）が有効
+            </div>
           </div>
         </div>
+        <div id="s9-p-hd" class="se" style="font-size:clamp(14px,2vw,26px);font-weight:800;color:rgba(74,222,128,1);margin-top:.4em;">P：Positioning（ポジショニング）</div>
+        <div class="t-sm c-muted se" style="padding-left:.2em;">競合との差別化ポイントを軸に立ち位置を可視化する</div>
       </div>
-      <div id="s9-p-hd" class="se" style="font-size:clamp(13px,1.9vw,24px);font-weight:800;color:rgba(74,222,128,1);">P：Positioning（ポジショニング）</div>
-      <div id="s9-map" class="se">
+      <div id="s9-map" class="se" style="flex:1.4;display:flex;align-items:center;justify-content:center;">
         <svg class="pos-svg" viewBox="0 0 400 248" xmlns="http://www.w3.org/2000/svg">
           <line x1="200" y1="14"  x2="200" y2="224" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
           <line x1="16"  y1="119" x2="384" y2="119" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
