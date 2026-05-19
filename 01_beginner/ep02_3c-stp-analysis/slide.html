@@ -710,8 +710,8 @@ body {
 .ksf-center .kc-sub{font-size:.72em;color:var(--accent);margin-top:.3em;}
 
 /* ── Positioning map ─────────────────────────────── */
-.pos-svg{display:block;width:100%;height:auto;}
-.venn-svg{width:100%;height:auto;display:block;}
+.pos-svg{display:block;width:clamp(280px,55vw,540px);height:auto;margin:.2em auto;}
+.venn-svg{width:clamp(260px,55vw,520px);height:auto;display:block;margin:.3em auto;}
 
 /* ── Flow chart ──────────────────────────────────── */
 .flow-wrap{display:flex;flex-direction:column;gap:.35em;width:100%;}
@@ -728,6 +728,10 @@ body {
 .seg-tbl th{background:rgba(124,111,255,0.18);color:var(--accent);text-align:left;font-weight:700;}
 .seg-tbl tr:nth-child(even) td{background:rgba(255,255,255,0.025);}
 .seg-hl th{background:rgba(250,204,21,0.18)!important;color:var(--yellow)!important;}
+/* ── Last slide (S13) ────────────────────────────── */
+#s13{background:radial-gradient(ellipse 80% 65% at 40% 50%, #0c1f10 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
+#s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px var(--glow-grn),0 8px 32px rgba(0,0,0,0.5);}
+#s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--acc2);display:flex;align-items:center;justify-content:center;gap:.55em;}
 </style>
 </head>
 <body>
@@ -803,18 +807,12 @@ body {
   <!-- S3: 3C Overview 90-120s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
-    <div class="pad" style="flex-direction:row;align-items:center;gap:2.5em;">
-      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:.7em;">
-        <div id="s3-hd" class="sh se">3C 分析とは</div>
-        <div id="s3-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
-          <i class="fa-solid fa-user-tie" style="color:var(--accent);"></i>大前研一『ストラテジック・マインド』1982年 提唱
-        </div>
-        <div id="s3-desc" class="se" style="display:flex;align-items:center;gap:.5em;margin-top:.6em;">
-          <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
-          <span class="t-md">3つの視点を揃えることで、<strong style="color:#fff;">戦略が成立する条件</strong>を見極める</span>
-        </div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s3-hd" class="sh se">3C 分析とは</div>
+      <div id="s3-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
+        <i class="fa-solid fa-user-tie" style="color:var(--accent);"></i>大前研一『ストラテジック・マインド』1982年 提唱
       </div>
-      <div id="s3-venn" class="se" style="flex:1.4;display:flex;align-items:center;justify-content:center;">
+      <div id="s3-venn" class="se" style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;">
         <svg class="venn-svg" viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
           <circle cx="230" cy="105" r="93" fill="rgba(124,111,255,0.13)" stroke="rgba(124,111,255,0.55)" stroke-width="2"/>
           <circle cx="296" cy="195" r="93" fill="rgba(96,165,250,0.11)"  stroke="rgba(96,165,250,0.5)"   stroke-width="2"/>
@@ -828,6 +826,10 @@ body {
           <text x="230" y="167" text-anchor="middle" fill="#fff"  font-size="14" font-weight="700" font-family="sans-serif">KSF</text>
           <text x="230" y="183" text-anchor="middle" fill="rgba(255,255,255,0.65)" font-size="11" font-family="sans-serif">戦略の勝ち筋</text>
         </svg>
+      </div>
+      <div id="s3-desc" class="se" style="display:flex;align-items:center;gap:.5em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
+        <span class="t-md">3つの視点を揃えることで、<strong style="color:#fff;">戦略が成立する条件</strong>を見極める</span>
       </div>
     </div>
   </section>
@@ -956,24 +958,21 @@ body {
   <!-- S9: Targeting + Positioning 350-420s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
-    <div class="pad" style="flex-direction:row;align-items:center;gap:2em;">
-      <div style="flex:1;display:flex;flex-direction:column;justify-content:center;gap:.6em;">
-        <div id="s9-t-hd" class="se" style="font-size:clamp(14px,2vw,26px);font-weight:800;color:rgba(96,165,250,1);">T：Targeting（ターゲット選定）</div>
-        <div id="s9-t-body" class="se">
-          <div class="card" style="padding:.5em 1em;">
-            <div class="t-sm c-muted" style="display:flex;flex-wrap:wrap;gap:.2em 1.5em;">
-              <span>① 規模と成長性</span><span>② 収益性</span><span>③ 競合状況</span><span>④ 自社との適合性</span>
-            </div>
-            <div class="t-sm" style="display:flex;align-items:center;gap:.4em;margin-top:.4em;">
-              <i class="fa-solid fa-arrow-right" style="color:var(--green);"></i>
-              中小・スタートアップは <strong style="color:var(--green);">「集中型」</strong>（1セグメントに絞り込む）が有効
-            </div>
+    <div class="pad" style="justify-content:center;gap:.4em;">
+      <div id="s9-t-hd" class="se" style="font-size:clamp(14px,2vw,26px);font-weight:800;color:rgba(96,165,250,1);">T：Targeting（ターゲット選定）</div>
+      <div id="s9-t-body" class="se">
+        <div class="card" style="padding:.5em 1em;">
+          <div class="t-sm c-muted" style="display:flex;flex-wrap:wrap;gap:.2em 1.5em;">
+            <span>① 規模と成長性</span><span>② 収益性</span><span>③ 競合状況</span><span>④ 自社との適合性</span>
+          </div>
+          <div class="t-sm" style="display:flex;align-items:center;gap:.4em;margin-top:.4em;">
+            <i class="fa-solid fa-arrow-right" style="color:var(--green);"></i>
+            中小・スタートアップは <strong style="color:var(--green);">「集中型」</strong>（1セグメントに絞り込む）が有効
           </div>
         </div>
-        <div id="s9-p-hd" class="se" style="font-size:clamp(14px,2vw,26px);font-weight:800;color:rgba(74,222,128,1);margin-top:.4em;">P：Positioning（ポジショニング）</div>
-        <div class="t-sm c-muted se" style="padding-left:.2em;">競合との差別化ポイントを軸に立ち位置を可視化する</div>
       </div>
-      <div id="s9-map" class="se" style="flex:1.4;display:flex;align-items:center;justify-content:center;">
+      <div id="s9-p-hd" class="se" style="font-size:clamp(14px,2vw,26px);font-weight:800;color:rgba(74,222,128,1);">P：Positioning（ポジショニング）</div>
+      <div id="s9-map" class="se" style="flex:1;min-height:0;display:flex;align-items:center;justify-content:center;">
         <svg class="pos-svg" viewBox="0 0 400 248" xmlns="http://www.w3.org/2000/svg">
           <line x1="200" y1="14"  x2="200" y2="224" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
           <line x1="16"  y1="119" x2="384" y2="119" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
