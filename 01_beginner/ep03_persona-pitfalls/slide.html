@@ -689,8 +689,25 @@ body {
 /* ── NG Persona card ─────────────────────────────── */
 .persona-card{
   background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
-  border-radius:10px;padding:.7em 1em;max-width:420px;margin:.4em auto;
+  border-radius:10px;padding:.7em 1em;max-width:520px;margin:.4em auto;
+  display:flex;gap:1em;align-items:flex-start;
 }
+.pc-img-wrap{flex-shrink:0;text-align:center;}
+.pc-avatar{
+  width:clamp(72px,9vw,110px);height:clamp(72px,9vw,110px);
+  border-radius:50%;object-fit:cover;display:block;
+  border:2px solid rgba(124,111,255,0.5);
+  background:rgba(124,111,255,0.15);
+}
+.pc-avatar-ph{
+  width:clamp(72px,9vw,110px);height:clamp(72px,9vw,110px);
+  border-radius:50%;border:2px solid rgba(124,111,255,0.4);
+  background:rgba(124,111,255,0.12);
+  display:none;align-items:center;justify-content:center;
+  font-size:clamp(28px,4vw,54px);color:rgba(180,170,255,0.6);
+}
+.pc-name-tag{font-size:clamp(9px,1.1vw,13px);color:rgba(180,170,255,0.9);font-weight:700;margin-top:.35em;}
+.pc-rows{flex:1;}
 .persona-card .pc-row{
   display:flex;gap:.5em;align-items:baseline;
   font-size:clamp(11px,1.4vw,17px);padding:.12em 0;
@@ -800,12 +817,20 @@ body {
       <div id="s2-q" class="sh se">これ、どれだけ役に立ちますか？</div>
       <div id="s2-card" class="se">
         <div class="persona-card">
-          <div class="pc-row"><span class="pc-key">名前</span><span class="pc-val">田中美咲（仮）</span></div>
-          <div class="pc-row"><span class="pc-key">年齢</span><span class="pc-val">32歳</span></div>
-          <div class="pc-row"><span class="pc-key">職業</span><span class="pc-val">IT企業 マーケ担当</span></div>
-          <div class="pc-row"><span class="pc-key">収入</span><span class="pc-val">年収450万円</span></div>
-          <div class="pc-row"><span class="pc-key">趣味</span><span class="pc-val">ヨガ・カフェ巡り・旅行</span></div>
-          <div class="pc-row"><span class="pc-key">家族</span><span class="pc-val">独身・都内一人暮らし</span></div>
+          <div class="pc-img-wrap">
+            <img class="pc-avatar" src="./persona.png" alt="田中美咲"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="pc-avatar-ph"><i class="fa-solid fa-user"></i></div>
+            <div class="pc-name-tag">田中美咲（仮）</div>
+          </div>
+          <div class="pc-rows">
+            <div class="pc-row"><span class="pc-key">年齢</span><span class="pc-val">32歳</span></div>
+            <div class="pc-row"><span class="pc-key">職業</span><span class="pc-val">IT企業 マーケ担当</span></div>
+            <div class="pc-row"><span class="pc-key">収入</span><span class="pc-val">年収450万円</span></div>
+            <div class="pc-row"><span class="pc-key">趣味</span><span class="pc-val">ヨガ・カフェ巡り・旅行</span></div>
+            <div class="pc-row"><span class="pc-key">家族</span><span class="pc-val">独身・都内一人暮らし</span></div>
+            <div class="pc-row"><span class="pc-key">課題</span><span class="pc-val">施策の費用対効果を上司に説明できない</span></div>
+          </div>
         </div>
       </div>
       <div id="s2-ng" class="se">
@@ -858,9 +883,9 @@ body {
         <i class="fa-solid fa-triangle-exclamation"></i>&ensp;落とし穴 ① 「想像だけ」で作られたペルソナ
       </div>
       <div id="s4-fails" class="se">
-        <div class="ng-row se"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>実際の顧客インタビューをしていない</span></div>
-        <div class="ng-row se"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>社内の思い込みや「こんな人に来てほしい」という希望が混入</span></div>
-        <div class="ng-row se"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>趣味や家族構成など「商品と無関係な情報」だけが充実</span></div>
+        <div class="ng-row"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>実際の顧客インタビューをしていない</span></div>
+        <div class="ng-row"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>社内の思い込みや「こんな人に来てほしい」という希望が混入</span></div>
+        <div class="ng-row"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>趣味や家族構成など「商品と無関係な情報」だけが充実</span></div>
       </div>
       <div id="s4-result" class="se">
         <div class="card" style="border:1px solid rgba(248,100,100,0.3);background:rgba(248,100,100,0.07);padding:.6em 1em;text-align:center;">
