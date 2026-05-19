@@ -710,7 +710,8 @@ body {
 .ksf-center .kc-sub{font-size:.72em;color:var(--accent);margin-top:.3em;}
 
 /* ── Positioning map ─────────────────────────────── */
-.pos-svg{display:block;max-width:460px;width:100%;margin:.2em auto;}
+.pos-svg{display:block;max-width:500px;width:100%;margin:.1em auto;max-height:clamp(145px,19vh,190px);}
+.venn-svg{width:clamp(200px,50vw,480px);height:auto;display:block;margin:.4em auto;max-height:clamp(140px,18vh,185px);}
 
 /* ── Flow chart ──────────────────────────────────── */
 .flow-wrap{display:flex;flex-direction:column;gap:.35em;width:100%;}
@@ -953,41 +954,41 @@ body {
   <!-- S9: Targeting + Positioning 350-420s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
-    <div class="pad" style="justify-content:center;gap:.6em;">
-      <div id="s9-t-hd" class="se" style="font-size:clamp(14px,2.1vw,27px);font-weight:800;color:rgba(96,165,250,1);">T：Targeting（ターゲット選定）</div>
+    <div class="pad" style="justify-content:center;gap:.3em;">
+      <div id="s9-t-hd" class="se" style="font-size:clamp(13px,1.9vw,24px);font-weight:800;color:rgba(96,165,250,1);">T：Targeting（ターゲット選定）</div>
       <div id="s9-t-body" class="se">
-        <div class="card" style="padding:.6em 1em;">
-          <div class="t-sm c-muted" style="display:flex;flex-wrap:wrap;gap:.3em 2em;">
+        <div class="card" style="padding:.4em .9em;">
+          <div class="t-sm c-muted" style="display:flex;flex-wrap:wrap;gap:.2em 1.5em;">
             <span>① 規模と成長性</span><span>② 収益性</span><span>③ 競合状況</span><span>④ 自社との適合性</span>
           </div>
-          <div class="t-sm mt-s" style="display:flex;align-items:center;gap:.4em;">
+          <div class="t-sm" style="display:flex;align-items:center;gap:.4em;margin-top:.3em;">
             <i class="fa-solid fa-arrow-right" style="color:var(--green);"></i>
             中小・スタートアップは <strong style="color:var(--green);">「集中型」</strong>（1セグメントに絞り込む）が有効
           </div>
         </div>
       </div>
-      <div id="s9-p-hd" class="se" style="font-size:clamp(14px,2.1vw,27px);font-weight:800;color:rgba(74,222,128,1);margin-top:.3em;">P：Positioning（ポジショニング）</div>
+      <div id="s9-p-hd" class="se" style="font-size:clamp(13px,1.9vw,24px);font-weight:800;color:rgba(74,222,128,1);">P：Positioning（ポジショニング）</div>
       <div id="s9-map" class="se">
-        <svg class="pos-svg" viewBox="0 0 400 230" xmlns="http://www.w3.org/2000/svg">
-          <line x1="200" y1="12"  x2="200" y2="218" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
-          <line x1="16"  y1="115" x2="384" y2="115" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
-          <polygon points="200,8 195,18 205,18"    fill="rgba(255,255,255,0.25)"/>
-          <polygon points="200,222 195,212 205,212" fill="rgba(255,255,255,0.25)"/>
-          <polygon points="388,115 378,110 378,120" fill="rgba(255,255,255,0.25)"/>
-          <polygon points="12,115 22,110 22,120"    fill="rgba(255,255,255,0.25)"/>
-          <text x="200" y="7"   text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">高価格・高品質</text>
-          <text x="200" y="229" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">低価格・手軽さ</text>
-          <text x="10"  y="113" text-anchor="start"  fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">大衆向け</text>
-          <text x="392" y="113" text-anchor="end"    fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">こだわり向け</text>
+        <svg class="pos-svg" viewBox="0 0 400 248" xmlns="http://www.w3.org/2000/svg">
+          <line x1="200" y1="14"  x2="200" y2="224" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+          <line x1="16"  y1="119" x2="384" y2="119" stroke="rgba(255,255,255,0.18)" stroke-width="1.5"/>
+          <polygon points="200,10 195,20 205,20"    fill="rgba(255,255,255,0.25)"/>
+          <polygon points="200,228 195,218 205,218" fill="rgba(255,255,255,0.25)"/>
+          <polygon points="388,119 378,114 378,124" fill="rgba(255,255,255,0.25)"/>
+          <polygon points="12,119 22,114 22,124"    fill="rgba(255,255,255,0.25)"/>
+          <text x="200" y="9"   text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">高価格・高品質</text>
+          <text x="200" y="244" text-anchor="middle" fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">低価格・手軽さ</text>
+          <text x="10"  y="117" text-anchor="start"  fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">大衆向け</text>
+          <text x="392" y="117" text-anchor="end"    fill="rgba(255,255,255,0.45)" font-size="11" font-family="sans-serif">こだわり向け</text>
           <!-- brand dots -->
-          <circle cx="145" cy="52"  r="9" fill="rgba(124,111,255,0.9)"/>
-          <text x="145" y="39" text-anchor="middle" fill="rgba(180,170,255,1)" font-size="14" font-weight="700" font-family="sans-serif">スタバ</text>
-          <circle cx="320" cy="60"  r="8" fill="rgba(248,135,100,0.9)"/>
-          <text x="320" y="47" text-anchor="middle" fill="rgba(255,180,140,1)" font-size="12" font-family="sans-serif">高級カフェ</text>
-          <circle cx="80"  cy="170" r="9" fill="rgba(96,165,250,0.9)"/>
-          <text x="80"  y="192" text-anchor="middle" fill="rgba(140,200,255,1)" font-size="14" font-weight="700" font-family="sans-serif">コンビニ</text>
-          <circle cx="270" cy="160" r="8" fill="rgba(74,222,128,0.9)"/>
-          <text x="270" y="178" text-anchor="middle" fill="rgba(120,230,160,1)" font-size="13" font-family="sans-serif">ドトール</text>
+          <circle cx="145" cy="55"  r="9" fill="rgba(124,111,255,0.9)"/>
+          <text x="145" y="42" text-anchor="middle" fill="rgba(180,170,255,1)" font-size="14" font-weight="700" font-family="sans-serif">スタバ</text>
+          <circle cx="320" cy="62"  r="8" fill="rgba(248,135,100,0.9)"/>
+          <text x="320" y="49" text-anchor="middle" fill="rgba(255,180,140,1)" font-size="12" font-family="sans-serif">高級カフェ</text>
+          <circle cx="80"  cy="178" r="9" fill="rgba(96,165,250,0.9)"/>
+          <text x="80"  y="196" text-anchor="middle" fill="rgba(140,200,255,1)" font-size="14" font-weight="700" font-family="sans-serif">コンビニ</text>
+          <circle cx="270" cy="167" r="8" fill="rgba(74,222,128,0.9)"/>
+          <text x="270" y="183" text-anchor="middle" fill="rgba(120,230,160,1)" font-size="13" font-family="sans-serif">ドトール</text>
         </svg>
       </div>
     </div>
