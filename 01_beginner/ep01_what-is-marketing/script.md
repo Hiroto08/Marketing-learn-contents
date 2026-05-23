@@ -12,7 +12,7 @@
 ### 主な引用・参考文献
 - Philip Kotler & Kevin Keller『マーケティング・マネジメント』第15版（2016）
 - Peter F. Drucker『マネジメント』（1973）
-- American Marketing Association (AMA) 公式定義（2017年改訂）
+- American Marketing Association (AMA) 公式定義（2007年制定・2017年再承認）
 - Theodore Levitt "Marketing Myopia", *Harvard Business Review* (1960)
 
 ---
@@ -69,7 +69,7 @@
 ```
 【見出し】マーケティングとは？（公式定義）
 
-アメリカ・マーケティング協会（AMA）2017年改訂版：
+アメリカ・マーケティング協会（AMA）2007年制定・2017年再承認：
 
 "Marketing is the activity, set of institutions, and processes
 for creating, communicating, delivering, and exchanging
@@ -85,7 +85,7 @@ and society at large."
 
 **ナレーション：**
 「マーケティングの世界標準の定義を見てみましょう。
-アメリカ・マーケティング協会——AMAが定めた定義で、2017年に改訂された最新版です。
+アメリカ・マーケティング協会——AMAが2007年に制定し、2017年に再承認した公式定義です。
 英語の原文が難しく感じるかもしれませんが、要点はシンプルです。『顧客にとって価値があるものを作り、伝え、届け、交換する——その一連の活動すべて』これがマーケティングです。
 注目してほしいのは、『創る・伝える・届ける・交換する』という4つのプロセスです。これらすべてをまとめてマーケティングと呼ぶんです。
 つまり、広告は最後の『伝える』というステップのひとつに過ぎません。マーケティングは、広告よりもはるかに広い概念なんです。」
