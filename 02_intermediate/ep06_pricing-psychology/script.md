@@ -14,7 +14,7 @@
 - Dan Ariely 『Predictably Irrational: The Hidden Forces That Shape Our Decisions』（2008）——デコイ効果の実験（The Economist誌の価格プランの事例）
 - Daniel Kahneman & Amos Tversky "Prospect Theory: An Analysis of Decision under Risk", *Econometrica* (1979)——損失回避バイアス
 - Richard H. Thaler & Cass R. Sunstein 『Nudge: Improving Decisions About Health, Wealth, and Happiness』（2008）——価格フレーミング
-- Priya Raghubir & Joydeep Srivastava "Framing Effects of Price Bundling on Consumer Preferences", *Journal of Consumer Research* (2002)
+- Manjit S. Yadav & Kent B. Monroe "How buyers perceive savings in a bundle price: An examination of a bundle's transaction value", *Journal of Marketing Research*, vol.30, no.3 (1993) ——バンドル価格の知覚節約効果に関する研究
 
 ---
 
@@ -272,7 +272,7 @@ The Economist誌が提示した3つの購読プラン：A・Web版のみ59ドル
 **スライド内容：**
 ```
 【見出し】⑤ 価格バンドリング
-（Raghubir & Srivastava, Journal of Consumer Research, 2002）
+（Yadav & Monroe, Journal of Marketing Research, 1993）
 
 【定義】
 　複数の商品・サービスをセットにして

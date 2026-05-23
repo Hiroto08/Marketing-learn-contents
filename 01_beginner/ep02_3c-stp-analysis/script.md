@@ -10,10 +10,10 @@
 | 学習ゴール | 3C分析で市場を正しく捉え、STPで「誰に・何を・どう届けるか」を設計できる |
 
 ### 主な引用・参考文献
-- 大前研一『ストラテジック・マインド』（1982）——3C分析の提唱者
+- 大前研一『The Mind of the Strategist』（1982）／日本語版『ストラテジック・マインド』（1984）——3C分析の提唱者
 - Philip Kotler & Kevin Keller『マーケティング・マネジメント』第15版（2016）——STP分析
-- Jack Trout & Al Ries『ポジショニング戦略』（1981）——ポジショニングの古典
-- Harvard Business Review: "Finding the Right Job For Your Product" (2016)——セグメンテーション
+- Al Ries & Jack Trout『Positioning: The Battle for Your Mind』（1981）——ポジショニングの古典
+- Clayton M. Christensen et al. "Finding the Right Job For Your Product", *MIT Sloan Management Review*, vol.48, no.3 (2007)——セグメンテーション
 
 ---
 

@@ -10,10 +10,10 @@
 | 学習ゴール | カスタマージャーニーの各ステージで何をすべきかを理解し、自社の施策に当てはめられる |
 
 ### 主な引用・参考文献
-- McKinsey & Company, David C. Edelman "The consumer decision journey", *McKinsey Quarterly* (2009)
+- McKinsey & Company, David Court, Dave Elzinga, Susan Mulder & Ole Jørgen Vetvik "The consumer decision journey", *McKinsey Quarterly* (2009)
 - David C. Edelman & Marc Singer "Competing on Customer Journeys", *Harvard Business Review* (Nov–Dec 2015)
 - Philip Kotler, Hermawan Kartajaya, Iwan Setiawan『マーケティング4.0』（2016）——5Aフレームワーク（Aware→Appeal→Ask→Act→Advocate）
-- 電通 AISAS モデル（2004年商標登録）
+- 電通 AISAS モデル（2004年提唱・2005年商標登録）
 - AIDMA モデル：Roland Hall "Retail Advertising and Selling" (1924) が原典とされる
 
 ---
