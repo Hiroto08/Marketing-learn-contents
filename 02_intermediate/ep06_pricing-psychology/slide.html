@@ -1216,6 +1216,60 @@ const NARRATIONS = [
 const TOTAL_SECS = 600;
 
 
+/* ================================================================
+   DERIVED LOOKUPS
+================================================================ */
+const SLIDE_FIRST_STEP = Array(SLIDES_META.length).fill(-1);
+const SLIDE_STEP_COUNT = Array(SLIDES_META.length).fill(0);
+STEPS.forEach((s, i) => {
+  if (SLIDE_FIRST_STEP[s.si] === -1) SLIDE_FIRST_STEP[s.si] = i;
+  SLIDE_STEP_COUNT[s.si]++;
+});
+
+/* ================================================================
+   STATE
+================================================================ */
+let state = {
+  slide:    0,
+  cursor:   0,
+  elapsed:  0,
+  playing:  false,
+  lastRAF:  null,
+};
+
+/* ================================================================
+   BUILD STEP DOTS
+================================================================ */
+SLIDES_META.forEach((sm, si) => {
+  const container = document.getElementById(sm.dotContainerId);
+  if (!container) return;
+  const count = SLIDE_STEP_COUNT[si];
+  for (let i = 0; i < count; i++) {
+    const d = document.createElement('div');
+    d.className = 'step-dot';
+    d.dataset.si = si;
+    d.dataset.stepLocal = i;
+    container.appendChild(d);
+  }
+});
+
+function updateDots() {
+  const si = state.slide;
+  const first = SLIDE_FIRST_STEP[si];
+  const container = document.getElementById(SLIDES_META[si].dotContainerId);
+  if (!container) return;
+  const dots = container.querySelectorAll('.step-dot');
+  const revealed = state.cursor - first;
+  dots.forEach((dot, i) => {
+    dot.classList.remove('done','active');
+    if (i < revealed - 1) dot.classList.add('done');
+    else if (i === revealed - 1) dot.classList.add('active');
+  });
+}
+
+/* ================================================================
+   STEP ACTIVATION
+================================================================ */
 function activateStep(idx) {
   if (idx < 0 || idx >= STEPS.length) return;
   const step = STEPS[idx];
