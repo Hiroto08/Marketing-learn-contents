@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第12回 A/Bテストの正しいやり方 | AI時代のマーケティング・ラボ</title>
+<title>第12回 データで改善！A/Bテストの正しいやり方 | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -684,80 +684,487 @@ body {
   display:flex; align-items:center; gap:.4em;
 }
 #narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
+
+/* ================================================================
+   SVG UTILITY COMPONENTS — v2 design system
+================================================================ */
+
+/* ── GAUGE BAR ──────────────────────────────────────────────────
+   <div class="gauge-wrap se" id="...">
+     <div class="gauge-hd">LTV÷CPA</div>
+     <div class="gauge-track">
+       <div class="gauge-fill" style="--v:.75;--c:var(--green)"></div>
+       <span class="gauge-marker" style="left:33%">3×</span>
+     </div>
+     <div class="gauge-legs"><span>0</span><span>3×</span><span>10+</span></div>
+   </div>  */
+.gauge-wrap  { background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.75em 1.1em; }
+.gauge-hd    { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); font-weight:700; margin-bottom:.55em; }
+.gauge-track { height:clamp(10px,1.2vw,16px); background:var(--surf2); border-radius:9999px; position:relative; }
+.gauge-fill  { height:100%; border-radius:9999px;
+  background:linear-gradient(90deg, var(--c-from,#4ade80), var(--c,var(--accent)));
+  width:0; box-shadow:0 0 10px var(--c,var(--accent));
+  animation:gaugeFill 1.3s .35s cubic-bezier(.4,0,.2,1) forwards;
+  animation-play-state:paused; }
+.gauge-marker { position:absolute; top:-200%; height:300%; transform:translateX(-50%);
+  border-left:1.5px dashed var(--border); padding-left:.35em;
+  font-size:clamp(8px,.9vw,12px); color:var(--muted); white-space:nowrap;
+  display:flex; align-items:flex-start; }
+.gauge-legs  { display:flex; justify-content:space-between;
+  font-size:clamp(8px,.85vw,12px); color:var(--muted); margin-top:.3em; }
+@keyframes gaugeFill { to { width:calc(var(--v,.5)*100%); } }
+.rv-fade .gauge-fill,.rv-up .gauge-fill,.rv-scale .gauge-fill,.rv-pop .gauge-fill { animation-play-state:running; }
+
+/* ── KPI BIG NUMBER ─────────────────────────────────────────────
+   <div class="kpi-big se" id="..." style="--c:var(--green)">
+     <div class="kpi-num">9.9×</div><div class="kpi-sub">LTV/CPA</div>
+   </div>  */
+.kpi-wrap { display:flex; align-items:center; justify-content:center; gap:1.5em; flex-wrap:wrap; }
+.kpi-big  { text-align:center; }
+.kpi-num  { font-size:clamp(36px,6vw,80px); font-weight:900; color:var(--c,var(--accent));
+  line-height:1; font-family:'Inter',sans-serif;
+  filter:drop-shadow(0 0 18px var(--c,var(--accent))); }
+.kpi-sub  { font-size:clamp(9px,1.15vw,15px); color:var(--muted2); margin-top:.3em; display:block; }
+.kpi-ctx  { font-size:clamp(11px,1.4vw,18px); color:var(--muted2);
+  border-left:1px solid var(--border); padding-left:1em; line-height:1.6; }
+
+/* ── HORIZONTAL BAR CHART ───────────────────────────────────────
+   <div class="bar-chart-h">
+     <div class="bh-row">
+       <span class="bh-lbl">A案</span>
+       <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--accent)"></div></div>
+       <span class="bh-val" style="color:var(--accent)">75%</span>
+     </div>
+   </div>  */
+.bar-chart-h { display:flex; flex-direction:column; gap:.55em; }
+.bh-row  { display:flex; align-items:center; gap:.65em; font-size:clamp(10px,1.3vw,17px); }
+.bh-lbl  { flex:0 0 clamp(60px,9vw,120px); text-align:right; color:var(--muted2); font-size:.9em; }
+.bh-track{ flex:1; height:clamp(8px,.9vw,14px); background:var(--surf2); border-radius:9999px; overflow:hidden; }
+.bh-fill { height:100%; border-radius:9999px; box-shadow:0 0 8px var(--c,var(--accent));
+  background:linear-gradient(90deg,var(--c-from,var(--c,var(--accent))),var(--c,var(--accent)));
+  width:0; animation:barFill 1s .2s ease-out forwards; animation-play-state:paused; }
+.bh-val  { flex:0 0 3.2em; text-align:left; font-weight:700; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; font-size:.9em; }
+@keyframes barFill { to { width:calc(var(--v,50)*1%); } }
+.rv-fade .bh-fill,.rv-up .bh-fill,.rv-scale .bh-fill { animation-play-state:running; }
+
+/* ── 2×2 MATRIX ─────────────────────────────────────────────────
+   <div class="matrix-2x2">
+     <div class="mx-cell mx-tl"><div class="mx-hd">...</div><div class="mx-body">...</div></div>
+     <div class="mx-cell mx-tr hi">...</div>
+     <div class="mx-cell mx-bl">...</div>
+     <div class="mx-cell mx-br hi-g">...</div>
+   </div>  */
+.matrix-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:2px;
+  border-radius:10px; overflow:hidden; background:var(--border); }
+.mx-cell    { background:var(--surf); padding:.65em .9em; transition:background .3s; }
+.mx-cell.hi   { background:rgba(124,111,255,.12); }
+.mx-cell.hi-g { background:rgba(74,222,128,.08); }
+.mx-cell.hi-r { background:rgba(248,113,113,.08); }
+.mx-cell.hi-y { background:rgba(251,191,36,.08); }
+.mx-tl { border-radius:10px 0 0 0; } .mx-tr { border-radius:0 10px 0 0; }
+.mx-bl { border-radius:0 0 0 10px; } .mx-br { border-radius:0 0 10px 0; }
+.mx-hd   { font-weight:700; font-size:clamp(10px,1.35vw,18px); color:var(--accent); margin-bottom:.25em; }
+.mx-body { font-size:clamp(9px,1.2vw,15px); color:var(--muted2); line-height:1.5; }
+.mx-labels { display:flex; justify-content:space-between; align-items:center; margin-top:.35em; }
+.mx-lbl-x  { font-size:clamp(8px,.9vw,12px); color:var(--muted); letter-spacing:.05em; }
+
+/* ── STAT RING (SVG donut) ──────────────────────────────────────
+   Circumference of r=38 ≈ 238.76 → use 239
+   <div class="stat-ring" style="--v:75;--c:#4ade80">
+     <svg viewBox="0 0 100 100">
+       <circle class="sr-track" cx="50" cy="50" r="38"/>
+       <circle class="sr-fill"  cx="50" cy="50" r="38"/>
+     </svg>
+     <div class="sr-inner"><div class="sr-val">75%</div><div class="sr-lbl">継続率</div></div>
+   </div>  */
+.stat-rings  { display:flex; gap:1.5em; align-items:center; justify-content:center; flex-wrap:wrap; }
+.stat-ring   { position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:clamp(80px,10vw,130px); height:clamp(80px,10vw,130px); }
+.stat-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+.sr-track { fill:none; stroke:var(--surf2); stroke-width:7; }
+.sr-fill  { fill:none; stroke:var(--c,var(--accent)); stroke-width:7; stroke-linecap:round;
+  stroke-dasharray:0 239;
+  animation:ringFill 1.3s .35s ease-out forwards; animation-play-state:paused; }
+.sr-inner { position:relative; z-index:1; text-align:center; }
+.sr-val   { font-size:clamp(14px,1.8vw,22px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; line-height:1; }
+.sr-lbl   { font-size:clamp(7px,.85vw,11px); color:var(--muted); }
+.stat-ring-wrap { text-align:center; }
+.stat-ring-ttl  { font-size:clamp(9px,1.1vw,14px); color:var(--muted2); margin-top:.35em; font-weight:700; }
+@keyframes ringFill { to { stroke-dasharray:calc(var(--v,75)*2.39) 239; } }
+.rv-fade .sr-fill,.rv-up .sr-fill,.rv-scale .sr-fill,.rv-pop .sr-fill { animation-play-state:running; }
+
+/* ── NUMBER STEPS ───────────────────────────────────────────────
+   <div class="n-steps">
+     <div class="n-step se" id="...">
+       <div class="n-num">1</div>
+       <div class="n-body"><strong>見出し</strong><div class="t-sm">補足</div></div>
+     </div>
+   </div>  */
+.n-steps { display:flex; flex-direction:column; gap:.5em; }
+.n-step  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); }
+.n-num   { min-width:clamp(24px,2.8vw,36px); height:clamp(24px,2.8vw,36px); border-radius:50%;
+  background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:.82em; flex-shrink:0; margin-top:.1em;
+  box-shadow:0 0 14px var(--glow-acc); font-family:'Inter',sans-serif; }
+.n-num.g { background:var(--green); box-shadow:0 0 14px var(--glow-grn); color:#000; }
+.n-num.r { background:var(--red);   box-shadow:0 0 14px rgba(248,113,113,.3); }
+.n-num.b { background:var(--blue);  box-shadow:0 0 14px rgba(96,165,250,.3); }
+.n-body  { color:var(--muted2); line-height:1.5; }
+.n-body strong { color:var(--text); }
+
+/* ── HORIZONTAL FLOW ────────────────────────────────────────────
+   <div class="h-flow">
+     <div class="h-flow-node accent">Aware<span class="fn-sub">認知</span></div>
+     <svg class="h-arrow" viewBox="0 0 24 24" fill="none">
+       <path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"/>
+     </svg>
+     <div class="h-flow-node grn">Act<span class="fn-sub">行動</span></div>
+   </div>  */
+.h-flow { display:flex; align-items:center; gap:.35em; flex-wrap:wrap; justify-content:center; }
+.h-flow-node { background:var(--surf); border:1px solid var(--border); border-radius:9px;
+  padding:.45em .9em; font-size:clamp(10px,1.35vw,18px); font-weight:700;
+  text-align:center; flex-shrink:0; line-height:1.3; }
+.h-flow-node .fn-sub { font-size:.72em; font-weight:400; color:var(--muted2); display:block; margin-top:.05em; }
+.h-flow-node.accent { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.4); color:var(--accent); }
+.h-flow-node.acc2   { background:rgba(255,107,138,.12); border-color:rgba(255,107,138,.4); color:var(--acc2); }
+.h-flow-node.grn    { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.4);  color:var(--green); }
+.h-flow-node.blu    { background:rgba(96,165,250,.12);  border-color:rgba(96,165,250,.4);  color:var(--blue); }
+.h-flow-node.ylw    { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.4);  color:var(--yellow); }
+.h-arrow { width:clamp(14px,1.8vw,24px); color:var(--muted); flex-shrink:0; }
+
+/* ── QUOTE BLOCK ────────────────────────────────────────────────
+   <blockquote class="quote-blk se" id="...">
+     <p class="qb-text">「...」</p>
+     <cite class="qb-cite">Author, Source (Year)</cite>
+   </blockquote>  */
+.quote-blk { position:relative; background:var(--surf); border-radius:10px;
+  padding:1em 1.3em 1em 2.5em; border:1px solid var(--border);
+  border-left:4px solid var(--accent); overflow:hidden; }
+.quote-blk::before { content:'\201C'; font-size:clamp(50px,8vw,100px); font-weight:900;
+  color:rgba(124,111,255,.15); position:absolute; top:-.1em; left:.15em;
+  line-height:1; pointer-events:none; font-family:'Inter','Georgia',serif; }
+.qb-text { font-size:clamp(13px,1.8vw,24px); line-height:1.65; color:var(--text);
+  position:relative; z-index:1; }
+.qb-text em { color:var(--accent); font-style:normal; font-weight:700; }
+.qb-text .hl { color:var(--acc2); }
+.qb-cite { display:block; margin-top:.55em; font-size:clamp(9px,1.1vw,14px);
+  color:var(--muted); font-style:italic; position:relative; z-index:1; }
+
+/* ── COMPARISON TABLE ───────────────────────────────────────────
+   <div class="comp-tbl">
+     <div class="comp-row comp-head">
+       <span class="comp-label"></span><span class="comp-a">Before</span><span class="comp-b">After</span>
+     </div>
+     <div class="comp-row hi">
+       <span class="comp-label">CVR</span>
+       <span class="comp-a c-red">1.2%</span><span class="comp-b c-green">2.3%</span>
+     </div>
+   </div>  */
+.comp-tbl { display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
+.comp-row { display:flex; align-items:stretch; background:var(--surf); }
+.comp-row.hi   .comp-b { background:rgba(74,222,128,.08); color:var(--green); }
+.comp-row.lo   .comp-a { background:rgba(248,113,113,.08); color:var(--red); }
+.comp-label { flex:0 0 clamp(80px,12vw,160px); padding:.55em .9em;
+  font-size:clamp(10px,1.3vw,16px); color:var(--muted2);
+  border-right:1px solid var(--border); display:flex; align-items:center; }
+.comp-a,.comp-b { flex:1; padding:.55em .9em;
+  font-size:clamp(11px,1.5vw,20px); display:flex; align-items:center;
+  justify-content:center; font-weight:700; }
+.comp-a { border-right:1px solid var(--border); }
+.comp-row.comp-head { background:var(--surf2); }
+.comp-row.comp-head .comp-label,
+.comp-row.comp-head .comp-a,
+.comp-row.comp-head .comp-b { font-size:clamp(9px,1.1vw,14px); font-weight:700; color:var(--muted); }
+
+/* ── TAGS / CHIPS ───────────────────────────────────────────────
+   <span class="tag tag-a">変更コスト低</span>  */
+.tag   { display:inline-flex; align-items:center; gap:.3em; padding:.2em .7em;
+  border-radius:9999px; font-size:clamp(9px,1.1vw,14px); font-weight:700;
+  border:1px solid transparent; line-height:1.3; }
+.tag-a { background:rgba(124,111,255,.12); border-color:rgba(124,111,255,.35); color:var(--accent); }
+.tag-g { background:rgba(74,222,128,.1);  border-color:rgba(74,222,128,.35);  color:var(--green); }
+.tag-r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.35); color:var(--red); }
+.tag-b { background:rgba(96,165,250,.1);  border-color:rgba(96,165,250,.35);  color:var(--blue); }
+.tag-y { background:rgba(251,191,36,.1);  border-color:rgba(251,191,36,.35);  color:var(--yellow); }
+
+/* ── ICON ROW LIST ───────────────────────────────────────────────
+   <div class="icon-rows">
+     <div class="icon-row se" id="...">
+       <i class="fa-solid fa-arrow-trend-up c-green"></i>
+       <div><strong>タイトル</strong><div class="t-sm">説明</div></div>
+     </div>
+   </div>  */
+.icon-rows { display:flex; flex-direction:column; gap:.5em; }
+.icon-row  { display:flex; align-items:flex-start; gap:.8em; font-size:clamp(12px,1.7vw,22px); }
+.icon-row > i { font-size:1.05em; flex-shrink:0; margin-top:.1em; }
+.icon-row > div > strong { color:var(--text); }
+.icon-row > div > .t-sm { margin-top:.1em; }
+
+/* ── COLS3 / COLS4 ──────────────────────────────────────────────*/
+.cols3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; }
+.cols4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5%; }
+
+/* ── HIGHLIGHT BANNER ───────────────────────────────────────────
+   <div class="hl-banner" style="--c:var(--green)">
+     <i class="fa-solid fa-circle-check hb-icon"></i>
+     <div class="hb-text"><strong>見出し</strong><br>本文</div>
+   </div>  */
+.hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
+  background:var(--surf); border:1px solid var(--border);
+  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+.hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
+.hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
+.hb-text strong { color:var(--text); }
+
+/* ── VERDICT ROWS ───────────────────────────────────────────────*/
+.verdict-rows { display:flex; flex-direction:column; gap:.4em; }
+.verdict-row  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); padding:.3em 0; }
+.v-icon { width:clamp(18px,2vw,26px); flex-shrink:0; margin-top:.15em; text-align:center; }
+.verdict-row.ok .v-icon { color:var(--green); }
+.verdict-row.ng .v-icon { color:var(--red); }
+.v-body { color:var(--muted2); line-height:1.5; }
+.verdict-row.ok .v-body strong { color:var(--text); }
+.verdict-row.ng .v-body strong { color:var(--red); }
+
+/* ── SVG INLINE HELPERS ─────────────────────────────────────────*/
+.svg-il      { width:100%; height:auto; display:block; overflow:visible; }
+.svg-il text { font-family:'Inter','Noto Sans JP',sans-serif; }
+.svg-grid    { stroke:var(--border); stroke-width:.5; }
+.svg-axis    { stroke:var(--muted); stroke-width:1; fill:none; }
+.svg-curve   { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; }
+.svg-curve2  { fill:none; stroke:var(--acc2);   stroke-width:2.5; stroke-linecap:round; }
+.svg-area    { fill:rgba(124,111,255,.15); stroke:none; }
+.svg-area2   { fill:rgba(255,107,138,.12); stroke:none; }
+.svg-area-g  { fill:rgba(74,222,128,.12);  stroke:none; }
+.svg-lbl     { fill:var(--muted2); font-size:11px; }
+.svg-lbl-a   { fill:var(--accent); font-weight:bold; font-size:11px; }
+.svg-lbl-2   { fill:var(--acc2);   font-size:11px; }
+.svg-bar-a   { fill:rgba(124,111,255,.7); }
+.svg-bar-g   { fill:rgba(74,222,128,.7); }
+.svg-bar-r   { fill:rgba(248,113,113,.7); }
+.svg-marker  { stroke:var(--acc2); stroke-width:1.5; stroke-dasharray:4 3; fill:none; }
+
+/* ── FORMULA DISPLAY ────────────────────────────────────────────
+   <div class="formula se" id="...">
+     <span class="fm-var" style="--c:var(--accent)">LTV</span>
+     <span class="fm-op">÷</span>
+     <span class="fm-var" style="--c:var(--acc2)">CPA</span>
+     <span class="fm-op">&gt;</span>
+     <span class="fm-val" style="--c:var(--green)">3</span>
+   </div>  */
+.formula    { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.4em; }
+.fm-var     { font-size:clamp(20px,3.5vw,46px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 10px var(--c,var(--accent))); }
+.fm-op      { font-size:clamp(16px,2.8vw,36px); font-weight:900; color:var(--muted);
+  font-family:'Inter',sans-serif; }
+.fm-val     { font-size:clamp(24px,4.5vw,60px); font-weight:900; color:var(--c,var(--green));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 14px var(--c,var(--green))); }
+.formula-sub { text-align:center; font-size:clamp(10px,1.3vw,17px); color:var(--muted2); margin-top:.3em; }
+
+/* ── STEP-FLOW (vertical with connector) ────────────────────────
+   <div class="step-flow">
+     <div class="sf-item se" id="...">
+       <div class="sf-dot"></div>
+       <div class="sf-body"><strong>ステップ1</strong><span class="t-sm">説明</span></div>
+     </div>
+   </div>  */
+.step-flow { position:relative; padding-left:1.6em; display:flex; flex-direction:column; gap:.55em; }
+.step-flow::before { content:''; position:absolute; left:.55em; top:.8em; bottom:.8em;
+  width:2px; background:linear-gradient(to bottom,var(--accent),var(--border)); border-radius:1px; }
+.sf-item { display:flex; align-items:flex-start; gap:.75em; position:relative; }
+.sf-dot  { width:clamp(14px,1.6vw,20px); height:clamp(14px,1.6vw,20px); border-radius:50%;
+  background:var(--accent); border:2px solid var(--slide-bg);
+  box-shadow:0 0 10px var(--glow-acc); flex-shrink:0; margin-top:.2em; z-index:1; }
+.sf-body { font-size:clamp(11px,1.55vw,20px); color:var(--muted2); line-height:1.5; }
+.sf-body strong { color:var(--text); }
+
+/* ── PILL BADGE ─────────────────────────────────────────────────*/
+.pill     { display:inline-flex; align-items:center; gap:.3em;
+  background:var(--surf2); border:1px solid var(--border); border-radius:6px;
+  padding:.15em .6em; font-size:clamp(9px,1.1vw,14px); font-weight:700; }
+.pill.acc { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.3); color:var(--accent); }
+.pill.grn { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.3);  color:var(--green); }
+.pill.red { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:var(--red); }
+.pill.ylw { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.3);  color:var(--yellow); }
+
+/* ── S1 RING / DOT ANIMATIONS ───────────────────────────────────*/
+.s1-ring { animation:ringRotate 24s linear infinite; transform-origin:center; }
+.s1-ring1 { animation-duration:30s; }
+.s1-ring2 { animation-duration:22s; animation-direction:reverse; }
+.s1-ring3 { animation-duration:15s; }
+@keyframes ringRotate {
+  from { transform:translate(-50%,-50%) rotate(0deg); }
+  to   { transform:translate(-50%,-50%) rotate(360deg); }
+}
+.s1-dot { animation:dotFloat 4s ease-in-out infinite alternate; }
+.s1-dot1 { animation-duration:4.2s; }
+.s1-dot2 { animation-duration:3.5s; animation-delay:.5s; }
+.s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
+@keyframes dotFloat { to { transform:translateY(-8px); } }
+
 </style>
 
 <style id="ep-css">
-/* ── vertical centering override ── */
+/* ── vertical centering（必ず先頭に含める） ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── EP12 accent: data / analytics green ── */
-:root{ --accent:#22C55E; --acc2:#06B6D4; }
+/* ── EP12 accent: green / data analytics ── */
+:root { --accent: #22C55E; --glow-acc: rgba(34,197,94,.25); --acc2: #06b6d4; }
+
+/* ── S1 overrides ── */
+#s1 { background: radial-gradient(ellipse 90% 75% at 62% 45%, #06210f 0%, var(--slide-bg) 68%); align-items:center; justify-content:center; text-align:center; }
+#s1-badge { display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(34,197,94,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px); }
+#s1-badge i { color:var(--accent); }
+#s1-ep { font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em; }
+#s1-catch { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em; }
 
 /* ── A vs B compare blocks ── */
-.ab-row{display:flex;gap:.6em;margin:.35em 0;}
-.ab-card{flex:1;border-radius:10px;padding:.6em .9em;font-size:clamp(11px,1.45vw,18px);}
-.ab-card.a{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.35);}
-.ab-card.b{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.4);}
-.ab-card .ab-hd{font-weight:700;margin-bottom:.25em;}
-.ab-card.a .ab-hd{color:var(--blue);}
-.ab-card.b .ab-hd{color:var(--green);}
-.ab-card .ab-bd{color:var(--muted2);line-height:1.5;}
+.ab-row { display:flex;gap:.6em;margin:.35em 0; }
+.ab-card { flex:1;border-radius:10px;padding:.6em .9em;font-size:clamp(11px,1.45vw,18px); }
+.ab-card.a { background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.35); }
+.ab-card.b { background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.4); }
+.ab-card .ab-hd { font-weight:700;margin-bottom:.25em; }
+.ab-card.a .ab-hd { color:var(--blue); }
+.ab-card.b .ab-hd { color:var(--green); }
+.ab-card .ab-bd { color:var(--muted2);line-height:1.5; }
 
-/* ── fail / fix cards ── */
-.fcard{border-radius:9px;padding:.55em .9em;margin-bottom:.35em;font-size:clamp(11px,1.45vw,18px);}
-.fcard.bad{background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.32);}
-.fcard.good{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);}
-.fcard.info{background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.35);}
-.fcard .fc-hd{font-weight:700;margin-bottom:.2em;}
-.fcard.bad .fc-hd{color:var(--red);}
-.fcard.good .fc-hd{color:var(--green);}
-.fcard.info .fc-hd{color:var(--acc2);}
-.fcard .fc-bd{color:var(--muted2);font-size:.92em;line-height:1.45;}
+/* ── verdict rows ── */
+.verdict-rows { display:flex;flex-direction:column;gap:.45em;margin:.35em 0; }
+.verdict-row { display:flex;align-items:flex-start;gap:.7em;padding:.5em .8em;border-radius:9px;font-size:clamp(11px,1.5vw,19px); }
+.verdict-row.ng { background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.3); }
+.verdict-row.ok { background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35); }
+.v-icon { flex-shrink:0;font-size:1.1em;margin-top:2px; }
+.verdict-row.ng .v-icon { color:var(--red); }
+.verdict-row.ok .v-icon { color:var(--green); }
+.v-body { color:var(--muted2);line-height:1.5; }
+
+/* ── matrix 2x2 ── */
+.matrix-2x2 { display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.4em;margin:.3em 0;height:auto; }
+.mx-cell { border-radius:9px;padding:.55em .8em;font-size:clamp(10px,1.35vw,17px);background:var(--surf);border:1px solid var(--border); }
+.mx-cell .mx-hd { font-weight:700;color:#fff;margin-bottom:.15em;font-size:1em; }
+.mx-cell .mx-body { color:var(--muted2);font-size:.88em;line-height:1.4; }
+.mx-cell.hi { border:1px solid rgba(34,197,94,0.45);background:rgba(34,197,94,0.09); }
+.mx-cell.hi .mx-hd { color:var(--green); }
+.mx-cell.hi-g { border:1px solid rgba(6,182,212,0.4);background:rgba(6,182,212,0.07); }
+.mx-cell.hi-g .mx-hd { color:var(--acc2); }
+.mx-labels { display:flex;justify-content:space-between;font-size:clamp(9px,1.2vw,13px);color:var(--muted);margin-top:.15em; }
+
+/* ── step flow (vertical) ── */
+.step-flow { display:flex;flex-direction:column;gap:0;margin:.3em 0; }
+.sf-item { display:flex;align-items:flex-start;gap:.75em;padding:.4em 0; }
+.sf-item + .sf-item { border-top:1px dashed var(--border); }
+.sf-dot { flex-shrink:0;width:.75em;height:.75em;border-radius:50%;background:var(--accent);margin-top:.35em;box-shadow:0 0 6px var(--glow-acc); }
+.sf-body { color:var(--muted2);font-size:clamp(11px,1.5vw,19px);line-height:1.5; }
+.sf-body strong { color:#fff; }
+
+/* ── n-steps (numbered) ── */
+.n-steps { display:flex;flex-direction:column;gap:.35em;margin:.3em 0; }
+.n-step { display:flex;align-items:flex-start;gap:.65em; }
+.n-num { flex-shrink:0;width:1.6em;height:1.6em;border-radius:50%;background:var(--accent);color:#04210f;font-weight:900;font-size:.82em;display:flex;align-items:center;justify-content:center;margin-top:2px; }
+.n-num.r { background:var(--red);color:#fff; }
+.n-body { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);line-height:1.5; }
+.n-body strong { color:#fff; }
+
+/* ── gauge wrap ── */
+.gauge-wrap { margin:.4em 0; }
+.gauge-hd { font-size:clamp(11px,1.5vw,19px);font-weight:700;color:#fff;margin-bottom:.3em; }
+.gauge-track { position:relative;height:.9em;background:var(--surf2);border-radius:99px;overflow:visible;margin:.15em 0; }
+.gauge-fill { height:100%;border-radius:99px;background:var(--c,var(--green));width:calc(var(--v,0) * 100%);transition:width 1s ease; }
+.gauge-marker { position:absolute;top:-1.6em;font-size:.78em;color:var(--muted2);transform:translateX(-50%);white-space:nowrap; }
+.gauge-marker::after { content:'';position:absolute;bottom:-1.3em;left:50%;transform:translateX(-50%);width:1px;height:1em;background:var(--muted); }
+.gauge-legs { display:flex;justify-content:space-between;font-size:.78em;color:var(--muted);margin-top:.25em; }
+
+/* ── formula ── */
+.formula { display:flex;align-items:center;gap:.5em;flex-wrap:wrap;margin:.4em 0;justify-content:center; }
+.fm-var { font-size:clamp(18px,2.5vw,32px);font-weight:900;color:var(--c,#fff);padding:.1em .35em;background:rgba(255,255,255,0.05);border-radius:7px;border:1px solid rgba(255,255,255,0.1); }
+.fm-op { font-size:clamp(16px,2.2vw,28px);font-weight:900;color:var(--muted2); }
+.fm-val { font-size:clamp(18px,2.5vw,32px);font-weight:900;color:var(--c,var(--green)); }
+.formula-sub { text-align:center;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.15em; }
+
+/* ── hl-banner ── */
+.hl-banner { display:flex;align-items:center;gap:.8em;padding:.6em 1em;border-radius:10px;border:1px solid rgba(34,197,94,0.4);background:rgba(34,197,94,0.07);margin:.4em 0; }
+.hb-icon { font-size:clamp(18px,2.5vw,30px);color:var(--c,var(--green));flex-shrink:0; }
+.hb-text { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);line-height:1.5; }
+
+/* ── bar chart horizontal ── */
+.bar-chart-h { display:flex;flex-direction:column;gap:.5em;margin:.3em 0; }
+.bh-row { display:flex;align-items:center;gap:.6em; }
+.bh-lbl { min-width:7em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);flex-shrink:0;text-align:right; }
+.bh-track { flex:1;height:.75em;background:var(--surf2);border-radius:99px;overflow:hidden; }
+.bh-fill { height:100%;border-radius:99px;background:var(--c,var(--green));width:calc(var(--v,0) * 1%);transition:width 1.2s ease; }
+.bh-val { min-width:6em;font-size:clamp(10px,1.35vw,17px);font-weight:700; }
+
+/* ── comp table ── */
+.comp-tbl { display:flex;flex-direction:column;gap:.2em;margin:.3em 0; }
+.comp-row { display:flex;gap:.4em;padding:.35em .5em;border-radius:7px;font-size:clamp(11px,1.5vw,19px); }
+.comp-row.comp-head { background:rgba(255,255,255,0.04);font-weight:700;color:var(--muted2); }
+.comp-label { flex:1.4;color:var(--muted2); }
+.comp-a { flex:1;text-align:center;color:var(--muted2); }
+.comp-b { flex:1;text-align:center;color:var(--muted2); }
+.comp-row.hi { background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.25); }
+.c-red { color:var(--red);font-weight:700; }
+.c-green { color:var(--green);font-weight:700; }
+
+/* ── kpi big ── */
+.kpi-wrap { display:flex;align-items:center;gap:1em;margin:.4em 0; }
+.kpi-big { text-align:center;min-width:6em; }
+.kpi-num { font-size:clamp(32px,5.5vw,70px);font-weight:900;color:var(--c,var(--green));line-height:1; }
+.kpi-sub { font-size:clamp(9px,1.2vw,14px);color:var(--muted2);margin-top:.2em; }
+.kpi-ctx { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);line-height:1.6; }
+
+/* ── SVG inline ── */
+.svg-il { display:block;width:100%;max-height:130px;overflow:visible; }
+.svg-grid { stroke:rgba(255,255,255,0.1);stroke-width:1; }
+.svg-area { fill:rgba(96,165,250,0.18); }
+.svg-curve { fill:none;stroke:rgba(96,165,250,0.9);stroke-width:2; }
+.svg-area2 { fill:rgba(34,197,94,0.18); }
+.svg-curve2 { fill:none;stroke:rgba(34,197,94,0.9);stroke-width:2; }
+.svg-marker { stroke:rgba(251,191,36,0.85);stroke-width:1.5;stroke-dasharray:4 3; }
+.svg-lbl { fill:var(--muted2);font-size:10px; }
+.svg-lbl-a { fill:rgba(96,165,250,0.9);font-size:10px;font-weight:700; }
+.svg-lbl-2 { fill:rgba(34,197,94,0.9);font-size:10px;font-weight:700; }
+
+/* ── fcard (fail / fix) ── */
+.fcard { border-radius:9px;padding:.55em .9em;margin-bottom:.35em;font-size:clamp(11px,1.45vw,18px); }
+.fcard.bad { background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.32); }
+.fcard.good { background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35); }
+.fcard.info { background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.35); }
+.fcard .fc-hd { font-weight:700;margin-bottom:.2em; }
+.fcard.bad .fc-hd { color:var(--red); }
+.fcard.good .fc-hd { color:var(--green); }
+.fcard.info .fc-hd { color:var(--acc2); }
+.fcard .fc-bd { color:var(--muted2);font-size:.92em;line-height:1.45; }
 
 /* ── data table ── */
-.dtbl{width:100%;border-collapse:collapse;font-size:clamp(10px,1.3vw,16px);}
-.dtbl th{background:rgba(255,255,255,0.05);padding:.35em .55em;text-align:center;border:1px solid var(--border);color:var(--muted2);font-weight:700;}
-.dtbl td{padding:.32em .55em;border:1px solid var(--border);color:var(--muted2);text-align:center;vertical-align:middle;line-height:1.4;}
-.dtbl td.hl{color:var(--green);font-weight:700;}
-.dtbl td.hl2{color:var(--acc2);font-weight:700;}
-.dtbl .row-hd{background:rgba(255,255,255,0.03);font-weight:700;color:var(--muted2);text-align:left;padding-left:.6em;}
-
-/* ── priority matrix ── */
-.matrix{display:grid;grid-template-columns:1fr 1fr;gap:.4em;margin:.3em 0;}
-.mcell{border-radius:9px;padding:.55em .8em;font-size:clamp(10px,1.35vw,17px);background:var(--surf);border:1px solid var(--border);}
-.mcell .mc-hd{font-weight:700;color:#fff;margin-bottom:.15em;}
-.mcell .mc-star{color:var(--yellow);font-size:.9em;}
-.mcell.hi{border:1px solid rgba(34,197,94,0.4);background:rgba(34,197,94,0.07);}
-
-/* ── numbered list ── */
-.nlist{display:flex;flex-direction:column;gap:.3em;margin:.3em 0;}
-.nrow{display:flex;align-items:flex-start;gap:.6em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);}
-.nrow .nnum{flex-shrink:0;width:1.5em;height:1.5em;border-radius:50%;background:var(--accent);color:#04210f;font-weight:900;font-size:.82em;display:flex;align-items:center;justify-content:center;margin-top:1px;}
-.nrow strong{color:#fff;}
-
-/* ── coin row ── */
-.coin-row{display:flex;gap:.4em;justify-content:center;margin:.4em 0;flex-wrap:wrap;}
-.coin{width:clamp(34px,4.5vw,56px);height:clamp(34px,4.5vw,56px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(13px,1.7vw,22px);border:2px solid var(--border);}
-.coin.h{background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.5);color:var(--green);}
-.coin.t{background:rgba(120,120,168,0.12);border-color:var(--border);color:var(--muted2);}
-
-/* ── lift big number ── */
-.lift-big{font-size:clamp(28px,5vw,64px);font-weight:900;color:var(--green);line-height:1;}
+.dtbl { width:100%;border-collapse:collapse;font-size:clamp(10px,1.3vw,16px); }
+.dtbl th { background:rgba(255,255,255,0.05);padding:.35em .55em;text-align:center;border:1px solid var(--border);color:var(--muted2);font-weight:700; }
+.dtbl td { padding:.32em .55em;border:1px solid var(--border);color:var(--muted2);text-align:center;vertical-align:middle;line-height:1.4; }
+.dtbl td.hl { color:var(--green);font-weight:700; }
+.dtbl .row-hd { background:rgba(255,255,255,0.03);font-weight:700;color:var(--muted2);text-align:left;padding-left:.6em; }
 
 /* ── last slide ── */
-#s13{background:radial-gradient(ellipse 80% 65% at 45% 50%, #06210f 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
-#s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.2em 1.7em;width:80%;box-shadow:0 0 30px rgba(34,197,94,0.25),0 8px 32px rgba(0,0,0,0.5);}
-#s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--acc2);display:flex;align-items:center;justify-content:center;gap:.55em;}
-.road-row{display:flex;align-items:flex-start;gap:.6em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);padding:.18em 0;}
-.road-row .rd-tag{flex-shrink:0;font-weight:700;min-width:6.5em;}
+#s13 { background:radial-gradient(ellipse 80% 65% at 45% 50%, #06210f 0%, var(--slide-bg) 65%);align-items:center;justify-content:center; }
+#s13-card { background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.2em 1.7em;width:80%;box-shadow:0 0 30px rgba(34,197,94,0.25),0 8px 32px rgba(0,0,0,0.5); }
+#s13-cta { margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--acc2);display:flex;align-items:center;justify-content:center;gap:.55em; }
+.road-row { display:flex;align-items:flex-start;gap:.6em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);padding:.18em 0; }
+.road-row .rd-tag { flex-shrink:0;font-weight:700;min-width:6.5em; }
 
-/* ── s1 overrides ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 62% 45%, #06210f 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(34,197,94,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px);}
-#s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em;}
-#s1-catch{font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em;}
+/* ── sum items (S12) ── */
+.sum-item { display:flex;align-items:flex-start;gap:.7em;padding:.3em 0;border-bottom:1px dashed var(--border); }
+.sum-item:last-child { border-bottom:none; }
+.sum-icon { flex-shrink:0;width:1.5em;height:1.5em;border-radius:50%;background:rgba(34,197,94,0.2);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.85em;margin-top:2px; }
+.sum-main { font-size:clamp(11px,1.5vw,19px);color:#fff;font-weight:700; }
+.sum-sub { font-size:clamp(9px,1.2vw,14px);color:var(--muted2);margin-top:.1em; }
+
+/* ── coin row ── */
+.coin-row { display:flex;gap:.4em;justify-content:center;margin:.3em 0;flex-wrap:wrap; }
+.coin { width:clamp(30px,4vw,50px);height:clamp(30px,4vw,50px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(12px,1.6vw,20px);border:2px solid var(--border); }
+.coin.h { background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.5);color:var(--green); }
+.coin.t { background:rgba(120,120,168,0.12);border-color:var(--border);color:var(--muted2); }
 </style>
 </head>
 <body>
@@ -779,76 +1186,94 @@ body {
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-flask-vial"></i>&ensp;AI時代のマーケティング・ラボ ／ 実践編ファイナル</div>
       <div id="s1-ep" class="se">第12回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">データを改善に繋げる<br>「A/Bテスト」の正しいやり方</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">データで改善！<br>「A/Bテスト」の正しいやり方</div>
       <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">感覚の改善から、証明できる改善へ</div>
       <div id="s1-catch" class="se">「変えたら売上が上がった気がする」から卒業しよう</div>
     </div>
   </section>
 
-  <!-- S2: Hook 30-80s -->
+  <!-- S2: Hook 30-80s — verdict-rows パラダイムシフト -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
     <div class="pad-t">
-      <div id="s2-q" class="sh se">「ボタンを赤に変えたら売上が上がった」は本当か？</div>
-      <div id="s2-fails" class="se">
-        <div class="row" style="padding:.28em 0;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);">
-          <i class="fa-solid fa-arrow-trend-up" style="color:var(--muted);flex-shrink:0;margin-top:3px;"></i>
-          <span>ボタンを青→赤に変えた → 翌週、購入が増えた → <strong style="color:var(--text);">「赤が良かった！」</strong></span>
+      <div id="s2-hd" class="sh se">「ボタンを赤に変えたら売上が上がった」は本当か？</div>
+      <div id="s2-verdict" class="verdict-rows se">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>感覚の改善：</strong>変える → 数字を見る →「増えた！ 赤ボタンが効いた」<br><span style="font-size:.88em;">同週SNS話題／季節変動／競合停止…別の要因かもしれない</span></div>
         </div>
-        <div class="row" style="padding:.28em 0;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);">
-          <i class="fa-solid fa-arrow-trend-up" style="color:var(--muted);flex-shrink:0;margin-top:3px;"></i>
-          <span>ヘッドラインを変えた → CVRが上がった → <strong style="color:var(--text);">「この文章が刺さった！」</strong></span>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>ヘッドラインを変えた → CVR上昇：</strong>「この文章が刺さった！」<br><span style="font-size:.88em;">本当に文章が原因？ 検証なしには言い切れない</span></div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body"><strong>証明できる改善：</strong>仮説を立てる → 正しく比較する → 統計で判断する<br><span style="font-size:.88em;">Amazon は年間数千の A/B テストで感覚でなく「実験」で進化</span></div>
         </div>
       </div>
-      <div id="s2-doubt" class="se" style="background:rgba(248,113,113,0.10);border:2px solid rgba(248,113,113,0.35);border-radius:10px;padding:.55em 1em;margin-top:.5em;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);">
-        <span style="color:var(--red);font-weight:900;">その「改善」は本当に原因か？</span>　同じ週にSNSで話題に／季節で購買意欲UP／競合が停止…
-      </div>
-      <div id="s2-cmp" class="ab-row se">
-        <div class="ab-card a"><div class="ab-hd"><i class="fa-solid fa-cloud"></i> 気がする改善</div><div class="ab-bd">変える → 数字を見る →「増えた！」</div></div>
-        <div class="ab-card b"><div class="ab-hd"><i class="fa-solid fa-square-check"></i> 証明できる改善</div><div class="ab-bd">仮説を立てる → 正しく比較 → 統計で判断</div></div>
-      </div>
-      <div id="s2-amz" class="se" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.35);border-radius:9px;padding:.5em .9em;margin-top:.4em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);display:flex;align-items:center;gap:.5em;">
-        <i class="fa-solid fa-a" style="color:var(--acc2);flex-shrink:0;"></i>
-        <span>Amazon は<strong style="color:#fff;">年間数千ものA/Bテスト</strong>を実施 → 感覚ではなく「実験」でサービスを進化</span>
+      <div id="s2-amz" class="se hl-banner" style="--c:var(--acc2)">
+        <i class="fa-solid fa-flask-vial hb-icon"></i>
+        <div class="hb-text"><strong>「気がする改善」を卒業し、数字で証明できる改善サイクルを手に入れよう</strong></div>
       </div>
     </div>
   </section>
 
-  <!-- S3: Definition + Fisher 80-130s -->
+  <!-- S3: Definition + Fisher 80-130s — matrix-2x2 でA/B群 -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
       <div id="s3-hd" class="sh se">A/Bテストとは何か — 実験で「原因」を特定する</div>
-      <div id="s3-def" class="card card-l se" style="margin-bottom:.5em;">
+      <div id="s3-def" class="se card card-l" style="margin-bottom:.45em;">
         <div style="font-size:clamp(12px,1.7vw,22px);font-weight:700;color:#fff;">同じ条件下で<em style="color:var(--accent);font-style:normal;">1つの変数だけ</em>を変えた2つを<br><em style="color:var(--acc2);font-style:normal;">ランダムに振り分けて比較</em>し、統計的に判断する手法</div>
       </div>
-      <div id="s3-ab" class="ab-row se">
-        <div class="ab-card a"><div class="ab-hd">A：コントロール群</div><div class="ab-bd">現在のバージョン（変えない）</div></div>
-        <div class="ab-card b"><div class="ab-hd">B：テスト群</div><div class="ab-bd">改善案（1か所だけ変える）</div></div>
+      <div id="s3-matrix" class="matrix-2x2 se">
+        <div class="mx-cell mx-tl">
+          <div class="mx-hd"><i class="fa-solid fa-a" style="color:var(--blue);"></i> A：コントロール群</div>
+          <div class="mx-body">現在のバージョン（変えない）<br>基準値として比較に使う</div>
+        </div>
+        <div class="mx-cell mx-tr hi">
+          <div class="mx-hd"><i class="fa-solid fa-b" style="color:var(--green);"></i> B：テスト群</div>
+          <div class="mx-body">改善案（1か所だけ変える）<br>同時・ランダムに振り分け</div>
+        </div>
+        <div class="mx-cell mx-bl hi-g">
+          <div class="mx-hd"><i class="fa-solid fa-seedling"></i> Fisher（1935）</div>
+          <div class="mx-body">① ランダム化（偏りを排除）<br>② 反復（十分なサンプル）<br>③ 局所管理（条件を揃える）</div>
+        </div>
+        <div class="mx-cell mx-br">
+          <div class="mx-hd"><i class="fa-solid fa-globe"></i> ウェブへの応用</div>
+          <div class="mx-body">農業実験の原則がそのまま<br>ウェブCVR改善に使われている</div>
+        </div>
       </div>
-      <div id="s3-fisher" class="se" style="background:rgba(6,182,212,0.07);border:1px solid rgba(6,182,212,0.3);border-radius:9px;padding:.55em .9em;margin-top:.4em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <div style="font-weight:700;color:var(--acc2);margin-bottom:.25em;"><i class="fa-solid fa-seedling"></i> 起源：Ronald A. Fisher（1935）『The Design of Experiments』— 農業実験の実験計画法</div>
-        <span><strong style="color:#fff;">①ランダム化</strong>（偶然の偏りを排除）｜<strong style="color:#fff;">②反復</strong>（十分なサンプル）｜<strong style="color:#fff;">③局所管理</strong>（条件を揃える）</span>
-      </div>
+      <div id="s3-fisher" class="se" style="margin-top:.3em;font-size:clamp(10px,1.3vw,16px);color:var(--muted2);text-align:center;"><i class="fa-solid fa-book-open" style="color:var(--acc2);"></i> Ronald A. Fisher 『The Design of Experiments』（1935）— 農業実験で確立した実験計画法の3原則</div>
     </div>
   </section>
 
-  <!-- S4: What to test 130-180s -->
+  <!-- S4: What to test 130-180s — matrix-2x2 インパクト×変更しやすさ -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">何をテストすべきか — インパクト × 変更しやすさ</div>
-      <div id="s4-matrix" class="matrix se">
-        <div class="mcell hi"><div class="mc-hd">ヘッドライン <span class="mc-star">★★★</span></div><div style="color:var(--muted2);font-size:.85em;">最初に読む。CVRへの影響が最大</div></div>
-        <div class="mcell hi"><div class="mc-hd">CTA（ボタン文言・色）<span class="mc-star">★★★</span></div><div style="color:var(--muted2);font-size:.85em;">行動を直接誘導。変更コスト低</div></div>
-        <div class="mcell"><div class="mc-hd">画像・動画 <span class="mc-star">★★</span></div><div style="color:var(--muted2);font-size:.85em;">感情的な引きつけ。制作コスト高</div></div>
-        <div class="mcell"><div class="mc-hd">価格表示・訴求軸 <span class="mc-star">★★</span></div><div style="color:var(--muted2);font-size:.85em;">購買意欲に直結する訴求の差</div></div>
+      <div id="s4-hd" class="sh se">何をテストすべきか — インパクト × 変更しやすさで優先度を決める</div>
+      <div id="s4-matrix" class="matrix-2x2 se">
+        <div class="mx-cell mx-tl hi">
+          <div class="mx-hd"><i class="fa-solid fa-star"></i> ★★★ ヘッドライン</div>
+          <div class="mx-body">最初に読まれる。CVRへの影響が最大<br><span style="color:var(--green);font-weight:700;">最優先でテスト</span></div>
+        </div>
+        <div class="mx-cell mx-tr hi">
+          <div class="mx-hd"><i class="fa-solid fa-star"></i> ★★★ CTAボタン</div>
+          <div class="mx-body">文言・色・サイズ・配置<br>変更コスト低く即試せる</div>
+        </div>
+        <div class="mx-cell mx-bl">
+          <div class="mx-hd">★★ 価格表示・オファー</div>
+          <div class="mx-body">「送料無料」「今だけ」など<br>購買意欲に直結する訴求</div>
+        </div>
+        <div class="mx-cell mx-br hi-g">
+          <div class="mx-hd">★★ メイン画像・動画</div>
+          <div class="mx-body">感情的な引きつけに影響<br>制作コストは高め</div>
+        </div>
       </div>
-      <div id="s4-order" class="nlist se">
-        <div class="nrow"><span class="nnum">1</span><span><strong>ヘッドライン</strong>（見出し・キャッチ）→ 変更が最もCVRに影響</span></div>
-        <div class="nrow"><span class="nnum">2</span><span><strong>CTAボタン</strong>（文言・色・配置）→ 変更コストが低い</span></div>
-        <div class="nrow"><span class="nnum">3</span><span><strong>価格表示・オファー訴求</strong>（「送料無料」「今だけ」）</span></div>
-        <div class="nrow"><span class="nnum">4</span><span><strong>メイン画像・動画</strong> → 制作コストは高め</span></div>
+      <div class="mx-labels se" id="s4-labels">
+        <span class="mx-lbl-x">← 変更しにくい ── 変更しやすい →</span>
+        <span class="mx-lbl-x">↑ インパクト大</span>
       </div>
       <div id="s4-quote" class="se" style="background:var(--surf);border-left:4px solid var(--acc2);border-radius:0 9px 9px 0;padding:.5em .9em;margin-top:.35em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
         <i class="fa-solid fa-quote-left" style="color:var(--acc2);"></i> Optimizely：「インパクトが大きく、実装コストが小さいものから始めよ」
@@ -856,191 +1281,282 @@ body {
     </div>
   </section>
 
-  <!-- S5: Sample size 180-230s -->
+  <!-- S5: Sample size 180-230s — formula + hl-banner「最低1,000人ルール」 -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">サンプルサイズ — 「何人のデータが必要か」を事前に決める</div>
-      <div id="s5-coin" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-bottom:.4em;">
-        <div style="font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-bottom:.25em;">「5人に見せて4人が良いと言った」は…</div>
+      <div id="s5-hd" class="sh se">サンプルサイズ — テスト前に「何人必要か」を必ず計算する</div>
+      <div id="s5-coin" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-bottom:.35em;">
+        <div style="font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-bottom:.2em;">「5人に見せて4人が良いと言った」→ コイン5回投げて4回表でも偏りとは言えない</div>
         <div class="coin-row">
           <div class="coin h">表</div><div class="coin h">表</div><div class="coin h">表</div><div class="coin h">表</div><div class="coin t">裏</div>
         </div>
-        <div style="font-size:clamp(10px,1.4vw,17px);color:var(--red);text-align:center;">コインを5回投げて4回表でも「表が出やすい」とは言えない → 偶然の差を誤判断</div>
+        <div style="font-size:clamp(10px,1.4vw,17px);color:var(--red);text-align:center;margin-top:.2em;">少ないサンプル = 偶然の差を「効果あり」と誤判断する</div>
       </div>
-      <div id="s5-p" class="se" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.3);border-radius:9px;padding:.5em .9em;margin-bottom:.4em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <strong style="color:var(--acc2);">p値 &lt; 0.05</strong> ＝「この差が偶然起きる確率が5%以下」→ <strong style="color:#fff;">95%の確率でBが本当に良い</strong>という目安
+      <div id="s5-formula" class="se">
+        <div class="formula">
+          <span class="fm-var" style="--c:var(--acc2)">p値</span>
+          <span class="fm-op">&lt;</span>
+          <span class="fm-val" style="--c:var(--green)">0.05</span>
+        </div>
+        <div class="formula-sub">「この差が偶然起きる確率が5%以下」＝95%の確率でBが本当に良い</div>
       </div>
-      <div id="s5-tbl" class="se" style="overflow-x:auto;">
-        <table class="dtbl">
-          <thead><tr><th>現在のCVR</th><th>最低必要サンプル数（片側）</th></tr></thead>
-          <tbody>
-            <tr><td>1%（100人に1人）</td><td class="hl">約 4,000〜8,000 セッション</td></tr>
-            <tr><td>3%（100人に3人）</td><td class="hl">約 1,500〜3,000 セッション</td></tr>
-            <tr><td>5%（100人に5人）</td><td class="hl">約 800〜1,500 セッション</td></tr>
-          </tbody>
-        </table>
+      <div id="s5-banner" class="se hl-banner" style="--c:var(--green);margin:.3em 0;">
+        <i class="fa-solid fa-circle-check hb-icon"></i>
+        <div class="hb-text"><strong>最低サンプルの目安：CVR 1% → 約4,000〜8,000 / CVR 3% → 約1,500〜3,000 / CVR 5% → 約800〜1,500 セッション（各群）</strong><br>→ テスト開始前に Evan Miller の Sample Size Calculator 等で必ず計算</div>
       </div>
-      <div id="s5-conc" class="se" style="margin-top:.35em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);text-align:center;">検出したい改善幅が小さいほど必要サンプルは増える　→　<strong style="color:var(--accent);">開始前に必ず計算する</strong>（Evan Miller のツール等）</div>
     </div>
   </section>
 
-  <!-- S6: Fail 1 early stop 230-280s -->
+  <!-- S6: Fail 1 early stop 230-280s — bar-chart-h 期間別信頼性 + ベルカーブSVG説明 -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
       <div id="s6-hd" class="sh se">よくある失敗 ① 早期終了 — 「良さそうだから終了」は危険</div>
-      <div id="s6-trend" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-bottom:.4em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <div style="font-weight:700;color:#fff;margin-bottom:.2em;">テスト開始直後のサンプル推移イメージ（時間軸 →）</div>
-        <div style="padding:.12em 0;"><span style="color:var(--green);font-weight:700;">100人時点：</span>B優勢 →「Bが勝ちそう！」<span style="color:var(--red);font-weight:700;">→ 早期終了</span></div>
-        <div style="padding:.12em 0;"><span style="color:var(--yellow);font-weight:700;">500人時点：</span>A・Bほぼ同等</div>
-        <div style="padding:.12em 0;"><span style="color:var(--blue);font-weight:700;">1000人時点：</span>実は<strong style="color:#fff;">Aの方が優勢</strong>だった</div>
+      <div id="s6-bars" class="bar-chart-h se">
+        <div class="bh-row">
+          <span class="bh-lbl" style="color:var(--red);">100人時点</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:15;--c:var(--red)"></div></div>
+          <span class="bh-val" style="color:var(--red);">B優勢→早期終了 ⚠</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl" style="color:var(--yellow);">500人時点</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:45;--c:var(--yellow)"></div></div>
+          <span class="bh-val" style="color:var(--yellow);">A・Bほぼ同等</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl" style="color:var(--green);">1000人時点</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:80;--c:var(--green)"></div></div>
+          <span class="bh-val" style="color:var(--green);">実はAが優勢！</span>
+        </div>
       </div>
-      <div id="s6-fp" class="fcard bad se">
-        <div class="fc-hd"><i class="fa-solid fa-triangle-exclamation"></i> フォールスポジティブ（偽の陽性）</div>
-        <div class="fc-bd">途中でのぞくたびに誤検知リスクが累積。5%水準でも途中チェックを繰り返すと偽陽性率が20〜30%超に（Evan Miller 2010 "How Not To Run An A/B Test"）</div>
+      <div id="s6-fp" class="se fcard bad" style="margin-bottom:.3em;">
+        <div class="fc-hd"><i class="fa-solid fa-triangle-exclamation"></i> フォールスポジティブ（偽の陽性）— Evan Miller 2010</div>
+        <div class="fc-bd">途中チェックを繰り返すと、5%水準でも偽陽性率が<strong style="color:var(--red);">20〜30%超</strong>に膨れ上がる。「効果なし」を「効果あり」と誤判断してしまう</div>
       </div>
-      <div id="s6-fix" class="nlist se">
-        <div class="nrow"><span class="nnum">1</span><span>開始前に<strong>必要サンプル数</strong>を決める</span></div>
-        <div class="nrow"><span class="nnum">2</span><span>サンプルに達するまで<strong>結果を見ない（判断しない）</strong></span></div>
-        <div class="nrow"><span class="nnum">3</span><span>事前設定した期間が終わってから判断する</span></div>
+      <div id="s6-fix" class="n-steps se">
+        <div class="n-step">
+          <div class="n-num">1</div>
+          <div class="n-body"><strong>開始前に必要サンプル数を決める</strong></div>
+        </div>
+        <div class="n-step">
+          <div class="n-num">2</div>
+          <div class="n-body"><strong>達成するまで結果を見ない（判断しない）</strong></div>
+        </div>
+        <div class="n-step">
+          <div class="n-num">3</div>
+          <div class="n-body"><strong>事前設定した期間が終わってから判断する</strong></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- S7: Fail 2 multi-variable 280-330s -->
+  <!-- S7: Early termination bell curve 280-330s — インラインSVGベルカーブ -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">よくある失敗 ② 複数変数の同時変更 — 何が効いたか不明に</div>
-      <div id="s7-bad" class="fcard bad se">
-        <div class="fc-hd"><i class="fa-solid fa-circle-xmark"></i> やってしまいがち</div>
-        <div class="fc-bd">A：<strong style="color:var(--blue);">青ボタン</strong>＋現行ヘッドライン＋通常画像 ／ B：<strong style="color:var(--red);">赤ボタン＋新ヘッドライン＋新画像</strong><br>→ BのCVRが高くても、ボタン？ヘッドライン？画像？ <strong style="color:#fff;">改善要因が特定できない</strong></div>
+      <div id="s7-hd" class="sh se">なぜ早期終了が危険か — ベルカーブで見る「揺らぎ」</div>
+      <svg class="svg-il se" id="s7-bell" viewBox="0 0 400 130" aria-hidden="true">
+        <!-- グリッド -->
+        <line class="svg-grid" x1="0" y1="110" x2="400" y2="110"/>
+        <line class="svg-grid" x1="0" y1="55" x2="400" y2="55" stroke-dasharray="4 3"/>
+        <!-- A案（対照）ベルカーブ：中央寄り -->
+        <path class="svg-area" d="M30,110 C70,110 90,10 170,10 C250,10 270,110 310,110 Z"/>
+        <path class="svg-curve" d="M30,110 C70,110 90,10 170,10 C250,10 270,110 310,110"/>
+        <!-- B案（改善）ベルカーブ：少し右にシフト -->
+        <path class="svg-area2" d="M70,110 C110,110 130,18 210,18 C290,18 310,110 355,110 Z"/>
+        <path class="svg-curve2" d="M70,110 C110,110 130,18 210,18 C290,18 310,110 355,110"/>
+        <!-- 差の矢印（点線） -->
+        <line class="svg-marker" x1="170" y1="10" x2="210" y2="18"/>
+        <!-- 早期終了ゾーン（赤ハイライト） -->
+        <rect x="0" y="0" width="90" height="110" fill="rgba(248,113,113,0.07)" rx="4"/>
+        <line x1="90" y1="0" x2="90" y2="110" stroke="rgba(248,113,113,0.5)" stroke-width="1.5" stroke-dasharray="5 3"/>
+        <!-- ラベル -->
+        <text class="svg-lbl-a" x="165" y="8" text-anchor="middle">A案（対照）</text>
+        <text class="svg-lbl-2" x="215" y="16" text-anchor="start">B案（＋差）</text>
+        <text class="svg-lbl" x="45" y="125" text-anchor="middle" style="fill:rgba(248,113,113,0.9);font-size:9px;">早期終了ゾーン</text>
+        <text class="svg-lbl" x="200" y="125" text-anchor="middle">コンバージョン率</text>
+      </svg>
+      <div id="s7-explain" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-top:.3em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
+        <div style="padding:.1em 0;"><span style="color:var(--red);font-weight:700;">少ないサンプル段階では</span>——2つの分布が大きく重なり合い、差が偶然か本物か判断できない</div>
+        <div style="padding:.1em 0;"><span style="color:var(--green);font-weight:700;">十分なサンプルを集めると</span>——分布が安定し、本当の差（シフト）が統計的に確認できる</div>
       </div>
-      <div id="s7-good" class="fcard good se">
-        <div class="fc-hd"><i class="fa-solid fa-circle-check"></i> 1テスト1変数の原則</div>
-        <div class="fc-bd">A：青ボタン＋現行ヘッドライン＋通常画像 ／ B：<strong style="color:var(--green);">赤ボタン</strong>＋現行ヘッドライン＋通常画像<br>→ 差異の原因が「ボタンの色」だけになる</div>
+      <div id="s7-rule" class="se hl-banner" style="--c:var(--green);margin-top:.3em;">
+        <i class="fa-solid fa-shield-halved hb-icon"></i>
+        <div class="hb-text"><strong>鉄則：決めたサンプル数に達するまで判断しない</strong> — 分布が安定してはじめて差が見える</div>
       </div>
-      <div id="s7-mvt" class="fcard info se">
-        <div class="fc-hd"><i class="fa-solid fa-layer-group"></i> 例外：多変数テスト（MVT）</div>
-        <div class="fc-bd">複数要素を同時に組み合わせる高度な手法。必要サンプルが膨大 → 月間10万PV以上の規模がなければA/Bテストを推奨</div>
-      </div>
-      <div id="s7-conc" class="se" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);border-radius:9px;padding:.5em .9em;margin-top:.3em;font-size:clamp(11px,1.55vw,20px);font-weight:700;color:var(--green);text-align:center;">初心者は必ず「1テスト1変数」から始める</div>
     </div>
   </section>
 
-  <!-- S8: Fail 3 timing 330-380s -->
+  <!-- S8: Fail 2 multi-variable 330-380s — verdict-rows NG→OK -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">よくある失敗 ③ 短期・偏ったデータ — 曜日・季節・時間帯を無視しない</div>
-      <div id="s8-prob" class="se">
-        <div class="fcard bad" style="margin-bottom:.3em;"><div class="fc-bd"><strong style="color:var(--red);">月曜だけ3日テスト</strong> → ビジネス系の閲覧が多い日。土日のレジャー層に当てはまらない</div></div>
-        <div class="fcard bad"><div class="fc-bd"><strong style="color:var(--red);">12月にテスト</strong> → 年末商戦で行動が特殊。1月に同じ施策でも同じ結果にならない</div></div>
+      <div id="s8-hd" class="sh se">よくある失敗 ② 複数変数の同時変更 — 「何が効いたか」が不明になる</div>
+      <div id="s8-verdict" class="verdict-rows se">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body">
+            <strong>NG：複数変数を同時に変える</strong><br>
+            A：青ボタン＋現行ヘッドライン＋通常画像<br>
+            B：<span style="color:var(--red);">赤ボタン＋新ヘッドライン＋新画像</span><br>
+            <span style="font-size:.88em;">→ BのCVRが高くてもボタン？ヘッドライン？画像？改善要因が特定できない</span>
+          </div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body">
+            <strong>OK：1テスト1変数の原則</strong><br>
+            A：青ボタン＋現行ヘッドライン＋通常画像<br>
+            B：<span style="color:var(--green);">赤ボタン</span>＋現行ヘッドライン＋通常画像<br>
+            <span style="font-size:.88em;">→ 差異の原因が「ボタンの色」だけになり、因果関係が明確になる</span>
+          </div>
+        </div>
       </div>
-      <div id="s8-bias" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin:.35em 0;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <div style="padding:.1em 0;"><strong style="color:#fff;">曜日：</strong>月〜金はBtoB多め／土日はBtoC多め</div>
-        <div style="padding:.1em 0;"><strong style="color:#fff;">時間帯：</strong>朝のスマホ vs 夜のPCで行動が異なる</div>
-        <div style="padding:.1em 0;"><strong style="color:#fff;">季節：</strong>EC購買は12月・3月・9月にピーク。平時と比較不可</div>
-      </div>
-      <div id="s8-check" class="se" style="background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.3);border-radius:9px;padding:.5em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <strong style="color:var(--green);">正しい期間：</strong>最低7日（曜日の偏りを排除）／理想2〜4週間 ／ 祝日・大型セールをまたぐのは避ける
+      <div id="s8-mvt" class="se fcard info" style="margin-top:.3em;margin-bottom:0;">
+        <div class="fc-hd"><i class="fa-solid fa-layer-group"></i> 例外：多変数テスト（MVT）— 月間10万PV以上の規模がなければ非推奨</div>
+        <div class="fc-bd">複数要素を同時に組み合わせる高度な手法。必要サンプルが膨大になるため、スモール規模ではまず「1テスト1変数」から</div>
       </div>
     </div>
   </section>
 
-  <!-- S9: Tools 380-430s -->
+  <!-- S9: Statistical significance 380-430s — gauge-wrap p値ゲージ -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se">A/Bテストを実装する — ツール選定と始め方</div>
-      <div id="s9-tools" class="se">
-        <div class="fcard info" style="margin-bottom:.3em;">
-          <div class="fc-hd"><i class="fa-solid fa-piggy-bank"></i> スモールスタート向け（無料〜低コスト）</div>
-          <div class="fc-bd">Google Optimize は<strong style="color:var(--red);">2023年9月終了</strong> → 後継は GA4連携＋VWO Starter／Optimizely Free など</div>
+      <div id="s9-hd" class="sh se">統計的有意性 — p値と信頼区間の正しい読み方</div>
+      <div id="s9-gauge" class="gauge-wrap se">
+        <div class="gauge-hd">信頼水準（Confidence Level）— テスト期間・サンプル数が増えるほど上昇</div>
+        <div class="gauge-track">
+          <div class="gauge-fill" style="--v:.95;--c:var(--green)"></div>
+          <span class="gauge-marker" style="left:95%">95% ライン</span>
         </div>
-        <div class="fcard info">
-          <div class="fc-hd"><i class="fa-solid fa-building"></i> 中規模以上向け</div>
-          <div class="fc-bd">Optimizely（業界標準・有料）／ VWO ／ Adobe Target</div>
-        </div>
+        <div class="gauge-legs"><span>0%</span><span>50%</span><span>95%（有意）</span><span>100%</span></div>
       </div>
-      <div id="s9-url" class="se" style="background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.3);border-radius:9px;padding:.55em .9em;margin:.35em 0;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <div style="font-weight:700;color:var(--green);margin-bottom:.2em;"><i class="fa-solid fa-code-branch"></i> 技術力が低い場合の簡易法：URLパラメータ分岐</div>
-        ページA（/lp）とB（/lp-b）を作り、広告配信先を50%ずつ振り分け → GA4のカスタムイベントでCV計測（疑似A/Bテスト）
+      <div id="s9-pval" class="se" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.3);border-radius:9px;padding:.55em .9em;margin:.35em 0;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
+        <strong style="color:var(--acc2);">p値 &lt; 0.05</strong> ＝「この差が偶然起きる確率が5%以下」<br>
+        → <strong style="color:#fff;">95%の確率でBは本当にAより優れている</strong>という統計的根拠
       </div>
-      <div id="s9-flow" class="se" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);text-align:center;">
-        Optimizely実装：<strong style="color:#fff;">①スクリプト設置 → ②バリアント設定 → ③50/50振り分け → ④CVイベント計測</strong>
+      <div id="s9-ci" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
+        <strong style="color:#fff;">信頼区間（CI）</strong>が重要：「BはAより○〜○%優れる」という<em style="font-style:normal;color:var(--green);">範囲</em>で示す<br>
+        <span style="color:var(--red);">信頼区間がゼロをまたぐ場合</span>は「有意差なし」と判断する
+      </div>
+      <div id="s9-tip" class="se" style="margin-top:.3em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);text-align:center;">
+        <i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> テスト期間が長く・サンプルが多いほど信頼区間は<strong style="color:var(--accent);">狭く（精度が高く）</strong>なる
       </div>
     </div>
   </section>
 
-  <!-- S10: Reading results 430-480s -->
+  <!-- S10: 3 traps summary 430-480s — n-steps 3つの落とし穴 -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s10-hd" class="sh se">テスト結果の正しい読み方 — 3つの指標で判断する</div>
-      <div id="s10-cvr" class="fcard info se">
-        <div class="fc-hd">① CVR（コンバージョン率）= CV数 ÷ セッション数 × 100</div>
-        <div class="fc-bd">A：1,000セッション／CV20件 → <strong style="color:var(--blue);">2.0%</strong>　｜　B：1,000セッション／CV24件 → <strong style="color:var(--green);">2.4%</strong></div>
+      <div id="s10-hd" class="sh se">3つの落とし穴 — よくある失敗をまとめる</div>
+      <div id="s10-traps" class="n-steps se">
+        <div class="n-step">
+          <div class="n-num r">1</div>
+          <div class="n-body">
+            <strong>早期終了（Evan Miller 2010）</strong>
+            <div class="t-sm">途中でのぞいて「Bが優勢→終了」→ 偽陽性率が20〜30%超に<br>✅ 対策：決めたサンプル数・期間が来るまで判断しない</div>
+          </div>
+        </div>
+        <div class="n-step">
+          <div class="n-num r">2</div>
+          <div class="n-body">
+            <strong>複数変数の同時変更</strong>
+            <div class="t-sm">ボタン＋ヘッドライン＋画像を一度に変える → 改善要因が特定不能<br>✅ 対策：1テスト1変数の鉄則を守る</div>
+          </div>
+        </div>
+        <div class="n-step">
+          <div class="n-num r">3</div>
+          <div class="n-body">
+            <strong>実施期間が短い・偏っている</strong>
+            <div class="t-sm">月曜3日だけ / 年末商戦中 → 曜日・季節・時間帯の影響を混入<br>✅ 対策：最低7日間（理想2〜4週間）、特別期間をまたがない</div>
+          </div>
+        </div>
       </div>
-      <div id="s10-lift" class="fcard good se">
-        <div class="fc-hd">② リフト率（改善率）=（B − A）÷ A × 100</div>
-        <div class="fc-bd">(2.4 − 2.0) ÷ 2.0 × 100 = <strong style="color:var(--green);">20%改善</strong>　→「0.4%上がった」より伝わりやすい</div>
-      </div>
-      <div id="s10-ci" class="fcard info se">
-        <div class="fc-hd">③ 信頼区間（Confidence Interval）</div>
-        <div class="fc-bd">「Bが95%の確率でAより○〜○%優れる」範囲。狭いほど精度が高い ／ <strong style="color:#fff;">ゼロをまたぐ場合は「差なし」</strong>と判断</div>
-      </div>
-      <div id="s10-neg" class="se" style="background:var(--surf);border-left:4px solid var(--accent);border-radius:0 9px 9px 0;padding:.5em .9em;margin-top:.3em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> BがAより悪い「失敗のテスト」も「効果がない」という重要な知見 → 失敗は損失ではなく<strong style="color:var(--accent);">学習コスト</strong>
+      <div id="s10-sum" class="se hl-banner" style="--c:var(--accent);margin-top:.3em;">
+        <i class="fa-solid fa-shield-halved hb-icon"></i>
+        <div class="hb-text"><strong>この3つを避けるだけで、A/Bテストの信頼性は劇的に向上する</strong></div>
       </div>
     </div>
   </section>
 
-  <!-- S11: Case study 480-530s -->
+  <!-- S11: Case study 480-530s — comp-tbl + kpi-big -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
       <div id="s11-hd" class="sh se">実践例：商品ページの画像A/BテストでCVR 32%改善</div>
       <div id="s11-setup" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-bottom:.35em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <div style="margin-bottom:.2em;"><strong style="color:#fff;">状況：</strong>中小ECサイト（ハンドメイドアクセサリー・架空）／月間約8,000セッション／CVR 3.2%</div>
-        <div><strong style="color:var(--accent);">仮説：</strong>単品の白抜き写真より、着用シーン写真の方が購買意欲を引き出せるのでは？（変更はメイン画像のみ＝1変数／21日間／各群2,000セッション）</div>
+        <div style="margin-bottom:.2em;"><strong style="color:#fff;">状況：</strong>中小ECサイト（ハンドメイドアクセサリー・架空）月間約8,000セッション／CVR 3.2%</div>
+        <div><strong style="color:var(--accent);">仮説：</strong>「単品白抜き写真より着用シーン写真の方が購買意欲を引き出せる」— 変更はメイン画像1か所のみ（21日間・各群2,000セッション事前計算済み）</div>
       </div>
-      <div id="s11-tbl" class="se" style="overflow-x:auto;">
-        <table class="dtbl">
-          <thead><tr><th>　</th><th>A：単品画像</th><th>B：シーン画像</th></tr></thead>
-          <tbody>
-            <tr><td class="row-hd">セッション</td><td>2,000</td><td>2,000</td></tr>
-            <tr><td class="row-hd">CV件数</td><td>64件</td><td class="hl">84件</td></tr>
-            <tr><td class="row-hd">CVR</td><td>3.2%</td><td class="hl">4.2%</td></tr>
-          </tbody>
-        </table>
+      <div id="s11-tbl" class="comp-tbl se">
+        <div class="comp-row comp-head">
+          <span class="comp-label">指標</span>
+          <span class="comp-a">A：単品画像（現行）</span>
+          <span class="comp-b">B：シーン画像（改善）</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">セッション</span>
+          <span class="comp-a">2,000</span>
+          <span class="comp-b">2,000</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">CV件数</span>
+          <span class="comp-a">64件</span>
+          <span class="comp-b c-green">84件</span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label">CVR</span>
+          <span class="comp-a c-red">3.2%</span>
+          <span class="comp-b c-green">4.2%</span>
+        </div>
       </div>
-      <div id="s11-result" class="se" style="display:flex;align-items:center;gap:.9em;margin-top:.4em;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);border-radius:9px;padding:.5em .9em;">
-        <div class="lift-big">+32%</div>
-        <div style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">リフト率 31.25%≒32%改善 ／ <strong style="color:#fff;">p値 0.018（&lt;0.05 → 統計的有意差あり）</strong> ／ 信頼水準95%以上</div>
+      <div id="s11-kpi" class="kpi-wrap se" style="margin-top:.4em;">
+        <div class="kpi-big" style="--c:var(--green)">
+          <div class="kpi-num">+32%</div>
+          <div class="kpi-sub">リフト率（CVR改善）</div>
+        </div>
+        <div class="kpi-ctx">
+          <strong>p値 0.018（p &lt; 0.05）→ 統計的有意差あり</strong><br>
+          信頼水準95%以上<br>
+          <span style="color:var(--accent);">次の仮説：着用<strong>動画</strong>はさらに効果があるか？</span>
+        </div>
       </div>
-      <div id="s11-next" class="se" style="margin-top:.3em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);"><i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i> 次の仮説へ：「シーン画像が有効なら、着用<strong style="color:var(--accent);">動画</strong>はさらに効くか？」</div>
     </div>
   </section>
 
-  <!-- S12: Summary + culture 530-580s -->
+  <!-- S12: Summary 530-580s — step-flow 実践ロードマップ -->
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">今日のまとめ ＋ 「テストして学ぶ」文化を根付かせる</div>
-      <div id="s12-items" class="se">
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">A/Bテスト＝1変数だけ変え、ランダムに比較し統計で判断（Fisher 1935）</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">何をテストするか：インパクト大×変更しやすい順</div><div class="sum-sub">ヘッドライン→CTA→価格→画像</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">サンプルサイズは事前計算／期間は最低7日・理想2〜4週間</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">3つの失敗：①早期終了 ②複数変数 ③短期・偏ったデータ</div><div class="sum-sub">決めた数まで待つ／1テスト1変数／曜日・季節を除去</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">結果はCVR・リフト率・信頼区間で読む／失敗も次の仮説に</div></div></div>
+      <div id="s12-hd" class="sh se">今日のまとめ ＋ A/Bテスト実践ロードマップ</div>
+      <div id="s12-flow" class="step-flow se">
+        <div class="sf-item">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>① 仮説を立てる</strong>：Who（誰の）・Problem（何の問題）・Action（何を変える）・Metric（何で測る）</div>
+        </div>
+        <div class="sf-item">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>② テスト設計：</strong>1変数のみ変更 ／ サンプルサイズ事前計算 ／ 最低7日間確保</div>
+        </div>
+        <div class="sf-item">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>③ テスト実施：</strong>サンプル達成まで途中判断しない ／ 特別期間を避ける</div>
+        </div>
+        <div class="sf-item">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>④ 結果を読む：</strong>CVR・リフト率・信頼区間で判断 ／ 失敗も「仮説を棄却できた」知見として活かす</div>
+        </div>
+        <div class="sf-item">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>⑤ 次の仮説へ：</strong>結果から新しい問いを立て、テストサイクルを回す</div>
+        </div>
       </div>
-      <div id="s12-culture" class="se" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.3);border-radius:9px;padding:.5em .9em;margin-top:.35em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <strong style="color:var(--acc2);">実験文化：</strong>週次/月次の「テストレビュー」を設ける ／「失敗した」→「<strong style="color:#fff;">仮説を棄却できた</strong>」と言い換える ／ Amazonは1日平均10以上のテストを同時進行
-      </div>
-      <div id="s12-do" class="se" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35);border-radius:9px;padding:.5em .9em;margin-top:.3em;font-size:clamp(11px,1.5vw,19px);font-weight:700;color:var(--green);text-align:center;">
-        今すぐできる実践：自社で「最初にテストする1か所」を今日決める
+      <div id="s12-do" class="se hl-banner" style="--c:var(--accent);margin-top:.3em;">
+        <i class="fa-solid fa-rocket hb-icon"></i>
+        <div class="hb-text"><strong>今すぐできる実践：自社で「最初にテストする1か所」を今日決める</strong><br>ヘッドラインかCTAボタン——そこから実験文化が始まる</div>
       </div>
     </div>
   </section>
@@ -1096,57 +1612,49 @@ const STEPS = [
   {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
   {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
   {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-q'],              anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-fails'],          anim:'rv-up'},
-  {si:1,  t:40,   ids:['s2-doubt'],          anim:'rv-scale'},
-  {si:1,  t:47,   ids:['s2-cmp'],            anim:'rv-up'},
-  {si:1,  t:55,   ids:['s2-amz'],            anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
+  {si:1,  t:33,   ids:['s2-verdict'],        anim:'rv-up'},
+  {si:1,  t:50,   ids:['s2-amz'],            anim:'rv-scale'},
   {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
   {si:2,  t:83,   ids:['s3-def'],            anim:'rv-scale'},
-  {si:2,  t:92,   ids:['s3-ab'],             anim:'rv-up'},
-  {si:2,  t:102,  ids:['s3-fisher'],         anim:'rv-fade'},
+  {si:2,  t:93,   ids:['s3-matrix'],         anim:'rv-up'},
+  {si:2,  t:108,  ids:['s3-fisher'],         anim:'rv-fade'},
   {si:3,  t:130,  ids:['s4-hd'],             anim:'rv-fade'},
   {si:3,  t:133,  ids:['s4-matrix'],         anim:'rv-scale'},
-  {si:3,  t:145,  ids:['s4-order'],          anim:'rv-up'},
+  {si:3,  t:148,  ids:['s4-labels'],         anim:'rv-fade'},
   {si:3,  t:158,  ids:['s4-quote'],          anim:'rv-fade'},
   {si:4,  t:180,  ids:['s5-hd'],             anim:'rv-fade'},
   {si:4,  t:183,  ids:['s5-coin'],           anim:'rv-scale'},
-  {si:4,  t:193,  ids:['s5-p'],              anim:'rv-fade'},
-  {si:4,  t:202,  ids:['s5-tbl'],            anim:'rv-up'},
-  {si:4,  t:215,  ids:['s5-conc'],           anim:'rv-fade'},
+  {si:4,  t:197,  ids:['s5-formula'],        anim:'rv-up'},
+  {si:4,  t:210,  ids:['s5-banner'],         anim:'rv-fade'},
   {si:5,  t:230,  ids:['s6-hd'],             anim:'rv-fade'},
-  {si:5,  t:233,  ids:['s6-trend'],          anim:'rv-up'},
-  {si:5,  t:245,  ids:['s6-fp'],             anim:'rv-scale'},
-  {si:5,  t:258,  ids:['s6-fix'],            anim:'rv-up'},
+  {si:5,  t:233,  ids:['s6-bars'],           anim:'rv-up'},
+  {si:5,  t:248,  ids:['s6-fp'],             anim:'rv-scale'},
+  {si:5,  t:260,  ids:['s6-fix'],            anim:'rv-up'},
   {si:6,  t:280,  ids:['s7-hd'],             anim:'rv-fade'},
-  {si:6,  t:283,  ids:['s7-bad'],            anim:'rv-up'},
-  {si:6,  t:295,  ids:['s7-good'],           anim:'rv-up'},
-  {si:6,  t:307,  ids:['s7-mvt'],            anim:'rv-fade'},
-  {si:6,  t:318,  ids:['s7-conc'],           anim:'rv-scale'},
+  {si:6,  t:283,  ids:['s7-bell'],           anim:'rv-fade'},
+  {si:6,  t:300,  ids:['s7-explain'],        anim:'rv-up'},
+  {si:6,  t:315,  ids:['s7-rule'],           anim:'rv-scale'},
   {si:7,  t:330,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:333,  ids:['s8-prob'],           anim:'rv-up'},
-  {si:7,  t:346,  ids:['s8-bias'],           anim:'rv-up'},
-  {si:7,  t:360,  ids:['s8-check'],          anim:'rv-fade'},
+  {si:7,  t:333,  ids:['s8-verdict'],        anim:'rv-up'},
+  {si:7,  t:355,  ids:['s8-mvt'],            anim:'rv-fade'},
   {si:8,  t:380,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:383,  ids:['s9-tools'],          anim:'rv-up'},
-  {si:8,  t:398,  ids:['s9-url'],            anim:'rv-scale'},
-  {si:8,  t:412,  ids:['s9-flow'],           anim:'rv-fade'},
+  {si:8,  t:383,  ids:['s9-gauge'],          anim:'rv-scale'},
+  {si:8,  t:398,  ids:['s9-pval'],           anim:'rv-up'},
+  {si:8,  t:410,  ids:['s9-ci'],             anim:'rv-up'},
+  {si:8,  t:422,  ids:['s9-tip'],            anim:'rv-fade'},
   {si:9,  t:430,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:433,  ids:['s10-cvr'],           anim:'rv-up'},
-  {si:9,  t:445,  ids:['s10-lift'],          anim:'rv-up'},
-  {si:9,  t:457,  ids:['s10-ci'],            anim:'rv-up'},
-  {si:9,  t:468,  ids:['s10-neg'],           anim:'rv-fade'},
+  {si:9,  t:433,  ids:['s10-traps'],         anim:'rv-up'},
+  {si:9,  t:465,  ids:['s10-sum'],           anim:'rv-scale'},
   {si:10, t:480,  ids:['s11-hd'],            anim:'rv-fade'},
   {si:10, t:483,  ids:['s11-setup'],         anim:'rv-up'},
-  {si:10, t:495,  ids:['s11-tbl'],           anim:'rv-up'},
-  {si:10, t:507,  ids:['s11-result'],        anim:'rv-scale'},
-  {si:10, t:518,  ids:['s11-next'],          anim:'rv-fade'},
+  {si:10, t:497,  ids:['s11-tbl'],           anim:'rv-up'},
+  {si:10, t:510,  ids:['s11-kpi'],           anim:'rv-scale'},
   {si:11, t:530,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:533,  ids:['s12-items'],         anim:'rv-up'},
-  {si:11, t:558,  ids:['s12-culture'],       anim:'rv-fade'},
-  {si:11, t:568,  ids:['s12-do'],            anim:'rv-scale'},
+  {si:11, t:533,  ids:['s12-flow'],          anim:'rv-up'},
+  {si:11, t:565,  ids:['s12-do'],            anim:'rv-scale'},
   {si:12, t:580,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:592,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:12, t:593,  ids:['s13-cta'],           anim:'rv-up'},
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
@@ -1170,12 +1678,12 @@ const NARRATIONS = [
   `A/Bテストで最初に決めるのは「何をテストするか」です。すべてを一度にテストする必要はありません。インパクトが大きく、変更しやすいものから始めましょう。\n最優先はヘッドライン——最初に目に入る文言はCVRへの影響が最も大きいです。次がCTAボタン、文言や色を変えるだけで試せます。その次が価格表示や「送料無料」といったオファー訴求、そして画像や動画の順です。Optimizelyは「インパクトが大きく実装コストが小さいものから始めよ」と推奨しています。`,
   `「5人に見せて4人が良いと言った」——これはデータとして信頼できません。コインを5回投げて4回表が出ても、そのコインが偏っているとは言えないのと同じです。少ないサンプルでは偶然の差を「効果あり」と誤判断してしまいます。\n統計的有意差を示す指標がp値です。p値が0.05未満なら「この差が偶然起きる確率は5%以下」、つまり95%の確率で本物の差があると判断できます。現在のCVRが1%なら片側で4,000〜8,000セッション、3%なら1,500〜3,000セッション程度が最低ラインです。テスト開始前に必要サンプル数を計算してください。`,
   `最も多い失敗が早期終了です。テストを始めて数日後、「Bが優勢に見える、もう決めよう」と終了してしまうパターンです。\n2010年にEvan Millerが指摘した問題がまさにこれです。テスト途中でのぞくたびに「誤検知のリスク」が積み重なります。5%の有意水準を設定していても、途中チェックを繰り返すとフォールスポジティブ——本当は効果がないのに「効果あり」と誤判断する確率——が20〜30%を超えることもあります。\n対処法はシンプルです。開始前に必要サンプル数を決め、達成するまで判断しない。それだけです。`,
+  `ベルカーブを見てください。サンプルが少ない早期終了ゾーンでは、A案とB案の分布が大きく重なり合っています。この重なりが大きいほど、差が偶然か本物かを判断できません。\nサンプルを積み上げることで分布が安定し、はじめてシフト（本当の差）が統計的に確認できます。決めたサンプル数に達するまで判断しない——これが早期終了を防ぐ唯一の方法です。`,
   `2つ目の失敗は、複数の変数を同時に変えてしまうことです。ボタンの色、ヘッドライン、画像を全部変えてBがA比で高かったとき、「何が効いたか」がわかりません。ボタン？ヘッドライン？画像の組み合わせ？この状態では次の施策に知見を活かせません。\nA/Bテストの鉄則は「1テスト1変数」です。変えるのは1か所だけ。そうすることで「これが効いた」という因果関係が明確になります。複数要素を同時にテストするMVTという手法もありますが、月間10万PV以上の規模がないと信頼できる結果が出ません。まずは1変数から始めましょう。`,
-  `3つ目の失敗は、テスト期間が短すぎる、または偏った期間で判断してしまうことです。月曜日だけのデータ、年末商戦中のデータは、ほかの時期に当てはまらない可能性があります。\n曜日によってユーザー層が変わる、時間帯で行動パターンが違う、季節で購買意欲が大きく変動する——こうした外部要因の影響を除去するために、テスト期間は最低でも7日間必要です。曜日ごとの偏りを平均化できるからです。理想は2〜4週間。大型セールや祝日をまたぐ期間は避けてください。`,
-  `ツールの選び方を整理します。2023年にGoogle Optimizeが終了したため、現在の代替は状況によって異なります。スモールスタートなら、GAとの連携が可能なVWOのスターターや、Optimizelyの無料プランが選択肢です。\n技術的なハードルが高い場合の簡易手法として、URLパラメータ分岐があります。ページAとページBを別URLで作成し、広告の配信先を半々に振り分けるだけ。GA4でCVを計測すれば、ツールなしで疑似A/Bテストが可能です。「まずやってみる」ためのハードルを下げる方法として覚えておいてください。`,
-  `テスト結果の読み方で重要な指標が3つあります。まずCVR——セッション数に対するコンバージョン数の割合です。次にリフト率——CVRがどれだけ改善したかの比率です。2%が2.4%になった場合、上昇幅は0.4ポイントですが、リフト率は「20%改善」と表現します。ビジネスインパクトとして伝わりやすい数字です。\n3つ目が信頼区間——結果の精度を示す範囲です。信頼区間がゼロをまたぐ場合は「差なし」と判断します。そしてBがAより悪かった「失敗のテスト」も価値があります。「これは効かない」という知見もまた、次の改善仮説への入口です。`,
+  `テスト結果の信頼性を示す指標が信頼水準とp値です。信頼水準95%以上、p値0.05未満が「統計的有意差あり」の目安です。\n信頼区間も重要です。「BはAより○〜○%優れる」という範囲で結果を示します。信頼区間がゼロをまたぐ場合は「差なし」と判断してください。テスト期間が長く・サンプルが多いほど信頼区間は狭くなり、結果の精度が上がります。`,
+  `よくある3つの落とし穴をまとめます。早期終了——決めたサンプル数・期間が来るまで判断しない。複数変数の同時変更——1テスト1変数の鉄則を守る。実施期間が短い・偏っている——最低7日間、特別期間を避ける。\nこの3つを避けるだけで、A/Bテストの信頼性は劇的に向上します。`,
   `実際の事例を見てみましょう。ハンドメイドアクセサリーのECサイトで実施したA/Bテストです。仮説は「単品の白抜き画像より、着用シーン写真の方が購買を後押しするのでは」というもの。変えたのはメイン画像1か所だけ、テスト期間は21日間、各群2,000セッションを事前に設定しました。\n結果、CVRが3.2%から4.2%に上昇、リフト率は32%改善。p値0.018で統計的有意差あり——これは偶然ではなく、シーン画像が本当に効いたことを意味します。さらにこの結果が「動画ならもっと効くのでは」という次の仮説を生みました。テストの連鎖が改善の好循環を生み出します。`,
-  `今日のポイントをまとめます。A/Bテストとは1変数だけを変えてランダムに比較し、統計で判断する手法。テスト優先順位はインパクト×変更しやすさで決め、サンプルサイズは事前計算必須。3つの失敗——早期終了・複数変数・短期データ——を避け、CVRとリフト率と信頼区間で結果を読む。これがA/Bテストの全体像です。\n最後に「実験文化」について。週次または月次でテスト結果を共有するレビュー会を設けてください。「失敗した」でなく「仮説を棄却できた」と言い換えるだけで組織の空気が変わります。今日の実践は一つ——自社で最初にテストする1か所を今日決めること。そこから実験文化が始まります。`,
+  `今日のポイントをロードマップとしてまとめます。仮説を立てる、テストを設計する、実施する、結果を読む、次の仮説へ——この5ステップを繰り返すことで、データに基づく改善サイクルが回り始めます。\n「失敗した」でなく「仮説を棄却できた」と言い換えるだけで組織の空気が変わります。今日の実践は一つ——自社で最初にテストする1か所を今日決めること。そこから実験文化が始まります。`,
   `実践編、全12回が完了しました。入門編のマーケティング基礎から、中級編のUSP・差別化、そして実践編のCPA・LTV、コピーライティング、SNS運用、A/Bテストまで——ここまで学んできた皆さんは、今日からデータで改善を積み重ねられるマーケターです。\n次の上級編では、AIを使ったマーケティングの自動化・高速化をテーマにお届けします。チャンネル登録と高評価をぜひよろしくお願いします。実践編の感想やご質問もコメントでお待ちしています。ここまでお付き合いいただき、本当にありがとうございました！`,
 ];
 const TOTAL_SECS = 600;

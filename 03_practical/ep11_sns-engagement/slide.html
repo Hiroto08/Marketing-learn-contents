@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第11回 SNSエンゲージメントの高め方 | AI時代のマーケティング・ラボ</title>
+<title>第11回 SNSでファンを増やす エンゲージメントの高め方 | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -684,30 +684,358 @@ body {
   display:flex; align-items:center; gap:.4em;
 }
 #narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
+
+/* ================================================================
+   SVG UTILITY COMPONENTS — v2 design system
+================================================================ */
+
+/* ── GAUGE BAR ──────────────────────────────────────────────────
+   <div class="gauge-wrap se" id="...">
+     <div class="gauge-hd">LTV÷CPA</div>
+     <div class="gauge-track">
+       <div class="gauge-fill" style="--v:.75;--c:var(--green)"></div>
+       <span class="gauge-marker" style="left:33%">3×</span>
+     </div>
+     <div class="gauge-legs"><span>0</span><span>3×</span><span>10+</span></div>
+   </div>  */
+.gauge-wrap  { background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.75em 1.1em; }
+.gauge-hd    { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); font-weight:700; margin-bottom:.55em; }
+.gauge-track { height:clamp(10px,1.2vw,16px); background:var(--surf2); border-radius:9999px; position:relative; }
+.gauge-fill  { height:100%; border-radius:9999px;
+  background:linear-gradient(90deg, var(--c-from,#4ade80), var(--c,var(--accent)));
+  width:0; box-shadow:0 0 10px var(--c,var(--accent));
+  animation:gaugeFill 1.3s .35s cubic-bezier(.4,0,.2,1) forwards;
+  animation-play-state:paused; }
+.gauge-marker { position:absolute; top:-200%; height:300%; transform:translateX(-50%);
+  border-left:1.5px dashed var(--border); padding-left:.35em;
+  font-size:clamp(8px,.9vw,12px); color:var(--muted); white-space:nowrap;
+  display:flex; align-items:flex-start; }
+.gauge-legs  { display:flex; justify-content:space-between;
+  font-size:clamp(8px,.85vw,12px); color:var(--muted); margin-top:.3em; }
+@keyframes gaugeFill { to { width:calc(var(--v,.5)*100%); } }
+.rv-fade .gauge-fill,.rv-up .gauge-fill,.rv-scale .gauge-fill,.rv-pop .gauge-fill { animation-play-state:running; }
+
+/* ── KPI BIG NUMBER ─────────────────────────────────────────────
+   <div class="kpi-big se" id="..." style="--c:var(--green)">
+     <div class="kpi-num">9.9×</div><div class="kpi-sub">LTV/CPA</div>
+   </div>  */
+.kpi-wrap { display:flex; align-items:center; justify-content:center; gap:1.5em; flex-wrap:wrap; }
+.kpi-big  { text-align:center; }
+.kpi-num  { font-size:clamp(36px,6vw,80px); font-weight:900; color:var(--c,var(--accent));
+  line-height:1; font-family:'Inter',sans-serif;
+  filter:drop-shadow(0 0 18px var(--c,var(--accent))); }
+.kpi-sub  { font-size:clamp(9px,1.15vw,15px); color:var(--muted2); margin-top:.3em; display:block; }
+.kpi-ctx  { font-size:clamp(11px,1.4vw,18px); color:var(--muted2);
+  border-left:1px solid var(--border); padding-left:1em; line-height:1.6; }
+
+/* ── HORIZONTAL BAR CHART ───────────────────────────────────────
+   <div class="bar-chart-h">
+     <div class="bh-row">
+       <span class="bh-lbl">A案</span>
+       <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--accent)"></div></div>
+       <span class="bh-val" style="color:var(--accent)">75%</span>
+     </div>
+   </div>  */
+.bar-chart-h { display:flex; flex-direction:column; gap:.55em; }
+.bh-row  { display:flex; align-items:center; gap:.65em; font-size:clamp(10px,1.3vw,17px); }
+.bh-lbl  { flex:0 0 clamp(60px,9vw,120px); text-align:right; color:var(--muted2); font-size:.9em; }
+.bh-track{ flex:1; height:clamp(8px,.9vw,14px); background:var(--surf2); border-radius:9999px; overflow:hidden; }
+.bh-fill { height:100%; border-radius:9999px; box-shadow:0 0 8px var(--c,var(--accent));
+  background:linear-gradient(90deg,var(--c-from,var(--c,var(--accent))),var(--c,var(--accent)));
+  width:0; animation:barFill 1s .2s ease-out forwards; animation-play-state:paused; }
+.bh-val  { flex:0 0 3.2em; text-align:left; font-weight:700; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; font-size:.9em; }
+@keyframes barFill { to { width:calc(var(--v,50)*1%); } }
+.rv-fade .bh-fill,.rv-up .bh-fill,.rv-scale .bh-fill { animation-play-state:running; }
+
+/* ── 2×2 MATRIX ─────────────────────────────────────────────────
+   <div class="matrix-2x2">
+     <div class="mx-cell mx-tl"><div class="mx-hd">...</div><div class="mx-body">...</div></div>
+     <div class="mx-cell mx-tr hi">...</div>
+     <div class="mx-cell mx-bl">...</div>
+     <div class="mx-cell mx-br hi-g">...</div>
+   </div>  */
+.matrix-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:2px;
+  border-radius:10px; overflow:hidden; background:var(--border); }
+.mx-cell    { background:var(--surf); padding:.65em .9em; transition:background .3s; }
+.mx-cell.hi   { background:rgba(124,111,255,.12); }
+.mx-cell.hi-g { background:rgba(74,222,128,.08); }
+.mx-cell.hi-r { background:rgba(248,113,113,.08); }
+.mx-cell.hi-y { background:rgba(251,191,36,.08); }
+.mx-tl { border-radius:10px 0 0 0; } .mx-tr { border-radius:0 10px 0 0; }
+.mx-bl { border-radius:0 0 0 10px; } .mx-br { border-radius:0 0 10px 0; }
+.mx-hd   { font-weight:700; font-size:clamp(10px,1.35vw,18px); color:var(--accent); margin-bottom:.25em; }
+.mx-body { font-size:clamp(9px,1.2vw,15px); color:var(--muted2); line-height:1.5; }
+.mx-labels { display:flex; justify-content:space-between; align-items:center; margin-top:.35em; }
+.mx-lbl-x  { font-size:clamp(8px,.9vw,12px); color:var(--muted); letter-spacing:.05em; }
+
+/* ── STAT RING (SVG donut) ──────────────────────────────────────
+   Circumference of r=38 ≈ 238.76 → use 239
+   <div class="stat-ring" style="--v:75;--c:#4ade80">
+     <svg viewBox="0 0 100 100">
+       <circle class="sr-track" cx="50" cy="50" r="38"/>
+       <circle class="sr-fill"  cx="50" cy="50" r="38"/>
+     </svg>
+     <div class="sr-inner"><div class="sr-val">75%</div><div class="sr-lbl">継続率</div></div>
+   </div>  */
+.stat-rings  { display:flex; gap:1.5em; align-items:center; justify-content:center; flex-wrap:wrap; }
+.stat-ring   { position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:clamp(80px,10vw,130px); height:clamp(80px,10vw,130px); }
+.stat-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+.sr-track { fill:none; stroke:var(--surf2); stroke-width:7; }
+.sr-fill  { fill:none; stroke:var(--c,var(--accent)); stroke-width:7; stroke-linecap:round;
+  stroke-dasharray:0 239;
+  animation:ringFill 1.3s .35s ease-out forwards; animation-play-state:paused; }
+.sr-inner { position:relative; z-index:1; text-align:center; }
+.sr-val   { font-size:clamp(14px,1.8vw,22px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; line-height:1; }
+.sr-lbl   { font-size:clamp(7px,.85vw,11px); color:var(--muted); }
+.stat-ring-wrap { text-align:center; }
+.stat-ring-ttl  { font-size:clamp(9px,1.1vw,14px); color:var(--muted2); margin-top:.35em; font-weight:700; }
+@keyframes ringFill { to { stroke-dasharray:calc(var(--v,75)*2.39) 239; } }
+.rv-fade .sr-fill,.rv-up .sr-fill,.rv-scale .sr-fill,.rv-pop .sr-fill { animation-play-state:running; }
+
+/* ── NUMBER STEPS ───────────────────────────────────────────────
+   <div class="n-steps">
+     <div class="n-step se" id="...">
+       <div class="n-num">1</div>
+       <div class="n-body"><strong>見出し</strong><div class="t-sm">補足</div></div>
+     </div>
+   </div>  */
+.n-steps { display:flex; flex-direction:column; gap:.5em; }
+.n-step  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); }
+.n-num   { min-width:clamp(24px,2.8vw,36px); height:clamp(24px,2.8vw,36px); border-radius:50%;
+  background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:.82em; flex-shrink:0; margin-top:.1em;
+  box-shadow:0 0 14px var(--glow-acc); font-family:'Inter',sans-serif; }
+.n-num.g { background:var(--green); box-shadow:0 0 14px var(--glow-grn); color:#000; }
+.n-num.r { background:var(--red);   box-shadow:0 0 14px rgba(248,113,113,.3); }
+.n-num.b { background:var(--blue);  box-shadow:0 0 14px rgba(96,165,250,.3); }
+.n-body  { color:var(--muted2); line-height:1.5; }
+.n-body strong { color:var(--text); }
+
+/* ── HORIZONTAL FLOW ────────────────────────────────────────────
+   <div class="h-flow">
+     <div class="h-flow-node accent">Aware<span class="fn-sub">認知</span></div>
+     <svg class="h-arrow" viewBox="0 0 24 24" fill="none">
+       <path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"/>
+     </svg>
+     <div class="h-flow-node grn">Act<span class="fn-sub">行動</span></div>
+   </div>  */
+.h-flow { display:flex; align-items:center; gap:.35em; flex-wrap:wrap; justify-content:center; }
+.h-flow-node { background:var(--surf); border:1px solid var(--border); border-radius:9px;
+  padding:.45em .9em; font-size:clamp(10px,1.35vw,18px); font-weight:700;
+  text-align:center; flex-shrink:0; line-height:1.3; }
+.h-flow-node .fn-sub { font-size:.72em; font-weight:400; color:var(--muted2); display:block; margin-top:.05em; }
+.h-flow-node.accent { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.4); color:var(--accent); }
+.h-flow-node.acc2   { background:rgba(255,107,138,.12); border-color:rgba(255,107,138,.4); color:var(--acc2); }
+.h-flow-node.grn    { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.4);  color:var(--green); }
+.h-flow-node.blu    { background:rgba(96,165,250,.12);  border-color:rgba(96,165,250,.4);  color:var(--blue); }
+.h-flow-node.ylw    { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.4);  color:var(--yellow); }
+.h-arrow { width:clamp(14px,1.8vw,24px); color:var(--muted); flex-shrink:0; }
+
+/* ── QUOTE BLOCK ────────────────────────────────────────────────
+   <blockquote class="quote-blk se" id="...">
+     <p class="qb-text">「...」</p>
+     <cite class="qb-cite">Author, Source (Year)</cite>
+   </blockquote>  */
+.quote-blk { position:relative; background:var(--surf); border-radius:10px;
+  padding:1em 1.3em 1em 2.5em; border:1px solid var(--border);
+  border-left:4px solid var(--accent); overflow:hidden; }
+.quote-blk::before { content:'\201C'; font-size:clamp(50px,8vw,100px); font-weight:900;
+  color:rgba(124,111,255,.15); position:absolute; top:-.1em; left:.15em;
+  line-height:1; pointer-events:none; font-family:'Inter','Georgia',serif; }
+.qb-text { font-size:clamp(13px,1.8vw,24px); line-height:1.65; color:var(--text);
+  position:relative; z-index:1; }
+.qb-text em { color:var(--accent); font-style:normal; font-weight:700; }
+.qb-text .hl { color:var(--acc2); }
+.qb-cite { display:block; margin-top:.55em; font-size:clamp(9px,1.1vw,14px);
+  color:var(--muted); font-style:italic; position:relative; z-index:1; }
+
+/* ── COMPARISON TABLE ───────────────────────────────────────────
+   <div class="comp-tbl">
+     <div class="comp-row comp-head">
+       <span class="comp-label"></span><span class="comp-a">Before</span><span class="comp-b">After</span>
+     </div>
+     <div class="comp-row hi">
+       <span class="comp-label">CVR</span>
+       <span class="comp-a c-red">1.2%</span><span class="comp-b c-green">2.3%</span>
+     </div>
+   </div>  */
+.comp-tbl { display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
+.comp-row { display:flex; align-items:stretch; background:var(--surf); }
+.comp-row.hi   .comp-b { background:rgba(74,222,128,.08); color:var(--green); }
+.comp-row.lo   .comp-a { background:rgba(248,113,113,.08); color:var(--red); }
+.comp-label { flex:0 0 clamp(80px,12vw,160px); padding:.55em .9em;
+  font-size:clamp(10px,1.3vw,16px); color:var(--muted2);
+  border-right:1px solid var(--border); display:flex; align-items:center; }
+.comp-a,.comp-b { flex:1; padding:.55em .9em;
+  font-size:clamp(11px,1.5vw,20px); display:flex; align-items:center;
+  justify-content:center; font-weight:700; }
+.comp-a { border-right:1px solid var(--border); }
+.comp-row.comp-head { background:var(--surf2); }
+.comp-row.comp-head .comp-label,
+.comp-row.comp-head .comp-a,
+.comp-row.comp-head .comp-b { font-size:clamp(9px,1.1vw,14px); font-weight:700; color:var(--muted); }
+
+/* ── TAGS / CHIPS ───────────────────────────────────────────────
+   <span class="tag tag-a">変更コスト低</span>  */
+.tag   { display:inline-flex; align-items:center; gap:.3em; padding:.2em .7em;
+  border-radius:9999px; font-size:clamp(9px,1.1vw,14px); font-weight:700;
+  border:1px solid transparent; line-height:1.3; }
+.tag-a { background:rgba(124,111,255,.12); border-color:rgba(124,111,255,.35); color:var(--accent); }
+.tag-g { background:rgba(74,222,128,.1);  border-color:rgba(74,222,128,.35);  color:var(--green); }
+.tag-r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.35); color:var(--red); }
+.tag-b { background:rgba(96,165,250,.1);  border-color:rgba(96,165,250,.35);  color:var(--blue); }
+.tag-y { background:rgba(251,191,36,.1);  border-color:rgba(251,191,36,.35);  color:var(--yellow); }
+
+/* ── ICON ROW LIST ───────────────────────────────────────────────
+   <div class="icon-rows">
+     <div class="icon-row se" id="...">
+       <i class="fa-solid fa-arrow-trend-up c-green"></i>
+       <div><strong>タイトル</strong><div class="t-sm">説明</div></div>
+     </div>
+   </div>  */
+.icon-rows { display:flex; flex-direction:column; gap:.5em; }
+.icon-row  { display:flex; align-items:flex-start; gap:.8em; font-size:clamp(12px,1.7vw,22px); }
+.icon-row > i { font-size:1.05em; flex-shrink:0; margin-top:.1em; }
+.icon-row > div > strong { color:var(--text); }
+.icon-row > div > .t-sm { margin-top:.1em; }
+
+/* ── COLS3 / COLS4 ──────────────────────────────────────────────*/
+.cols3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; }
+.cols4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5%; }
+
+/* ── HIGHLIGHT BANNER ───────────────────────────────────────────
+   <div class="hl-banner" style="--c:var(--green)">
+     <i class="fa-solid fa-circle-check hb-icon"></i>
+     <div class="hb-text"><strong>見出し</strong><br>本文</div>
+   </div>  */
+.hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
+  background:var(--surf); border:1px solid var(--border);
+  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+.hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
+.hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
+.hb-text strong { color:var(--text); }
+
+/* ── VERDICT ROWS ───────────────────────────────────────────────*/
+.verdict-rows { display:flex; flex-direction:column; gap:.4em; }
+.verdict-row  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); padding:.3em 0; }
+.v-icon { width:clamp(18px,2vw,26px); flex-shrink:0; margin-top:.15em; text-align:center; }
+.verdict-row.ok .v-icon { color:var(--green); }
+.verdict-row.ng .v-icon { color:var(--red); }
+.v-body { color:var(--muted2); line-height:1.5; }
+.verdict-row.ok .v-body strong { color:var(--text); }
+.verdict-row.ng .v-body strong { color:var(--red); }
+
+/* ── SVG INLINE HELPERS ─────────────────────────────────────────*/
+.svg-il      { width:100%; height:auto; display:block; overflow:visible; }
+.svg-il text { font-family:'Inter','Noto Sans JP',sans-serif; }
+.svg-grid    { stroke:var(--border); stroke-width:.5; }
+.svg-axis    { stroke:var(--muted); stroke-width:1; fill:none; }
+.svg-curve   { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; }
+.svg-curve2  { fill:none; stroke:var(--acc2);   stroke-width:2.5; stroke-linecap:round; }
+.svg-area    { fill:rgba(124,111,255,.15); stroke:none; }
+.svg-area2   { fill:rgba(255,107,138,.12); stroke:none; }
+.svg-area-g  { fill:rgba(74,222,128,.12);  stroke:none; }
+.svg-lbl     { fill:var(--muted2); font-size:11px; }
+.svg-lbl-a   { fill:var(--accent); font-weight:bold; font-size:11px; }
+.svg-lbl-2   { fill:var(--acc2);   font-size:11px; }
+.svg-bar-a   { fill:rgba(124,111,255,.7); }
+.svg-bar-g   { fill:rgba(74,222,128,.7); }
+.svg-bar-r   { fill:rgba(248,113,113,.7); }
+.svg-marker  { stroke:var(--acc2); stroke-width:1.5; stroke-dasharray:4 3; fill:none; }
+
+/* ── FORMULA DISPLAY ────────────────────────────────────────────
+   <div class="formula se" id="...">
+     <span class="fm-var" style="--c:var(--accent)">LTV</span>
+     <span class="fm-op">÷</span>
+     <span class="fm-var" style="--c:var(--acc2)">CPA</span>
+     <span class="fm-op">&gt;</span>
+     <span class="fm-val" style="--c:var(--green)">3</span>
+   </div>  */
+.formula    { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.4em; }
+.fm-var     { font-size:clamp(20px,3.5vw,46px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 10px var(--c,var(--accent))); }
+.fm-op      { font-size:clamp(16px,2.8vw,36px); font-weight:900; color:var(--muted);
+  font-family:'Inter',sans-serif; }
+.fm-val     { font-size:clamp(24px,4.5vw,60px); font-weight:900; color:var(--c,var(--green));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 14px var(--c,var(--green))); }
+.formula-sub { text-align:center; font-size:clamp(10px,1.3vw,17px); color:var(--muted2); margin-top:.3em; }
+
+/* ── STEP-FLOW (vertical with connector) ────────────────────────
+   <div class="step-flow">
+     <div class="sf-item se" id="...">
+       <div class="sf-dot"></div>
+       <div class="sf-body"><strong>ステップ1</strong><span class="t-sm">説明</span></div>
+     </div>
+   </div>  */
+.step-flow { position:relative; padding-left:1.6em; display:flex; flex-direction:column; gap:.55em; }
+.step-flow::before { content:''; position:absolute; left:.55em; top:.8em; bottom:.8em;
+  width:2px; background:linear-gradient(to bottom,var(--accent),var(--border)); border-radius:1px; }
+.sf-item { display:flex; align-items:flex-start; gap:.75em; position:relative; }
+.sf-dot  { width:clamp(14px,1.6vw,20px); height:clamp(14px,1.6vw,20px); border-radius:50%;
+  background:var(--accent); border:2px solid var(--slide-bg);
+  box-shadow:0 0 10px var(--glow-acc); flex-shrink:0; margin-top:.2em; z-index:1; }
+.sf-body { font-size:clamp(11px,1.55vw,20px); color:var(--muted2); line-height:1.5; }
+.sf-body strong { color:var(--text); }
+
+/* ── PILL BADGE ─────────────────────────────────────────────────*/
+.pill     { display:inline-flex; align-items:center; gap:.3em;
+  background:var(--surf2); border:1px solid var(--border); border-radius:6px;
+  padding:.15em .6em; font-size:clamp(9px,1.1vw,14px); font-weight:700; }
+.pill.acc { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.3); color:var(--accent); }
+.pill.grn { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.3);  color:var(--green); }
+.pill.red { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:var(--red); }
+.pill.ylw { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.3);  color:var(--yellow); }
+
+/* ── S1 RING / DOT ANIMATIONS ───────────────────────────────────*/
+.s1-ring { animation:ringRotate 24s linear infinite; transform-origin:center; }
+.s1-ring1 { animation-duration:30s; }
+.s1-ring2 { animation-duration:22s; animation-direction:reverse; }
+.s1-ring3 { animation-duration:15s; }
+@keyframes ringRotate {
+  from { transform:translate(-50%,-50%) rotate(0deg); }
+  to   { transform:translate(-50%,-50%) rotate(360deg); }
+}
+.s1-dot { animation:dotFloat 4s ease-in-out infinite alternate; }
+.s1-dot1 { animation-duration:4.2s; }
+.s1-dot2 { animation-duration:3.5s; animation-delay:.5s; }
+.s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
+@keyframes dotFloat { to { transform:translateY(-8px); } }
+
 </style>
 
 <style id="ep-css">
-/* ── vertical centering override ── */
+/* ── vertical centering ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── SNS accent (pink/social) ── */
-:root{--accent:#EC4899;}
+/* ── accent: pink (SNS / social engagement) ── */
+:root { --accent: #EC4899; --glow-acc: rgba(236,72,153,.25); --acc2: #a78bfa; }
+
+/* ── s1 overrides ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2a0a22 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(236,72,153,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px);}
+#s1-badge i{color:var(--accent);}
+#s1-ep{font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em;}
+#s1-catch{font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em;}
 
 /* ── compare cards (S2) ── */
-.cmp-row{display:flex;gap:.6em;margin:.3em 0;}
+.cmp-row{display:flex;gap:.6em;margin:.35em 0;}
 .cmp-card{flex:1;border-radius:11px;padding:.65em .9em;font-size:clamp(11px,1.45vw,18px);}
-.cmp-card.weak{background:rgba(248,135,100,0.08);border:1px solid rgba(248,135,100,0.35);}
+.cmp-card.weak{background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.35);}
 .cmp-card.strong{background:rgba(74,222,128,0.10);border:1px solid rgba(74,222,128,0.4);}
 .cmp-card .cmp-hd{font-weight:800;margin-bottom:.25em;font-size:1.05em;}
-.cmp-card.weak .cmp-hd{color:var(--acc2);}
+.cmp-card.weak .cmp-hd{color:var(--red);}
 .cmp-card.strong .cmp-hd{color:var(--green);}
 .cmp-big{font-size:1.5em;font-weight:900;color:#fff;line-height:1.1;}
 .cmp-sub{color:var(--muted2);font-size:.9em;margin-top:.2em;line-height:1.45;}
 
-/* ── formula box (S3) ── */
-.formula{background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.35);border-radius:11px;padding:.7em 1em;text-align:center;font-size:clamp(12px,1.7vw,22px);color:#fff;font-weight:700;line-height:1.5;}
-.formula em{color:var(--accent);font-style:normal;}
+/* ── formula (S3) ── */
+.eng-formula{background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.35);border-radius:11px;padding:.7em 1em;text-align:center;font-size:clamp(12px,1.7vw,22px);color:#fff;font-weight:700;line-height:1.5;}
+.eng-formula em{color:var(--accent);font-style:normal;}
 
 /* ── benchmark table (S3) ── */
 .bm{width:100%;border-collapse:collapse;font-size:clamp(9px,1.2vw,15px);}
@@ -715,27 +1043,13 @@ body {
 .bm td{padding:.3em .5em;border:1px solid var(--border);color:var(--muted2);text-align:center;}
 .bm td.lbl{text-align:left;color:#fff;font-weight:700;}
 
-/* ── flow steps (S4) ── */
-.flow-wrap{display:flex;flex-direction:column;align-items:center;gap:.18em;margin:.2em 0;}
-.flow-step{border-radius:8px;padding:.42em .8em;text-align:center;font-size:clamp(10px,1.35vw,17px);font-weight:700;}
-.flow-step.f1{width:55%;background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.35);color:var(--blue);}
-.flow-step.f2{width:75%;background:rgba(251,191,36,0.13);border:1px solid rgba(251,191,36,0.35);color:var(--yellow);}
-.flow-step.f3{width:95%;background:rgba(236,72,153,0.13);border:1px solid rgba(236,72,153,0.4);color:var(--accent);}
-.flow-arr{color:var(--muted);font-size:.95em;}
+/* ── note banner ── */
+.note-g{border-radius:9px;padding:.55em .95em;font-size:clamp(11px,1.5vw,19px);font-weight:700;display:flex;align-items:center;gap:.55em;}
+.note-g.acc{background:rgba(236,72,153,0.09);border:1px solid rgba(236,72,153,0.35);color:var(--accent);}
+.note-g.grn{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.35);color:var(--green);}
+.note-g.red{background:rgba(248,100,100,0.09);border:1px solid rgba(248,100,100,0.35);color:var(--red);}
 
-/* ── rank bars (S4) ── */
-.rank-row{display:flex;align-items:center;gap:.5em;margin:.15em 0;font-size:clamp(10px,1.35vw,17px);}
-.rank-lbl{min-width:4.5em;font-weight:700;color:#fff;flex-shrink:0;}
-.rank-bar{height:.9em;border-radius:5px;background:linear-gradient(90deg,var(--accent),rgba(236,72,153,0.3));}
-
-/* ── post-type cards (S5) ── */
-.pt-grid{display:flex;flex-direction:column;gap:.3em;margin:.2em 0;}
-.pt-card{border-radius:9px;padding:.5em .85em;background:var(--surf);border:1px solid var(--border);font-size:clamp(10px,1.35vw,17px);}
-.pt-card .pt-hd{font-weight:800;color:var(--accent);margin-bottom:.12em;}
-.pt-card .pt-bd{color:var(--muted2);line-height:1.4;}
-.pt-card .pt-act{color:var(--green);font-size:.85em;margin-top:.12em;}
-
-/* ── jab/hook (S6) ── */
+/* ── jab / hook (S6) ── */
 .jh-row{display:flex;gap:.6em;margin:.3em 0;}
 .jh-card{flex:1;border-radius:10px;padding:.6em .9em;font-size:clamp(10px,1.4vw,17px);}
 .jh-card.jab{background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.35);}
@@ -746,58 +1060,31 @@ body {
 .jh-card .jh-bd{color:var(--muted2);line-height:1.4;}
 .jh-ratio{text-align:center;font-size:clamp(16px,2.6vw,36px);font-weight:900;color:var(--accent);margin:.2em 0;}
 
-/* ── ratio pie / bars (S7) ── */
+/* ── ratio bar (S7) ── */
 .ratio-bar{display:flex;height:1.4em;border-radius:8px;overflow:hidden;margin:.3em 0;font-size:clamp(9px,1.15vw,14px);font-weight:700;color:#fff;}
 .ratio-seg{display:flex;align-items:center;justify-content:center;}
 .ratio-seg.edu{background:rgba(96,165,250,0.55);flex:7;}
 .ratio-seg.ent{background:rgba(251,191,36,0.55);flex:2;}
 .ratio-seg.promo{background:rgba(236,72,153,0.6);flex:1;}
 
-/* ── generic info note ── */
-.note-g{border-radius:9px;padding:.55em .95em;font-size:clamp(11px,1.5vw,19px);font-weight:700;display:flex;align-items:center;gap:.55em;}
-.note-g.acc{background:rgba(236,72,153,0.09);border:1px solid rgba(236,72,153,0.35);color:var(--accent);}
-.note-g.grn{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.35);color:var(--green);}
-.note-g.red{background:rgba(248,100,100,0.09);border:1px solid rgba(248,100,100,0.35);color:var(--red);}
-
 /* ── CTA compare (S8) ── */
 .cta-cmp{border-radius:9px;padding:.5em .9em;margin:.2em 0;font-size:clamp(10px,1.4vw,17px);line-height:1.45;}
 .cta-cmp.bad{background:rgba(248,100,100,0.07);border:1px solid rgba(248,100,100,0.3);color:var(--muted2);}
 .cta-cmp.good{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.35);color:var(--muted2);}
+.rank-row{display:flex;align-items:center;gap:.5em;margin:.15em 0;font-size:clamp(10px,1.35vw,17px);}
+.rank-lbl{min-width:4.5em;font-weight:700;color:#fff;flex-shrink:0;}
+.rank-bar{height:.9em;border-radius:5px;background:linear-gradient(90deg,var(--accent),rgba(236,72,153,0.3));}
 
-/* ── format table (S9) ── */
-.fmt{width:100%;border-collapse:collapse;font-size:clamp(9px,1.15vw,14px);}
-.fmt th{padding:.35em .45em;text-align:center;border:1px solid var(--border);font-weight:700;}
-.fmt th.h-st{background:rgba(248,135,100,0.15);color:var(--acc2);}
-.fmt th.h-rl{background:rgba(124,111,255,0.15);color:var(--accent);}
-.fmt th.h-lv{background:rgba(248,100,100,0.15);color:var(--red);}
-.fmt td{padding:.3em .45em;border:1px solid var(--border);color:var(--muted2);text-align:center;line-height:1.35;}
-.fmt td.lbl{text-align:left;color:#fff;font-weight:700;background:rgba(255,255,255,0.03);}
-
-/* ── metric rank (S10) ── */
-.mt-card{border-radius:9px;padding:.5em .9em;margin:.22em 0;background:var(--surf);border:1px solid var(--border);font-size:clamp(10px,1.35vw,17px);}
-.mt-card .mt-hd{font-weight:800;color:var(--accent);margin-bottom:.1em;}
-.mt-card .mt-bd{color:var(--muted2);line-height:1.4;}
-
-/* ── case before/after (S11) ── */
+/* ── case study (S11) ── */
 .case-card{border-radius:9px;padding:.55em .9em;margin:.22em 0;font-size:clamp(10px,1.35vw,17px);line-height:1.45;}
 .case-card.before{background:rgba(120,120,140,0.1);border:1px solid var(--border);color:var(--muted2);}
-.case-card.fix{background:rgba(236,72,153,0.08);border:1px solid rgba(236,72,153,0.3);color:var(--muted2);}
 .case-card .cc-hd{font-weight:800;margin-bottom:.15em;}
-.case-card.fix .cc-hd{color:var(--accent);}
-.case-after{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.4);border-radius:10px;padding:.6em 1em;font-size:clamp(11px,1.5vw,19px);color:var(--green);font-weight:700;line-height:1.55;}
-.case-after .big{font-size:1.3em;font-weight:900;}
+.case-card.before .cc-hd{color:var(--muted2);}
 
 /* ── last slide ── */
 #s13{background:radial-gradient(ellipse 80% 65% at 40% 50%, #2a0a22 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
 #s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px rgba(236,72,153,0.25),0 8px 32px rgba(0,0,0,0.5);}
 #s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--accent);display:flex;align-items:center;justify-content:center;gap:.55em;}
-
-/* ── s1 overrides ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2a0a22 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(236,72,153,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px);}
-#s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em;}
-#s1-catch{font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em;}
 </style>
 </head>
 <body>
@@ -819,50 +1106,53 @@ body {
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
       <div id="s1-ep" class="se">第11回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">フォロワー数より大切な「エンゲージメント」</div>
-      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">SNS運用の本質を理解する</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">SNSでファンを増やす</div>
+      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">「エンゲージメント」の高め方</div>
       <div id="s1-catch" class="se">数字の多さより、繋がりの深さが売上を生む</div>
     </div>
   </section>
 
-  <!-- S2: Hook 30-90s -->
+  <!-- S2: Hook 30-80s フォロワー多い≠売上 -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
     <div class="pad-t">
       <div id="s2-q" class="sh se">どちらが「強い」アカウントか？</div>
       <div id="s2-cmp" class="cmp-row se">
         <div class="cmp-card weak">
-          <div class="cmp-hd">A アカウント</div>
+          <div class="cmp-hd"><i class="fa-solid fa-circle-xmark"></i>&nbsp;A アカウント</div>
           <div class="cmp-big">フォロワー 10,000</div>
-          <div class="cmp-sub">月間売上 <strong style="color:var(--red);">0円</strong><br>いいね平均30 / コメントほぼゼロ</div>
+          <div class="cmp-sub">月間売上 <strong style="color:var(--red);">0円</strong><br>いいね平均30 ／ コメントほぼゼロ</div>
         </div>
         <div class="cmp-card strong">
-          <div class="cmp-hd">B アカウント</div>
+          <div class="cmp-hd"><i class="fa-solid fa-circle-check"></i>&nbsp;B アカウント</div>
           <div class="cmp-big">フォロワー 500</div>
-          <div class="cmp-sub">月間売上 <strong style="color:var(--green);">100万円</strong><br>いいね平均80 / コメント毎回10件以上</div>
+          <div class="cmp-sub">月間売上 <strong style="color:var(--green);">100万円</strong><br>いいね平均80 ／ コメント毎回10件以上</div>
         </div>
       </div>
-      <div id="s2-vanity" class="note-g red se" style="justify-content:center;">
-        <i class="fa-solid fa-triangle-exclamation"></i>フォロワー数は「虚栄の指標（Vanity Metrics）」
-      </div>
-      <div id="s2-truth" class="se" style="text-align:center;margin-top:.5em;font-size:clamp(13px,1.9vw,24px);font-weight:900;line-height:1.5;">
-        <span style="color:var(--muted2);">フォロワー数 <span style="color:var(--red);">≠</span> 影響力</span><br>
-        <span style="color:var(--accent);">エンゲージメント率 ＝ 本当の影響力</span>
+      <div id="s2-verdict" class="verdict-rows se">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>フォロワー数 ＝ 影響力</strong>：虚栄の指標（Vanity Metrics）— 見た目は立派でも売上に直結しない</div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body"><strong>エンゲージメント率 ＝ 本当の影響力</strong>：熱量のある少数が売上・紹介・ブランド形成を生む</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- S3: Definition & formula 90-130s -->
+  <!-- S3: Engagement rate definition 80-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
       <div id="s3-hd" class="sh se">エンゲージメント率とは何か</div>
-      <div id="s3-formula" class="formula se">
+      <div id="s3-formula" class="eng-formula se">
         <em>エンゲージメント率（%）</em><br>
-        =（いいね＋コメント＋シェア＋保存）÷ <em>リーチ数</em> × 100
+        ＝（いいね＋コメント＋シェア＋保存）÷ <em>リーチ数</em> × 100
       </div>
       <div id="s3-ex" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .95em;margin:.4em 0;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);text-align:center;">
-        例）リーチ1,000人・いいね45+コメント8+シェア3+保存12 → <strong style="color:var(--accent);">(68)÷1,000×100 ＝ 6.8%</strong>
+        例）リーチ1,000人・いいね45＋コメント8＋シェア3＋保存12 → <strong style="color:var(--accent);">68÷1,000×100 ＝ 6.8%</strong>
       </div>
       <div id="s3-bm" class="se" style="overflow-x:auto;">
         <table class="bm">
@@ -876,76 +1166,110 @@ body {
         </table>
       </div>
       <div id="s3-bench" class="se" style="font-size:clamp(9px,1.2vw,15px);color:var(--muted);text-align:center;margin-top:.35em;">
-        目安：<strong style="color:var(--yellow);">1%以上＝良好</strong> / <strong style="color:var(--green);">3%以上＝優秀</strong>（Sprout Social「Social Media Benchmarks」）
+        目安：<strong style="color:var(--yellow);">1%以上＝良好</strong> ／ <strong style="color:var(--green);">3%以上＝優秀</strong>（Sprout Social「Social Media Benchmarks」）
       </div>
     </div>
   </section>
 
-  <!-- S4: Algorithm 130-180s -->
+  <!-- S4: Algorithm - bar-chart-h for action weights 130-180s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
       <div id="s4-hd" class="sh se">なぜエンゲージメントがアルゴリズムを動かすのか</div>
-      <div id="s4-quote" class="card card-l se" style="margin-bottom:.4em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);line-height:1.5;">
-        <i class="fa-solid fa-quote-left" style="color:var(--accent);"></i> 投稿への<strong style="color:#fff;">インタラクション（反応）の量と質</strong>が、表示優先度の判断基準の中心にある
-        <div style="font-size:.85em;color:var(--muted);margin-top:.2em;">— Adam Mosseri（Instagram CEO）2023 公式説明</div>
-      </div>
-      <div id="s4-flow" class="flow-wrap se">
-        <div class="flow-step f1">STEP1 フォロワーの5〜10%に配信</div>
-        <div class="flow-arr"><i class="fa-solid fa-arrow-down"></i> 反応が高ければ</div>
-        <div class="flow-step f2">STEP2 より広いフォロワーに配信</div>
-        <div class="flow-arr"><i class="fa-solid fa-arrow-down"></i> さらに高ければ</div>
-        <div class="flow-step f3">STEP3 フォロワー外（おすすめ・発見タブ）へ拡散 → 新規リーチ</div>
-      </div>
-      <div id="s4-rank" class="se" style="margin-top:.4em;">
-        <div style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);margin-bottom:.2em;">行動ランク（高→低）：</div>
-        <div class="rank-row"><span class="rank-lbl">保存</span><div class="rank-bar" style="width:95%;"></div></div>
-        <div class="rank-row"><span class="rank-lbl">コメント</span><div class="rank-bar" style="width:72%;"></div></div>
-        <div class="rank-row"><span class="rank-lbl">シェア</span><div class="rank-bar" style="width:52%;"></div></div>
-        <div class="rank-row"><span class="rank-lbl">いいね</span><div class="rank-bar" style="width:32%;"></div></div>
+      <blockquote id="s4-quote" class="quote-blk se">
+        <p class="qb-text">「Instagramはユーザーが最も楽しめるコンテンツを優先的に表示する。その判断基準の中心にあるのが投稿への<em>インタラクション（反応）の量と質</em>だ」</p>
+        <cite class="qb-cite">Adam Mosseri（Instagram CEO）2023 公式説明</cite>
+      </blockquote>
+      <div id="s4-rank" class="bar-chart-h se">
+        <div class="bh-row">
+          <span class="bh-lbl">保存</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:100;--c:var(--accent)"></div></div>
+          <span class="bh-val" style="color:var(--accent);">最高評価 ★★★★</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl">コメント</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--acc2)"></div></div>
+          <span class="bh-val" style="color:var(--acc2);">高評価 ★★★</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl">シェア</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:52;--c:var(--blue)"></div></div>
+          <span class="bh-val" style="color:var(--blue);">中評価 ★★</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl">いいね</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:30;--c:var(--muted)"></div></div>
+          <span class="bh-val" style="color:var(--muted);">基本 ★</span>
+        </div>
       </div>
       <div id="s4-conc" class="note-g acc se" style="justify-content:center;">
-        <i class="fa-solid fa-bullhorn"></i>エンゲージメントを高めることが「広告費ゼロの自然拡散」への唯一の道
+        <i class="fa-solid fa-bullhorn"></i>高エンゲージ投稿 → フォロワー外（おすすめ・発見タブ）へ自然拡散 → 広告費ゼロの新規リーチ
       </div>
     </div>
   </section>
 
-  <!-- S5: Post types 180-230s -->
+  <!-- S5: Content types - matrix-2x2 180-230s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">反応を生む投稿タイプ 5選</div>
-      <div id="s5-cards" class="pt-grid se">
-        <div class="pt-card"><div class="pt-hd">① 教育系コンテンツ</div><div class="pt-bd">「知らなかった！あとで見返したい」例：アルゴリズムの3つの仕組み</div><div class="pt-act"><i class="fa-solid fa-bookmark"></i> 狙う：保存・シェア</div></div>
-        <div class="pt-card"><div class="pt-hd">② 論争・意見表明</div><div class="pt-bd">「あなたはどう思いますか？」賛否が分かれるテーマ</div><div class="pt-act"><i class="fa-solid fa-comment"></i> 狙う：コメント・シェア</div></div>
-        <div class="pt-card"><div class="pt-hd">③ Before / After</div><div class="pt-bd">変化・改善を視覚で示す。例：リニューアル前後の比較</div><div class="pt-act"><i class="fa-solid fa-share"></i> 狙う：シェア・いいね</div></div>
-        <div class="pt-card"><div class="pt-hd">④ ストーリー・失敗談</div><div class="pt-bd">「自分も同じだった」という共鳴。例：開業1年目の3つの失敗</div><div class="pt-act"><i class="fa-solid fa-comment"></i> 狙う：コメント・保存</div></div>
-        <div class="pt-card"><div class="pt-hd">⑤ 質問・アンケート</div><div class="pt-bd">参加ハードルが低い双方向コンテンツ</div><div class="pt-act"><i class="fa-solid fa-square-poll-vertical"></i> 狙う：コメント・投票</div></div>
+      <div id="s5-hd" class="sh se">エンゲージメントを生む4つのコンテンツ種別</div>
+      <div id="s5-matrix" class="matrix-2x2 se">
+        <div class="mx-cell mx-tl hi">
+          <div class="mx-hd"><i class="fa-solid fa-bookmark"></i> 教育系（保存・シェア）</div>
+          <div class="mx-body">「知らなかった！あとで見返したい」<br>例：アルゴリズムの3つの仕組み</div>
+        </div>
+        <div class="mx-cell mx-tr hi-g">
+          <div class="mx-hd"><i class="fa-solid fa-comment"></i> 意見・論争（コメント）</div>
+          <div class="mx-body">賛否が分かれるテーマで議論を呼ぶ<br>例：フォロワー数は意味がない理由</div>
+        </div>
+        <div class="mx-cell mx-bl hi-y">
+          <div class="mx-hd"><i class="fa-solid fa-share-nodes"></i> Before/After（シェア）</div>
+          <div class="mx-body">変化・改善を視覚で示す<br>例：リニューアル前後のデザイン比較</div>
+        </div>
+        <div class="mx-cell mx-br">
+          <div class="mx-hd"><i class="fa-solid fa-square-poll-vertical"></i> 質問・アンケート（参加）</div>
+          <div class="mx-body">回答ハードルが低い双方向コンテンツ<br>例：あなたのSNS投稿は週何回？</div>
+        </div>
+      </div>
+      <div class="mx-labels">
+        <span class="mx-lbl-x">← 保存・シェア狙い ── コメント・参加狙い →</span>
+        <span class="mx-lbl-x" style="text-align:right">↑ アルゴリズム評価が高い</span>
+      </div>
+      <div id="s5-tip" class="se" style="font-size:clamp(9px,1.25vw,15px);color:var(--muted);text-align:center;margin-top:.25em;">
+        失敗談・ストーリーも強力：「自分だけじゃなかった」という共鳴がコメントと保存を同時に誘う
       </div>
     </div>
   </section>
 
-  <!-- S6: Jab/Right Hook 230-280s -->
+  <!-- S6: Jab/Hook theory - n-steps 230-280s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
       <div id="s6-hd" class="sh se">なぜ「売り込みばかり」は反応ゼロになるのか</div>
-      <div id="s6-src" class="se" style="font-size:clamp(9px,1.15vw,14px);color:var(--muted);margin-bottom:.4em;">Gary Vaynerchuk『Jab, Jab, Jab, Right Hook』（2013）</div>
+      <div id="s6-src" class="se" style="font-size:clamp(9px,1.15vw,14px);color:var(--muted);margin-bottom:.3em;">Gary Vaynerchuk『Jab, Jab, Jab, Right Hook』（2013）</div>
       <div id="s6-jh" class="jh-row se">
         <div class="jh-card jab"><div class="jh-hd"><i class="fa-solid fa-hand-fist"></i> Jab ＝ 価値提供</div><div class="jh-bd">役立つ情報・共感ストーリー・楽しめる内容 → 信頼を「貯める」</div></div>
         <div class="jh-card hook"><div class="jh-hd"><i class="fa-solid fa-bolt"></i> Right Hook ＝ 売り込み</div><div class="jh-bd">商品紹介・セール告知・申込誘導 → 貯めた信頼を「使う」</div></div>
       </div>
       <div id="s6-ratio" class="jh-ratio se">Jab : Right Hook ＝ 3 : 1（最低でも）</div>
-      <div id="s6-loop" class="se">
-        <div class="row" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);padding:.15em 0;"><span style="color:var(--red);font-weight:900;flex-shrink:0;">①</span><span>「また広告か」とスクロールを飛ばされる</span></div>
-        <div class="row" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);padding:.15em 0;"><span style="color:var(--red);font-weight:900;flex-shrink:0;">②</span><span>エンゲージメントが下がりアルゴリズム評価が落ちる</span></div>
-        <div class="row" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);padding:.15em 0;"><span style="color:var(--red);font-weight:900;flex-shrink:0;">③</span><span>リーチが下がり、売り込みすら届かなくなる</span></div>
-        <div class="row" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);padding:.15em 0;"><span style="color:var(--red);font-weight:900;flex-shrink:0;">④</span><span>結果：フォロワーがいても<strong style="color:#fff;">反応ゼロ</strong></span></div>
+      <div class="n-steps" id="s6-loop">
+        <div class="n-step se" id="s6-loop1">
+          <div class="n-num r">①</div>
+          <div class="n-body"><strong>「また広告か」とスクロールを飛ばされる</strong></div>
+        </div>
+        <div class="n-step se" id="s6-loop2">
+          <div class="n-num r">②</div>
+          <div class="n-body"><strong>エンゲージメント低下 → アルゴリズム評価が落ちる</strong></div>
+        </div>
+        <div class="n-step se" id="s6-loop3">
+          <div class="n-num r">③</div>
+          <div class="n-body"><strong>リーチが下がり、売り込みすら届かなくなる</strong><div class="t-sm">結果：フォロワーがいても反応ゼロの悪循環</div></div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- S7: Content calendar 280-330s -->
+  <!-- S7: Content calendar - step-flow 280-330s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
@@ -958,21 +1282,25 @@ body {
         </div>
         <div style="font-size:clamp(9px,1.2vw,15px);color:var(--muted);text-align:center;">月20投稿なら 教育14・共感4・告知2 が目安</div>
       </div>
-      <div id="s7-freq" class="se" style="overflow-x:auto;margin-top:.4em;">
-        <table class="bm">
-          <thead><tr><th class="lbl">プラットフォーム</th><th>最適投稿頻度（週次）</th></tr></thead>
-          <tbody>
-            <tr><td class="lbl">Instagram</td><td>フィード3〜5 / リール3〜7 / ストーリーズ毎日</td></tr>
-            <tr><td class="lbl">X（Twitter）</td><td>1〜3回（質重視）または毎日（量×スピード）</td></tr>
-            <tr><td class="lbl">Facebook</td><td>3〜5回</td></tr>
-            <tr><td class="lbl">TikTok</td><td>3〜7回（TikTok for Business 推奨）</td></tr>
-          </tbody>
-        </table>
+      <div class="step-flow" id="s7-cal">
+        <div class="sf-item se" id="s7-cal1">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>月曜：教育系カルーセル</strong><div class="t-sm">業界知識・Tips ／ 保存・シェアを狙う</div></div>
+        </div>
+        <div class="sf-item se" id="s7-cal2">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>水曜：Before/After または失敗談（Reels）</strong><div class="t-sm">視覚的変化・共感 ／ シェアとコメントを誘う</div></div>
+        </div>
+        <div class="sf-item se" id="s7-cal3">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>金曜：問いかけ・アンケート投稿</strong><div class="t-sm">回答のハードルを低く ／ コメントを集める</div></div>
+        </div>
+        <div class="sf-item se" id="s7-cal4">
+          <div class="sf-dot"></div>
+          <div class="sf-body"><strong>毎日：ストーリーズ</strong><div class="t-sm">進捗・舞台裏・簡易アンケート ／ フォロワーとの親密度を高める</div></div>
+        </div>
       </div>
-      <div id="s7-cal" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);margin-top:.35em;line-height:1.55;">
-        <strong style="color:var(--accent);">週次例(IG)：</strong>月＝教育カルーセル / 水＝Before-After(Reels) / 金＝問いかけ / 毎日＝ストーリーズ
-      </div>
-      <div id="s7-pt" class="note-g acc se" style="justify-content:center;">
+      <div id="s7-pt" class="note-g acc se" style="justify-content:center;margin-top:.3em;">
         <i class="fa-solid fa-calendar-check"></i>「思いついたら投稿」から「設計して投稿」へ — 一貫性がアルゴリズムへのシグナル
       </div>
     </div>
@@ -988,57 +1316,84 @@ body {
         <div class="cta-cmp good"><strong style="color:var(--green);">○ CTAあり：</strong>「…あなたが最近食べた一番美味しいものは？コメントで教えてください！」</div>
       </div>
       <div id="s8-types" class="se" style="margin-top:.3em;">
-        <div class="row" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);padding:.1em 0;"><span style="color:var(--accent);font-weight:700;flex-shrink:0;">①</span><span>二択質問「A派？B派？」</span></div>
-        <div class="row" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);padding:.1em 0;"><span style="color:var(--accent);font-weight:700;flex-shrink:0;">②</span><span>経験を聞く「経験ある方は▲をコメント」</span></div>
-        <div class="row" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);padding:.1em 0;"><span style="color:var(--accent);font-weight:700;flex-shrink:0;">③</span><span>意見を求める「どう思いますか？」</span></div>
-        <div class="row" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);padding:.1em 0;"><span style="color:var(--accent);font-weight:700;flex-shrink:0;">④</span><span>共感確認 / ⑤数字で答えさせる / ⑥タグ付け依頼 / ⑦続きを予告</span></div>
+        <div class="verdict-rows">
+          <div class="verdict-row ok"><i class="fa-solid fa-check v-icon"></i><div class="v-body"><strong>二択質問</strong>「A派？B派？」— 回答のハードルが最も低い</div></div>
+          <div class="verdict-row ok"><i class="fa-solid fa-check v-icon"></i><div class="v-body"><strong>経験を聞く</strong>「〇〇した方は▲をコメント」— 一言で回答できる</div></div>
+          <div class="verdict-row ok"><i class="fa-solid fa-check v-icon"></i><div class="v-body"><strong>数字で答えさせる</strong>「何年やっていますか？数字だけで教えて！」— 最速エンゲージ</div></div>
+          <div class="verdict-row ok"><i class="fa-solid fa-check v-icon"></i><div class="v-body"><strong>続きを予告</strong>「保存しておくと次回の投稿と合わせて使えます」— 保存も同時に狙う</div></div>
+        </div>
       </div>
       <div id="s8-effect" class="se" style="margin-top:.35em;">
-        <div class="rank-row"><span class="rank-lbl" style="min-width:6em;">CTAなし</span><div class="rank-bar" style="width:18%;background:rgba(150,150,160,0.5);"></div><span style="color:var(--muted);font-size:.9em;">0.1〜0.3%</span></div>
-        <div class="rank-row"><span class="rank-lbl" style="min-width:6em;">CTAあり</span><div class="rank-bar" style="width:70%;"></div><span style="color:var(--green);font-size:.9em;">0.5〜1.0%以上（2〜5倍）</span></div>
+        <div class="rank-row"><span class="rank-lbl" style="min-width:6em;">CTAなし</span><div class="rank-bar" style="width:18%;background:rgba(150,150,160,0.5);"></div><span style="color:var(--muted);font-size:.9em;">コメント率 0.1〜0.3%</span></div>
+        <div class="rank-row"><span class="rank-lbl" style="min-width:6em;">CTAあり</span><div class="rank-bar" style="width:70%;"></div><span style="color:var(--green);font-size:.9em;">コメント率 0.5〜1.0%以上（2〜5倍）</span></div>
       </div>
     </div>
   </section>
 
-  <!-- S9: Format usage 380-430s -->
+  <!-- S9: Platform comparison - comp-tbl 380-430s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
       <div id="s9-hd" class="sh se">フォーマット別エンゲージメント特性と使い分け</div>
-      <div id="s9-tbl" class="se" style="overflow-x:auto;">
-        <table class="fmt">
-          <thead><tr><th class="lbl">&nbsp;</th><th class="h-st">ストーリーズ</th><th class="h-rl">リール</th><th class="h-lv">ライブ配信</th></tr></thead>
-          <tbody>
-            <tr><td class="lbl">主な目的</td><td>親密度・日常感</td><td>新規リーチ・拡散</td><td>リアルタイム信頼</td></tr>
-            <tr><td class="lbl">残るか</td><td>24時間で消える</td><td>恒久的に残る</td><td>終了後アーカイブ可</td></tr>
-            <tr><td class="lbl">拡散力</td><td>フォロワー限定</td><td>フォロワー外に届く</td><td>フォロワー通知優先</td></tr>
-            <tr><td class="lbl">エンゲージ</td><td>アンケート・DM</td><td>いいね・保存・コメ</td><td>コメント・リアクション</td></tr>
-          </tbody>
-        </table>
+      <div id="s9-tbl" class="comp-tbl se">
+        <div class="comp-row comp-head">
+          <span class="comp-label">&nbsp;</span>
+          <span class="comp-a" style="color:var(--acc2);">ストーリーズ</span>
+          <span class="comp-b" style="color:var(--accent);">リール</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">主な目的</span>
+          <span class="comp-a">親密度・日常感</span>
+          <span class="comp-b">新規リーチ・拡散</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">残るか</span>
+          <span class="comp-a">24時間で消える</span>
+          <span class="comp-b">恒久的に残る</span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label">拡散力</span>
+          <span class="comp-a c-red">フォロワー限定</span>
+          <span class="comp-b c-green">フォロワー外に届く</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">エンゲージ</span>
+          <span class="comp-a">アンケート・DM</span>
+          <span class="comp-b">いいね・保存・コメント</span>
+        </div>
       </div>
-      <div id="s9-use" class="se" style="font-size:clamp(9px,1.3vw,16px);color:var(--muted2);margin-top:.4em;line-height:1.55;">
-        <div><strong style="color:var(--acc2);">ストーリーズ：</strong>既存フォロワーとの「関係深化」</div>
-        <div><strong style="color:var(--accent);">リール：</strong>新規獲得・認知拡大の「拡散」（冒頭3秒が鍵）</div>
-        <div><strong style="color:var(--red);">ライブ：</strong>信頼・熱量を伝える「クロージング」</div>
+      <div id="s9-live" class="note-g grn se" style="justify-content:center;margin-top:.4em;">
+        <i class="fa-solid fa-tower-broadcast"></i>ライブ配信：コメント率が通常投稿の<strong>6倍</strong>（Meta公式レポート）— 購買検討中の層へのクロージングに最適
       </div>
-      <div id="s9-meta" class="note-g grn se" style="justify-content:center;">
-        <i class="fa-solid fa-tower-broadcast"></i>ライブ視聴者はコメント率が通常投稿の6倍（Meta公式レポート）
+      <div id="s9-use" class="se" style="font-size:clamp(9px,1.3vw,16px);color:var(--muted2);margin-top:.35em;line-height:1.55;text-align:center;">
+        <strong style="color:var(--acc2);">ストーリーズ：</strong>関係深化 ／
+        <strong style="color:var(--accent);">リール：</strong>認知拡大（冒頭3秒が鍵） ／
+        <strong style="color:var(--red);">ライブ：</strong>クロージング
       </div>
     </div>
   </section>
 
-  <!-- S10: Analytics 430-480s -->
+  <!-- S10: Analytics - verdict-rows for NG→OK 430-480s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
       <div id="s10-hd" class="sh se">インサイトを読む — 優先すべき3つの指標</div>
-      <div id="s10-metrics" class="se">
-        <div class="mt-card"><div class="mt-hd">① 保存率（保存数 ÷ リーチ × 100）目安2〜5%以上</div><div class="mt-bd">「手元に置きたい」投稿 → 高い投稿のテーマ・型を増やす</div></div>
-        <div class="mt-card"><div class="mt-hd">② リーチ率（リーチ ÷ フォロワー × 100）目安10〜30%</div><div class="mt-bd">アルゴリズムが積極配信しているか → 下がる投稿タイプを見直す</div></div>
-        <div class="mt-card"><div class="mt-hd">③ プロフィールアクセス率（÷リーチ×100）目安2%以上</div><div class="mt-bd">「この人を知りたい」温度感 → フォロワー候補を引きつける投稿</div></div>
+      <div id="s10-metrics" class="verdict-rows se">
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-bookmark v-icon" style="color:var(--accent);"></i>
+          <div class="v-body"><strong>① 保存率</strong>（保存数 ÷ リーチ × 100）目安2〜5%以上<br><span style="color:var(--muted2);font-size:.9em;">「手元に置きたい」投稿 → 高い投稿のテーマ・型を増やす</span></div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-eye v-icon" style="color:var(--acc2);"></i>
+          <div class="v-body"><strong>② リーチ率</strong>（リーチ ÷ フォロワー × 100）目安10〜30%<br><span style="color:var(--muted2);font-size:.9em;">アルゴリズムが積極配信しているか → 下がる投稿タイプを見直す</span></div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-user-check v-icon" style="color:var(--green);"></i>
+          <div class="v-body"><strong>③ プロフィールアクセス率</strong>（÷ リーチ × 100）目安2%以上<br><span style="color:var(--muted2);font-size:.9em;">「この人を知りたい」温度感 → フォロワー候補を引きつける投稿</span></div>
+        </div>
       </div>
-      <div id="s10-steps" class="se" style="font-size:clamp(9px,1.25vw,15px);color:var(--muted2);margin-top:.35em;line-height:1.5;">
-        <strong style="color:var(--accent);">手順：</strong>直近10〜30投稿を転記 → 上位3投稿を特定 → 共通する「テーマ・型・CTA・投稿時間」を抽出 → 次月計画に組み込む
+      <div id="s10-steps" class="se" style="font-size:clamp(9px,1.25vw,15px);color:var(--muted2);margin-top:.4em;line-height:1.5;">
+        <strong style="color:var(--accent);">手順：</strong>直近10〜30投稿を転記 → 上位3投稿を特定 → 共通する「テーマ・型・CTA・時間」を抽出 → 次月計画に組み込む
       </div>
       <div id="s10-pt" class="note-g acc se" style="justify-content:center;">
         <i class="fa-solid fa-magnifying-glass-chart"></i>感覚ではなく、データで「何が刺さっているか」を発見する習慣を
@@ -1046,44 +1401,74 @@ body {
     </div>
   </section>
 
-  <!-- S11: Case study 480-530s -->
+  <!-- S11: Case study - kpi-big + comp-tbl 480-530s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
       <div id="s11-hd" class="sh se">実践事例：ローカルカフェのInstagram改善（3ヶ月）</div>
-      <div id="s11-before" class="case-card before se">
-        <div class="cc-hd" style="color:var(--muted2);"><i class="fa-solid fa-circle-xmark"></i> Before：フォロワー1,200人 / エンゲージ率 0.4%（業界平均3〜5%を大きく下回る）</div>
-        商品写真・営業告知中心 / 投稿不定期 / CTAなし / 大量ハッシュタグ乱用
+      <div id="s11-kpi" class="kpi-wrap se">
+        <div class="kpi-big" style="--c:var(--accent)">
+          <div class="kpi-num">8×</div>
+          <div class="kpi-sub">エンゲージメント率 改善</div>
+        </div>
+        <div class="kpi-ctx">
+          <strong>0.4% → 3.2%（3ヶ月）</strong><br>フォロワー+320人（自然増）<br>問い合わせ 月3件 → 月18件
+        </div>
       </div>
-      <div id="s11-fixes" class="se">
-        <div class="case-card fix"><div class="cc-hd">施策① 投稿時間をデータ最適化</div>火・木・土の12〜13時（最もアクティブな時間帯）に統一</div>
-        <div class="case-card fix"><div class="cc-hd">施策② 投稿タイプをJab型に転換</div>告知中心 → 教育70・ストーリー20・告知10（「コーヒーの豆知識」等）</div>
-        <div class="case-card fix"><div class="cc-hd">施策③ CTA＋地域特化ハッシュタグ</div>毎投稿に問いかけCTA / #○○市カフェ など地域×ニッチタグに絞る</div>
-      </div>
-      <div id="s11-after" class="case-after se">
-        <i class="fa-solid fa-arrow-trend-up"></i> After（3ヶ月後）：エンゲージ率 <span class="big">0.4% → 3.2%（8倍）</span> / フォロワー+320人 / 問い合わせ 月3件 → 月18件
+      <div id="s11-tbl" class="comp-tbl se">
+        <div class="comp-row comp-head">
+          <span class="comp-label">項目</span>
+          <span class="comp-a">改善前（Before）</span>
+          <span class="comp-b">改善後（After）</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">投稿内容</span>
+          <span class="comp-a">商品写真・営業告知中心</span>
+          <span class="comp-b">教育70・共感20・告知10</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">投稿時間</span>
+          <span class="comp-a">不定期</span>
+          <span class="comp-b">火・木・土 12〜13時に統一</span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label">CTA</span>
+          <span class="comp-a c-red">なし</span>
+          <span class="comp-b c-green">毎投稿に問いかけCTA</span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label">ハッシュタグ</span>
+          <span class="comp-a c-red">大量タグ乱用</span>
+          <span class="comp-b c-green">地域×ニッチタグに絞る</span>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- S12: Summary 530-580s -->
+  <!-- S12: Summary - n-steps 530-580s -->
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">今日のまとめ</div>
+      <div id="s12-hd" class="sh se">今日のまとめ＆今すぐできる実践ステップ</div>
       <div id="s12-items" class="se">
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">フォロワー数は「虚栄の指標」</div><div class="sum-sub">売上を生むのは熱量のある少数のエンゲージメント</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">エンゲージ率＝（いいね＋コメ＋シェア＋保存）÷リーチ×100</div><div class="sum-sub">1%以上が良好／3%以上が優秀（Sprout Social）</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">アルゴリズムは高エンゲージ投稿をフォロワー外へ自然拡散</div><div class="sum-sub">評価が高い行動：保存＞コメント＞シェア＞いいね</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">Jab/Right Hook：価値提供70〜80% ：告知20〜30%</div><div class="sum-sub">毎投稿にCTA1行 / フォーマット使い分け / 月1回データ分析</div></div></div>
+        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">フォロワー数は「虚栄の指標」</div><div class="sum-sub">売上を生むのはエンゲージメント率が高い熱量のある少数</div></div></div>
+        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">エンゲージ率＝（いいね＋コメ＋シェア＋保存）÷リーチ×100</div><div class="sum-sub">1%以上＝良好 ／ 3%以上＝優秀（Sprout Social）</div></div></div>
+        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">アルゴリズムは保存＞コメント＞シェア＞いいねを評価</div><div class="sum-sub">高エンゲージ投稿はフォロワー外へ自然拡散（広告費ゼロ）</div></div></div>
+        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">Jab/Right Hook：価値提供70〜80% vs 告知20〜30%</div><div class="sum-sub">毎投稿にCTA1行 ／ フォーマット使い分け ／ 月1回データ分析</div></div></div>
       </div>
-      <div id="s12-steps" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-top:.4em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);line-height:1.5;">
-        <strong style="color:var(--accent);">今すぐできる実践：</strong>
-        <span>① 直近10投稿のエンゲージ率を計算</span>
-        <span style="color:var(--border);margin:0 .25em;">|</span>
-        <span>② 告知30%超ならJab投稿を追加</span>
-        <span style="color:var(--border);margin:0 .25em;">|</span>
-        <span>③ 次の投稿にCTAを1行</span>
+      <div class="n-steps" id="s12-steps">
+        <div class="n-step se" id="s12-st1">
+          <div class="n-num">1</div>
+          <div class="n-body"><strong>直近10投稿のエンゲージメント率を計算する</strong><div class="t-sm">（いいね＋コメ＋シェア＋保存）÷ リーチ × 100 を今日中に</div></div>
+        </div>
+        <div class="n-step se" id="s12-st2">
+          <div class="n-num g">2</div>
+          <div class="n-body"><strong>告知が30%を超えていたらJab投稿を追加する</strong><div class="t-sm">教育・共感コンテンツを1本先に作って投稿カレンダーに入れる</div></div>
+        </div>
+        <div class="n-step se" id="s12-st3">
+          <div class="n-num g">3</div>
+          <div class="n-body"><strong>次の投稿にCTAを1行加える</strong><div class="t-sm">「あなたはどう思いますか？」の一言だけで反応が2〜5倍変わる</div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1094,8 +1479,8 @@ body {
     <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
       <div id="s13-card" class="se">
         <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
-        <div class="next-title">第12回 ABテスト — マーケティングの仮説検証</div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>ABテストとは何か。なぜ「感覚」より「データ」が必要か</span></div>
+        <div class="next-title">第12回 データで広告・LP・メールを磨く「ABテスト」— マーケティングの仮説検証</div>
+        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>ABテストとは何か。なぜ「感覚」より「データ」が必要なのか</span></div>
         <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>テストすべき変数の選び方（件名・CTA・画像・コピー）</span></div>
         <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>統計的有意差とサンプルサイズの考え方</span></div>
       </div>
@@ -1131,57 +1516,61 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
-  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-q'],              anim:'rv-fade'},
-  {si:1,  t:34,   ids:['s2-cmp'],            anim:'rv-up'},
-  {si:1,  t:48,   ids:['s2-vanity'],         anim:'rv-scale'},
-  {si:1,  t:58,   ids:['s2-truth'],          anim:'rv-fade'},
-  {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:84,   ids:['s3-formula'],        anim:'rv-scale'},
-  {si:2,  t:92,   ids:['s3-ex'],             anim:'rv-fade'},
-  {si:2,  t:100,  ids:['s3-bm'],             anim:'rv-up'},
-  {si:2,  t:112,  ids:['s3-bench'],          anim:'rv-fade'},
-  {si:3,  t:130,  ids:['s4-hd'],             anim:'rv-fade'},
-  {si:3,  t:133,  ids:['s4-quote'],          anim:'rv-up'},
-  {si:3,  t:142,  ids:['s4-flow'],           anim:'rv-up'},
-  {si:3,  t:158,  ids:['s4-rank'],           anim:'rv-up'},
-  {si:3,  t:170,  ids:['s4-conc'],           anim:'rv-fade'},
-  {si:4,  t:180,  ids:['s5-hd'],             anim:'rv-fade'},
-  {si:4,  t:184,  ids:['s5-cards'],          anim:'rv-up'},
-  {si:5,  t:230,  ids:['s6-hd','s6-src'],    anim:'rv-fade'},
-  {si:5,  t:235,  ids:['s6-jh'],             anim:'rv-up'},
-  {si:5,  t:246,  ids:['s6-ratio'],          anim:'rv-scale'},
-  {si:5,  t:256,  ids:['s6-loop'],           anim:'rv-up'},
-  {si:6,  t:280,  ids:['s7-hd'],             anim:'rv-fade'},
-  {si:6,  t:284,  ids:['s7-ratio'],          anim:'rv-scale'},
-  {si:6,  t:294,  ids:['s7-freq'],           anim:'rv-up'},
-  {si:6,  t:308,  ids:['s7-cal'],            anim:'rv-fade'},
-  {si:6,  t:318,  ids:['s7-pt'],             anim:'rv-fade'},
-  {si:7,  t:330,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:334,  ids:['s8-cmp'],            anim:'rv-up'},
-  {si:7,  t:346,  ids:['s8-types'],          anim:'rv-up'},
-  {si:7,  t:362,  ids:['s8-effect'],         anim:'rv-fade'},
-  {si:8,  t:380,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:384,  ids:['s9-tbl'],            anim:'rv-up'},
-  {si:8,  t:402,  ids:['s9-use'],            anim:'rv-up'},
-  {si:8,  t:418,  ids:['s9-meta'],           anim:'rv-scale'},
-  {si:9,  t:430,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:434,  ids:['s10-metrics'],       anim:'rv-up'},
-  {si:9,  t:458,  ids:['s10-steps'],         anim:'rv-fade'},
-  {si:9,  t:470,  ids:['s10-pt'],            anim:'rv-fade'},
-  {si:10, t:480,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:484,  ids:['s11-before'],        anim:'rv-up'},
-  {si:10, t:496,  ids:['s11-fixes'],         anim:'rv-up'},
-  {si:10, t:518,  ids:['s11-after'],         anim:'rv-scale'},
-  {si:11, t:530,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:534,  ids:['s12-items'],         anim:'rv-up'},
-  {si:11, t:564,  ids:['s12-steps'],         anim:'rv-fade'},
-  {si:12, t:580,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:590,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],            anim:'rv-fade'},
+  {si:0,  t:0.8,  ids:['s1-ep'],               anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-title'],            anim:'rv-up'},
+  {si:0,  t:2.5,  ids:['s1-sub'],              anim:'rv-up'},
+  {si:0,  t:3.5,  ids:['s1-catch'],            anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],                anim:'rv-fade'},
+  {si:1,  t:34,   ids:['s2-cmp'],              anim:'rv-up'},
+  {si:1,  t:50,   ids:['s2-verdict'],          anim:'rv-fade'},
+  {si:2,  t:80,   ids:['s3-hd'],               anim:'rv-fade'},
+  {si:2,  t:84,   ids:['s3-formula'],          anim:'rv-scale'},
+  {si:2,  t:92,   ids:['s3-ex'],               anim:'rv-fade'},
+  {si:2,  t:100,  ids:['s3-bm'],               anim:'rv-up'},
+  {si:2,  t:112,  ids:['s3-bench'],            anim:'rv-fade'},
+  {si:3,  t:130,  ids:['s4-hd'],               anim:'rv-fade'},
+  {si:3,  t:133,  ids:['s4-quote'],            anim:'rv-up'},
+  {si:3,  t:148,  ids:['s4-rank'],             anim:'rv-up'},
+  {si:3,  t:168,  ids:['s4-conc'],             anim:'rv-fade'},
+  {si:4,  t:180,  ids:['s5-hd'],               anim:'rv-fade'},
+  {si:4,  t:184,  ids:['s5-matrix'],           anim:'rv-up'},
+  {si:4,  t:210,  ids:['s5-tip'],              anim:'rv-fade'},
+  {si:5,  t:230,  ids:['s6-hd','s6-src'],      anim:'rv-fade'},
+  {si:5,  t:234,  ids:['s6-jh'],               anim:'rv-up'},
+  {si:5,  t:244,  ids:['s6-ratio'],            anim:'rv-scale'},
+  {si:5,  t:252,  ids:['s6-loop1'],            anim:'rv-up'},
+  {si:5,  t:258,  ids:['s6-loop2'],            anim:'rv-up'},
+  {si:5,  t:264,  ids:['s6-loop3'],            anim:'rv-up'},
+  {si:6,  t:280,  ids:['s7-hd'],               anim:'rv-fade'},
+  {si:6,  t:284,  ids:['s7-ratio'],            anim:'rv-scale'},
+  {si:6,  t:292,  ids:['s7-cal1'],             anim:'rv-up'},
+  {si:6,  t:298,  ids:['s7-cal2'],             anim:'rv-up'},
+  {si:6,  t:304,  ids:['s7-cal3'],             anim:'rv-up'},
+  {si:6,  t:310,  ids:['s7-cal4'],             anim:'rv-up'},
+  {si:6,  t:318,  ids:['s7-pt'],               anim:'rv-fade'},
+  {si:7,  t:330,  ids:['s8-hd'],               anim:'rv-fade'},
+  {si:7,  t:334,  ids:['s8-cmp'],              anim:'rv-up'},
+  {si:7,  t:346,  ids:['s8-types'],            anim:'rv-up'},
+  {si:7,  t:362,  ids:['s8-effect'],           anim:'rv-fade'},
+  {si:8,  t:380,  ids:['s9-hd'],               anim:'rv-fade'},
+  {si:8,  t:384,  ids:['s9-tbl'],              anim:'rv-up'},
+  {si:8,  t:404,  ids:['s9-live'],             anim:'rv-scale'},
+  {si:8,  t:416,  ids:['s9-use'],              anim:'rv-fade'},
+  {si:9,  t:430,  ids:['s10-hd'],              anim:'rv-fade'},
+  {si:9,  t:434,  ids:['s10-metrics'],         anim:'rv-up'},
+  {si:9,  t:458,  ids:['s10-steps'],           anim:'rv-fade'},
+  {si:9,  t:468,  ids:['s10-pt'],              anim:'rv-fade'},
+  {si:10, t:480,  ids:['s11-hd'],              anim:'rv-fade'},
+  {si:10, t:484,  ids:['s11-kpi'],             anim:'rv-scale'},
+  {si:10, t:500,  ids:['s11-tbl'],             anim:'rv-up'},
+  {si:11, t:530,  ids:['s12-hd'],              anim:'rv-fade'},
+  {si:11, t:534,  ids:['s12-items'],           anim:'rv-up'},
+  {si:11, t:555,  ids:['s12-st1'],             anim:'rv-up'},
+  {si:11, t:561,  ids:['s12-st2'],             anim:'rv-up'},
+  {si:11, t:567,  ids:['s12-st3'],             anim:'rv-up'},
+  {si:12, t:580,  ids:['s13-card'],            anim:'rv-scale'},
+  {si:12, t:590,  ids:['s13-cta'],             anim:'rv-up'},
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
@@ -1203,10 +1592,10 @@ const NARRATIONS = [
   `突然ですが、2つのSNSアカウントを比べてみてください。フォロワー1万人・売上ゼロのアカウントと、フォロワー500人・月100万円のアカウント——どちらが「強い」と思いますか。\n答えは明白です。後者です。フォロワー数は「虚栄の指標」と呼ばれます。見た目は立派でも、売上・集客・ブランド形成には直結しません。\n売上を生むのは、あなたの投稿に本気で反応してくれる熱量のある少数です。今日はその熱量を測る指標——エンゲージメント率——を徹底的に解説します。`,
   `エンゲージメント率の計算式は、いいね・コメント・シェア・保存の合計をリーチ数で割って100をかけたものです。リーチ数とは投稿を見た人の数で、フォロワー数とは異なります。\nたとえばリーチ1,000人・合計アクション68件なら6.8%。Sprout Socialのベンチマークによると、全業種で1%以上が良好、3%以上が優秀な水準です。\nまず自分のアカウントの直近10投稿を計算して、この基準のどこに位置するか確認するところから始めましょう。`,
   `InstagramのCEO、アダム・モッセーリは2023年に公式でアルゴリズムの仕組みを説明しています。投稿はまずフォロワーの5〜10%に配信され、そこでの反応が良ければより広く、さらに良ければフォロワー外のおすすめタブにも表示されます。\nつまり、エンゲージメントが高い投稿はプラットフォームが「良いコンテンツだ」と判断して無料で拡散してくれる仕組みです。特に「保存」はアルゴリズムへの評価が最も高い行動です。\n広告費ゼロで新規リーチを生む唯一の方法が、エンゲージメントを高めることなのです。`,
-  `エンゲージメントを高める投稿には5つの型があります。1つ目は教育系コンテンツ。有益な情報をわかりやすく届けると「保存」が増え、アルゴリズムへの評価が上がります。\n2つ目は意見表明。賛否が分かれるテーマはコメントを呼びます。3つ目はBefore/After。視覚的な変化はシェアされやすい。\n4つ目は失敗談。成功談より共感を生みやすく、「自分だけじゃなかった」という安心感がコメントを誘います。5つ目は質問・アンケート。回答の手軽さがコメント率を大幅に上げます。\nこの5型を組み合わせて投稿カレンダーを設計しましょう。`,
+  `エンゲージメントを高める投稿には4つのタイプがあります。1つ目は教育系コンテンツ。有益な情報をわかりやすく届けると「保存」が増え、アルゴリズムへの評価が上がります。\n2つ目は意見表明。賛否が分かれるテーマはコメントを呼びます。3つ目はBefore/After。視覚的な変化はシェアされやすい。\n4つ目は質問・アンケート。回答の手軽さがコメント率を大幅に上げます。失敗談・ストーリーも強力で、「自分だけじゃなかった」という共鳴がコメントと保存を同時に誘います。\nこれらを組み合わせて投稿カレンダーを設計しましょう。`,
   `SNSの投稿が「商品紹介」「セール告知」「お知らせ」ばかりになっていませんか。マーケター・起業家のゲーリー・ヴェイナーチャクは2013年の著書で「Jab, Jab, Jab, Right Hook」理論を提唱しました。\nジャブとは価値提供——役立つ情報や共感できるストーリーです。ライトフックとは売り込みです。少なくとも3回のジャブを打ってから1回の売り込みをしろ、というのが本質です。\n売り込みばかりのアカウントはフォロワーがスクロールを飛ばし、エンゲージメントが下がり、リーチが落ちます。売り込みすら届かない状態に自ら落ち込む悪循環です。\n70〜80%を価値提供に使うことで、残りの20〜30%の告知が初めて効きます。`,
   `エンゲージメントを高めるためには、投稿を「その日の思いつき」ではなく「カレンダーに基づく設計」で行うことが重要です。月間投稿の比率は教育70・エンタメ20・告知10が目安です。\nInstagram ならリールは週3〜7本、フィードは3〜5本、ストーリーズは毎日が理想。TikTok for Business も週3〜7本の一貫した投稿を推奨しています。\n週次カレンダーの例として、月曜は業界知識の教育カルーセル、水曜はビフォーアフターのリール、金曜は問いかけ投稿、毎日ストーリーズという設計が機能しやすいです。一貫した投稿スケジュールはアルゴリズムへのポジティブなシグナルにもなります。`,
-  `エンゲージメントの中でも「コメント」はアルゴリズム評価が特に高い行動です。コメントを増やす最強の手法が、投稿末尾のCTA、行動喚起の設計です。\n「今日のランチはパスタでした」で終わる投稿と、「あなたが最近食べた一番美味しいものは。コメントで教えてください」で終わる投稿では、コメント率が2〜5倍変わります。\n特に効果的な型は二択質問・経験を聞く・数字で答えさせる、の3つです。回答のハードルが低いほど参加者が増えます。\n重要なのは、CTAを「毎回つける」ことを習慣にすることです。毎投稿に一言添えるだけで数字は大きく変わります。`,
+  `エンゲージメントの中でも「コメント」はアルゴリズム評価が特に高い行動です。コメントを増やす最強の手法が、投稿末尾のCTA、行動喚起の設計です。\n「今日のランチはパスタでした」で終わる投稿と、「あなたが最近食べた一番美味しいものは？コメントで教えてください」で終わる投稿では、コメント率が2〜5倍変わります。\n特に効果的な型は二択質問・経験を聞く・数字で答えさせる、の3つです。回答のハードルが低いほど参加者が増えます。\n重要なのは、CTAを「毎回つける」ことを習慣にすることです。毎投稿に一言添えるだけで数字は大きく変わります。`,
   `ストーリーズ・リール・ライブは、それぞれ役割が異なります。ストーリーズは24時間で消えるコンテンツで、既存フォロワーとの親密度を深める関係強化ツールです。毎日の舞台裏や簡易アンケートに向いています。\nリールはフォロワー外にも拡散される発見型コンテンツ。新規認知獲得の主力です。冒頭3秒で引き込む設計が鍵になります。\nライブ配信はリアルタイムの熱量が特徴で、Meta公式レポートによると通常投稿の6倍ものコメントが集まります。購買検討中の層に直接語りかける場として活用しましょう。\n3つのフォーマットを組み合わせることで、新規獲得・関係深化・購買促進を同時に設計できます。`,
   `投稿を改善し続けるためには、データを読む習慣が欠かせません。最も重視すべき指標は3つ。第1位は保存率。「あとで見返したい」コンテンツの証明で、アルゴリズム評価が最も高い。\n第2位はリーチ率。フォロワー数に対してどれだけ届いているかを見ます。低下しているなら投稿タイプの見直しサインです。\n第3位はプロフィールアクセス率。これが高い投稿は「この人をもっと知りたい」という感情を生んでいる、つまり新規フォロワー獲得に近い投稿です。\n直近30投稿のデータをスプレッドシートに書き出し、上位3投稿の共通点を探す——これを月1回やるだけで、投稿の精度は着実に上がっていきます。`,
   `実際の改善事例を紹介します。地方都市の個人カフェ——フォロワー1,200人でエンゲージメント率0.4%、業界平均の10分の1以下という状態でした。\n実施した施策は3つです。まず、インサイトデータをもとに投稿時間を最適化。次に、営業告知中心の投稿を教育70・ストーリー20・告知10の比率に転換。「コーヒーの豆知識」や「常連さんから学んだこと」といったJab型投稿に切り替えました。\nそしてすべての投稿に問いかけCTAを追加し、ハッシュタグを地域特化型に絞りました。\n3ヶ月後の結果——エンゲージメント率は0.4%から3.2%へ8倍に改善。店舗への問い合わせは月3件から18件に増加しました。手法の難易度は高くありません。順序と一貫性が成果を生みます。`,

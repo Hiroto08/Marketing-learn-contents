@@ -684,6 +684,327 @@ body {
   display:flex; align-items:center; gap:.4em;
 }
 #narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
+
+/* ================================================================
+   SVG UTILITY COMPONENTS — v2 design system
+================================================================ */
+
+/* ── GAUGE BAR ──────────────────────────────────────────────────
+   <div class="gauge-wrap se" id="...">
+     <div class="gauge-hd">LTV÷CPA</div>
+     <div class="gauge-track">
+       <div class="gauge-fill" style="--v:.75;--c:var(--green)"></div>
+       <span class="gauge-marker" style="left:33%">3×</span>
+     </div>
+     <div class="gauge-legs"><span>0</span><span>3×</span><span>10+</span></div>
+   </div>  */
+.gauge-wrap  { background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.75em 1.1em; }
+.gauge-hd    { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); font-weight:700; margin-bottom:.55em; }
+.gauge-track { height:clamp(10px,1.2vw,16px); background:var(--surf2); border-radius:9999px; position:relative; }
+.gauge-fill  { height:100%; border-radius:9999px;
+  background:linear-gradient(90deg, var(--c-from,#4ade80), var(--c,var(--accent)));
+  width:0; box-shadow:0 0 10px var(--c,var(--accent));
+  animation:gaugeFill 1.3s .35s cubic-bezier(.4,0,.2,1) forwards;
+  animation-play-state:paused; }
+.gauge-marker { position:absolute; top:-200%; height:300%; transform:translateX(-50%);
+  border-left:1.5px dashed var(--border); padding-left:.35em;
+  font-size:clamp(8px,.9vw,12px); color:var(--muted); white-space:nowrap;
+  display:flex; align-items:flex-start; }
+.gauge-legs  { display:flex; justify-content:space-between;
+  font-size:clamp(8px,.85vw,12px); color:var(--muted); margin-top:.3em; }
+@keyframes gaugeFill { to { width:calc(var(--v,.5)*100%); } }
+.rv-fade .gauge-fill,.rv-up .gauge-fill,.rv-scale .gauge-fill,.rv-pop .gauge-fill { animation-play-state:running; }
+
+/* ── KPI BIG NUMBER ─────────────────────────────────────────────
+   <div class="kpi-big se" id="..." style="--c:var(--green)">
+     <div class="kpi-num">9.9×</div><div class="kpi-sub">LTV/CPA</div>
+   </div>  */
+.kpi-wrap { display:flex; align-items:center; justify-content:center; gap:1.5em; flex-wrap:wrap; }
+.kpi-big  { text-align:center; }
+.kpi-num  { font-size:clamp(36px,6vw,80px); font-weight:900; color:var(--c,var(--accent));
+  line-height:1; font-family:'Inter',sans-serif;
+  filter:drop-shadow(0 0 18px var(--c,var(--accent))); }
+.kpi-sub  { font-size:clamp(9px,1.15vw,15px); color:var(--muted2); margin-top:.3em; display:block; }
+.kpi-ctx  { font-size:clamp(11px,1.4vw,18px); color:var(--muted2);
+  border-left:1px solid var(--border); padding-left:1em; line-height:1.6; }
+
+/* ── HORIZONTAL BAR CHART ───────────────────────────────────────
+   <div class="bar-chart-h">
+     <div class="bh-row">
+       <span class="bh-lbl">A案</span>
+       <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--accent)"></div></div>
+       <span class="bh-val" style="color:var(--accent)">75%</span>
+     </div>
+   </div>  */
+.bar-chart-h { display:flex; flex-direction:column; gap:.55em; }
+.bh-row  { display:flex; align-items:center; gap:.65em; font-size:clamp(10px,1.3vw,17px); }
+.bh-lbl  { flex:0 0 clamp(60px,9vw,120px); text-align:right; color:var(--muted2); font-size:.9em; }
+.bh-track{ flex:1; height:clamp(8px,.9vw,14px); background:var(--surf2); border-radius:9999px; overflow:hidden; }
+.bh-fill { height:100%; border-radius:9999px; box-shadow:0 0 8px var(--c,var(--accent));
+  background:linear-gradient(90deg,var(--c-from,var(--c,var(--accent))),var(--c,var(--accent)));
+  width:0; animation:barFill 1s .2s ease-out forwards; animation-play-state:paused; }
+.bh-val  { flex:0 0 3.2em; text-align:left; font-weight:700; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; font-size:.9em; }
+@keyframes barFill { to { width:calc(var(--v,50)*1%); } }
+.rv-fade .bh-fill,.rv-up .bh-fill,.rv-scale .bh-fill { animation-play-state:running; }
+
+/* ── 2×2 MATRIX ─────────────────────────────────────────────────
+   <div class="matrix-2x2">
+     <div class="mx-cell mx-tl"><div class="mx-hd">...</div><div class="mx-body">...</div></div>
+     <div class="mx-cell mx-tr hi">...</div>
+     <div class="mx-cell mx-bl">...</div>
+     <div class="mx-cell mx-br hi-g">...</div>
+   </div>  */
+.matrix-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:2px;
+  border-radius:10px; overflow:hidden; background:var(--border); }
+.mx-cell    { background:var(--surf); padding:.65em .9em; transition:background .3s; }
+.mx-cell.hi   { background:rgba(124,111,255,.12); }
+.mx-cell.hi-g { background:rgba(74,222,128,.08); }
+.mx-cell.hi-r { background:rgba(248,113,113,.08); }
+.mx-cell.hi-y { background:rgba(251,191,36,.08); }
+.mx-tl { border-radius:10px 0 0 0; } .mx-tr { border-radius:0 10px 0 0; }
+.mx-bl { border-radius:0 0 0 10px; } .mx-br { border-radius:0 0 10px 0; }
+.mx-hd   { font-weight:700; font-size:clamp(10px,1.35vw,18px); color:var(--accent); margin-bottom:.25em; }
+.mx-body { font-size:clamp(9px,1.2vw,15px); color:var(--muted2); line-height:1.5; }
+.mx-labels { display:flex; justify-content:space-between; align-items:center; margin-top:.35em; }
+.mx-lbl-x  { font-size:clamp(8px,.9vw,12px); color:var(--muted); letter-spacing:.05em; }
+
+/* ── STAT RING (SVG donut) ──────────────────────────────────────
+   Circumference of r=38 ≈ 238.76 → use 239
+   <div class="stat-ring" style="--v:75;--c:#4ade80">
+     <svg viewBox="0 0 100 100">
+       <circle class="sr-track" cx="50" cy="50" r="38"/>
+       <circle class="sr-fill"  cx="50" cy="50" r="38"/>
+     </svg>
+     <div class="sr-inner"><div class="sr-val">75%</div><div class="sr-lbl">継続率</div></div>
+   </div>  */
+.stat-rings  { display:flex; gap:1.5em; align-items:center; justify-content:center; flex-wrap:wrap; }
+.stat-ring   { position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:clamp(80px,10vw,130px); height:clamp(80px,10vw,130px); }
+.stat-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+.sr-track { fill:none; stroke:var(--surf2); stroke-width:7; }
+.sr-fill  { fill:none; stroke:var(--c,var(--accent)); stroke-width:7; stroke-linecap:round;
+  stroke-dasharray:0 239;
+  animation:ringFill 1.3s .35s ease-out forwards; animation-play-state:paused; }
+.sr-inner { position:relative; z-index:1; text-align:center; }
+.sr-val   { font-size:clamp(14px,1.8vw,22px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; line-height:1; }
+.sr-lbl   { font-size:clamp(7px,.85vw,11px); color:var(--muted); }
+.stat-ring-wrap { text-align:center; }
+.stat-ring-ttl  { font-size:clamp(9px,1.1vw,14px); color:var(--muted2); margin-top:.35em; font-weight:700; }
+@keyframes ringFill { to { stroke-dasharray:calc(var(--v,75)*2.39) 239; } }
+.rv-fade .sr-fill,.rv-up .sr-fill,.rv-scale .sr-fill,.rv-pop .sr-fill { animation-play-state:running; }
+
+/* ── NUMBER STEPS ───────────────────────────────────────────────
+   <div class="n-steps">
+     <div class="n-step se" id="...">
+       <div class="n-num">1</div>
+       <div class="n-body"><strong>見出し</strong><div class="t-sm">補足</div></div>
+     </div>
+   </div>  */
+.n-steps { display:flex; flex-direction:column; gap:.5em; }
+.n-step  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); }
+.n-num   { min-width:clamp(24px,2.8vw,36px); height:clamp(24px,2.8vw,36px); border-radius:50%;
+  background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:.82em; flex-shrink:0; margin-top:.1em;
+  box-shadow:0 0 14px var(--glow-acc); font-family:'Inter',sans-serif; }
+.n-num.g { background:var(--green); box-shadow:0 0 14px var(--glow-grn); color:#000; }
+.n-num.r { background:var(--red);   box-shadow:0 0 14px rgba(248,113,113,.3); }
+.n-num.b { background:var(--blue);  box-shadow:0 0 14px rgba(96,165,250,.3); }
+.n-body  { color:var(--muted2); line-height:1.5; }
+.n-body strong { color:var(--text); }
+
+/* ── HORIZONTAL FLOW ────────────────────────────────────────────
+   <div class="h-flow">
+     <div class="h-flow-node accent">Aware<span class="fn-sub">認知</span></div>
+     <svg class="h-arrow" viewBox="0 0 24 24" fill="none">
+       <path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"/>
+     </svg>
+     <div class="h-flow-node grn">Act<span class="fn-sub">行動</span></div>
+   </div>  */
+.h-flow { display:flex; align-items:center; gap:.35em; flex-wrap:wrap; justify-content:center; }
+.h-flow-node { background:var(--surf); border:1px solid var(--border); border-radius:9px;
+  padding:.45em .9em; font-size:clamp(10px,1.35vw,18px); font-weight:700;
+  text-align:center; flex-shrink:0; line-height:1.3; }
+.h-flow-node .fn-sub { font-size:.72em; font-weight:400; color:var(--muted2); display:block; margin-top:.05em; }
+.h-flow-node.accent { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.4); color:var(--accent); }
+.h-flow-node.acc2   { background:rgba(255,107,138,.12); border-color:rgba(255,107,138,.4); color:var(--acc2); }
+.h-flow-node.grn    { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.4);  color:var(--green); }
+.h-flow-node.blu    { background:rgba(96,165,250,.12);  border-color:rgba(96,165,250,.4);  color:var(--blue); }
+.h-flow-node.ylw    { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.4);  color:var(--yellow); }
+.h-arrow { width:clamp(14px,1.8vw,24px); color:var(--muted); flex-shrink:0; }
+
+/* ── QUOTE BLOCK ────────────────────────────────────────────────
+   <blockquote class="quote-blk se" id="...">
+     <p class="qb-text">「...」</p>
+     <cite class="qb-cite">Author, Source (Year)</cite>
+   </blockquote>  */
+.quote-blk { position:relative; background:var(--surf); border-radius:10px;
+  padding:1em 1.3em 1em 2.5em; border:1px solid var(--border);
+  border-left:4px solid var(--accent); overflow:hidden; }
+.quote-blk::before { content:'\201C'; font-size:clamp(50px,8vw,100px); font-weight:900;
+  color:rgba(124,111,255,.15); position:absolute; top:-.1em; left:.15em;
+  line-height:1; pointer-events:none; font-family:'Inter','Georgia',serif; }
+.qb-text { font-size:clamp(13px,1.8vw,24px); line-height:1.65; color:var(--text);
+  position:relative; z-index:1; }
+.qb-text em { color:var(--accent); font-style:normal; font-weight:700; }
+.qb-text .hl { color:var(--acc2); }
+.qb-cite { display:block; margin-top:.55em; font-size:clamp(9px,1.1vw,14px);
+  color:var(--muted); font-style:italic; position:relative; z-index:1; }
+
+/* ── COMPARISON TABLE ───────────────────────────────────────────
+   <div class="comp-tbl">
+     <div class="comp-row comp-head">
+       <span class="comp-label"></span><span class="comp-a">Before</span><span class="comp-b">After</span>
+     </div>
+     <div class="comp-row hi">
+       <span class="comp-label">CVR</span>
+       <span class="comp-a c-red">1.2%</span><span class="comp-b c-green">2.3%</span>
+     </div>
+   </div>  */
+.comp-tbl { display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
+.comp-row { display:flex; align-items:stretch; background:var(--surf); }
+.comp-row.hi   .comp-b { background:rgba(74,222,128,.08); color:var(--green); }
+.comp-row.lo   .comp-a { background:rgba(248,113,113,.08); color:var(--red); }
+.comp-label { flex:0 0 clamp(80px,12vw,160px); padding:.55em .9em;
+  font-size:clamp(10px,1.3vw,16px); color:var(--muted2);
+  border-right:1px solid var(--border); display:flex; align-items:center; }
+.comp-a,.comp-b { flex:1; padding:.55em .9em;
+  font-size:clamp(11px,1.5vw,20px); display:flex; align-items:center;
+  justify-content:center; font-weight:700; }
+.comp-a { border-right:1px solid var(--border); }
+.comp-row.comp-head { background:var(--surf2); }
+.comp-row.comp-head .comp-label,
+.comp-row.comp-head .comp-a,
+.comp-row.comp-head .comp-b { font-size:clamp(9px,1.1vw,14px); font-weight:700; color:var(--muted); }
+
+/* ── TAGS / CHIPS ───────────────────────────────────────────────
+   <span class="tag tag-a">変更コスト低</span>  */
+.tag   { display:inline-flex; align-items:center; gap:.3em; padding:.2em .7em;
+  border-radius:9999px; font-size:clamp(9px,1.1vw,14px); font-weight:700;
+  border:1px solid transparent; line-height:1.3; }
+.tag-a { background:rgba(124,111,255,.12); border-color:rgba(124,111,255,.35); color:var(--accent); }
+.tag-g { background:rgba(74,222,128,.1);  border-color:rgba(74,222,128,.35);  color:var(--green); }
+.tag-r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.35); color:var(--red); }
+.tag-b { background:rgba(96,165,250,.1);  border-color:rgba(96,165,250,.35);  color:var(--blue); }
+.tag-y { background:rgba(251,191,36,.1);  border-color:rgba(251,191,36,.35);  color:var(--yellow); }
+
+/* ── ICON ROW LIST ───────────────────────────────────────────────
+   <div class="icon-rows">
+     <div class="icon-row se" id="...">
+       <i class="fa-solid fa-arrow-trend-up c-green"></i>
+       <div><strong>タイトル</strong><div class="t-sm">説明</div></div>
+     </div>
+   </div>  */
+.icon-rows { display:flex; flex-direction:column; gap:.5em; }
+.icon-row  { display:flex; align-items:flex-start; gap:.8em; font-size:clamp(12px,1.7vw,22px); }
+.icon-row > i { font-size:1.05em; flex-shrink:0; margin-top:.1em; }
+.icon-row > div > strong { color:var(--text); }
+.icon-row > div > .t-sm { margin-top:.1em; }
+
+/* ── COLS3 / COLS4 ──────────────────────────────────────────────*/
+.cols3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; }
+.cols4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5%; }
+
+/* ── HIGHLIGHT BANNER ───────────────────────────────────────────
+   <div class="hl-banner" style="--c:var(--green)">
+     <i class="fa-solid fa-circle-check hb-icon"></i>
+     <div class="hb-text"><strong>見出し</strong><br>本文</div>
+   </div>  */
+.hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
+  background:var(--surf); border:1px solid var(--border);
+  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+.hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
+.hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
+.hb-text strong { color:var(--text); }
+
+/* ── VERDICT ROWS ───────────────────────────────────────────────*/
+.verdict-rows { display:flex; flex-direction:column; gap:.4em; }
+.verdict-row  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); padding:.3em 0; }
+.v-icon { width:clamp(18px,2vw,26px); flex-shrink:0; margin-top:.15em; text-align:center; }
+.verdict-row.ok .v-icon { color:var(--green); }
+.verdict-row.ng .v-icon { color:var(--red); }
+.v-body { color:var(--muted2); line-height:1.5; }
+.verdict-row.ok .v-body strong { color:var(--text); }
+.verdict-row.ng .v-body strong { color:var(--red); }
+
+/* ── SVG INLINE HELPERS ─────────────────────────────────────────*/
+.svg-il      { width:100%; height:auto; display:block; overflow:visible; }
+.svg-il text { font-family:'Inter','Noto Sans JP',sans-serif; }
+.svg-grid    { stroke:var(--border); stroke-width:.5; }
+.svg-axis    { stroke:var(--muted); stroke-width:1; fill:none; }
+.svg-curve   { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; }
+.svg-curve2  { fill:none; stroke:var(--acc2);   stroke-width:2.5; stroke-linecap:round; }
+.svg-area    { fill:rgba(124,111,255,.15); stroke:none; }
+.svg-area2   { fill:rgba(255,107,138,.12); stroke:none; }
+.svg-area-g  { fill:rgba(74,222,128,.12);  stroke:none; }
+.svg-lbl     { fill:var(--muted2); font-size:11px; }
+.svg-lbl-a   { fill:var(--accent); font-weight:bold; font-size:11px; }
+.svg-lbl-2   { fill:var(--acc2);   font-size:11px; }
+.svg-bar-a   { fill:rgba(124,111,255,.7); }
+.svg-bar-g   { fill:rgba(74,222,128,.7); }
+.svg-bar-r   { fill:rgba(248,113,113,.7); }
+.svg-marker  { stroke:var(--acc2); stroke-width:1.5; stroke-dasharray:4 3; fill:none; }
+
+/* ── FORMULA DISPLAY ────────────────────────────────────────────
+   <div class="formula se" id="...">
+     <span class="fm-var" style="--c:var(--accent)">LTV</span>
+     <span class="fm-op">÷</span>
+     <span class="fm-var" style="--c:var(--acc2)">CPA</span>
+     <span class="fm-op">&gt;</span>
+     <span class="fm-val" style="--c:var(--green)">3</span>
+   </div>  */
+.formula    { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.4em; }
+.fm-var     { font-size:clamp(20px,3.5vw,46px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 10px var(--c,var(--accent))); }
+.fm-op      { font-size:clamp(16px,2.8vw,36px); font-weight:900; color:var(--muted);
+  font-family:'Inter',sans-serif; }
+.fm-val     { font-size:clamp(24px,4.5vw,60px); font-weight:900; color:var(--c,var(--green));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 14px var(--c,var(--green))); }
+.formula-sub { text-align:center; font-size:clamp(10px,1.3vw,17px); color:var(--muted2); margin-top:.3em; }
+
+/* ── STEP-FLOW (vertical with connector) ────────────────────────
+   <div class="step-flow">
+     <div class="sf-item se" id="...">
+       <div class="sf-dot"></div>
+       <div class="sf-body"><strong>ステップ1</strong><span class="t-sm">説明</span></div>
+     </div>
+   </div>  */
+.step-flow { position:relative; padding-left:1.6em; display:flex; flex-direction:column; gap:.55em; }
+.step-flow::before { content:''; position:absolute; left:.55em; top:.8em; bottom:.8em;
+  width:2px; background:linear-gradient(to bottom,var(--accent),var(--border)); border-radius:1px; }
+.sf-item { display:flex; align-items:flex-start; gap:.75em; position:relative; }
+.sf-dot  { width:clamp(14px,1.6vw,20px); height:clamp(14px,1.6vw,20px); border-radius:50%;
+  background:var(--accent); border:2px solid var(--slide-bg);
+  box-shadow:0 0 10px var(--glow-acc); flex-shrink:0; margin-top:.2em; z-index:1; }
+.sf-body { font-size:clamp(11px,1.55vw,20px); color:var(--muted2); line-height:1.5; }
+.sf-body strong { color:var(--text); }
+
+/* ── PILL BADGE ─────────────────────────────────────────────────*/
+.pill     { display:inline-flex; align-items:center; gap:.3em;
+  background:var(--surf2); border:1px solid var(--border); border-radius:6px;
+  padding:.15em .6em; font-size:clamp(9px,1.1vw,14px); font-weight:700; }
+.pill.acc { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.3); color:var(--accent); }
+.pill.grn { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.3);  color:var(--green); }
+.pill.red { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:var(--red); }
+.pill.ylw { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.3);  color:var(--yellow); }
+
+/* ── S1 RING / DOT ANIMATIONS ───────────────────────────────────*/
+.s1-ring { animation:ringRotate 24s linear infinite; transform-origin:center; }
+.s1-ring1 { animation-duration:30s; }
+.s1-ring2 { animation-duration:22s; animation-direction:reverse; }
+.s1-ring3 { animation-duration:15s; }
+@keyframes ringRotate {
+  from { transform:translate(-50%,-50%) rotate(0deg); }
+  to   { transform:translate(-50%,-50%) rotate(360deg); }
+}
+.s1-dot { animation:dotFloat 4s ease-in-out infinite alternate; }
+.s1-dot1 { animation-duration:4.2s; }
+.s1-dot2 { animation-duration:3.5s; animation-delay:.5s; }
+.s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
+@keyframes dotFloat { to { transform:translateY(-8px); } }
+
 </style>
 
 <style id="ep-css">
@@ -692,75 +1013,48 @@ body {
 .pad-t { justify-content: center; }
 
 /* ── accent: teal (numbers / investment theme) ── */
-:root{--accent:#14B8A6;}
-
-/* ── calc / formula box ── */
-.calc-box{background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:.6em 1em;margin:.35em 0;font-size:clamp(12px,1.7vw,22px);color:var(--muted2);line-height:1.7;}
-.calc-box .calc-eq{font-weight:700;color:#fff;}
-.calc-box .calc-accent{color:var(--accent);font-weight:700;}
-
-/* ── red emphasis (loss) ── */
-.loss-box{background:rgba(248,100,100,0.10);border:2px solid rgba(248,100,100,0.4);border-radius:10px;padding:.55em 1em;text-align:center;font-size:clamp(15px,2.4vw,30px);font-weight:900;color:var(--red);margin:.4em 0;}
+:root { --accent: #14B8A6; --glow-acc: rgba(20,184,166,.25); --acc2: #f59e0b; }
 
 /* ── note / source ── */
-.src-note{font-size:clamp(9px,1.15vw,14px);color:var(--muted);}
+.src-note { font-size: clamp(9px,1.15vw,14px); color: var(--muted); }
+
+/* ── loss / red emphasis ── */
+.loss-box { background: rgba(248,100,100,0.10); border: 2px solid rgba(248,100,100,0.4); border-radius: 10px; padding: .55em 1em; text-align: center; font-size: clamp(15px,2.4vw,30px); font-weight: 900; color: var(--red); margin: .4em 0; }
 
 /* ── ratio bands (S5) ── */
-.ratio-band{border-radius:9px;padding:.5em .9em;margin:.3em 0;font-size:clamp(11px,1.55vw,20px);display:flex;align-items:center;gap:.6em;}
-.ratio-band.good{background:rgba(74,222,128,0.10);border:1px solid rgba(74,222,128,0.4);}
-.ratio-band.warn{background:rgba(251,191,36,0.10);border:1px solid rgba(251,191,36,0.4);}
-.ratio-band.bad{background:rgba(248,100,100,0.10);border:1px solid rgba(248,100,100,0.4);}
-.ratio-band .rb-num{font-weight:900;min-width:6.5em;flex-shrink:0;font-size:1.05em;}
-.ratio-band.good .rb-num{color:var(--green);}
-.ratio-band.warn .rb-num{color:var(--yellow);}
-.ratio-band.bad .rb-num{color:var(--red);}
-.big-ratio{text-align:center;font-size:clamp(36px,7vw,82px);font-weight:900;color:var(--accent);line-height:1;margin:.1em 0;}
-.big-ratio small{display:block;font-size:.22em;color:var(--muted2);font-weight:700;margin-top:.4em;}
-
-/* ── lever cards (S6) ── */
-.lever-card{border-radius:9px;padding:.5em .9em;margin:.3em 0;font-size:clamp(10px,1.4vw,18px);background:var(--surf);border:1px solid var(--border);}
-.lever-card .lc-hd{font-weight:700;color:var(--accent);margin-bottom:.2em;}
-.lever-card ul{padding-left:1.2em;color:var(--muted2);line-height:1.5;margin:.1em 0 0 0;}
-.lever-card .lc-goal{color:var(--green);font-size:.92em;margin-top:.2em;}
-
-/* ── approach cards (S7) ── */
-.appr-card{border-radius:9px;padding:.5em .9em;margin:.3em 0;font-size:clamp(10px,1.35vw,17px);}
-.appr-card.a1{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.3);}
-.appr-card.a2{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);}
-.appr-card.a3{background:rgba(20,184,166,0.10);border:1px solid rgba(20,184,166,0.4);}
-.appr-card .ac-hd{font-weight:700;margin-bottom:.2em;}
-.appr-card.a1 .ac-hd{color:var(--blue);}
-.appr-card.a2 .ac-hd{color:var(--yellow);}
-.appr-card.a3 .ac-hd{color:var(--accent);}
-.appr-card ul{padding-left:1.2em;color:var(--muted2);line-height:1.45;margin:.1em 0 0 0;}
-
-/* ── mechanism rows (S8) ── */
-.mech-row{display:flex;gap:.6em;align-items:flex-start;padding:.22em 0;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);}
-.mech-row .mech-no{color:var(--accent);font-weight:900;flex-shrink:0;}
+.ratio-band { border-radius: 9px; padding: .5em .9em; margin: .3em 0; font-size: clamp(11px,1.55vw,20px); display: flex; align-items: center; gap: .6em; }
+.ratio-band.good { background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.4); }
+.ratio-band.warn { background: rgba(251,191,36,0.10); border: 1px solid rgba(251,191,36,0.4); }
+.ratio-band.bad  { background: rgba(248,100,100,0.10); border: 1px solid rgba(248,100,100,0.4); }
+.ratio-band .rb-num { font-weight: 900; min-width: 6.5em; flex-shrink: 0; font-size: 1.05em; }
+.ratio-band.good .rb-num { color: var(--green); }
+.ratio-band.warn .rb-num { color: var(--yellow); }
+.ratio-band.bad  .rb-num { color: var(--red); }
 
 /* ── cohort table (S9) ── */
-.coh{width:100%;border-collapse:collapse;font-size:clamp(9px,1.25vw,16px);}
-.coh th{background:rgba(255,255,255,0.05);padding:.35em .5em;text-align:center;border:1px solid var(--border);color:var(--muted2);font-weight:700;}
-.coh td{padding:.32em .5em;border:1px solid var(--border);color:var(--muted2);text-align:center;}
-.coh .row-hd{background:rgba(255,255,255,0.03);font-weight:700;color:var(--muted2);text-align:left;padding-left:.7em;}
-.coh tr.hi td{background:rgba(20,184,166,0.14);color:#fff;font-weight:700;}
+.coh { width: 100%; border-collapse: collapse; font-size: clamp(9px,1.25vw,16px); }
+.coh th { background: rgba(255,255,255,0.05); padding: .35em .5em; text-align: center; border: 1px solid var(--border); color: var(--muted2); font-weight: 700; }
+.coh td { padding: .32em .5em; border: 1px solid var(--border); color: var(--muted2); text-align: center; }
+.coh .row-hd { background: rgba(255,255,255,0.03); font-weight: 700; color: var(--muted2); text-align: left; padding-left: .7em; }
+.coh tr.hi td { background: rgba(20,184,166,0.14); color: #fff; font-weight: 700; }
 
-/* ── trap cards (S11) ── */
-.trap-card{border-radius:9px;padding:.5em .9em;margin:.3em 0;font-size:clamp(10px,1.35vw,17px);background:var(--surf);border:1px solid var(--border);}
-.trap-card .tc-hd{font-weight:700;color:var(--red);margin-bottom:.2em;}
-.trap-card .tc-fix{background:rgba(74,222,128,0.10);border:1px solid rgba(74,222,128,0.3);border-radius:7px;padding:.3em .6em;margin-top:.3em;color:var(--green);font-size:.95em;}
+/* ── summary list (S12) ── */
+.sum-item { display: flex; gap: .55em; align-items: flex-start; padding: .25em 0; font-size: clamp(10px,1.45vw,19px); }
+.sum-icon { color: var(--accent); flex-shrink: 0; margin-top: .18em; }
+.sum-main { font-weight: 700; color: #fff; }
+.sum-sub  { color: var(--muted2); font-size: .88em; margin-top: .08em; }
 
 /* ── last slide ── */
-#s13{background:radial-gradient(ellipse 80% 65% at 40% 50%, #07201d 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
-#s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px rgba(20,184,166,0.3),0 8px 32px rgba(0,0,0,0.5);}
-#s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--accent);display:flex;align-items:center;justify-content:center;gap:.55em;}
+#s13 { background: radial-gradient(ellipse 80% 65% at 40% 50%, #07201d 0%, var(--slide-bg) 65%); align-items: center; justify-content: center; }
+#s13-card { background: var(--surf); border: 1px solid var(--border); border-radius: 14px; padding: 1.3em 1.8em; width: 76%; box-shadow: 0 0 30px rgba(20,184,166,0.3), 0 8px 32px rgba(0,0,0,0.5); }
+#s13-cta { margin-top: 1em; text-align: center; font-size: clamp(12px,1.75vw,22px); font-weight: 700; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: .55em; }
 
 /* ── s1 overrides ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #07201d 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(20,184,166,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px);}
-#s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em;}
-#s1-catch{font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em;}
+#s1 { background: radial-gradient(ellipse 90% 75% at 65% 45%, #07201d 0%, var(--slide-bg) 68%); align-items: center; justify-content: center; text-align: center; }
+#s1-badge { display: inline-flex; align-items: center; gap: .5em; background: var(--surf2); border: 1px solid rgba(20,184,166,0.4); color: var(--muted2); border-radius: 20px; padding: .3em 1.2em; margin-bottom: .75em; font-size: clamp(9px,1.2vw,14px); }
+#s1-badge i { color: var(--accent); }
+#s1-ep { font-size: clamp(10px,1.4vw,18px); color: var(--accent); font-weight: 700; margin-bottom: .4em; }
+#s1-catch { font-size: clamp(11px,1.5vw,19px); color: var(--muted2); margin-top: .7em; }
 </style>
 </head>
 <body>
@@ -788,48 +1082,89 @@ body {
     </div>
   </section>
 
-  <!-- S2: Hook 30-90s -->
+  <!-- S2: Hook 30-80s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
     <div class="pad-t">
-      <div id="s2-q" class="sh se">なぜ広告費をかけても利益が出ないのか？</div>
-      <div id="s2-case" class="calc-box se">
-        <div>広告費：<span class="calc-eq">100,000円</span> ／ 獲得件数：<span class="calc-eq">10件</span></div>
-        <div>CPA ＝ <span class="calc-accent">10,000円/件</span> → 「1件1万円で獲れた！」</div>
+      <div id="s2-hd" class="sh se">なぜ広告費をかけても利益が出ないのか？</div>
+      <div class="comp-tbl se" id="s2-tbl">
+        <div class="comp-row comp-head">
+          <span class="comp-label">指標</span>
+          <span class="comp-a">CPA視点のみ</span>
+          <span class="comp-b">LTV視点で見ると</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">広告費</span>
+          <span class="comp-a">100,000円</span>
+          <span class="comp-b">100,000円</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">獲得件数</span>
+          <span class="comp-a">10件</span>
+          <span class="comp-b">10件</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">CPA</span>
+          <span class="comp-a" style="color:var(--green);font-weight:700;">10,000円/件 ✅</span>
+          <span class="comp-b" style="color:var(--muted2);">10,000円/件</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">1回購入単価</span>
+          <span class="comp-a" style="color:var(--muted);">（考慮せず）</span>
+          <span class="comp-b" style="color:var(--red);">8,000円</span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label">損益</span>
+          <span class="comp-a c-green">「安く獲れた！」</span>
+          <span class="comp-b c-red">赤字 20,000円 ❌</span>
+        </div>
       </div>
-      <div id="s2-real" class="calc-box se">
-        <div style="color:var(--muted);margin-bottom:.2em;">実は…この顧客が1回しか買わず購入単価8,000円だった場合</div>
-        <div>売上：8,000円 × 10件 ＝ <span class="calc-eq">80,000円</span></div>
-        <div>広告費：<span class="calc-eq">100,000円</span></div>
-      </div>
-      <div id="s2-loss" class="loss-box se">→ 広告費だけで赤字 20,000円</div>
-      <div id="s2-core" class="se" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.35);border-radius:9px;padding:.55em .9em;margin-top:.4em;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);display:flex;align-items:center;gap:.6em;">
-        <i class="fa-solid fa-arrow-right" style="color:var(--accent);flex-shrink:0;"></i>
-        <span>CPAだけ見ると「安く獲れた＝成功」と錯覚する → <strong style="color:#fff;">生涯でいくら買うか（LTV）</strong>を見なければ本当の費用対効果は判断できない</span>
+      <div id="s2-core" class="hl-banner se" style="--c:var(--accent);margin-top:.5em;">
+        <i class="fa-solid fa-lightbulb hb-icon"></i>
+        <div class="hb-text"><strong>CPAは入口の数字に過ぎない</strong><br>その顧客が生涯でいくら買うか（LTV）を見なければ、本当の費用対効果は判断できない</div>
       </div>
     </div>
   </section>
 
-  <!-- S3: CPA Definition 90-130s -->
+  <!-- S3: CPA Definition 80-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
       <div id="s3-hd" class="sh se">CPA（Cost Per Acquisition）とは</div>
-      <div id="s3-def" class="card card-l se" style="margin-bottom:.5em;">
-        <div style="font-size:clamp(12px,1.8vw,23px);font-weight:700;color:#fff;">1件の成果（顧客獲得・購入・申込）を得るためにかかった<em style="color:var(--accent);font-style:normal;">広告費</em></div>
-        <div class="calc-box" style="margin-top:.4em;">
-          <span class="calc-eq">CPA ＝ 広告費 ÷ 獲得件数</span><br>
-          例：広告費50,000円 ÷ 獲得5件 ＝ <span class="calc-accent">CPA 10,000円</span>
+      <div class="formula se" id="s3-formula">
+        <span class="fm-var" style="--c:var(--accent)">CPA</span>
+        <span class="fm-op">=</span>
+        <span class="fm-var" style="--c:var(--muted2)">広告費</span>
+        <span class="fm-op">÷</span>
+        <span class="fm-var" style="--c:var(--muted2)">獲得件数</span>
+      </div>
+      <div class="formula-sub se" id="s3-fml-ex">例：広告費 50,000円 ÷ 獲得 5件 ＝ <strong style="color:var(--accent)">CPA 10,000円</strong></div>
+      <div class="bar-chart-h se" id="s3-bench" style="margin-top:.5em;">
+        <div style="font-size:clamp(10px,1.3vw,16px);font-weight:700;color:var(--accent);margin-bottom:.4em;">業種別CPA目安 <span class="src-note">（参考：Neil Patel / 業界ベンチマーク）</span></div>
+        <div class="bh-row">
+          <span class="bh-lbl">EC（物販）</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:10;--c:var(--accent)"></div></div>
+          <span class="bh-val" style="color:var(--accent)">〜5,000円</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl">SaaS・IT</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:35;--c:var(--blue)"></div></div>
+          <span class="bh-val" style="color:var(--blue)">〜30,000円</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl">士業・コンサル</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:55;--c:var(--yellow)"></div></div>
+          <span class="bh-val" style="color:var(--yellow)">〜50,000円</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl">不動産・保険</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:100;--c:var(--red)"></div></div>
+          <span class="bh-val" style="color:var(--red)">100,000円超</span>
         </div>
       </div>
-      <div id="s3-bench" class="se" style="font-size:clamp(10px,1.4vw,18px);color:var(--muted2);line-height:1.6;margin-bottom:.4em;">
-        <div style="color:var(--accent);font-weight:700;margin-bottom:.15em;">業種別CPA目安 <span class="src-note">（参考：Neil Patel / 業界ベンチマーク）</span></div>
-        EC（物販）：1,000〜5,000円 ／ SaaS・IT：5,000〜30,000円<br>
-        不動産・保険：20,000〜100,000円以上 ／ 士業・コンサル：10,000〜50,000円
-      </div>
-      <div id="s3-myth" class="se" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.35);border-radius:9px;padding:.55em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
+      <div id="s3-myth" class="se" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.35);border-radius:9px;padding:.55em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.4em;">
         <span style="color:var(--red);font-weight:900;">×</span> CPAが低い ＝ 良い顧客　…ではない&ensp;
-        <span style="color:var(--accent);font-weight:900;">◎</span> CPAは<strong style="color:#fff;">LTVとセット</strong>で評価する（1万円のCPAでもLTVが5万円なら優秀な投資）
+        <span style="color:var(--accent);font-weight:900;">◎</span> CPAは<strong style="color:#fff;">LTVとセット</strong>で評価する
       </div>
     </div>
   </section>
@@ -839,25 +1174,34 @@ body {
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
       <div id="s4-hd" class="sh se">LTV（Life Time Value）とは</div>
-      <div id="s4-def" class="card card-l se" style="margin-bottom:.45em;">
-        <div style="font-size:clamp(12px,1.8vw,23px);font-weight:700;color:#fff;">1人の顧客が取引を続ける期間に、企業にもたらす<em style="color:var(--accent);font-style:normal;">利益の合計</em></div>
-        <div class="src-note" style="margin-top:.2em;">── Philip Kotler『マーケティング・マネジメント』</div>
+      <div id="s4-def" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:.6em 1em;margin-bottom:.45em;font-size:clamp(12px,1.7vw,22px);color:var(--muted2);line-height:1.6;">
+        <strong style="color:#fff;">1人の顧客が取引を続ける期間に、企業にもたらす<em style="color:var(--accent);font-style:normal;">利益の合計</em></strong><br>
+        <span class="src-note">── Philip Kotler『マーケティング・マネジメント』</span>
       </div>
-      <div id="s4-formula" class="calc-box se">
-        <span class="calc-eq">LTV ＝ 平均購入単価 × 購入頻度（年） × 継続期間（年）</span>
+      <div class="formula se" id="s4-formula">
+        <span class="fm-var" style="--c:var(--accent)">LTV</span>
+        <span class="fm-op">=</span>
+        <span class="fm-var" style="--c:var(--acc2)">単価</span>
+        <span class="fm-op">×</span>
+        <span class="fm-var" style="--c:var(--blue)">頻度</span>
+        <span class="fm-op">×</span>
+        <span class="fm-var" style="--c:var(--green)">期間</span>
       </div>
-      <div id="s4-calc" class="calc-box se">
-        平均購入単価 5,000円 × 購入頻度 年24回 × 継続2年 ＝ <span class="calc-accent">LTV 240,000円</span>
-      </div>
-      <div id="s4-compare" class="se" style="display:flex;gap:.5em;margin-top:.3em;">
-        <div style="flex:1;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:9px;padding:.5em .8em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-          <div style="color:var(--green);font-weight:700;">LTVが高い顧客</div>定期購入・高単価・長期継続・紹介を生む
+      <div class="n-steps se" id="s4-calc">
+        <div class="n-step" id="s4-step1">
+          <div class="n-num" style="background:var(--acc2);color:#000;">単価</div>
+          <div class="n-body"><strong>平均購入単価：5,000円</strong><div class="t-sm">アップセル・高価格帯商品で引き上げ可能</div></div>
         </div>
-        <div style="flex:1;background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.3);border-radius:9px;padding:.5em .8em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-          <div style="color:var(--red);font-weight:700;">LTVが低い顧客</div>1回購入・低単価・短期離脱・クレームが多い
+        <div class="n-step" id="s4-step2">
+          <div class="n-num b">頻度</div>
+          <div class="n-body"><strong>購入頻度：月2回（年24回）</strong><div class="t-sm">サブスク・リピート施策で増加</div></div>
+        </div>
+        <div class="n-step" id="s4-step3">
+          <div class="n-num g">期間</div>
+          <div class="n-body"><strong>継続期間：2年</strong><div class="t-sm">解約防止・オンボーディングで延長</div></div>
         </div>
       </div>
-      <div id="s4-profit" class="se src-note" style="margin-top:.3em;">発展：利益ベースLTV ＝ 平均購入単価 × 粗利率 × 購入頻度 × 継続期間</div>
+      <div class="formula-sub se" id="s4-result">LTV ＝ 5,000円 × 24回 × 2年 ＝ <strong style="color:var(--accent);font-size:1.15em;">240,000円</strong></div>
     </div>
   </section>
 
@@ -866,14 +1210,31 @@ body {
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
       <div id="s5-hd" class="sh se">LTV÷CPA——広告投資の判断基準</div>
-      <div id="s5-big" class="big-ratio se">LTV ÷ CPA ＞ 3<small>これが「健全」の目安</small></div>
+      <div class="formula se" id="s5-formula">
+        <span class="fm-var" style="--c:var(--accent)">LTV</span>
+        <span class="fm-op">÷</span>
+        <span class="fm-var" style="--c:var(--acc2)">CPA</span>
+        <span class="fm-op">&gt;</span>
+        <span class="fm-val" style="--c:var(--green)">3</span>
+      </div>
+      <div class="formula-sub se" id="s5-fsub">これが「健全な投資」の目安（業界ベンチマーク）</div>
+      <div class="gauge-wrap se" id="s5-gauge" style="margin:.5em 0;">
+        <div class="gauge-hd">LTV ÷ CPA 比率ゾーン</div>
+        <div class="gauge-track">
+          <div class="gauge-fill" style="--v:.33;--c:var(--red)"></div>
+          <div class="gauge-fill" style="--v:.67;--c:var(--yellow);opacity:.7;"></div>
+          <div class="gauge-fill" style="--v:1;--c:var(--green);opacity:.5;"></div>
+          <span class="gauge-marker" style="left:33%">3× 目安</span>
+        </div>
+        <div class="gauge-legs"><span style="color:var(--red);">❌ &lt;1</span><span style="color:var(--yellow);">⚠️ 1〜3</span><span style="color:var(--green);">✅ 3+</span></div>
+      </div>
       <div id="s5-bands" class="se">
         <div class="ratio-band good"><span class="rb-num">＞ 3</span><span><i class="fa-solid fa-circle-check"></i> 健全：広告投資を増やす余地あり</span></div>
         <div class="ratio-band warn"><span class="rb-num">1〜3</span><span><i class="fa-solid fa-triangle-exclamation"></i> 要注意：利益が薄い・改善が必要</span></div>
         <div class="ratio-band bad"><span class="rb-num">＜ 1</span><span><i class="fa-solid fa-circle-xmark"></i> 危険：広告費が顧客価値を上回る → 事業が成立しない</span></div>
       </div>
-      <div id="s5-why" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-top:.35em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);">
-        <strong style="color:var(--accent);">なぜ3倍か：</strong>広告費の他に商品原価・人件費・運営費・サポートコストがかかるため、LTVがCPAの3倍以上ないと全コストをカバーできない
+      <div id="s5-why" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-top:.35em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);">
+        <strong style="color:var(--accent);">なぜ3倍か：</strong>広告費以外に商品原価・人件費・運営費・サポートコストがかかるため
       </div>
     </div>
   </section>
@@ -883,24 +1244,37 @@ body {
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
       <div id="s6-hd" class="sh se">LTVを上げる3つのレバー</div>
-      <div id="s6-formula" class="calc-box se" style="text-align:center;">
-        LTV ＝ <span class="calc-accent">平均購入単価</span> × <span class="calc-accent">購入頻度</span> × <span class="calc-accent">継続期間</span><br>
-        <span class="src-note">↑レバー①　　　　↑レバー②　　　↑レバー③</span>
+      <div class="formula se" id="s6-formula">
+        <span class="fm-var" style="--c:var(--accent)">LTV</span>
+        <span class="fm-op">=</span>
+        <span class="fm-var" style="--c:var(--acc2)">平均単価</span>
+        <span class="fm-op">×</span>
+        <span class="fm-var" style="--c:var(--blue)">購入頻度</span>
+        <span class="fm-op">×</span>
+        <span class="fm-var" style="--c:var(--green)">継続期間</span>
       </div>
-      <div id="s6-l1" class="lever-card se">
-        <div class="lc-hd"><i class="fa-solid fa-1"></i> 平均単価を上げる（アップセル・クロスセル）</div>
-        <ul><li>アップセル：上位プラン・高単価商品へ誘導</li><li>クロスセル：関連商品の同時購入を促す</li></ul>
-        <div class="lc-goal">目標：単価10〜30%向上でLTVは比例して向上</div>
-      </div>
-      <div id="s6-l2" class="lever-card se">
-        <div class="lc-hd"><i class="fa-solid fa-2"></i> 購入頻度を上げる（リテンション施策）</div>
-        <ul><li>定期購入（サブスク）への移行促進・リピート特典</li><li>パーソナライズされたリマインドメール</li></ul>
-        <div class="lc-goal">目標：購入頻度が1.5倍になればLTVも1.5倍</div>
-      </div>
-      <div id="s6-l3" class="lever-card se">
-        <div class="lc-hd"><i class="fa-solid fa-3"></i> 継続期間を延ばす（解約防止・サポート強化）</div>
-        <ul><li>オンボーディング充実・解約検討者への能動フォロー</li><li>コミュニティ・会員組織による帰属意識の醸成</li></ul>
-        <div class="lc-goal">目標：継続が2年→3年でLTVは1.5倍</div>
+      <div class="n-steps" style="margin-top:.4em;">
+        <div class="n-step se" id="s6-l1">
+          <div class="n-num" style="background:var(--acc2);color:#000;">①</div>
+          <div class="n-body">
+            <strong>平均単価を上げる（アップセル・クロスセル）</strong>
+            <div class="t-sm">上位プランへの誘導 / 関連商品の同時購入を促す<br>目標：単価10〜30%向上でLTVは比例して向上</div>
+          </div>
+        </div>
+        <div class="n-step se" id="s6-l2">
+          <div class="n-num b">②</div>
+          <div class="n-body">
+            <strong>購入頻度を上げる（リテンション施策）</strong>
+            <div class="t-sm">定期購入・リピート特典・パーソナライズリマインド<br>目標：購入頻度が1.5倍になればLTVも1.5倍</div>
+          </div>
+        </div>
+        <div class="n-step se" id="s6-l3">
+          <div class="n-num g">③</div>
+          <div class="n-body">
+            <strong>継続期間を延ばす（解約防止・サポート強化）</strong>
+            <div class="t-sm">オンボーディング充実・解約検討者の早期フォロー<br>目標：継続が2年→3年でLTVは1.5倍</div>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -910,22 +1284,49 @@ body {
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
       <div id="s7-hd" class="sh se">CPAを下げる3つのアプローチ</div>
-      <div id="s7-formula" class="calc-box se" style="text-align:center;">
-        CPA ＝ 広告費 ÷ 獲得件数 → <span class="calc-accent">同じ広告費でより多く獲得する</span>
+      <div class="formula se" id="s7-formula">
+        <span class="fm-var" style="--c:var(--acc2)">CPA</span>
+        <span class="fm-op">=</span>
+        <span class="fm-var" style="--c:var(--muted2)">広告費</span>
+        <span class="fm-op">÷</span>
+        <span class="fm-var" style="--c:var(--muted2)">獲得件数</span>
+        <span class="fm-op" style="font-size:.8em;color:var(--muted);">→ 同じ広告費でより多く獲得</span>
       </div>
-      <div id="s7-a1" class="appr-card a1 se">
-        <div class="ac-hd"><i class="fa-solid fa-wand-magic-sparkles"></i> ① クリエイティブ改善（CTR向上）</div>
-        <ul><li>コピー・見出し・ビジュアルをA/Bテスト</li><li>「痛み」や「理想の未来」を訴求</li></ul>
-        <div style="color:var(--green);font-size:.92em;margin-top:.15em;">CTR 1%→2% → CPAは約50%改善</div>
+      <div class="n-steps" style="margin-top:.4em;">
+        <div class="n-step se" id="s7-a1">
+          <div class="n-num b">①</div>
+          <div class="n-body">
+            <strong>クリエイティブ改善（CTR向上）</strong>
+            <div class="t-sm">コピー・ビジュアルのA/Bテスト / 「痛み・理想の未来」を訴求</div>
+          </div>
+        </div>
+        <div class="n-step se" id="s7-a2">
+          <div class="n-num" style="background:var(--acc2);color:#000;">②</div>
+          <div class="n-body">
+            <strong>ランディングページ最適化（CVR向上）</strong>
+            <div class="t-sm">FVに「誰向け・何を解決するか」を明示 / 社会的証明を追加</div>
+          </div>
+        </div>
+        <div class="n-step se" id="s7-a3">
+          <div class="n-num g">③</div>
+          <div class="n-body">
+            <strong>ターゲティング精度向上（無駄な配信を減らす）</strong>
+            <div class="t-sm">LTV高顧客の共通属性を抽出・類似オーディエンス活用</div>
+          </div>
+        </div>
       </div>
-      <div id="s7-a2" class="appr-card a2 se">
-        <div class="ac-hd"><i class="fa-solid fa-file-lines"></i> ② ランディングページ最適化（CVR向上）</div>
-        <ul><li>FVに「誰向け・何が解決するか」を明示／社会的証明を追加</li><li>入力フォームのステップ数・フィールド数を削減</li></ul>
-        <div style="color:var(--green);font-size:.92em;margin-top:.15em;">CVR 1%→2% → CPAは半分に</div>
-      </div>
-      <div id="s7-a3" class="appr-card a3 se">
-        <div class="ac-hd"><i class="fa-solid fa-bullseye"></i> ③ ターゲティング精度向上（無駄な配信を減らす）</div>
-        <ul><li>LTV高顧客の共通属性を抽出・類似オーディエンス活用</li><li>時間帯・デバイス・地域別のビッド最適化</li></ul>
+      <div class="bar-chart-h se" id="s7-impact" style="margin-top:.4em;">
+        <div style="font-size:clamp(9px,1.2vw,15px);font-weight:700;color:var(--muted2);margin-bottom:.3em;">改善効果の目安</div>
+        <div class="bh-row">
+          <span class="bh-lbl">CTR 1%（改善前）</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:50;--c:var(--muted)"></div></div>
+          <span class="bh-val" style="color:var(--muted)">CPA 20,000円</span>
+        </div>
+        <div class="bh-row">
+          <span class="bh-lbl">CTR 2%（改善後）</span>
+          <div class="bh-track"><div class="bh-fill" style="--v:100;--c:var(--green)"></div></div>
+          <span class="bh-val" style="color:var(--green)">CPA 10,000円 🎯</span>
+        </div>
       </div>
     </div>
   </section>
@@ -935,19 +1336,34 @@ body {
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
       <div id="s8-hd" class="sh se">リテンション率の威力</div>
-      <div id="s8-data" class="loss-box se" style="background:rgba(20,184,166,0.10);border-color:rgba(20,184,166,0.45);color:var(--accent);">
-        顧客維持率を <strong style="color:#fff;">わずか5%改善</strong>するだけで 利益は <strong style="color:#fff;">25〜95%増加</strong>
-        <div class="src-note" style="font-weight:400;margin-top:.2em;">── Bain &amp; Company研究 / Reichheld『The Loyalty Effect』(1996)</div>
+      <div class="kpi-wrap se" id="s8-kpi">
+        <div class="kpi-big" style="--c:var(--green)">
+          <div class="kpi-num">25〜95%</div>
+          <div class="kpi-sub">利益増加</div>
+        </div>
+        <div class="kpi-ctx">
+          <strong>たった5%の維持率改善で</strong><br>
+          Bain &amp; Company研究<br>
+          <span style="font-size:.85em;color:var(--muted);">Reichheld『The Loyalty Effect』(1996)</span>
+        </div>
       </div>
-      <div id="s8-mech" class="se" style="margin-top:.2em;">
-        <div class="mech-row"><span class="mech-no">①</span><span><strong style="color:#fff;">新規獲得コストがゼロ</strong>：既存顧客の維持コストは新規獲得の約1/5〜1/7</span></div>
-        <div class="mech-row"><span class="mech-no">②</span><span><strong style="color:#fff;">購入単価が上がる</strong>：継続顧客は信頼から高価格帯も購入しやすい</span></div>
-        <div class="mech-row"><span class="mech-no">③</span><span><strong style="color:#fff;">紹介・口コミが生まれる</strong>：紹介獲得のCPAは実質ゼロ</span></div>
-        <div class="mech-row"><span class="mech-no">④</span><span><strong style="color:#fff;">オペレーションコストが下がる</strong>：既存対応は習熟により効率化</span></div>
-      </div>
-      <div id="s8-bucket" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-top:.3em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);display:flex;align-items:center;gap:.6em;">
-        <i class="fa-solid fa-fill-drip" style="color:var(--accent);flex-shrink:0;"></i>
-        <span><strong style="color:#fff;">バケツの穴モデル</strong>：水を注ぎ続ける（新規獲得）より、穴を塞ぐ（リテンション改善）ほうが効率的</span>
+      <div id="s8-mech" class="se" style="margin-top:.35em;">
+        <div class="hl-banner" style="--c:var(--accent);margin-bottom:.3em;">
+          <i class="fa-solid fa-circle-check hb-icon"></i>
+          <div class="hb-text"><strong>① 新規獲得コストがゼロ</strong> — 既存顧客の維持コストは新規獲得の約1/5〜1/7</div>
+        </div>
+        <div class="hl-banner" style="--c:var(--acc2);margin-bottom:.3em;">
+          <i class="fa-solid fa-circle-check hb-icon"></i>
+          <div class="hb-text"><strong>② 購入単価が上がる</strong> — 継続顧客は信頼から高価格帯も購入しやすい</div>
+        </div>
+        <div class="hl-banner" style="--c:var(--blue);margin-bottom:.3em;">
+          <i class="fa-solid fa-circle-check hb-icon"></i>
+          <div class="hb-text"><strong>③ 紹介・口コミが生まれる</strong> — 紹介獲得のCPAは実質ゼロ</div>
+        </div>
+        <div class="hl-banner" style="--c:var(--green);">
+          <i class="fa-solid fa-circle-check hb-icon"></i>
+          <div class="hb-text"><strong>④ オペレーションコストが下がる</strong> — 既存対応は習熟により効率化</div>
+        </div>
       </div>
     </div>
   </section>
@@ -958,18 +1374,42 @@ body {
     <div class="pad-t">
       <div id="s9-hd" class="sh se">コホート分析でLTVを可視化する</div>
       <div id="s9-def" class="se src-note" style="margin-bottom:.35em;font-size:clamp(10px,1.35vw,16px);">同時期に獲得した顧客グループ（コホート）を追跡し、購買行動の時間変化を可視化する手法 <span style="color:var(--muted);">※数値は架空データ</span></div>
-      <div id="s9-tbl" class="se" style="overflow-x:auto;">
-        <table class="coh">
-          <thead>
-            <tr><th style="width:24%;">獲得月後→</th><th>0ヶ月</th><th>1ヶ月</th><th>2ヶ月</th><th>3ヶ月</th></tr>
-          </thead>
-          <tbody>
-            <tr><td class="row-hd">1月獲得</td><td>100%</td><td>45%</td><td>30%</td><td>28%</td></tr>
-            <tr class="hi"><td class="row-hd">2月獲得</td><td>100%</td><td>50%</td><td>38%</td><td>35%</td></tr>
-            <tr><td class="row-hd">3月獲得</td><td>100%</td><td>40%</td><td>25%</td><td>20%</td></tr>
-            <tr class="hi"><td class="row-hd">4月獲得</td><td>100%</td><td>55%</td><td>42%</td><td>40%</td></tr>
-          </tbody>
-        </table>
+      <div class="comp-tbl se" id="s9-tbl">
+        <div class="comp-row comp-head" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
+          <span class="comp-label">獲得月後→</span>
+          <span class="comp-a">0ヶ月</span>
+          <span class="comp-b">1ヶ月</span>
+          <span class="comp-b">2ヶ月</span>
+          <span class="comp-b">3ヶ月</span>
+        </div>
+        <div class="comp-row" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
+          <span class="comp-label">1月獲得</span>
+          <span class="comp-a">100%</span>
+          <span class="comp-b">45%</span>
+          <span class="comp-b">30%</span>
+          <span class="comp-b">28%</span>
+        </div>
+        <div class="comp-row hi" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
+          <span class="comp-label" style="color:var(--accent);font-weight:700;">2月獲得 ★</span>
+          <span class="comp-a">100%</span>
+          <span class="comp-b c-green">50%</span>
+          <span class="comp-b c-green">38%</span>
+          <span class="comp-b c-green">35%</span>
+        </div>
+        <div class="comp-row" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
+          <span class="comp-label">3月獲得</span>
+          <span class="comp-a">100%</span>
+          <span class="comp-b c-red">40%</span>
+          <span class="comp-b c-red">25%</span>
+          <span class="comp-b c-red">20%</span>
+        </div>
+        <div class="comp-row hi" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
+          <span class="comp-label" style="color:var(--accent);font-weight:700;">4月獲得 ★</span>
+          <span class="comp-a">100%</span>
+          <span class="comp-b c-green">55%</span>
+          <span class="comp-b c-green">42%</span>
+          <span class="comp-b c-green">40%</span>
+        </div>
       </div>
       <div id="s9-find" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);line-height:1.55;margin:.3em 0;">
         ① どのチャネルの顧客がリピートしやすいか ② どの時期の施策が良質な顧客を獲得したか<br>③ 離脱ピークはいつか（フォローのタイミング） ④ LTVを正確に予測できる
@@ -985,18 +1425,41 @@ body {
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
       <div id="s10-hd" class="sh se">実践例：ECサイトA社の「損益逆転」 <span class="src-note">※架空のECサイト</span></div>
-      <div id="s10-init" class="calc-box se">
-        スキンケアサプリ（月額サブスク） ／ 広告費 月50万円 ／ 月間獲得 約63件 → <span class="calc-accent">CPA 約8,000円</span><br>
-        1回目の購入単価：3,000円（初回割引）
+      <div class="kpi-wrap se" id="s10-kpi">
+        <div class="kpi-big" style="--c:var(--accent)">
+          <div class="kpi-num">9.9×</div>
+          <div class="kpi-sub">LTV / CPA 比率</div>
+        </div>
+        <div class="kpi-ctx">
+          <strong>黄金比率（3倍）を<br>大幅に超えた！</strong><br>
+          <span style="font-size:.85em;color:var(--muted);">スキンケアサプリ月額サブスク<br>CPA 8,000円 → LTV 79,500円</span>
+        </div>
       </div>
-      <div id="s10-loss" class="loss-box se">CPA 8,000円 ＞ 売上 3,000円 → 一見、大赤字に見える</div>
-      <div id="s10-ltv" class="calc-box se">
-        購入頻度 月1回 ／ 継続 平均18ヶ月 ／ 通常月単価 4,500円<br>
-        LTV ＝ 3,000円 ＋ 4,500円 × 17ヶ月 ＝ <span class="calc-eq">79,500円</span><br>
-        <span class="calc-accent" style="font-size:1.15em;">LTV ÷ CPA ＝ 79,500 ÷ 8,000 ≒ 9.9倍</span> → 黄金比率（3倍）を大幅に超える！
+      <div class="comp-tbl se" id="s10-tbl">
+        <div class="comp-row comp-head">
+          <span class="comp-label">指標</span>
+          <span class="comp-a">初回購入視点</span>
+          <span class="comp-b">LTV視点（18ヶ月）</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">CPA</span>
+          <span class="comp-a">8,000円</span>
+          <span class="comp-b">8,000円</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label">売上</span>
+          <span class="comp-a c-red">3,000円（初回割引）</span>
+          <span class="comp-b c-green">79,500円</span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label">判断</span>
+          <span class="comp-a c-red">❌ 大赤字に見える</span>
+          <span class="comp-b c-green">✅ 優秀な投資（9.9倍）</span>
+        </div>
       </div>
-      <div id="s10-fix" class="se" style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:9px;padding:.5em .9em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);">
-        <strong style="color:var(--green);">さらに改善：</strong>2ヶ月目フォローメールで継続率+5% ／ 6ヶ月継続者に上位プラン案内（単価+1,500円） → LTV 79,500円→約95,000円 → 広告予算1.5倍でも収益プラス
+      <div id="s10-fix" class="hl-banner se" style="--c:var(--green);margin-top:.4em;">
+        <i class="fa-solid fa-arrow-trend-up hb-icon"></i>
+        <div class="hb-text"><strong>さらに改善：LTV 79,500円→約95,000円</strong><br>2ヶ月目フォローメール（継続率+5%）＋6ヶ月継続者に上位プラン案内（単価+1,500円）→ 広告予算1.5倍でも収益プラス</div>
       </div>
     </div>
   </section>
@@ -1006,20 +1469,19 @@ body {
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
       <div id="s11-hd" class="sh se">よくある罠——LTV計算の3つの落とし穴</div>
-      <div id="s11-t1" class="trap-card se">
-        <div class="tc-hd"><i class="fa-solid fa-triangle-exclamation"></i> 罠① LTVを楽観的に見積もりすぎる</div>
-        <div style="color:var(--muted2);">「最も良い顧客」で全体を計算 → 平均には低LTV顧客も多く含まれる</div>
-        <div class="tc-fix">対策：中央値またはコホート実績値で計算。計画は保守的な値で</div>
-      </div>
-      <div id="s11-t2" class="trap-card se">
-        <div class="tc-hd"><i class="fa-solid fa-triangle-exclamation"></i> 罠② チャネル別のCPAを混在させる</div>
-        <div style="color:var(--muted2);">SEO・SNS・リスティング・紹介を合計し一つのCPAを出す → 良質チャネルを評価できない</div>
-        <div class="tc-fix">対策：チャネル別にCPA・LTV・LTV/CPAを管理する</div>
-      </div>
-      <div id="s11-t3" class="trap-card se">
-        <div class="tc-hd"><i class="fa-solid fa-triangle-exclamation"></i> 罠③ 計測期間が短すぎる</div>
-        <div style="color:var(--muted2);">3ヶ月でLTVを確定 → サブスクは12〜24ヶ月後に大きく変動</div>
-        <div class="tc-fix">対策：最低12ヶ月で評価。コホートで離脱ピーク月を特定しフォロー設計</div>
+      <div class="verdict-rows se" id="s11-verdicts">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>罠① LTVを楽観的に見積もりすぎる</strong><br>「最も良い顧客」で全体を計算 → 平均には低LTV顧客も多い<br><span style="color:var(--green);font-size:.9em;">✅ 対策：中央値またはコホート実績値で計算。計画は保守的に</span></div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>罠② チャネル別のCPAを混在させる</strong><br>SEO・SNS・リスティングを合計し一つのCPAを出す → 良質チャネルを評価できない<br><span style="color:var(--green);font-size:.9em;">✅ 対策：チャネル別にCPA・LTV・LTV/CPAを管理する</span></div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>罠③ 計測期間が短すぎる</strong><br>3ヶ月でLTVを確定 → サブスクは12〜24ヶ月後に大きく変動<br><span style="color:var(--green);font-size:.9em;">✅ 対策：最低12ヶ月で評価。コホートで離脱ピーク月を特定しフォロー設計</span></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1036,13 +1498,19 @@ body {
         <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">LTVを上げる3つのレバー</div><div class="sum-sub">①単価（アップセル）②頻度（リテンション）③継続期間（解約防止）</div></div></div>
         <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">リテンションの威力（Reichheld / Bain）</div><div class="sum-sub">維持率5%改善で利益25〜95%増。新規獲得は維持の5〜7倍</div></div></div>
       </div>
-      <div id="s12-steps" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-top:.4em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <strong style="color:var(--accent);">今すぐできる実践ステップ：</strong>
-        <span style="margin-left:.3em;">① 自社のLTVを計算</span>
-        <span style="color:var(--border);margin:0 .3em;">|</span>
-        <span>② チャネル別にLTV÷CPAを算出</span>
-        <span style="color:var(--border);margin:0 .3em;">|</span>
-        <span>③ コホートで残存率を毎月追跡</span>
+      <div class="n-steps se" id="s12-steps" style="margin-top:.5em;">
+        <div class="n-step" id="s12-st1">
+          <div class="n-num">①</div>
+          <div class="n-body"><strong>自社のLTVを計算する</strong><div class="t-sm">平均単価・頻度・継続期間を調べてLTV計算</div></div>
+        </div>
+        <div class="n-step" id="s12-st2">
+          <div class="n-num b">②</div>
+          <div class="n-body"><strong>チャネル別にLTV÷CPAを算出</strong><div class="t-sm">主な広告チャネルのCPAを計算し比率を出す</div></div>
+        </div>
+        <div class="n-step" id="s12-st3">
+          <div class="n-num g">③</div>
+          <div class="n-body"><strong>コホート分析で残存率を毎月追跡</strong><div class="t-sm">3ヶ月後残存率をKPIに設定して継続モニタリング</div></div>
+        </div>
       </div>
     </div>
   </section>
@@ -1050,7 +1518,7 @@ body {
   <!-- S13: Next Episode 590-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
+    <div class="pad" style="align-items:center;justify-content:center;text-align:center;">
       <div id="s13-card" class="se">
         <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
         <div class="next-title">第10回 読まれる・刺さる・動かす コピーライティング5つの法則</div>
@@ -1095,58 +1563,55 @@ const STEPS = [
   {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
   {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
   {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-q'],              anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-case'],           anim:'rv-up'},
-  {si:1,  t:40,   ids:['s2-real'],           anim:'rv-up'},
-  {si:1,  t:48,   ids:['s2-loss'],           anim:'rv-scale'},
-  {si:1,  t:55,   ids:['s2-core'],           anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
+  {si:1,  t:33,   ids:['s2-tbl'],            anim:'rv-up'},
+  {si:1,  t:50,   ids:['s2-core'],           anim:'rv-fade'},
   {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:83,   ids:['s3-def'],            anim:'rv-up'},
-  {si:2,  t:92,   ids:['s3-bench'],          anim:'rv-up'},
-  {si:2,  t:100,  ids:['s3-myth'],           anim:'rv-fade'},
+  {si:2,  t:83,   ids:['s3-formula'],        anim:'rv-scale'},
+  {si:2,  t:89,   ids:['s3-fml-ex'],         anim:'rv-fade'},
+  {si:2,  t:93,   ids:['s3-bench'],          anim:'rv-up'},
+  {si:2,  t:108,  ids:['s3-myth'],           anim:'rv-fade'},
   {si:3,  t:130,  ids:['s4-hd'],             anim:'rv-fade'},
   {si:3,  t:133,  ids:['s4-def'],            anim:'rv-up'},
-  {si:3,  t:140,  ids:['s4-formula'],        anim:'rv-up'},
-  {si:3,  t:147,  ids:['s4-calc'],           anim:'rv-scale'},
-  {si:3,  t:155,  ids:['s4-compare'],        anim:'rv-up'},
-  {si:3,  t:165,  ids:['s4-profit'],         anim:'rv-fade'},
+  {si:3,  t:140,  ids:['s4-formula'],        anim:'rv-scale'},
+  {si:3,  t:147,  ids:['s4-calc'],           anim:'rv-up'},
+  {si:3,  t:168,  ids:['s4-result'],         anim:'rv-scale'},
   {si:4,  t:190,  ids:['s5-hd'],             anim:'rv-fade'},
-  {si:4,  t:193,  ids:['s5-big'],            anim:'rv-scale'},
-  {si:4,  t:200,  ids:['s5-bands'],          anim:'rv-up'},
-  {si:4,  t:212,  ids:['s5-why'],            anim:'rv-fade'},
+  {si:4,  t:193,  ids:['s5-formula'],        anim:'rv-scale'},
+  {si:4,  t:199,  ids:['s5-fsub'],           anim:'rv-fade'},
+  {si:4,  t:204,  ids:['s5-gauge'],          anim:'rv-up'},
+  {si:4,  t:211,  ids:['s5-bands'],          anim:'rv-up'},
+  {si:4,  t:226,  ids:['s5-why'],            anim:'rv-fade'},
   {si:5,  t:240,  ids:['s6-hd'],             anim:'rv-fade'},
-  {si:5,  t:243,  ids:['s6-formula'],        anim:'rv-up'},
+  {si:5,  t:243,  ids:['s6-formula'],        anim:'rv-scale'},
   {si:5,  t:250,  ids:['s6-l1'],             anim:'rv-up'},
   {si:5,  t:262,  ids:['s6-l2'],             anim:'rv-up'},
   {si:5,  t:274,  ids:['s6-l3'],             anim:'rv-up'},
   {si:6,  t:300,  ids:['s7-hd'],             anim:'rv-fade'},
-  {si:6,  t:303,  ids:['s7-formula'],        anim:'rv-up'},
+  {si:6,  t:303,  ids:['s7-formula'],        anim:'rv-scale'},
   {si:6,  t:310,  ids:['s7-a1'],             anim:'rv-up'},
-  {si:6,  t:322,  ids:['s7-a2'],             anim:'rv-up'},
-  {si:6,  t:334,  ids:['s7-a3'],             anim:'rv-up'},
+  {si:6,  t:320,  ids:['s7-a2'],             anim:'rv-up'},
+  {si:6,  t:330,  ids:['s7-a3'],             anim:'rv-up'},
+  {si:6,  t:342,  ids:['s7-impact'],         anim:'rv-up'},
   {si:7,  t:360,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:363,  ids:['s8-data'],           anim:'rv-scale'},
-  {si:7,  t:372,  ids:['s8-mech'],           anim:'rv-up'},
-  {si:7,  t:390,  ids:['s8-bucket'],         anim:'rv-fade'},
+  {si:7,  t:363,  ids:['s8-kpi'],            anim:'rv-scale'},
+  {si:7,  t:375,  ids:['s8-mech'],           anim:'rv-up'},
   {si:8,  t:410,  ids:['s9-hd'],             anim:'rv-fade'},
   {si:8,  t:413,  ids:['s9-def'],            anim:'rv-fade'},
   {si:8,  t:418,  ids:['s9-tbl'],            anim:'rv-up'},
-  {si:8,  t:440,  ids:['s9-find'],           anim:'rv-up'},
-  {si:8,  t:455,  ids:['s9-google'],         anim:'rv-fade'},
+  {si:8,  t:445,  ids:['s9-find'],           anim:'rv-up'},
+  {si:8,  t:460,  ids:['s9-google'],         anim:'rv-fade'},
   {si:9,  t:480,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:483,  ids:['s10-init'],          anim:'rv-up'},
-  {si:9,  t:492,  ids:['s10-loss'],          anim:'rv-scale'},
-  {si:9,  t:500,  ids:['s10-ltv'],           anim:'rv-up'},
+  {si:9,  t:483,  ids:['s10-kpi'],           anim:'rv-scale'},
+  {si:9,  t:497,  ids:['s10-tbl'],           anim:'rv-up'},
   {si:9,  t:515,  ids:['s10-fix'],           anim:'rv-fade'},
   {si:10, t:530,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:533,  ids:['s11-t1'],            anim:'rv-up'},
-  {si:10, t:541,  ids:['s11-t2'],            anim:'rv-up'},
-  {si:10, t:549,  ids:['s11-t3'],            anim:'rv-up'},
+  {si:10, t:533,  ids:['s11-verdicts'],      anim:'rv-up'},
   {si:11, t:560,  ids:['s12-hd'],            anim:'rv-fade'},
   {si:11, t:563,  ids:['s12-items'],         anim:'rv-up'},
-  {si:11, t:578,  ids:['s12-steps'],         anim:'rv-fade'},
+  {si:11, t:578,  ids:['s12-steps'],         anim:'rv-up'},
   {si:12, t:590,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:594,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:12, t:595,  ids:['s13-cta'],           anim:'rv-up'},
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
