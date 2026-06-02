@@ -69,6 +69,7 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
+  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -136,22 +137,26 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
-.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
+   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
+.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
+.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
 
 /* section header */
 .sh {
-  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
-  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
+  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
+  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
+  letter-spacing:.01em;
 }
-.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes */
-.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
-.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
-.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
-.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
-.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
+/* body text sizes — large for mobile/YouTube legibility (bold gothic).
+   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
+.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
+.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
+.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
+.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
+.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -914,7 +919,8 @@ body {
    </div>  */
 .hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
   background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
+  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
 .hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
 .hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
 .hb-text strong { color:var(--text); }
@@ -1005,9 +1011,48 @@ body {
 .s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
 @keyframes dotFloat { to { transform:translateY(-8px); } }
 
+/* ================================================================
+   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
+   Shared keyword + diagram vocabulary for all episodes.
+================================================================ */
+.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
+.aflow.sm{gap:.4em;}
+.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
+  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
+.aflow.sm .achip{padding:.45em .7em;}
+.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(15px,1.9cqw,24px);}
+.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
+.aghost{opacity:.4;}
+.aarrow{color:var(--accent);font-weight:900;}
+/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
+   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
+.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
+.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
+  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
+.tag.acc{border-color:var(--accent);color:var(--accent);}
+.tag.ng{border-color:var(--red);color:var(--red);}
+.tag.ok{border-color:var(--green);color:var(--green);}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
+.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
+  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
+.pcard .ph{font-weight:900;line-height:1.1;}
+.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
+.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
+.bignum{color:var(--accent);font-weight:900;line-height:1;}
+.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
+.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
+.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(14px,1.9cqw,24px);}
+.jcell .jv{font-weight:900;line-height:1;}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
+.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
+.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
+.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
+.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
+
 </style>
 
 <style id="ep-css">
+
 /* ── vertical centering override ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
@@ -1015,83 +1060,15 @@ body {
 /* ── EP05 accent: purple ── */
 :root { --accent:#7c6fff; --glow-acc:rgba(124,111,255,.25); }
 
-/* ── S1 overrides ── */
+/* ── S1 ── */
 #s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #1a0a2e 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px);}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
 #s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em;}
-#s1-catch{font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em;}
+#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
+#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── h-flow nodes ── */
-.h-flow-node.phase-aware  {background:rgba(96,165,250,0.15);border:1.5px solid rgba(96,165,250,0.4);color:var(--blue);}
-.h-flow-node.phase-appeal {background:rgba(251,191,36,0.12);border:1.5px solid rgba(251,191,36,0.4);color:var(--yellow);}
-.h-flow-node.phase-ask    {background:rgba(248,135,100,0.12);border:1.5px solid rgba(248,135,100,0.4);color:var(--acc2);}
-.h-flow-node.phase-act    {background:rgba(74,222,128,0.12);border:1.5px solid rgba(74,222,128,0.4);color:var(--green);}
-.h-flow-node.phase-adv    {background:rgba(124,111,255,0.15);border:1.5px solid rgba(124,111,255,0.5);color:var(--accent);}
-
-/* ── model timeline (S3) ── */
-.model-cols{display:flex;gap:.6em;margin:.4em 0;}
-.model-col{flex:1;border-radius:10px;padding:.6em .8em;font-size:clamp(9px,1.2vw,15px);}
-.model-col.aidma{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.3);}
-.model-col.aisas{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);}
-.model-col.fivea{background:rgba(124,111,255,0.1);border:1px solid rgba(124,111,255,0.4);}
-.model-col .mc-hd{font-weight:700;margin-bottom:.3em;font-size:1.1em;}
-.model-col.aidma .mc-hd{color:var(--blue);}
-.model-col.aisas .mc-hd{color:var(--yellow);}
-.model-col.fivea .mc-hd{color:var(--accent);}
-.mc-yr{font-size:.82em;color:var(--muted);display:block;margin-bottom:.3em;}
-.mc-step{padding:.1em 0;color:var(--muted2);line-height:1.45;}
-
-/* ── phase desc table (S4) ── */
-.phase-descs{display:flex;flex-direction:column;gap:.22em;margin:.3em 0;}
-.phase-row{display:flex;align-items:flex-start;gap:.6em;font-size:clamp(10px,1.3vw,16px);padding:.15em 0;color:var(--muted2);}
-.ph-lbl{font-weight:700;min-width:6em;flex-shrink:0;}
-.ph-lbl.aware{color:var(--blue);}
-.ph-lbl.appeal{color:var(--yellow);}
-.ph-lbl.ask{color:var(--acc2);}
-.ph-lbl.act{color:var(--green);}
-.ph-lbl.adv{color:var(--accent);}
-
-/* ── stage tactic cards (S5,S6,S7) ── */
-.tactic-card{border-radius:9px;padding:.55em .9em;font-size:clamp(10px,1.35vw,17px);margin-bottom:.35em;}
-.tactic-card .tc-hd{font-weight:700;margin-bottom:.2em;}
-.tactic-card ul{padding-left:1.2em;color:var(--muted2);line-height:1.5;margin:0;}
-.tactic-card.aware-card{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.3);}
-.tactic-card.aware-card .tc-hd{color:var(--blue);}
-.tactic-card.appeal-card{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);}
-.tactic-card.appeal-card .tc-hd{color:var(--yellow);}
-.tactic-card.ask-card{background:rgba(248,135,100,0.08);border:1px solid rgba(248,135,100,0.3);}
-.tactic-card.ask-card .tc-hd{color:var(--acc2);}
-.tactic-card.act-card{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);}
-.tactic-card.act-card .tc-hd{color:var(--green);}
-.tactic-card.adv-card{background:rgba(124,111,255,0.08);border:1px solid rgba(124,111,255,0.3);}
-.tactic-card.adv-card .tc-hd{color:var(--accent);}
-
-/* ── journey map table (S8) ── */
-.jmap{width:100%;border-collapse:collapse;font-size:clamp(8px,1.1vw,14px);}
-.jmap th{background:rgba(255,255,255,0.05);padding:.3em .4em;text-align:center;border:1px solid var(--border);color:var(--muted2);font-weight:700;}
-.jmap td{padding:.25em .4em;border:1px solid var(--border);color:var(--muted2);text-align:center;vertical-align:top;line-height:1.4;}
-.jmap td.ok{color:var(--green);font-weight:700;}
-.jmap td.warn{color:var(--yellow);font-weight:700;}
-.jmap td.bad{color:var(--red);font-weight:700;}
-.jmap .row-hd{background:rgba(255,255,255,0.03);font-weight:700;color:var(--muted2);text-align:left;padding-left:.6em;white-space:nowrap;}
-
-/* ── case result cards (S9) ── */
-.case-hole{border-radius:9px;padding:.45em .8em;margin-bottom:.28em;font-size:clamp(10px,1.3vw,16px);background:rgba(248,135,100,0.08);border:1px solid rgba(248,135,100,0.3);}
-.case-hole .ch-hd{font-weight:700;color:var(--acc2);margin-bottom:.15em;}
-.case-fix{border-radius:9px;padding:.45em .8em;font-size:clamp(10px,1.3vw,16px);background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);}
-.case-fix .cf-hd{font-weight:700;color:var(--green);margin-bottom:.15em;}
-
-/* ── why cards (S7) ── */
-.why-row{display:flex;gap:.5em;margin:.35em 0;}
-.why-card{flex:1;border-radius:9px;padding:.5em .7em;font-size:clamp(9px,1.2vw,15px);background:var(--surf);border:1px solid var(--border);}
-.why-card .wc-hd{font-weight:700;color:var(--accent);margin-bottom:.15em;}
-.why-card .wc-bd{color:var(--muted2);font-size:.92em;}
-
-/* ── S13 last slide ── */
-#s13{background:radial-gradient(ellipse 80% 65% at 40% 50%, #0c1f10 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
-#s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px var(--glow-grn),0 8px 32px rgba(0,0,0,0.5);}
-#s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--acc2);display:flex;align-items:center;justify-content:center;gap:.55em;}
+/* Minimal design helpers (.aflow/.tag/.duo/.pcard/.jmini/.funnel/.loop/.note/.bignum)
+   live in the shared base CSS — no need to redefine here. */
 
 </style>
 </head>
@@ -1101,7 +1078,6 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1114,495 +1090,201 @@ body {
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
       <div id="s1-ep" class="se">第5回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">買いたくなる流れを作る</div>
-      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">「カスタマージャーニー」の描き方</div>
-      <div id="s1-catch" class="se">顧客が「知る→買う→ファンになる」旅を設計する</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">買いたくなる流れ</div>
+      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">カスタマージャーニー</div>
+      <div id="s1-catch" class="se">知る → 買う → ファン</div>
     </div>
   </section>
 
   <!-- S2: Hook 30-90s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad-t">
-      <div id="s2-hd" class="sh se">なぜ「良い広告」なのに成果が出ないのか？</div>
-      <div id="s2-fails" class="se">
-        <div class="verdict-rows">
-          <div class="verdict-row ng">
-            <i class="fa-solid fa-xmark v-icon"></i>
-            <div class="v-body"><strong>認知広告 → 購入ページ直行</strong>：検討フェーズがゼロで離脱</div>
-          </div>
-          <div class="verdict-row ng">
-            <i class="fa-solid fa-xmark v-icon"></i>
-            <div class="v-body"><strong>SNS投稿でフォロワー増加</strong>：でも購入に繋がらない</div>
-          </div>
-          <div class="verdict-row ng">
-            <i class="fa-solid fa-xmark v-icon"></i>
-            <div class="v-body"><strong>良い口コミがある</strong>：なのに新規顧客が増えない</div>
-          </div>
-        </div>
+    <div class="pad">
+      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">なぜ「良い広告」でも<span style="color:#fff;">売れない</span>？</div>
+      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin:.25em 0 .15em;">知った瞬間に<br>買わない</div>
+      <div id="s2-flow" class="se aflow t-md" style="margin-top:.2em;">
+        <span class="achip">認知</span><span class="aarrow">✕</span><span class="achip aghost">即・購入</span>
       </div>
-      <div id="s2-cause" class="se" style="background:rgba(248,100,100,0.10);border:2px solid rgba(248,100,100,0.35);border-radius:10px;padding:.65em 1.1em;margin-top:.5em;font-size:clamp(14px,2vw,26px);font-weight:900;color:var(--red);text-align:center;">
-        顧客は「知った瞬間に買わない」
-      </div>
-      <div id="s2-flow" class="se">
-        <div class="h-flow" style="justify-content:center;margin-top:.5em;">
-          <div class="h-flow-node phase-aware" style="font-size:clamp(10px,1.3vw,15px);">認知<span class="fn-sub">知る</span></div>
-          <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="h-flow-node phase-appeal" style="font-size:clamp(10px,1.3vw,15px);">検討<span class="fn-sub">気になる</span></div>
-          <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="h-flow-node phase-ask" style="font-size:clamp(10px,1.3vw,15px);">調査<span class="fn-sub">比べる</span></div>
-          <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="h-flow-node phase-act" style="font-size:clamp(10px,1.3vw,15px);">購入<span class="fn-sub">買う</span></div>
-          <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          <div class="h-flow-node phase-adv" style="font-size:clamp(10px,1.3vw,15px);">推薦<span class="fn-sub">広める</span></div>
-        </div>
-        <div style="text-align:center;font-size:clamp(10px,1.4vw,17px);color:var(--accent);font-weight:700;margin-top:.3em;">
-          <i class="fa-solid fa-arrow-right"></i>&ensp;各ステージに合った施策を打たないと、どんな良い広告も空振りになる
-        </div>
-      </div>
+      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">人は段階を踏んで買う</div>
     </div>
   </section>
 
-  <!-- S3: Model Timeline 90-130s -->
+  <!-- S3: Definition 90-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
-      <div id="s3-hd" class="sh se">顧客の旅は時代とともに変化してきた</div>
-      <div id="s3-models" class="model-cols se">
-        <div class="model-col aidma">
-          <div class="mc-hd"><i class="fa-solid fa-tv"></i> AIDMA</div>
-          <span class="mc-yr">1924年 / Roland Hall</span>
-          <div class="mc-step"><strong>A</strong>ttention（注意）</div>
-          <div class="mc-step"><strong>I</strong>nterest（関心）</div>
-          <div class="mc-step"><strong>D</strong>esire（欲求）</div>
-          <div class="mc-step"><strong>M</strong>emory（記憶）</div>
-          <div class="mc-step"><strong>A</strong>ction（行動）</div>
-          <div style="margin-top:.4em;font-size:.85em;color:var(--blue);">マス広告・一方向説得</div>
-        </div>
-        <div class="model-col aisas">
-          <div class="mc-hd"><i class="fa-solid fa-magnifying-glass"></i> AISAS</div>
-          <span class="mc-yr">2004年 / 電通提唱</span>
-          <div class="mc-step"><strong>A</strong>ttention（注意）</div>
-          <div class="mc-step"><strong>I</strong>nterest（関心）</div>
-          <div class="mc-step"><strong style="color:var(--yellow);">S</strong>earch（<strong style="color:var(--yellow);">検索</strong>）</div>
-          <div class="mc-step"><strong>A</strong>ction（行動）</div>
-          <div class="mc-step"><strong style="color:var(--yellow);">S</strong>hare（<strong style="color:var(--yellow);">共有</strong>）</div>
-          <div style="margin-top:.4em;font-size:.85em;color:var(--yellow);">検索・共有が加わった</div>
-        </div>
-        <div class="model-col fivea">
-          <div class="mc-hd"><i class="fa-solid fa-rotate"></i> 5A / CDJ</div>
-          <span class="mc-yr">2009〜16年 / McKinsey・Kotler</span>
-          <div class="mc-step"><strong>A</strong>ware（認知）</div>
-          <div class="mc-step"><strong>A</strong>ppeal（訴求）</div>
-          <div class="mc-step"><strong>A</strong>sk（調査）</div>
-          <div class="mc-step"><strong>A</strong>ct（行動）</div>
-          <div class="mc-step"><strong>A</strong>dvocate（推薦）</div>
-          <div style="margin-top:.4em;font-size:.85em;color:var(--accent);">ループ構造・口コミが認知を生む</div>
-        </div>
+      <div id="s3-hd" class="sh se">カスタマージャーニーとは</div>
+      <div id="s3-key" class="se t-xl" style="text-align:center;">顧客の<span style="color:var(--accent);">体験の旅</span></div>
+      <div id="s3-pts" class="se taglist t-md" style="margin-top:.5em;">
+        <span class="tag">行動</span><span class="tag">思考</span><span class="tag">感情</span><span class="tag acc">接点設計</span>
       </div>
-      <div id="s3-note" class="se">
-        <div class="hl-banner" style="--c:var(--accent);margin-top:.4em;">
-          <i class="fa-solid fa-rotate hb-icon"></i>
-          <div class="hb-text"><strong>決定的な変化：ループ構造の登場</strong> — Advocateが次の人のAwareを生む循環がSNS時代に加速</div>
-        </div>
-      </div>
+      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">接点の設計が成果を分ける</div>
     </div>
   </section>
 
-  <!-- S4: 5A Framework 130-190s -->
+  <!-- S4: Model evolution 130-190s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">コトラーの5Aフレームワーク</div>
-      <div id="s4-src" class="se" style="font-size:clamp(9px,1.1vw,13px);color:var(--muted);margin-bottom:.4em;">(Philip Kotler et al.『マーケティング4.0』2016)</div>
-      <div id="s4-flow" class="h-flow se" style="justify-content:center;margin:.2em 0 .4em;">
-        <div class="h-flow-node phase-aware">Aware<span class="fn-sub">認知</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node phase-appeal">Appeal<span class="fn-sub">訴求</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node phase-ask">Ask<span class="fn-sub">調査</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node phase-act">Act<span class="fn-sub">行動</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node phase-adv">Advocate<span class="fn-sub">推薦</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none" style="color:var(--accent);"><path d="M17 3l4 4-4 4M21 7H9a4 4 0 000 8h1" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <div id="s4-hd" class="sh se">旅は時代で変わった</div>
+      <div id="s4-flow" class="se aflow t-lg" style="margin-top:.3em;">
+        <span class="achip">AIDMA<small>1924 ／ 一方向</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip">AISAS<small>2004 ／ 検索・共有</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on">5A<small>2009- ／ ループ</small></span>
       </div>
-      <div id="s4-descs" class="phase-descs se">
-        <div class="phase-row">
-          <span class="ph-lbl aware">Aware</span>
-          <span>SNSや口コミで商品の存在を<strong style="color:#fff;">知る</strong>フェーズ</span>
-        </div>
-        <div class="phase-row">
-          <span class="ph-lbl appeal">Appeal</span>
-          <span>「良さそう」と<strong style="color:#fff;">気になる</strong>・魅力を感じるフェーズ</span>
-        </div>
-        <div class="phase-row">
-          <span class="ph-lbl ask">Ask</span>
-          <span>比較・検索・口コミで<strong style="color:#fff;">情報収集</strong>するフェーズ</span>
-        </div>
-        <div class="phase-row">
-          <span class="ph-lbl act">Act</span>
-          <span>購入・申し込み・<strong style="color:#fff;">意思決定</strong>するフェーズ</span>
-        </div>
-        <div class="phase-row">
-          <span class="ph-lbl adv">Advocate</span>
-          <span>SNS投稿・口コミで<strong style="color:#fff;">他者に推薦</strong>するフェーズ</span>
-        </div>
-      </div>
-      <div id="s4-pt" class="se" style="background:rgba(124,111,255,0.08);border:1px solid rgba(124,111,255,0.3);border-radius:9px;padding:.5em .9em;font-size:clamp(11px,1.5vw,19px);font-weight:700;color:var(--accent);display:flex;align-items:center;gap:.5em;">
-        <i class="fa-solid fa-rotate" style="flex-shrink:0;"></i>
-        直線ではなく「ループ」構造 → Advocateが次の人のAwareを生む
-      </div>
+      <div id="s4-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">いまは口コミが旅の起点</div>
     </div>
   </section>
 
-  <!-- S5: Aware/Appeal Tactics 190-240s -->
+  <!-- S5: 5A framework 190-240s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">ステージ別施策 ① Aware → Appeal</div>
-      <div id="s5-flow" class="h-flow se" style="justify-content:center;margin:.2em 0 .5em;">
-        <div class="h-flow-node phase-aware" style="box-shadow:0 0 12px rgba(96,165,250,0.4);">Aware<span class="fn-sub">認知</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node phase-appeal" style="box-shadow:0 0 12px rgba(251,191,36,0.4);">Appeal<span class="fn-sub">訴求</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none" style="color:var(--muted);"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node" style="color:var(--muted);border-color:var(--border);">Ask<span class="fn-sub" style="color:var(--muted);">...</span></div>
+      <div id="s5-hd" class="sh se">コトラーの5A</div>
+      <div id="s5-flow" class="se aflow sm t-md" style="margin-top:.2em;">
+        <span class="achip">Aware<small>認知</small></span><span class="aarrow">→</span>
+        <span class="achip">Appeal<small>訴求</small></span><span class="aarrow">→</span>
+        <span class="achip">Ask<small>調査</small></span><span class="aarrow">→</span>
+        <span class="achip">Act<small>行動</small></span><span class="aarrow">→</span>
+        <span class="achip on">Advocate<small>推薦</small></span>
       </div>
-      <div id="s5-aware" class="tactic-card aware-card se">
-        <div class="tc-hd"><i class="fa-solid fa-eye"></i> Aware フェーズ：<span style="font-weight:400;color:var(--muted2);">目的 = まず存在を知ってもらう</span></div>
-        <ul>
-          <li>SNS広告・ディスプレイ広告（認知拡大）</li>
-          <li>インフルエンサー起用・PR記事・タイアップ</li>
-          <li>SEO・YouTube動画・口コミが起きやすいコンテンツ設計</li>
-        </ul>
-      </div>
-      <div id="s5-appeal" class="tactic-card appeal-card se">
-        <div class="tc-hd"><i class="fa-solid fa-heart"></i> Appeal フェーズ：<span style="font-weight:400;color:var(--muted2);">目的 = 「気になる」感情を引き出す</span></div>
-        <ul>
-          <li>ブランドストーリー・世界観コンテンツ・SNSビジュアル統一</li>
-          <li>感情的ベネフィットを前面に出した動画・記事</li>
-          <li>ファーストビューのコピーで「自分ごと化」させる</li>
-        </ul>
-      </div>
-      <div id="s5-warn" class="se">
-        <div class="hl-banner" style="--c:var(--red);">
-          <i class="fa-solid fa-triangle-exclamation hb-icon"></i>
-          <div class="hb-text"><strong>この段階で「今すぐ買ってください」は逆効果</strong> — 初対面で即購買を迫るのはNG。まず関係性を育てる</div>
-        </div>
-      </div>
+      <div id="s5-loop" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">↻ Advocate が次の Aware を生む</div>
     </div>
   </section>
 
-  <!-- S6: Ask/Act Tactics 240-300s -->
+  <!-- S6: Aware/Appeal tactics 240-300s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">ステージ別施策 ② Ask → Act</div>
-      <div id="s6-flow" class="h-flow se" style="justify-content:center;margin:.2em 0 .5em;">
-        <div class="h-flow-node" style="color:var(--muted);border-color:var(--border);">Appeal<span class="fn-sub" style="color:var(--muted);">...</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none" style="color:var(--muted);"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node phase-ask" style="box-shadow:0 0 12px rgba(248,135,100,0.4);">Ask<span class="fn-sub">調査</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node phase-act" style="box-shadow:0 0 12px rgba(74,222,128,0.4);">Act<span class="fn-sub">行動</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none" style="color:var(--muted);"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node" style="color:var(--muted);border-color:var(--border);">Advocate<span class="fn-sub" style="color:var(--muted);">...</span></div>
+      <div id="s6-hd" class="sh se">施策① Aware → Appeal</div>
+      <div id="s6-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--blue);">
+          <div class="ph t-lg" style="color:var(--blue);">Aware<small>知ってもらう</small></div>
+          <div class="taglist t-sm"><span class="tag">SNS広告</span><span class="tag">SEO</span><span class="tag">動画</span></div>
+        </div>
+        <div class="pcard" style="border-top-color:var(--yellow);">
+          <div class="ph t-lg" style="color:var(--yellow);">Appeal<small>気になる</small></div>
+          <div class="taglist t-sm"><span class="tag">世界観</span><span class="tag">感情</span></div>
+        </div>
       </div>
-      <div id="s6-ask" class="tactic-card ask-card se">
-        <div class="tc-hd"><i class="fa-solid fa-magnifying-glass"></i> Ask フェーズ：<span style="font-weight:400;color:var(--muted2);">目的 = 疑問・不安を解消し比較を制す</span></div>
-        <ul>
-          <li>FAQ・比較記事・ハウツーブログ・レビュー・ユーザー事例</li>
-          <li>無料トライアル・サンプル・デモ動画提供</li>
-          <li>Google検索広告（指名・競合キーワード）</li>
-        </ul>
-      </div>
-      <div id="s6-act" class="tactic-card act-card se">
-        <div class="tc-hd"><i class="fa-solid fa-cart-shopping"></i> Act フェーズ：<span style="font-weight:400;color:var(--muted2);">目的 = 購入の背中を押す</span></div>
-        <ul>
-          <li>LP・カートUI改善（離脱ポイント排除）</li>
-          <li>カート離脱防止メール・リターゲティング</li>
-          <li>期間限定オファー・社会的証明（口コミ件数・評価点）</li>
-        </ul>
-      </div>
-      <div id="s6-pt" class="se" style="background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:9px;padding:.5em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--green);display:flex;align-items:center;gap:.5em;">
-        <i class="fa-solid fa-circle-info" style="flex-shrink:0;"></i>
-        Ask→Actの転換率 = <strong style="margin-left:.2em;">CVR（コンバージョン率）</strong>&ensp;がボトルネックになりやすい
-      </div>
+      <div id="s6-warn" class="se hl-banner" style="margin-top:.6em;">「今すぐ買って」は逆効果</div>
     </div>
   </section>
 
-  <!-- S7: Advocate Tactics 300-360s -->
+  <!-- S7: Ask/Act tactics 300-360s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">ステージ別施策 ③ Advocate（推薦）フェーズ</div>
-      <div id="s7-goal" class="se" style="font-size:clamp(12px,1.7vw,22px);font-weight:700;color:var(--accent);margin-bottom:.35em;">
-        <i class="fa-solid fa-bullhorn"></i> 目的：顧客をブランドの「語り部」にする
-      </div>
-      <div id="s7-tactics" class="tactic-card adv-card se">
-        <ul style="display:grid;grid-template-columns:1fr 1fr;gap:.1em .5em;">
-          <li>購入後フォローアップメール・感謝レター</li>
-          <li>SNSシェア仕掛け（ハッシュタグ・UGC設計）</li>
-          <li>ロイヤルティプログラム（ポイント・特典）</li>
-          <li>紹介プログラム（リファラル施策）</li>
-          <li>ユーザーコミュニティ形成・サポート充実</li>
-        </ul>
-      </div>
-      <div id="s7-why" class="why-row se">
-        <div class="why-card">
-          <div class="wc-hd"><i class="fa-solid fa-arrow-trend-down"></i> CPA大幅低下</div>
-          <div class="wc-bd">紹介経由の顧客は広告費ゼロで獲得できる</div>
+      <div id="s7-hd" class="sh se">施策② Ask → Act</div>
+      <div id="s7-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--acc2);">
+          <div class="ph t-lg" style="color:var(--acc2);">Ask<small>疑問を解消</small></div>
+          <div class="taglist t-sm"><span class="tag">比較</span><span class="tag">事例</span><span class="tag">レビュー</span></div>
         </div>
-        <div class="why-card">
-          <div class="wc-hd"><i class="fa-solid fa-arrow-trend-up"></i> LTV高い傾向</div>
-          <div class="wc-bd">口コミで来た顧客はリピート率が高い</div>
-        </div>
-        <div class="why-card">
-          <div class="wc-hd"><i class="fa-solid fa-star"></i> 第三者の信頼度</div>
-          <div class="wc-bd">企業広告より口コミは信頼度が圧倒的に高い</div>
+        <div class="pcard" style="border-top-color:var(--green);">
+          <div class="ph t-lg" style="color:var(--green);">Act<small>背中を押す</small></div>
+          <div class="taglist t-sm"><span class="tag">LP改善</span><span class="tag">限定</span><span class="tag">社会的証明</span></div>
         </div>
       </div>
-      <div id="s7-conc" class="se">
-        <div class="hl-banner" style="--c:var(--green);">
-          <i class="fa-solid fa-circle-check hb-icon"></i>
-          <div class="hb-text"><strong>既存顧客への投資がマーケティング最大の費用対効果</strong> — UGCが育つと顧客自身がマーケターになる</div>
-        </div>
-      </div>
+      <div id="s7-cvr" class="se hl-banner" style="margin-top:.6em;">Ask→Act ＝ CVR の最大の壁</div>
     </div>
   </section>
 
-  <!-- S8: Journey Map 360-410s -->
+  <!-- S8: Advocate tactics 360-410s -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">カスタマージャーニーマップの作り方</div>
-      <div id="s8-tbl" class="se" style="overflow-x:auto;">
-        <table class="jmap">
-          <thead>
-            <tr>
-              <th style="width:13%;">&nbsp;</th>
-              <th style="color:var(--blue);">Aware</th>
-              <th style="color:var(--yellow);">Appeal</th>
-              <th style="color:var(--acc2);">Ask</th>
-              <th style="color:var(--green);">Act</th>
-              <th style="color:var(--accent);">Advocate</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td class="row-hd">顧客の行動</td>
-              <td>商品名を<br>聞いた</td>
-              <td>「良さそう」<br>と思う</td>
-              <td>競合と<br>比較</td>
-              <td>申し込み<br>完了</td>
-              <td>友人に<br>紹介する</td>
-            </tr>
-            <tr>
-              <td class="row-hd">顧客の思考</td>
-              <td>「なんか<br>聞いたな」</td>
-              <td>「詳しく<br>知りたい」</td>
-              <td>「本当に<br>大丈夫か」</td>
-              <td>「これで<br>良かった」</td>
-              <td>「勧め<br>たい」</td>
-            </tr>
-            <tr>
-              <td class="row-hd">顧客の感情</td>
-              <td>中立</td>
-              <td>期待感↑</td>
-              <td>不安・慎重</td>
-              <td>安心・満足</td>
-              <td>充実感</td>
-            </tr>
-            <tr>
-              <td class="row-hd">タッチポイント</td>
-              <td>SNS広告</td>
-              <td>SNS動画<br>コンテンツ</td>
-              <td>Google検索<br>レビュー</td>
-              <td>LP・カート</td>
-              <td>メール<br>SNS</td>
-            </tr>
-            <tr>
-              <td class="row-hd">自社評価</td>
-              <td class="warn">△ 改善余地</td>
-              <td class="warn">△ 改善余地</td>
-              <td class="ok">◎ 強い</td>
-              <td class="bad">× 課題</td>
-              <td class="bad">× 弱い</td>
-            </tr>
-          </tbody>
-        </table>
+      <div id="s8-hd" class="sh se">施策③ Advocate</div>
+      <div id="s8-key" class="se t-xl" style="text-align:center;">顧客を<span style="color:var(--accent);">語り部</span>に</div>
+      <div id="s8-tags" class="se taglist t-md" style="margin-top:.4em;">
+        <span class="tag acc">UGC</span><span class="tag">紹介</span><span class="tag">コミュニティ</span>
       </div>
-      <div id="s8-tip" class="se" style="background:rgba(124,111,255,0.08);border:1px solid rgba(124,111,255,0.3);border-radius:9px;padding:.5em .9em;margin-top:.4em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-        <i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i>&ensp;完璧なマップより<strong style="color:#fff;">使えるマップ</strong>が大切。まず1枚描いて施策の優先順位をつける
+      <div id="s8-why" class="se aflow t-md" style="margin-top:.5em;color:var(--green);font-weight:800;gap:1em;">
+        <span>CPA↓</span><span>LTV↑</span><span>信頼↑</span>
       </div>
+      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">既存顧客への投資が最も効く</div>
     </div>
   </section>
 
-  <!-- S9: SaaS Case Study 410-480s -->
+  <!-- S9: Journey map 410-480s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se">実践例：あるSaaS（業務管理ツール）の課題</div>
-      <div id="s9-issue" class="se" style="background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.25);border-radius:9px;padding:.5em .9em;margin-bottom:.4em;font-size:clamp(11px,1.45vw,18px);color:var(--muted2);">
-        <strong style="color:var(--red);">課題：</strong>SNS広告CTRは高いがトライアル登録に繋がらない／登録後の有料転換率が低い
+      <div id="s9-hd" class="sh se">ジャーニーマップで自己採点</div>
+      <div id="s9-map" class="se jmini t-lg" style="margin-top:.3em;">
+        <div class="jcell"><span class="jn">Aware</span><span class="jv" style="color:var(--blue);">○</span></div>
+        <div class="jcell"><span class="jn">Appeal</span><span class="jv" style="color:var(--yellow);">○</span></div>
+        <div class="jcell"><span class="jn">Ask</span><span class="jv" style="color:var(--green);">◎</span></div>
+        <div class="jcell"><span class="jn">Act</span><span class="jv" style="color:var(--acc2);">△</span></div>
+        <div class="jcell"><span class="jn">Advocate</span><span class="jv" style="color:var(--red);">×</span></div>
       </div>
-      <div id="s9-holes" class="se">
-        <div class="case-hole">
-          <div class="ch-hd"><i class="fa-solid fa-circle-xmark"></i> Appeal：LPが機能説明に終始 — 感情的ベネフィットが弱い</div>
-          <div style="color:var(--muted2);font-size:.92em;">「使うとどう変わるか」が伝わらず、訴求力不足で離脱</div>
-        </div>
-        <div class="case-hole">
-          <div class="ch-hd"><i class="fa-solid fa-circle-xmark"></i> Ask：導入事例ページ不足（3社のみ）</div>
-          <div style="color:var(--muted2);font-size:.92em;">「同業種の事例が見つからない」と比較時に離脱される</div>
-        </div>
-        <div class="case-hole">
-          <div class="ch-hd"><i class="fa-solid fa-circle-xmark"></i> Act：登録後オンボーディングが未整備</div>
-          <div style="color:var(--muted2);font-size:.92em;">初回ログイン後に何をすればよいか不明で放置・離脱</div>
-        </div>
-      </div>
-      <div id="s9-fix" class="case-fix se">
-        <div class="cf-hd"><i class="fa-solid fa-circle-check"></i> 改善後 → 有料転換率 <strong style="font-size:1.3em;color:var(--green);">2.1倍</strong> に改善</div>
-        <div style="color:var(--muted2);font-size:.92em;">LP冒頭を体験談に刷新 / 導入事例を3→12社に拡充 / 登録72時間以内チュートリアルメール配信<br>
-        <span style="color:var(--green);font-weight:700;">広告費は1円も変えていない</span> — ジャーニー全体を俯瞰したことで本当のボトルネックが見えた</div>
-      </div>
+      <div id="s9-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">薄いステージを直す</div>
     </div>
   </section>
 
-  <!-- S10: Funnel Trap 480-530s -->
+  <!-- S10: SaaS case 480-530s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
-    <div class="pad">
-      <div id="s10-hd" class="sh se">陥りがちな罠：ファネル思考だけでは不十分</div>
-      <div style="display:flex;gap:1.2em;align-items:flex-start;margin-top:.4em;">
-        <div id="s10-funnel" class="se" style="flex:1;">
-          <div style="text-align:center;font-size:clamp(10px,1.3vw,16px);color:var(--muted2);margin-bottom:.3em;">ファネル思考（直線）</div>
-          <svg class="svg-il" viewBox="0 0 200 180" aria-hidden="true" style="width:100%;max-width:260px;margin:0 auto;display:block;">
-            <defs>
-              <linearGradient id="fg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#60a5fa" stop-opacity=".4"/><stop offset="100%" stop-color="#60a5fa" stop-opacity=".1"/></linearGradient>
-            </defs>
-            <polygon points="20,20 180,20 155,60 45,60" fill="url(#fg1)" stroke="#60a5fa" stroke-width="1.2"/>
-            <text x="100" y="45" text-anchor="middle" fill="#60a5fa" font-size="12" font-weight="700">認知</text>
-            <polygon points="45,65 155,65 135,100 65,100" fill="rgba(251,191,36,0.2)" stroke="#fbbf24" stroke-width="1.2"/>
-            <text x="100" y="87" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="700">関心</text>
-            <polygon points="65,105 135,105 118,135 82,135" fill="rgba(248,135,100,0.2)" stroke="#f88764" stroke-width="1.2"/>
-            <text x="100" y="124" text-anchor="middle" fill="#f88764" font-size="12" font-weight="700">検討</text>
-            <polygon points="82,140 118,140 108,165 92,165" fill="rgba(74,222,128,0.2)" stroke="#4ade80" stroke-width="1.2"/>
-            <text x="100" y="157" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="700">購入</text>
-            <line x1="100" y1="168" x2="100" y2="180" stroke="var(--red)" stroke-width="2" stroke-dasharray="4,3"/>
-            <text x="100" y="178" text-anchor="middle" fill="var(--red)" font-size="10">ここで終わり？</text>
-          </svg>
-        </div>
-        <div style="flex:1.4;display:flex;flex-direction:column;gap:.35em;padding-top:.4em;">
-          <div id="s10-probs" class="se">
-            <div class="verdict-rows">
-              <div class="verdict-row ng">
-                <i class="fa-solid fa-xmark v-icon"></i>
-                <div class="v-body">購入後の顧客体験が<strong>設計されない</strong></div>
-              </div>
-              <div class="verdict-row ng">
-                <i class="fa-solid fa-xmark v-icon"></i>
-                <div class="v-body">LTVとAdvocateの視点が<strong>抜け落ちる</strong></div>
-              </div>
-              <div class="verdict-row ng">
-                <i class="fa-solid fa-xmark v-icon"></i>
-                <div class="v-body">新規獲得コストだけが<strong>膨らみ続ける</strong></div>
-              </div>
-            </div>
-          </div>
-          <div id="s10-loop" class="se">
-            <div class="hl-banner" style="--c:var(--green);">
-              <i class="fa-solid fa-rotate hb-icon"></i>
-              <div class="hb-text"><strong>ループ（フライホイール）思考へ</strong><br>満足→口コミ→新規認知→獲得コスト低下</div>
-            </div>
-          </div>
-        </div>
+    <div class="pad-t">
+      <div id="s10-hd" class="sh se">事例：SaaS</div>
+      <div id="s10-holes" class="se taglist t-md" style="margin-top:.2em;">
+        <span class="tag" style="border-color:var(--red);color:var(--red);">✕ 感情訴求が弱い</span>
+        <span class="tag" style="border-color:var(--red);color:var(--red);">✕ 事例が少ない</span>
+        <span class="tag" style="border-color:var(--red);color:var(--red);">✕ 登録後に放置</span>
       </div>
+      <div id="s10-kpi" class="se" style="text-align:center;margin-top:.5em;">
+        <span class="t-md" style="color:var(--muted2);">改善で有料転換</span>
+        <span class="bignum t-xl" style="display:block;">2.1倍</span>
+      </div>
+      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">広告費はそのまま改善</div>
     </div>
   </section>
 
-  <!-- S11: Summary 530-560s -->
+  <!-- S11: Funnel trap -> loop 530-560s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">今日のまとめ</div>
-      <div id="s11-steps" class="se">
-        <div class="n-steps">
-          <div class="n-step" id="s11-s1">
-            <div class="n-num">1</div>
-            <div class="n-body"><strong>カスタマージャーニー = 顧客が認知してからファンになるまでの体験の旅</strong><div class="t-sm">企業視点の「購買プロセス」ではなく、顧客視点の体験を設計する</div></div>
-          </div>
-          <div class="n-step" id="s11-s2">
-            <div class="n-num b">2</div>
-            <div class="n-body"><strong>モデルの変遷 AIDMA → AISAS → 5A</strong><div class="t-sm">時代とともに「検索・共有・ループ」が加わり、口コミが購買を動かすように</div></div>
-          </div>
-          <div class="n-step" id="s11-s3">
-            <div class="n-num g">3</div>
-            <div class="n-body"><strong>5A：Aware → Appeal → Ask → Act → Advocate</strong><div class="t-sm">直線ではなくループ構造。ステージごとに顧客の状態と最適施策が異なる</div></div>
-          </div>
-          <div class="n-step" id="s11-s4">
-            <div class="n-num" style="background:var(--acc2);">4</div>
-            <div class="n-body"><strong>ファネルではなくループで考える</strong><div class="t-sm">Advocateへの投資が成長を加速。既存顧客こそ最大の費用対効果</div></div>
-          </div>
+      <div id="s11-hd" class="sh se">ファネルの罠</div>
+      <div id="s11-duo" class="se duo t-sm" style="margin-top:.2em;align-items:center;">
+        <div class="funnel">
+          <div class="frow f1">認知</div><div class="frow f2">興味</div><div class="frow f3">検討</div>
+          <div class="frow f4" style="background:rgba(248,113,113,.25);color:var(--red);">購入＝終わり ✕</div>
+        </div>
+        <div class="loop" style="color:var(--accent);font-weight:800;">
+          <div class="lrow"><span class="tag acc">満足</span><span class="aarrow">→</span><span class="tag acc">口コミ</span></div>
+          <div class="aarrow">↑　　　↓</div>
+          <div class="lrow"><span class="tag acc">新規認知</span><span class="aarrow">←</span><span class="tag acc">紹介</span></div>
         </div>
       </div>
-      <div id="s11-action" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-top:.35em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-        <strong style="color:var(--accent);">実践ステップ：</strong>
-        <span style="margin-left:.3em;">① マップを1枚描く</span>
-        <span style="color:var(--border);margin:0 .3em;">|</span>
-        <span>② 最も薄いステージを特定</span>
-        <span style="color:var(--border);margin:0 .3em;">|</span>
-        <span>③ 施策を1つ改善する</span>
-      </div>
+      <div id="s11-msg" class="se t-lg" style="text-align:center;color:var(--accent);margin-top:.4em;">ループで考える</div>
     </div>
   </section>
 
-  <!-- S12: Next vs preview 560-590s -->
+  <!-- S12: Summary 560-590s -->
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
-    <div class="pad">
-      <div id="s12-hd" class="sh se">カスタマージャーニー設計の実践チェック</div>
-      <div id="s12-check" class="se">
-        <div class="verdict-rows">
-          <div class="verdict-row ok">
-            <i class="fa-solid fa-check v-icon"></i>
-            <div class="v-body"><strong>Aware施策を打っている</strong>：SNS広告・SEO・インフルエンサーで認知を広げている</div>
-          </div>
-          <div class="verdict-row ok">
-            <i class="fa-solid fa-check v-icon"></i>
-            <div class="v-body"><strong>Appeal コンテンツがある</strong>：機能ではなく感情的ベネフィットを伝えている</div>
-          </div>
-          <div class="verdict-row ok">
-            <i class="fa-solid fa-check v-icon"></i>
-            <div class="v-body"><strong>Ask フェーズを充実させている</strong>：FAQ・事例・レビューで疑問を解消できる</div>
-          </div>
-          <div class="verdict-row ng">
-            <i class="fa-solid fa-xmark v-icon"></i>
-            <div class="v-body"><strong>Advocate を設計していない</strong>：購入後の仕掛けがなく口コミが自然発生に依存</div>
-          </div>
-          <div class="verdict-row ng">
-            <i class="fa-solid fa-xmark v-icon"></i>
-            <div class="v-body"><strong>ファネルで完結している</strong>：購入後のループ思考がない＝LTVとUGCを捨てている</div>
-          </div>
-        </div>
+    <div class="pad-t">
+      <div id="s12-hd" class="sh se">まとめ</div>
+      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+        <span class="tag">体験の旅</span>
+        <span class="tag">5Aはループ</span>
+        <span class="tag">ステージ別施策</span>
+        <span class="tag acc">Advocateに投資</span>
       </div>
-      <div id="s12-tip" class="se" style="background:rgba(124,111,255,0.08);border:1px solid rgba(124,111,255,0.3);border-radius:9px;padding:.5em .9em;margin-top:.4em;font-size:clamp(11px,1.45vw,18px);font-weight:700;color:var(--accent);display:flex;align-items:center;gap:.5em;">
-        <i class="fa-solid fa-lightbulb" style="flex-shrink:0;"></i>
-        ×が多いほど改善余地あり — 1つのステージを強化するだけで成果が変わる
-      </div>
+      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">まず自社の旅を1枚、描いてみる</div>
     </div>
   </section>
 
-  <!-- S13: Next Episode 590-600s -->
+  <!-- S13: Next 590-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
-      <div id="s13-card" class="se">
-        <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
-        <div class="next-title">第6回 安売りせずに選ばれる「価格設定の心理学」</div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>アンカリング・デコイ効果で知覚価値を高める</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>損失回避バイアスを活かした訴求設計</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>値下げしなくても「お得感」を演出する方法</span></div>
-      </div>
-      <div id="s13-cta" class="se"><i class="fa-solid fa-heart"></i> チャンネル登録 &amp; 高評価をお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第6回</div>
+      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">価格設定の心理学</div>
+      <div id="s13-sub" class="se t-md" style="color:var(--accent);">安売りせず選ばれる</div>
+      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
     </div>
   </section>
 
@@ -1634,55 +1316,53 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
-  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-fails'],          anim:'rv-up'},
-  {si:1,  t:42,   ids:['s2-cause'],          anim:'rv-scale'},
-  {si:1,  t:48,   ids:['s2-flow'],           anim:'rv-fade'},
-  {si:2,  t:90,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:92,   ids:['s3-models'],         anim:'rv-up'},
-  {si:2,  t:106,  ids:['s3-note'],           anim:'rv-fade'},
-  {si:3,  t:130,  ids:['s4-hd','s4-src'],    anim:'rv-fade'},
-  {si:3,  t:133,  ids:['s4-flow'],           anim:'rv-scale'},
-  {si:3,  t:142,  ids:['s4-descs'],          anim:'rv-up'},
-  {si:3,  t:152,  ids:['s4-pt'],             anim:'rv-fade'},
-  {si:4,  t:190,  ids:['s5-hd'],             anim:'rv-fade'},
-  {si:4,  t:192,  ids:['s5-flow'],           anim:'rv-scale'},
-  {si:4,  t:198,  ids:['s5-aware'],          anim:'rv-up'},
-  {si:4,  t:208,  ids:['s5-appeal'],         anim:'rv-up'},
-  {si:4,  t:218,  ids:['s5-warn'],           anim:'rv-fade'},
-  {si:5,  t:240,  ids:['s6-hd'],             anim:'rv-fade'},
-  {si:5,  t:242,  ids:['s6-flow'],           anim:'rv-scale'},
-  {si:5,  t:248,  ids:['s6-ask'],            anim:'rv-up'},
-  {si:5,  t:258,  ids:['s6-act'],            anim:'rv-up'},
-  {si:5,  t:266,  ids:['s6-pt'],             anim:'rv-fade'},
-  {si:6,  t:300,  ids:['s7-hd','s7-goal'],   anim:'rv-fade'},
-  {si:6,  t:304,  ids:['s7-tactics'],        anim:'rv-up'},
-  {si:6,  t:314,  ids:['s7-why'],            anim:'rv-up'},
-  {si:6,  t:323,  ids:['s7-conc'],           anim:'rv-fade'},
-  {si:7,  t:360,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:363,  ids:['s8-tbl'],            anim:'rv-up'},
-  {si:7,  t:378,  ids:['s8-tip'],            anim:'rv-fade'},
-  {si:8,  t:410,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:413,  ids:['s9-issue'],          anim:'rv-up'},
-  {si:8,  t:420,  ids:['s9-holes'],          anim:'rv-up'},
-  {si:8,  t:436,  ids:['s9-fix'],            anim:'rv-scale'},
-  {si:9,  t:480,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:483,  ids:['s10-funnel'],        anim:'rv-up'},
-  {si:9,  t:493,  ids:['s10-probs'],         anim:'rv-up'},
-  {si:9,  t:503,  ids:['s10-loop'],          anim:'rv-fade'},
-  {si:10, t:530,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:532,  ids:['s11-steps'],         anim:'rv-up'},
-  {si:10, t:548,  ids:['s11-action'],        anim:'rv-fade'},
-  {si:11, t:560,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:562,  ids:['s12-check'],         anim:'rv-up'},
-  {si:11, t:576,  ids:['s12-tip'],           anim:'rv-fade'},
-  {si:12, t:590,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:594,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
+  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
+  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
+  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
+  {si:1,  t:38,   ids:['s2-ans'],     anim:'rv-scale'},
+  {si:1,  t:60,   ids:['s2-flow'],    anim:'rv-up'},
+  {si:1,  t:80,   ids:['s2-note'],    anim:'rv-fade'},
+  {si:2,  t:90,   ids:['s3-hd'],      anim:'rv-fade'},
+  {si:2,  t:96,   ids:['s3-key'],     anim:'rv-scale'},
+  {si:2,  t:110,  ids:['s3-pts'],     anim:'rv-up'},
+  {si:2,  t:122,  ids:['s3-note'],    anim:'rv-fade'},
+  {si:3,  t:130,  ids:['s4-hd'],      anim:'rv-fade'},
+  {si:3,  t:140,  ids:['s4-flow'],    anim:'rv-up'},
+  {si:3,  t:170,  ids:['s4-note'],    anim:'rv-fade'},
+  {si:4,  t:190,  ids:['s5-hd'],      anim:'rv-fade'},
+  {si:4,  t:198,  ids:['s5-flow'],    anim:'rv-up'},
+  {si:4,  t:222,  ids:['s5-loop'],    anim:'rv-fade'},
+  {si:5,  t:240,  ids:['s6-hd'],      anim:'rv-fade'},
+  {si:5,  t:250,  ids:['s6-duo'],     anim:'rv-up'},
+  {si:5,  t:285,  ids:['s6-warn'],    anim:'rv-pop'},
+  {si:6,  t:300,  ids:['s7-hd'],      anim:'rv-fade'},
+  {si:6,  t:310,  ids:['s7-duo'],     anim:'rv-up'},
+  {si:6,  t:345,  ids:['s7-cvr'],     anim:'rv-pop'},
+  {si:7,  t:360,  ids:['s8-hd'],      anim:'rv-fade'},
+  {si:7,  t:368,  ids:['s8-key'],     anim:'rv-scale'},
+  {si:7,  t:385,  ids:['s8-tags'],    anim:'rv-up'},
+  {si:7,  t:398,  ids:['s8-why'],     anim:'rv-fade'},
+  {si:7,  t:405,  ids:['s8-note'],    anim:'rv-fade'},
+  {si:8,  t:410,  ids:['s9-hd'],      anim:'rv-fade'},
+  {si:8,  t:420,  ids:['s9-map'],     anim:'rv-up'},
+  {si:8,  t:455,  ids:['s9-note'],    anim:'rv-fade'},
+  {si:9,  t:480,  ids:['s10-hd'],     anim:'rv-fade'},
+  {si:9,  t:490,  ids:['s10-holes'],  anim:'rv-up'},
+  {si:9,  t:512,  ids:['s10-kpi'],    anim:'rv-scale'},
+  {si:9,  t:522,  ids:['s10-note'],   anim:'rv-fade'},
+  {si:10, t:530,  ids:['s11-hd'],     anim:'rv-fade'},
+  {si:10, t:538,  ids:['s11-duo'],    anim:'rv-up'},
+  {si:10, t:552,  ids:['s11-msg'],    anim:'rv-pop'},
+  {si:11, t:560,  ids:['s12-hd'],     anim:'rv-fade'},
+  {si:11, t:568,  ids:['s12-tags'],   anim:'rv-up'},
+  {si:11, t:580,  ids:['s12-note'],   anim:'rv-fade'},
+  {si:12, t:590,  ids:['s13-lbl'],    anim:'rv-fade'},
+  {si:12, t:592,  ids:['s13-title'],  anim:'rv-up'},
+  {si:12, t:595,  ids:['s13-sub'],    anim:'rv-fade'},
+  {si:12, t:598,  ids:['s13-cta'],    anim:'rv-pop'}
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
