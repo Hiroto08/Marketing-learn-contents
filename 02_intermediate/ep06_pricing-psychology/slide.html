@@ -69,6 +69,7 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
+  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -136,22 +137,26 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
-.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
+   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
+.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
+.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
 
 /* section header */
 .sh {
-  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
-  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
+  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
+  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
+  letter-spacing:.01em;
 }
-.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes */
-.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
-.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
-.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
-.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
-.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
+/* body text sizes — large for mobile/YouTube legibility (bold gothic).
+   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
+.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
+.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
+.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
+.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
+.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -365,7 +370,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
+  color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -434,7 +439,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
+  color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -618,7 +623,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
+  font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -914,7 +919,8 @@ body {
    </div>  */
 .hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
   background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
+  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
 .hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
 .hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
 .hb-text strong { color:var(--text); }
@@ -1005,97 +1011,64 @@ body {
 .s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
 @keyframes dotFloat { to { transform:translateY(-8px); } }
 
+/* ================================================================
+   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
+   Shared keyword + diagram vocabulary for all episodes.
+================================================================ */
+.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
+.aflow.sm{gap:.4em;}
+.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
+  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
+.aflow.sm .achip{padding:.45em .7em;}
+.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
+.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
+.aghost{opacity:.4;}
+.aarrow{color:var(--accent);font-weight:900;}
+/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
+   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
+.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
+.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
+  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
+.tag.acc{border-color:var(--accent);color:var(--accent);}
+.tag.ng{border-color:var(--red);color:var(--red);}
+.tag.ok{border-color:var(--green);color:var(--green);}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
+.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
+  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
+.pcard .ph{font-weight:900;line-height:1.1;}
+.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
+.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
+.bignum{color:var(--accent);font-weight:900;line-height:1;}
+.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
+.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
+.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
+.jcell .jv{font-weight:900;line-height:1;}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
+.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
+.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
+.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
+.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
+
 </style>
 
 <style id="ep-css">
-/* ── vertical centering（必ず先頭に含める） ── */
+
+/* ── vertical centering override ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
 /* ── EP06 accent: orange ── */
-:root { --accent: #F97316; --glow-acc: rgba(249,115,22,.25); --acc2: #fbbf24; }
+:root { --accent:#F97316; --glow-acc:rgba(249,115,22,.25); }
 
-/* ── s1 overrides ── */
-#s1 { background: radial-gradient(ellipse 90% 75% at 62% 45%, #3d1a00 0%, var(--slide-bg) 68%); align-items:center; justify-content:center; text-align:center; }
-#s1-badge { display:inline-flex; align-items:center; gap:.5em; background:var(--surf2); border:1px solid rgba(249,115,22,0.4); color:var(--muted2); border-radius:20px; padding:.3em 1.2em; margin-bottom:.75em; font-size:clamp(9px,1.2vw,14px); }
-#s1-badge i { color:var(--accent); }
-#s1-ep { font-size:clamp(10px,1.4vw,18px); color:var(--accent); font-weight:700; margin-bottom:.4em; }
-#s1-catch { font-size:clamp(11px,1.5vw,19px); color:var(--muted2); margin-top:.7em; }
+/* ── S1 ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2e1605 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(249,115,22,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+#s1-badge i{color:var(--accent);}
+#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
+#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── anchor note ── */
-.src-note { font-size:clamp(9px,1.15vw,14px); color:var(--muted); }
+/* Minimal design helpers and type scale live in the shared base CSS — not redefined here. */
 
-/* ── price-tag big display ── */
-.price-tag { display:inline-flex; flex-direction:column; align-items:center; background:var(--surf); border:2px solid var(--accent); border-radius:12px; padding:.5em 1.2em; }
-.price-tag .pt-val { font-size:clamp(28px,5vw,64px); font-weight:900; color:var(--accent); line-height:1; }
-.price-tag .pt-lbl { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); font-weight:600; margin-top:.2em; }
-.price-tag.old { border-color:var(--muted); opacity:.7; }
-.price-tag.old .pt-val { color:var(--muted2); text-decoration:line-through; }
-
-/* ── price pair ── */
-.price-pair { display:flex; align-items:center; gap:1.2em; justify-content:center; flex-wrap:wrap; margin:.5em 0; }
-.price-arrow { font-size:clamp(20px,3vw,40px); color:var(--accent); }
-
-/* ── anchor info box ── */
-.anchor-box { background:rgba(249,115,22,0.08); border:1px solid rgba(249,115,22,0.4); border-radius:10px; padding:.55em .9em; font-size:clamp(10px,1.4vw,18px); color:var(--muted2); margin:.3em 0; }
-.anchor-box strong { color:var(--accent); }
-
-/* ── plan cards for decoy effect ── */
-.plans-wrap { display:flex; gap:.7em; justify-content:center; margin:.5em 0; flex-wrap:wrap; }
-.plan-card { flex:1; min-width:160px; max-width:220px; background:var(--surf); border:1px solid var(--border); border-radius:12px; padding:.8em .9em; text-align:center; transition:box-shadow .2s; }
-.plan-card.hi { border-color:var(--accent); box-shadow:0 0 18px var(--glow-acc); background:rgba(249,115,22,0.07); }
-.plan-card.decoy { border-color:var(--muted); opacity:.75; }
-.plan-card .pc-name { font-size:clamp(11px,1.5vw,19px); font-weight:700; color:#fff; margin-bottom:.3em; }
-.plan-card.hi .pc-name { color:var(--accent); }
-.plan-card .pc-price { font-size:clamp(20px,3.2vw,42px); font-weight:900; color:#fff; line-height:1.1; }
-.plan-card.hi .pc-price { color:var(--accent); }
-.plan-card .pc-sub { font-size:clamp(9px,1.15vw,14px); color:var(--muted2); margin-top:.25em; }
-.plan-card .pc-tag { display:inline-block; background:var(--accent); color:#fff; border-radius:20px; font-size:clamp(8px,1.05vw,13px); font-weight:700; padding:.15em .8em; margin-top:.35em; }
-.plan-card.decoy .pc-tag { background:var(--muted); }
-
-/* ── two-col layout ── */
-.two-col { display:flex; gap:1em; align-items:flex-start; }
-.two-col > * { flex:1; }
-
-/* ── loss/gain comparison ── */
-.frame-box { border-radius:10px; padding:.6em .9em; font-size:clamp(11px,1.55vw,20px); font-weight:700; margin:.3em 0; }
-.frame-box.ng { background:rgba(248,100,100,0.10); border:2px solid rgba(248,100,100,0.4); color:var(--red); }
-.frame-box.ok { background:rgba(249,115,22,0.10); border:2px solid rgba(249,115,22,0.4); color:var(--accent); }
-.frame-box .fb-label { font-size:clamp(9px,1.1vw,13px); font-weight:700; margin-bottom:.2em; letter-spacing:.05em; }
-.frame-box .fb-text { color:#fff; font-size:clamp(12px,1.65vw,21px); }
-
-/* ── bundle comparison ── */
-.bundle-wrap { display:flex; gap:.8em; margin:.4em 0; flex-wrap:wrap; }
-.bundle-col { flex:1; min-width:160px; background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.6em .9em; }
-.bundle-col .bc-hd { font-size:clamp(10px,1.35vw,17px); font-weight:700; color:var(--muted2); margin-bottom:.35em; }
-.bundle-col .bc-item { font-size:clamp(10px,1.35vw,17px); color:var(--muted2); padding:.15em 0; border-bottom:1px solid rgba(255,255,255,0.06); }
-.bundle-col .bc-total { font-size:clamp(13px,1.8vw,22px); font-weight:900; color:#fff; margin-top:.35em; }
-.bundle-col.hi { border-color:var(--accent); background:rgba(249,115,22,0.07); }
-.bundle-col.hi .bc-total { color:var(--accent); }
-.bundle-save { text-align:center; font-size:clamp(11px,1.6vw,20px); font-weight:900; color:var(--green); margin-top:.3em; }
-
-/* ── framing steps ── */
-.frame-steps { display:flex; align-items:center; gap:.6em; justify-content:center; flex-wrap:wrap; margin:.5em 0; }
-.frame-step-box { background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.55em 1em; text-align:center; }
-.frame-step-box .fsb-val { font-size:clamp(22px,3.5vw,48px); font-weight:900; color:var(--accent); line-height:1; }
-.frame-step-box .fsb-lbl { font-size:clamp(9px,1.2vw,15px); color:var(--muted2); margin-top:.2em; }
-.frame-step-box.hi { border-color:var(--green); background:rgba(74,222,128,0.06); }
-.frame-step-box.hi .fsb-val { color:var(--green); }
-.frame-arrow { font-size:clamp(16px,2.5vw,32px); color:var(--muted); }
-
-/* ── wine experiment ── */
-.wine-wrap { display:flex; gap:.8em; justify-content:center; margin:.4em 0; flex-wrap:wrap; }
-.wine-card { flex:1; min-width:130px; max-width:180px; background:var(--surf); border:1px solid var(--border); border-radius:12px; padding:.7em .9em; text-align:center; }
-.wine-card.hi { border-color:var(--accent); background:rgba(249,115,22,0.07); box-shadow:0 0 16px var(--glow-acc); }
-.wine-card .wc-price { font-size:clamp(26px,4vw,52px); font-weight:900; line-height:1; }
-.wine-card .wc-rating { font-size:clamp(18px,2.5vw,32px); font-weight:900; color:var(--accent); margin:.25em 0; }
-.wine-card.hi .wc-price { color:var(--accent); }
-.wine-card .wc-sub { font-size:clamp(9px,1.1vw,14px); color:var(--muted2); }
-
-/* ── s13 overrides ── */
-#s13 { background:radial-gradient(ellipse 80% 65% at 40% 50%, #3d1a00 0%, var(--slide-bg) 65%); align-items:center; justify-content:center; }
-#s13-card { background:var(--surf); border:1px solid var(--border); border-radius:14px; padding:1.3em 1.8em; width:76%; box-shadow:0 0 30px var(--glow-acc), 0 8px 32px rgba(0,0,0,0.5); }
-#s13-cta { margin-top:1em; text-align:center; font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--accent); display:flex; align-items:center; justify-content:center; gap:.55em; }
 </style>
 </head>
 <body>
@@ -1104,7 +1077,6 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1117,413 +1089,187 @@ body {
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
       <div id="s1-ep" class="se">第6回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">安売りせずに選ばれる</div>
-      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">「価格設定の心理学」</div>
-      <div id="s1-catch" class="se">行動経済学が教える、お客さんの「お得感」の作り方</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">安売りせず選ばれる</div>
+      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">価格設定の心理学</div>
+      <div id="s1-catch" class="se">値下げではなく「見せ方」で勝つ</div>
     </div>
   </section>
 
   <!-- S2: Hook 30-80s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad-t">
-      <div id="s2-hd" class="sh se">値下げしても売れないのはなぜか？</div>
-      <div class="comp-tbl se" id="s2-tbl">
-        <div class="comp-row comp-head">
-          <span class="comp-label">思い込み</span>
-          <span class="comp-a">よくある誤解</span>
-          <span class="comp-b">実際は？</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">価格の絶対値</span>
-          <span class="comp-a c-red">安ければ買う</span>
-          <span class="comp-b c-green">比較・文脈で決まる</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">値下げの効果</span>
-          <span class="comp-a c-red">売上が上がる</span>
-          <span class="comp-b c-green">知覚価値次第</span>
-        </div>
-        <div class="comp-row hi">
-          <span class="comp-label">本質</span>
-          <span class="comp-a c-red">価格の問題</span>
-          <span class="comp-b c-green">知覚価値の設計</span>
-        </div>
+    <div class="pad">
+      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">なぜ<span style="color:#fff;">値下げ</span>しても売れない？</div>
+      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin:.25em 0 .15em;">絶対値ではなく<br>相対で判断</div>
+      <div id="s2-flow" class="se aflow t-md" style="margin-top:.2em;">
+        <span class="achip">価格</span><span class="aarrow">→</span><span class="achip on">価値の天秤</span><span class="aarrow">→</span><span class="achip">購入</span>
       </div>
-      <div id="s2-core" class="se" style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.35);border-radius:9px;padding:.55em .9em;margin-top:.4em;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);display:flex;align-items:center;gap:.6em;">
-        <i class="fa-solid fa-lightbulb" style="color:var(--accent);flex-shrink:0;font-size:1.4em;"></i>
-        <span>1万円が「高い」か「安いか」は<strong style="color:#fff;">何と比べるか・どんな文脈か</strong>で変わる。今日は「知覚価値のデザイン」を6つのテクニックで学ぶ。</span>
-      </div>
+      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">本質は「知覚価値」の設計</div>
     </div>
   </section>
 
-  <!-- S3: Anchoring 80-130s -->
+  <!-- S3: Basic principle + 6 techniques 80-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
-      <div id="s3-hd" class="sh se">① アンカリング効果——最初に見せた価格が基準点になる</div>
-      <div id="s3-pair" class="se price-pair">
-        <div class="price-tag old">
-          <div class="pt-lbl">定価</div>
-          <div class="pt-val">5,000円</div>
-          <div class="pt-lbl">← アンカー（基準）</div>
-        </div>
-        <div class="price-arrow"><i class="fa-solid fa-arrow-right"></i></div>
-        <div class="price-tag">
-          <div class="pt-lbl">特別価格</div>
-          <div class="pt-val">3,000円</div>
-          <div class="pt-lbl">40% OFF → お得！</div>
-        </div>
+      <div id="s3-hd" class="sh se">価格心理学の基本</div>
+      <div id="s3-key" class="se t-xl" style="text-align:center;">価格戦略＝<span style="color:var(--accent);">比較の設計</span></div>
+      <div id="s3-pts" class="se taglist t-md" style="margin-top:.5em;">
+        <span class="tag">基準点</span><span class="tag">比較対象</span><span class="tag">損得</span><span class="tag acc">文脈で変わる</span>
       </div>
-      <div id="s3-why" class="se">
-        <div class="anchor-box"><strong>なぜ効くのか：</strong>5,000円が「基準点」になり、3,000円は「2,000円お得」と脳が差分でお得感を計算する</div>
-      </div>
-      <div id="s3-tips" class="se" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);line-height:1.6;margin-top:.3em;">
-        <div style="color:var(--accent);font-weight:700;margin-bottom:.2em;"><i class="fa-solid fa-store"></i> 実店舗・ECでの活用例</div>
-        <div>・入口付近に高価格帯商品を置く（高アンカー設定）&emsp;・メニューの先頭にプレミアム商品を載せる</div>
-        <div>・「通常価格」を先に見せてからセール価格を出す</div>
-      </div>
-      <div id="s3-warn" class="se" style="background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.3);border-radius:9px;padding:.45em .8em;margin-top:.3em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-        <i class="fa-solid fa-triangle-exclamation" style="color:var(--red);"></i> <strong style="color:var(--red);">注意：</strong>根拠のない高値定価は景品表示法に抵触する可能性。アンカーには必ず根拠を持たせること。
-      </div>
+      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">今日は6つのテクニック</div>
     </div>
   </section>
 
-  <!-- S4: Decoy Effect 130-190s -->
+  <!-- S4: Anchoring 130-190s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">② デコイ効果——3択の「おとり」で本命を際立たせる</div>
-      <div id="s4-src" class="se src-note" style="margin-bottom:.4em;">Dan Ariely 『Predictably Irrational』(2008) — The Economist誌の購読プラン実験</div>
-      <div id="s4-plans" class="se plans-wrap">
-        <div class="plan-card">
-          <div class="pc-name">A：Web版のみ</div>
-          <div class="pc-price">$59</div>
-          <div class="pc-sub">デジタル閲覧</div>
-          <div class="pc-tag">安い選択肢</div>
-        </div>
-        <div class="plan-card decoy">
-          <div class="pc-name">B：紙版のみ</div>
-          <div class="pc-price">$125</div>
-          <div class="pc-sub">紙の雑誌</div>
-          <div class="pc-tag">デコイ（おとり）</div>
-        </div>
-        <div class="plan-card hi">
-          <div class="pc-name">C：Web＋紙 セット</div>
-          <div class="pc-price">$125</div>
-          <div class="pc-sub">BとC、同価格なのに…</div>
-          <div class="pc-tag">← 圧倒的にお得！</div>
-        </div>
+      <div id="s4-hd" class="sh se">① アンカリング効果</div>
+      <div id="s4-key" class="se t-lg" style="text-align:center;">最初の数字が<span style="color:var(--accent);">基準点</span>に</div>
+      <div id="s4-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip">3,000円<small>だけ表示</small></span>
+        <span class="aarrow">vs</span>
+        <span class="achip on">定価5,000円<small>→ 3,000円(40%OFF)</small></span>
       </div>
-      <div id="s4-result" class="se" style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.35);border-radius:9px;padding:.5em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <strong style="color:var(--accent);">結果：</strong>Bを選んだ人はほぼ0%。BというデコイがあることでCが劇的にお得に見え、<strong style="color:#fff;">C（セット）の選択率が大幅上昇</strong>
-      </div>
-      <div id="s4-use" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);margin-top:.3em;">
-        <strong style="color:var(--accent);">日本での活用例：</strong>ファストフードのS/M/L・SaaSのBasic/Standard/Pro・不動産の「比較用劣り物件」
-      </div>
+      <div id="s4-note" class="se hl-banner" style="margin-top:.5em;">アンカーは「根拠」が命（景表法に注意）</div>
     </div>
   </section>
 
-  <!-- S5: Charm Pricing 190-240s -->
+  <!-- S5: Decoy 190-240s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">③ チャーム価格・端数価格——「980円」が「1,000円」より売れる理由</div>
-      <div id="s5-formula" class="formula se">
-        <span class="fm-var" style="--c:var(--accent)">980円</span>
-        <span class="fm-op">vs</span>
-        <span class="fm-var" style="--c:var(--muted)">1,000円</span>
-        <span class="fm-op">→ 差は</span>
-        <span class="fm-val" style="--c:var(--green)">20円</span>
+      <div id="s5-hd" class="sh se">② デコイ効果<small style="font-weight:600;color:var(--muted2);font-size:.68em;">　Ariely 2008</small></div>
+      <div id="s5-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">Web版<small>59ドル</small></span>
+        <span class="achip" style="border-color:var(--red);color:var(--red);">紙版<small>125ドル ✕ おとり</small></span>
+        <span class="achip on">Web＋紙<small>125ドル ◎ お得</small></span>
       </div>
-      <div id="s5-why" class="se" style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.35);border-radius:9px;padding:.5em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.3em;">
-        <strong style="color:var(--accent);">なぜ効くか：</strong>人間は数字を「左から読む」→ 980円はまず「9」を認識→「900円台」と感じる。実際の差は20円なのに<strong style="color:#fff;">心理的には「かなり安い」</strong>印象。
-      </div>
-      <div id="s5-gauge" class="gauge-wrap se">
-        <div class="gauge-hd">心理的な「安さ」の感じ方（実際の差は2%以下）</div>
-        <div class="gauge-track">
-          <div class="gauge-fill" style="--v:.85;--c:var(--accent)"></div>
-          <span class="gauge-marker" style="left:98%">1,000円</span>
-        </div>
-        <div class="gauge-legs"><span>980円の印象</span><span></span><span>1,000円の印象</span></div>
-      </div>
-      <div id="s5-use" class="se" style="display:flex;gap:.6em;margin-top:.3em;font-size:clamp(10px,1.35vw,17px);">
-        <div style="flex:1;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.3);border-radius:9px;padding:.5em .8em;color:var(--muted2);">
-          <div style="color:var(--accent);font-weight:700;margin-bottom:.2em;">端数価格（980円・4,980円）</div>
-          日用品・EC・価格競争が激しい市場
-        </div>
-        <div style="flex:1;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:9px;padding:.5em .8em;color:var(--muted2);">
-          <div style="color:var(--muted2);font-weight:700;margin-bottom:.2em;">整数価格（1,000円・5,000円）</div>
-          高級品・ブランド品・贈答品・サービス業
-        </div>
-      </div>
+      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">おとりが本命を際立たせる</div>
     </div>
   </section>
 
-  <!-- S6: Loss Aversion 240-300s -->
+  <!-- S6: Charm price 240-300s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">④ 損失回避バイアス——「得する」より「損しない」が行動を動かす</div>
-      <div id="s6-src" class="se src-note" style="margin-bottom:.3em;">Kahneman &amp; Tversky "Prospect Theory" Econometrica (1979) — ノーベル経済学賞（2002年）</div>
-      <div class="kpi-wrap se" id="s6-kpi">
-        <div class="kpi-big" style="--c:var(--accent)">
-          <div class="kpi-num">×2</div>
-          <div class="kpi-sub">損失の痛みは利益の喜びの約2倍大きい</div>
+      <div id="s6-hd" class="sh se">③ チャーム価格</div>
+      <div id="s6-key" class="se t-xl" style="text-align:center;"><span style="color:var(--accent);">980円</span> ＞ 1,000円</div>
+      <div id="s6-duo" class="se duo" style="margin-top:.4em;">
+        <div class="pcard" style="border-top-color:var(--accent);">
+          <div class="ph t-lg" style="color:var(--accent);">端数価格<small>980・4,980</small></div>
+          <div class="taglist t-sm"><span class="tag">日用品</span><span class="tag">EC</span></div>
         </div>
-        <div class="kpi-ctx">
-          <strong>プロスペクト理論の核心</strong><br>1,000円の損失は<br>1,000円の利益の<br>2倍強く感じる
-        </div>
-      </div>
-      <div id="s6-compare" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>利得フレーム（弱い）：</strong>「今なら2,000円お得！」</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>損失フレーム（強い）：</strong>「今日申し込まないと2,000円損します」</div>
+        <div class="pcard">
+          <div class="ph t-lg">整数価格<small>1,000・5,000</small></div>
+          <div class="taglist t-sm"><span class="tag">高級品</span><span class="tag">贈答</span></div>
         </div>
       </div>
-      <div id="s6-ex" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);margin-top:.3em;">
-        <strong style="color:var(--accent);">具体例：</strong>「残り3席！」「本日23:59まで」「今だけ送料無料」——全て<strong style="color:#fff;">機会損失を意識させる</strong>表現。ただし乱用は信頼を損なう。本当に限定の場合のみ使う。
-      </div>
+      <div id="s6-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">人は数字を「左から」読む</div>
     </div>
   </section>
 
-  <!-- S7: Bundling 300-360s -->
+  <!-- S7: Loss aversion 300-360s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">⑤ 価格バンドリング——まとめ買いで「割安感」を演出する</div>
-      <div id="s7-src" class="se src-note" style="margin-bottom:.35em;">Yadav &amp; Monroe, Journal of Marketing Research, vol.30, no.3 (1993)</div>
-      <div id="s7-tbl" class="comp-tbl se">
-        <div class="comp-row comp-head">
-          <span class="comp-label">購入方法</span>
-          <span class="comp-a">単品購入</span>
-          <span class="comp-b">セット購入</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">マーケティング講座 基礎編</span>
-          <span class="comp-a">5,000円</span>
-          <span class="comp-b" style="color:var(--muted);">－</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">マーケティング講座 中級編</span>
-          <span class="comp-a">5,000円</span>
-          <span class="comp-b" style="color:var(--muted);">－</span>
-        </div>
-        <div class="comp-row hi">
-          <span class="comp-label">合計</span>
-          <span class="comp-a c-red">10,000円</span>
-          <span class="comp-b c-green">7,800円（22%OFF）</span>
-        </div>
+      <div id="s7-hd" class="sh se">④ 損失回避バイアス<small style="font-weight:600;color:var(--muted2);font-size:.68em;">　Kahneman 1979</small></div>
+      <div id="s7-key" class="se" style="text-align:center;margin-top:.2em;">
+        <span class="t-md" style="color:var(--muted2);">損の痛みは得の喜びの</span>
+        <span class="bignum t-xl" style="display:block;">約2倍</span>
       </div>
-      <div id="s7-save" class="se bundle-save">→ まとめると <strong>2,200円お得</strong>！ アンカリング効果で「単品合計10,000円」がアンカーになる</div>
-      <div id="s7-why" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);margin-top:.3em;background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.3);border-radius:9px;padding:.5em .9em;">
-        <strong style="color:var(--accent);">バンドリングが有効な理由：</strong>①個別価格のアンカーでセット価格がお得に見える ②判断コストが下がる ③客単価が上がる<br>
-        <span class="src-note">混合バンドリング（単品でも買えるがセットがお得）が入口が広く効果的</span>
+      <div id="s7-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip aghost">2,000円お得！</span><span class="aarrow">＜</span><span class="achip on">今やめると2,000円損</span>
       </div>
+      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">「残り3席」が効く理由</div>
     </div>
   </section>
 
-  <!-- S8: Framing Effect 360-420s -->
+  <!-- S8: Bundling 360-420s -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">⑥ フレーミング効果——同じ価格でも「表現」次第でお得感が変わる</div>
-      <div id="s8-src" class="se src-note" style="margin-bottom:.35em;">Thaler &amp; Sunstein 『Nudge』(2008)</div>
-      <div id="s8-steps" class="h-flow se">
-        <div class="h-flow-node accent">年額<span class="fn-sub">36,000円</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node ylw">月額<span class="fn-sub">3,000円</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node grn">1日あたり<span class="fn-sub">わずか100円</span></div>
+      <div id="s8-hd" class="sh se">⑤ 価格バンドリング</div>
+      <div id="s8-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">基礎 5,000円<small>＋ 中級 5,000円</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on">セット 7,800円<small>22%OFF</small></span>
       </div>
-      <div id="s8-ex" class="se" style="display:flex;gap:.6em;margin:.35em 0;flex-wrap:wrap;">
-        <div class="frame-box ng" style="flex:1;min-width:200px;">
-          <div class="fb-label">❌ 大きく見える表現</div>
-          <div class="fb-text">「年間36,000円の投資が必要です」</div>
-        </div>
-        <div class="frame-box ok" style="flex:1;min-width:200px;">
-          <div class="fb-label">✅ 小さく・身近に見える表現</div>
-          <div class="fb-text">「1日わずか100円でプロ品質のツールが使えます」</div>
-        </div>
+      <div id="s8-tags" class="se taglist t-md" style="margin-top:.5em;">
+        <span class="tag">割安感</span><span class="tag">判断が簡単</span><span class="tag acc">客単価↑</span>
       </div>
-      <div id="s8-more" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-        <strong style="color:var(--accent);">その他：</strong>「初期費用無料」・「〇〇円相当の特典付き」・「上位XX%だけが受けられるプレミアム体験」・「今すぐ始めると〇〇日分無料」
-      </div>
+      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">混合バンドリングが使いやすい</div>
     </div>
   </section>
 
-  <!-- S9: Premium Pricing 420-480s -->
+  <!-- S9: Framing 420-480s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se">ボーナス：プレミアム価格戦略——高くても選ばれる理由</div>
-      <div id="s9-src" class="se src-note" style="margin-bottom:.35em;">Cialdini 『Influence』(1984) — 権威・希少性と価格知覚</div>
-      <div id="s9-wine" class="se wine-wrap">
-        <div class="wine-card">
-          <div class="wc-sub">グループA</div>
-          <div class="wc-price" style="color:var(--muted2);">$5</div>
-          <div class="wc-sub">と伝えた場合</div>
-          <div class="wc-rating" style="color:var(--muted);">★★★☆☆</div>
-          <div class="wc-sub">「普通」の評価</div>
-        </div>
-        <div style="display:flex;align-items:center;font-size:2em;color:var(--muted);">→</div>
-        <div class="wine-card hi">
-          <div class="wc-sub">グループB</div>
-          <div class="wc-price">$45</div>
-          <div class="wc-sub">と伝えた場合</div>
-          <div class="wc-rating">★★★★★</div>
-          <div class="wc-sub">「非常においしい！」</div>
-        </div>
+      <div id="s9-hd" class="sh se">⑥ フレーミング効果<small style="font-weight:600;color:var(--muted2);font-size:.68em;">　Thaler 2008</small></div>
+      <div id="s9-flow" class="se aflow sm t-md" style="margin-top:.3em;">
+        <span class="achip">年36,000円<small>大きい</small></span><span class="aarrow">→</span>
+        <span class="achip">月3,000円<small>小さい</small></span><span class="aarrow">→</span>
+        <span class="achip on">1日100円<small>コーヒー1杯</small></span>
       </div>
-      <div id="s9-banner" class="hl-banner se" style="--c:var(--accent)">
-        <i class="fa-solid fa-flask hb-icon"></i>
-        <div class="hb-text"><strong>全く同じワイン——価格が「品質情報」として機能する</strong><br>高価格が信頼・権威・希少性を演出し、体験そのものを変える</div>
-      </div>
-      <div id="s9-cond" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);margin-top:.3em;">
-        <strong style="color:var(--accent);">プレミアム価格が有効な条件：</strong>一貫したブランドストーリー ／ 独自のポジション ／ 「価格＝品質保証」の文脈 ／ 根拠なき高値は「ぼったくり」と思われるリスク
-      </div>
+      <div id="s9-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">同じ金額・印象は逆転する</div>
     </div>
   </section>
 
-  <!-- S10: Traps 480-530s -->
+  <!-- S10: Premium pricing 480-530s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s10-hd" class="sh se">よくある罠——価格設定のNG例とOK改善策</div>
-      <div id="s10-rows" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>単一価格設定のみ</strong>：比較軸がなく「高いか安いか」を判断できない。アンカーもデコイもない状態。</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>3プラン構成に変更</strong>：安い選択肢・デコイ・本命の3択を設計する。中央プランが自動的に「お得」に見える。</div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>根拠のない定価を設定</strong>：景品表示法に抵触するリスク。「元値」には必ず実績・根拠が必要。</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>フレーミングを活用</strong>：年額→月額→日額に分解して小さく見せる。損失回避フレームを正直な範囲で使う。</div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>常時セール・永久割引</strong>：アンカーが壊れ「これが本当の価格だろう」と思われて定価に戻せなくなる。</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>限定性に本物を使う</strong>：「今だけ」は本当に限定の時だけ。繰り返しを避けて希少性フレームの信頼を守る。</div>
-        </div>
+      <div id="s10-hd" class="sh se">ボーナス：プレミアム価格<small style="font-weight:600;color:var(--muted2);font-size:.68em;">　Cialdini 1984</small></div>
+      <div id="s10-key" class="se t-xl" style="text-align:center;">高いから<span style="color:var(--accent);">売れる</span></div>
+      <div id="s10-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip">同じワイン</span><span class="aarrow">→</span><span class="achip on">45ドルの方が「美味しい」</span>
       </div>
+      <div id="s10-note" class="se hl-banner" style="margin-top:.5em;">価値の文脈なき高値は「ぼったくり」</div>
     </div>
   </section>
 
-  <!-- S11: Case Study 530-560s -->
+  <!-- S11: Pitfalls 530-560s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">実践例：あるオンライン講座の価格設計改善 <span class="src-note">※架空事例</span></div>
-      <div id="s11-tbl" class="comp-tbl se">
-        <div class="comp-row comp-head">
-          <span class="comp-label">施策</span>
-          <span class="comp-a">Before（失敗）</span>
-          <span class="comp-b">After（改善）</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">プラン数</span>
-          <span class="comp-a c-red">1プランのみ 19,800円</span>
-          <span class="comp-b c-green">3プラン（デコイ設計）</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">アンカリング</span>
-          <span class="comp-a c-red">なし</span>
-          <span class="comp-b c-green">29,800円アンカー</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">フレーミング</span>
-          <span class="comp-a c-red">年額のみ表示</span>
-          <span class="comp-b c-green">月額1,650円と併記</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">損失回避</span>
-          <span class="comp-a c-red">なし</span>
-          <span class="comp-b c-green">早期割引14,800円（期間限定）</span>
-        </div>
-        <div class="comp-row hi">
-          <span class="comp-label">CVR（購入転換率）</span>
-          <span class="comp-a c-red">0.8%</span>
-          <span class="comp-b c-green">2.3%</span>
-        </div>
+      <div id="s11-hd" class="sh se">価格設定の落とし穴</div>
+      <div id="s11-tags" class="se taglist t-md" style="margin-top:.3em;">
+        <span class="tag ng">単一価格＝比較軸なし</span>
+        <span class="tag ng">根拠なき定価（景表法）</span>
+        <span class="tag ng">常時セール＝アンカー崩壊</span>
       </div>
-      <div class="kpi-wrap se" id="s11-kpi">
-        <div class="kpi-big" style="--c:var(--green)">
-          <div class="kpi-num">2.9×</div>
-          <div class="kpi-sub">CVR改善倍率</div>
-        </div>
-        <div class="kpi-ctx">
-          <strong>商品も広告費も変えず</strong><br>価格の<em>見せ方</em>だけで<br>約2.9倍の改善
-        </div>
-      </div>
+      <div id="s11-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">定価に戻せなくなる前に</div>
     </div>
   </section>
 
-  <!-- S12: Summary 560-590s -->
+  <!-- S12: Case study 560-590s -->
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">今日のまとめ——6つの価格心理テクニック</div>
-      <div id="s12-steps" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num">1</div>
-          <div class="n-body"><strong>アンカリング効果</strong><div class="t-sm">最初に見せる高価格が基準点になる。「定価→セール価格」の順序が重要</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num g">2</div>
-          <div class="n-body"><strong>デコイ効果（Ariely）</strong><div class="t-sm">3択の中に「おとり」を入れ、本命を際立たせる</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num b">3</div>
-          <div class="n-body"><strong>チャーム価格・端数価格</strong><div class="t-sm">端数＝安さの印象、整数＝プレミアム感。商品ポジションで使い分ける</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num r">4</div>
-          <div class="n-body"><strong>損失回避バイアス（Kahneman）</strong><div class="t-sm">「損しない」表現が「得する」表現より約2倍行動を動かす</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num">5</div>
-          <div class="n-body"><strong>価格バンドリング</strong><div class="t-sm">セット販売で客単価と知覚価値を同時に上げる</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num g">6</div>
-          <div class="n-body"><strong>フレーミング効果（Thaler）</strong><div class="t-sm">年額→月額→日額で「小さく」見せ、身近な比較で訴求する</div></div>
-        </div>
+      <div id="s12-hd" class="sh se">実践例：オンライン講座</div>
+      <div id="s12-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">単一 19,800円<small>CVR 0.8%</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on">3プラン＋フレーム<small>CVR 2.3%</small></span>
       </div>
-      <div id="s12-action" class="se" style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.35);border-radius:9px;padding:.5em .9em;margin-top:.3em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <strong style="color:var(--accent);">今すぐできる実践ステップ：</strong>
-        ① 自社の価格設定に「比較軸」があるか確認する&ensp;|&ensp;
-        ② アンカー・デコイとなる選択肢を設計する&ensp;|&ensp;
-        ③ 価格表現を「月額」「日額」に変換して試す
+      <div id="s12-kpi" class="se" style="text-align:center;margin-top:.4em;">
+        <span class="t-md" style="color:var(--muted2);">中身も広告費も変えず</span>
+        <span class="bignum t-xl" style="display:block;">約2.9倍</span>
       </div>
+      <div id="s12-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">見せ方だけで成果が変わる</div>
     </div>
   </section>
 
-  <!-- S13: Next Episode 590-600s -->
+  <!-- S13: Next 590-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
-      <div id="s13-card" class="se">
-        <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
-        <div class="next-title">第7回 デジタル時代の4Pと4C——混乱しないフレームワークの使い方</div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>伝統的な4P（Product / Price / Place / Promotion）とは</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>顧客視点の4C（Customer Value / Cost / Convenience / Communication）</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>今日の価格心理学が4Pの「Price」としてどう位置づけられるか</span></div>
-      </div>
-      <div id="s13-cta" class="se"><i class="fa-solid fa-heart"></i> チャンネル登録 &amp; 高評価をぜひお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第7回</div>
+      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">4Pと4C</div>
+      <div id="s13-sub" class="se t-md" style="color:var(--accent);">混乱しない使い分け</div>
+      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
     </div>
   </section>
 
@@ -1555,59 +1301,56 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
-  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-tbl'],            anim:'rv-up'},
-  {si:1,  t:48,   ids:['s2-core'],           anim:'rv-fade'},
-  {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:83,   ids:['s3-pair'],           anim:'rv-scale'},
-  {si:2,  t:92,   ids:['s3-why'],            anim:'rv-up'},
-  {si:2,  t:100,  ids:['s3-tips'],           anim:'rv-up'},
-  {si:2,  t:110,  ids:['s3-warn'],           anim:'rv-fade'},
-  {si:3,  t:130,  ids:['s4-hd'],             anim:'rv-fade'},
-  {si:3,  t:133,  ids:['s4-src'],            anim:'rv-fade'},
-  {si:3,  t:137,  ids:['s4-plans'],          anim:'rv-up'},
-  {si:3,  t:155,  ids:['s4-result'],         anim:'rv-scale'},
-  {si:3,  t:168,  ids:['s4-use'],            anim:'rv-fade'},
-  {si:4,  t:190,  ids:['s5-hd'],             anim:'rv-fade'},
-  {si:4,  t:193,  ids:['s5-formula'],        anim:'rv-scale'},
-  {si:4,  t:200,  ids:['s5-why'],            anim:'rv-up'},
-  {si:4,  t:210,  ids:['s5-gauge'],          anim:'rv-up'},
-  {si:4,  t:220,  ids:['s5-use'],            anim:'rv-fade'},
-  {si:5,  t:240,  ids:['s6-hd'],             anim:'rv-fade'},
-  {si:5,  t:243,  ids:['s6-src'],            anim:'rv-fade'},
-  {si:5,  t:247,  ids:['s6-kpi'],            anim:'rv-scale'},
-  {si:5,  t:260,  ids:['s6-compare'],        anim:'rv-up'},
-  {si:5,  t:275,  ids:['s6-ex'],             anim:'rv-fade'},
-  {si:6,  t:300,  ids:['s7-hd'],             anim:'rv-fade'},
-  {si:6,  t:303,  ids:['s7-src'],            anim:'rv-fade'},
-  {si:6,  t:307,  ids:['s7-tbl'],            anim:'rv-up'},
-  {si:6,  t:328,  ids:['s7-save'],           anim:'rv-scale'},
-  {si:6,  t:340,  ids:['s7-why'],            anim:'rv-fade'},
-  {si:7,  t:360,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:363,  ids:['s8-src'],            anim:'rv-fade'},
-  {si:7,  t:367,  ids:['s8-steps'],          anim:'rv-up'},
-  {si:7,  t:382,  ids:['s8-ex'],             anim:'rv-up'},
-  {si:7,  t:400,  ids:['s8-more'],           anim:'rv-fade'},
-  {si:8,  t:420,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:423,  ids:['s9-src'],            anim:'rv-fade'},
-  {si:8,  t:427,  ids:['s9-wine'],           anim:'rv-up'},
-  {si:8,  t:450,  ids:['s9-banner'],         anim:'rv-scale'},
-  {si:8,  t:462,  ids:['s9-cond'],           anim:'rv-fade'},
-  {si:9,  t:480,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:483,  ids:['s10-rows'],          anim:'rv-up'},
-  {si:10, t:530,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:533,  ids:['s11-tbl'],           anim:'rv-up'},
-  {si:10, t:548,  ids:['s11-kpi'],           anim:'rv-scale'},
-  {si:11, t:560,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:563,  ids:['s12-steps'],         anim:'rv-up'},
-  {si:11, t:580,  ids:['s12-action'],        anim:'rv-fade'},
-  {si:12, t:590,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:595,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
+  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
+  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
+  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
+  {si:1,  t:38,   ids:['s2-ans'],     anim:'rv-scale'},
+  {si:1,  t:55,   ids:['s2-flow'],    anim:'rv-up'},
+  {si:1,  t:70,   ids:['s2-note'],    anim:'rv-fade'},
+  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
+  {si:2,  t:88,   ids:['s3-key'],     anim:'rv-scale'},
+  {si:2,  t:105,  ids:['s3-pts'],     anim:'rv-up'},
+  {si:2,  t:120,  ids:['s3-note'],    anim:'rv-fade'},
+  {si:3,  t:130,  ids:['s4-hd'],      anim:'rv-fade'},
+  {si:3,  t:140,  ids:['s4-key'],     anim:'rv-scale'},
+  {si:3,  t:155,  ids:['s4-flow'],    anim:'rv-up'},
+  {si:3,  t:178,  ids:['s4-note'],    anim:'rv-pop'},
+  {si:4,  t:190,  ids:['s5-hd'],      anim:'rv-fade'},
+  {si:4,  t:200,  ids:['s5-flow'],    anim:'rv-up'},
+  {si:4,  t:228,  ids:['s5-note'],    anim:'rv-fade'},
+  {si:5,  t:240,  ids:['s6-hd'],      anim:'rv-fade'},
+  {si:5,  t:248,  ids:['s6-key'],     anim:'rv-scale'},
+  {si:5,  t:262,  ids:['s6-duo'],     anim:'rv-up'},
+  {si:5,  t:288,  ids:['s6-note'],    anim:'rv-fade'},
+  {si:6,  t:300,  ids:['s7-hd'],      anim:'rv-fade'},
+  {si:6,  t:310,  ids:['s7-key'],     anim:'rv-scale'},
+  {si:6,  t:330,  ids:['s7-flow'],    anim:'rv-up'},
+  {si:6,  t:350,  ids:['s7-note'],    anim:'rv-fade'},
+  {si:7,  t:360,  ids:['s8-hd'],      anim:'rv-fade'},
+  {si:7,  t:370,  ids:['s8-flow'],    anim:'rv-up'},
+  {si:7,  t:395,  ids:['s8-tags'],    anim:'rv-up'},
+  {si:7,  t:410,  ids:['s8-note'],    anim:'rv-fade'},
+  {si:8,  t:420,  ids:['s9-hd'],      anim:'rv-fade'},
+  {si:8,  t:430,  ids:['s9-flow'],    anim:'rv-up'},
+  {si:8,  t:465,  ids:['s9-note'],    anim:'rv-pop'},
+  {si:9,  t:480,  ids:['s10-hd'],     anim:'rv-fade'},
+  {si:9,  t:490,  ids:['s10-key'],    anim:'rv-scale'},
+  {si:9,  t:505,  ids:['s10-flow'],   anim:'rv-up'},
+  {si:9,  t:520,  ids:['s10-note'],   anim:'rv-pop'},
+  {si:10, t:530,  ids:['s11-hd'],     anim:'rv-fade'},
+  {si:10, t:538,  ids:['s11-tags'],   anim:'rv-up'},
+  {si:10, t:552,  ids:['s11-note'],   anim:'rv-pop'},
+  {si:11, t:560,  ids:['s12-hd'],     anim:'rv-fade'},
+  {si:11, t:568,  ids:['s12-flow'],   anim:'rv-up'},
+  {si:11, t:578,  ids:['s12-kpi'],    anim:'rv-scale'},
+  {si:11, t:585,  ids:['s12-note'],   anim:'rv-fade'},
+  {si:12, t:590,  ids:['s13-lbl'],    anim:'rv-fade'},
+  {si:12, t:592,  ids:['s13-title'],  anim:'rv-up'},
+  {si:12, t:595,  ids:['s13-sub'],    anim:'rv-fade'},
+  {si:12, t:598,  ids:['s13-cta'],    anim:'rv-pop'}
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},

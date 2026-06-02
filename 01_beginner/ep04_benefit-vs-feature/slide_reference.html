@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第7回 デジタル時代の4Pと4C | AI時代のマーケティング・ラボ</title>
+<title>第4回 ベネフィットと特徴の違い | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -69,7 +69,6 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
-  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -137,26 +136,22 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
 
 /* section header */
 .sh {
-  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
-  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
-  letter-spacing:.01em;
+  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
+  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
 }
-.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes — large for mobile/YouTube legibility (bold gothic).
-   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
-.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
-.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
-.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
-.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
-.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
+/* body text sizes */
+.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
+.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
+.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
+.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
+.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -370,7 +365,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  color:var(--muted2);
+  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -439,7 +434,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  color:var(--muted2);
+  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -623,7 +618,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-weight:700; color:var(--acc2);
+  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -689,386 +684,102 @@ body {
   display:flex; align-items:center; gap:.4em;
 }
 #narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
-
-/* ================================================================
-   SVG UTILITY COMPONENTS — v2 design system
-================================================================ */
-
-/* ── GAUGE BAR ──────────────────────────────────────────────────
-   <div class="gauge-wrap se" id="...">
-     <div class="gauge-hd">LTV÷CPA</div>
-     <div class="gauge-track">
-       <div class="gauge-fill" style="--v:.75;--c:var(--green)"></div>
-       <span class="gauge-marker" style="left:33%">3×</span>
-     </div>
-     <div class="gauge-legs"><span>0</span><span>3×</span><span>10+</span></div>
-   </div>  */
-.gauge-wrap  { background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.75em 1.1em; }
-.gauge-hd    { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); font-weight:700; margin-bottom:.55em; }
-.gauge-track { height:clamp(10px,1.2vw,16px); background:var(--surf2); border-radius:9999px; position:relative; }
-.gauge-fill  { height:100%; border-radius:9999px;
-  background:linear-gradient(90deg, var(--c-from,#4ade80), var(--c,var(--accent)));
-  width:0; box-shadow:0 0 10px var(--c,var(--accent));
-  animation:gaugeFill 1.3s .35s cubic-bezier(.4,0,.2,1) forwards;
-  animation-play-state:paused; }
-.gauge-marker { position:absolute; top:-200%; height:300%; transform:translateX(-50%);
-  border-left:1.5px dashed var(--border); padding-left:.35em;
-  font-size:clamp(8px,.9vw,12px); color:var(--muted); white-space:nowrap;
-  display:flex; align-items:flex-start; }
-.gauge-legs  { display:flex; justify-content:space-between;
-  font-size:clamp(8px,.85vw,12px); color:var(--muted); margin-top:.3em; }
-@keyframes gaugeFill { to { width:calc(var(--v,.5)*100%); } }
-.rv-fade .gauge-fill,.rv-up .gauge-fill,.rv-scale .gauge-fill,.rv-pop .gauge-fill { animation-play-state:running; }
-
-/* ── KPI BIG NUMBER ─────────────────────────────────────────────
-   <div class="kpi-big se" id="..." style="--c:var(--green)">
-     <div class="kpi-num">9.9×</div><div class="kpi-sub">LTV/CPA</div>
-   </div>  */
-.kpi-wrap { display:flex; align-items:center; justify-content:center; gap:1.5em; flex-wrap:wrap; }
-.kpi-big  { text-align:center; }
-.kpi-num  { font-size:clamp(36px,6vw,80px); font-weight:900; color:var(--c,var(--accent));
-  line-height:1; font-family:'Inter',sans-serif;
-  filter:drop-shadow(0 0 18px var(--c,var(--accent))); }
-.kpi-sub  { font-size:clamp(9px,1.15vw,15px); color:var(--muted2); margin-top:.3em; display:block; }
-.kpi-ctx  { font-size:clamp(11px,1.4vw,18px); color:var(--muted2);
-  border-left:1px solid var(--border); padding-left:1em; line-height:1.6; }
-
-/* ── HORIZONTAL BAR CHART ───────────────────────────────────────
-   <div class="bar-chart-h">
-     <div class="bh-row">
-       <span class="bh-lbl">A案</span>
-       <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--accent)"></div></div>
-       <span class="bh-val" style="color:var(--accent)">75%</span>
-     </div>
-   </div>  */
-.bar-chart-h { display:flex; flex-direction:column; gap:.55em; }
-.bh-row  { display:flex; align-items:center; gap:.65em; font-size:clamp(10px,1.3vw,17px); }
-.bh-lbl  { flex:0 0 clamp(60px,9vw,120px); text-align:right; color:var(--muted2); font-size:.9em; }
-.bh-track{ flex:1; height:clamp(8px,.9vw,14px); background:var(--surf2); border-radius:9999px; overflow:hidden; }
-.bh-fill { height:100%; border-radius:9999px; box-shadow:0 0 8px var(--c,var(--accent));
-  background:linear-gradient(90deg,var(--c-from,var(--c,var(--accent))),var(--c,var(--accent)));
-  width:0; animation:barFill 1s .2s ease-out forwards; animation-play-state:paused; }
-.bh-val  { flex:0 0 3.2em; text-align:left; font-weight:700; color:var(--c,var(--accent));
-  font-family:'Inter',sans-serif; font-size:.9em; }
-@keyframes barFill { to { width:calc(var(--v,50)*1%); } }
-.rv-fade .bh-fill,.rv-up .bh-fill,.rv-scale .bh-fill { animation-play-state:running; }
-
-/* ── 2×2 MATRIX ─────────────────────────────────────────────────
-   <div class="matrix-2x2">
-     <div class="mx-cell mx-tl"><div class="mx-hd">...</div><div class="mx-body">...</div></div>
-     <div class="mx-cell mx-tr hi">...</div>
-     <div class="mx-cell mx-bl">...</div>
-     <div class="mx-cell mx-br hi-g">...</div>
-   </div>  */
-.matrix-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:2px;
-  border-radius:10px; overflow:hidden; background:var(--border); }
-.mx-cell    { background:var(--surf); padding:.65em .9em; transition:background .3s; }
-.mx-cell.hi   { background:rgba(124,111,255,.12); }
-.mx-cell.hi-g { background:rgba(74,222,128,.08); }
-.mx-cell.hi-r { background:rgba(248,113,113,.08); }
-.mx-cell.hi-y { background:rgba(251,191,36,.08); }
-.mx-tl { border-radius:10px 0 0 0; } .mx-tr { border-radius:0 10px 0 0; }
-.mx-bl { border-radius:0 0 0 10px; } .mx-br { border-radius:0 0 10px 0; }
-.mx-hd   { font-weight:700; font-size:clamp(10px,1.35vw,18px); color:var(--accent); margin-bottom:.25em; }
-.mx-body { font-size:clamp(9px,1.2vw,15px); color:var(--muted2); line-height:1.5; }
-.mx-labels { display:flex; justify-content:space-between; align-items:center; margin-top:.35em; }
-.mx-lbl-x  { font-size:clamp(8px,.9vw,12px); color:var(--muted); letter-spacing:.05em; }
-
-/* ── STAT RING (SVG donut) ──────────────────────────────────────
-   Circumference of r=38 ≈ 238.76 → use 239
-   <div class="stat-ring" style="--v:75;--c:#4ade80">
-     <svg viewBox="0 0 100 100">
-       <circle class="sr-track" cx="50" cy="50" r="38"/>
-       <circle class="sr-fill"  cx="50" cy="50" r="38"/>
-     </svg>
-     <div class="sr-inner"><div class="sr-val">75%</div><div class="sr-lbl">継続率</div></div>
-   </div>  */
-.stat-rings  { display:flex; gap:1.5em; align-items:center; justify-content:center; flex-wrap:wrap; }
-.stat-ring   { position:relative; display:inline-flex; align-items:center; justify-content:center;
-  width:clamp(80px,10vw,130px); height:clamp(80px,10vw,130px); }
-.stat-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
-.sr-track { fill:none; stroke:var(--surf2); stroke-width:7; }
-.sr-fill  { fill:none; stroke:var(--c,var(--accent)); stroke-width:7; stroke-linecap:round;
-  stroke-dasharray:0 239;
-  animation:ringFill 1.3s .35s ease-out forwards; animation-play-state:paused; }
-.sr-inner { position:relative; z-index:1; text-align:center; }
-.sr-val   { font-size:clamp(14px,1.8vw,22px); font-weight:900; color:var(--c,var(--accent));
-  font-family:'Inter',sans-serif; line-height:1; }
-.sr-lbl   { font-size:clamp(7px,.85vw,11px); color:var(--muted); }
-.stat-ring-wrap { text-align:center; }
-.stat-ring-ttl  { font-size:clamp(9px,1.1vw,14px); color:var(--muted2); margin-top:.35em; font-weight:700; }
-@keyframes ringFill { to { stroke-dasharray:calc(var(--v,75)*2.39) 239; } }
-.rv-fade .sr-fill,.rv-up .sr-fill,.rv-scale .sr-fill,.rv-pop .sr-fill { animation-play-state:running; }
-
-/* ── NUMBER STEPS ───────────────────────────────────────────────
-   <div class="n-steps">
-     <div class="n-step se" id="...">
-       <div class="n-num">1</div>
-       <div class="n-body"><strong>見出し</strong><div class="t-sm">補足</div></div>
-     </div>
-   </div>  */
-.n-steps { display:flex; flex-direction:column; gap:.5em; }
-.n-step  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); }
-.n-num   { min-width:clamp(24px,2.8vw,36px); height:clamp(24px,2.8vw,36px); border-radius:50%;
-  background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
-  font-weight:900; font-size:.82em; flex-shrink:0; margin-top:.1em;
-  box-shadow:0 0 14px var(--glow-acc); font-family:'Inter',sans-serif; }
-.n-num.g { background:var(--green); box-shadow:0 0 14px var(--glow-grn); color:#000; }
-.n-num.r { background:var(--red);   box-shadow:0 0 14px rgba(248,113,113,.3); }
-.n-num.b { background:var(--blue);  box-shadow:0 0 14px rgba(96,165,250,.3); }
-.n-body  { color:var(--muted2); line-height:1.5; }
-.n-body strong { color:var(--text); }
-
-/* ── HORIZONTAL FLOW ────────────────────────────────────────────
-   <div class="h-flow">
-     <div class="h-flow-node accent">Aware<span class="fn-sub">認知</span></div>
-     <svg class="h-arrow" viewBox="0 0 24 24" fill="none">
-       <path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round"/>
-     </svg>
-     <div class="h-flow-node grn">Act<span class="fn-sub">行動</span></div>
-   </div>  */
-.h-flow { display:flex; align-items:center; gap:.35em; flex-wrap:wrap; justify-content:center; }
-.h-flow-node { background:var(--surf); border:1px solid var(--border); border-radius:9px;
-  padding:.45em .9em; font-size:clamp(10px,1.35vw,18px); font-weight:700;
-  text-align:center; flex-shrink:0; line-height:1.3; }
-.h-flow-node .fn-sub { font-size:.72em; font-weight:400; color:var(--muted2); display:block; margin-top:.05em; }
-.h-flow-node.accent { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.4); color:var(--accent); }
-.h-flow-node.acc2   { background:rgba(255,107,138,.12); border-color:rgba(255,107,138,.4); color:var(--acc2); }
-.h-flow-node.grn    { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.4);  color:var(--green); }
-.h-flow-node.blu    { background:rgba(96,165,250,.12);  border-color:rgba(96,165,250,.4);  color:var(--blue); }
-.h-flow-node.ylw    { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.4);  color:var(--yellow); }
-.h-arrow { width:clamp(14px,1.8vw,24px); color:var(--muted); flex-shrink:0; }
-
-/* ── QUOTE BLOCK ────────────────────────────────────────────────
-   <blockquote class="quote-blk se" id="...">
-     <p class="qb-text">「...」</p>
-     <cite class="qb-cite">Author, Source (Year)</cite>
-   </blockquote>  */
-.quote-blk { position:relative; background:var(--surf); border-radius:10px;
-  padding:1em 1.3em 1em 2.5em; border:1px solid var(--border);
-  border-left:4px solid var(--accent); overflow:hidden; }
-.quote-blk::before { content:'\201C'; font-size:clamp(50px,8vw,100px); font-weight:900;
-  color:rgba(124,111,255,.15); position:absolute; top:-.1em; left:.15em;
-  line-height:1; pointer-events:none; font-family:'Inter','Georgia',serif; }
-.qb-text { font-size:clamp(13px,1.8vw,24px); line-height:1.65; color:var(--text);
-  position:relative; z-index:1; }
-.qb-text em { color:var(--accent); font-style:normal; font-weight:700; }
-.qb-text .hl { color:var(--acc2); }
-.qb-cite { display:block; margin-top:.55em; font-size:clamp(9px,1.1vw,14px);
-  color:var(--muted); font-style:italic; position:relative; z-index:1; }
-
-/* ── COMPARISON TABLE ───────────────────────────────────────────
-   <div class="comp-tbl">
-     <div class="comp-row comp-head">
-       <span class="comp-label"></span><span class="comp-a">Before</span><span class="comp-b">After</span>
-     </div>
-     <div class="comp-row hi">
-       <span class="comp-label">CVR</span>
-       <span class="comp-a c-red">1.2%</span><span class="comp-b c-green">2.3%</span>
-     </div>
-   </div>  */
-.comp-tbl { display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
-.comp-row { display:flex; align-items:stretch; background:var(--surf); }
-.comp-row.hi   .comp-b { background:rgba(74,222,128,.08); color:var(--green); }
-.comp-row.lo   .comp-a { background:rgba(248,113,113,.08); color:var(--red); }
-.comp-label { flex:0 0 clamp(80px,12vw,160px); padding:.55em .9em;
-  font-size:clamp(10px,1.3vw,16px); color:var(--muted2);
-  border-right:1px solid var(--border); display:flex; align-items:center; }
-.comp-a,.comp-b { flex:1; padding:.55em .9em;
-  font-size:clamp(11px,1.5vw,20px); display:flex; align-items:center;
-  justify-content:center; font-weight:700; }
-.comp-a { border-right:1px solid var(--border); }
-.comp-row.comp-head { background:var(--surf2); }
-.comp-row.comp-head .comp-label,
-.comp-row.comp-head .comp-a,
-.comp-row.comp-head .comp-b { font-size:clamp(9px,1.1vw,14px); font-weight:700; color:var(--muted); }
-
-/* ── TAGS / CHIPS ───────────────────────────────────────────────
-   <span class="tag tag-a">変更コスト低</span>  */
-.tag   { display:inline-flex; align-items:center; gap:.3em; padding:.2em .7em;
-  border-radius:9999px; font-size:clamp(9px,1.1vw,14px); font-weight:700;
-  border:1px solid transparent; line-height:1.3; }
-.tag-a { background:rgba(124,111,255,.12); border-color:rgba(124,111,255,.35); color:var(--accent); }
-.tag-g { background:rgba(74,222,128,.1);  border-color:rgba(74,222,128,.35);  color:var(--green); }
-.tag-r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.35); color:var(--red); }
-.tag-b { background:rgba(96,165,250,.1);  border-color:rgba(96,165,250,.35);  color:var(--blue); }
-.tag-y { background:rgba(251,191,36,.1);  border-color:rgba(251,191,36,.35);  color:var(--yellow); }
-
-/* ── ICON ROW LIST ───────────────────────────────────────────────
-   <div class="icon-rows">
-     <div class="icon-row se" id="...">
-       <i class="fa-solid fa-arrow-trend-up c-green"></i>
-       <div><strong>タイトル</strong><div class="t-sm">説明</div></div>
-     </div>
-   </div>  */
-.icon-rows { display:flex; flex-direction:column; gap:.5em; }
-.icon-row  { display:flex; align-items:flex-start; gap:.8em; font-size:clamp(12px,1.7vw,22px); }
-.icon-row > i { font-size:1.05em; flex-shrink:0; margin-top:.1em; }
-.icon-row > div > strong { color:var(--text); }
-.icon-row > div > .t-sm { margin-top:.1em; }
-
-/* ── COLS3 / COLS4 ──────────────────────────────────────────────*/
-.cols3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; }
-.cols4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5%; }
-
-/* ── HIGHLIGHT BANNER ───────────────────────────────────────────
-   <div class="hl-banner" style="--c:var(--green)">
-     <i class="fa-solid fa-circle-check hb-icon"></i>
-     <div class="hb-text"><strong>見出し</strong><br>本文</div>
-   </div>  */
-.hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
-  background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
-  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
-.hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
-.hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
-.hb-text strong { color:var(--text); }
-
-/* ── VERDICT ROWS ───────────────────────────────────────────────*/
-.verdict-rows { display:flex; flex-direction:column; gap:.4em; }
-.verdict-row  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); padding:.3em 0; }
-.v-icon { width:clamp(18px,2vw,26px); flex-shrink:0; margin-top:.15em; text-align:center; }
-.verdict-row.ok .v-icon { color:var(--green); }
-.verdict-row.ng .v-icon { color:var(--red); }
-.v-body { color:var(--muted2); line-height:1.5; }
-.verdict-row.ok .v-body strong { color:var(--text); }
-.verdict-row.ng .v-body strong { color:var(--red); }
-
-/* ── SVG INLINE HELPERS ─────────────────────────────────────────*/
-.svg-il      { width:100%; height:auto; display:block; overflow:visible; }
-.svg-il text { font-family:'Inter','Noto Sans JP',sans-serif; }
-.svg-grid    { stroke:var(--border); stroke-width:.5; }
-.svg-axis    { stroke:var(--muted); stroke-width:1; fill:none; }
-.svg-curve   { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; }
-.svg-curve2  { fill:none; stroke:var(--acc2);   stroke-width:2.5; stroke-linecap:round; }
-.svg-area    { fill:rgba(124,111,255,.15); stroke:none; }
-.svg-area2   { fill:rgba(255,107,138,.12); stroke:none; }
-.svg-area-g  { fill:rgba(74,222,128,.12);  stroke:none; }
-.svg-lbl     { fill:var(--muted2); font-size:11px; }
-.svg-lbl-a   { fill:var(--accent); font-weight:bold; font-size:11px; }
-.svg-lbl-2   { fill:var(--acc2);   font-size:11px; }
-.svg-bar-a   { fill:rgba(124,111,255,.7); }
-.svg-bar-g   { fill:rgba(74,222,128,.7); }
-.svg-bar-r   { fill:rgba(248,113,113,.7); }
-.svg-marker  { stroke:var(--acc2); stroke-width:1.5; stroke-dasharray:4 3; fill:none; }
-
-/* ── FORMULA DISPLAY ────────────────────────────────────────────
-   <div class="formula se" id="...">
-     <span class="fm-var" style="--c:var(--accent)">LTV</span>
-     <span class="fm-op">÷</span>
-     <span class="fm-var" style="--c:var(--acc2)">CPA</span>
-     <span class="fm-op">&gt;</span>
-     <span class="fm-val" style="--c:var(--green)">3</span>
-   </div>  */
-.formula    { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.4em; }
-.fm-var     { font-size:clamp(20px,3.5vw,46px); font-weight:900; color:var(--c,var(--accent));
-  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 10px var(--c,var(--accent))); }
-.fm-op      { font-size:clamp(16px,2.8vw,36px); font-weight:900; color:var(--muted);
-  font-family:'Inter',sans-serif; }
-.fm-val     { font-size:clamp(24px,4.5vw,60px); font-weight:900; color:var(--c,var(--green));
-  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 14px var(--c,var(--green))); }
-.formula-sub { text-align:center; font-size:clamp(10px,1.3vw,17px); color:var(--muted2); margin-top:.3em; }
-
-/* ── STEP-FLOW (vertical with connector) ────────────────────────
-   <div class="step-flow">
-     <div class="sf-item se" id="...">
-       <div class="sf-dot"></div>
-       <div class="sf-body"><strong>ステップ1</strong><span class="t-sm">説明</span></div>
-     </div>
-   </div>  */
-.step-flow { position:relative; padding-left:1.6em; display:flex; flex-direction:column; gap:.55em; }
-.step-flow::before { content:''; position:absolute; left:.55em; top:.8em; bottom:.8em;
-  width:2px; background:linear-gradient(to bottom,var(--accent),var(--border)); border-radius:1px; }
-.sf-item { display:flex; align-items:flex-start; gap:.75em; position:relative; }
-.sf-dot  { width:clamp(14px,1.6vw,20px); height:clamp(14px,1.6vw,20px); border-radius:50%;
-  background:var(--accent); border:2px solid var(--slide-bg);
-  box-shadow:0 0 10px var(--glow-acc); flex-shrink:0; margin-top:.2em; z-index:1; }
-.sf-body { font-size:clamp(11px,1.55vw,20px); color:var(--muted2); line-height:1.5; }
-.sf-body strong { color:var(--text); }
-
-/* ── PILL BADGE ─────────────────────────────────────────────────*/
-.pill     { display:inline-flex; align-items:center; gap:.3em;
-  background:var(--surf2); border:1px solid var(--border); border-radius:6px;
-  padding:.15em .6em; font-size:clamp(9px,1.1vw,14px); font-weight:700; }
-.pill.acc { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.3); color:var(--accent); }
-.pill.grn { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.3);  color:var(--green); }
-.pill.red { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:var(--red); }
-.pill.ylw { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.3);  color:var(--yellow); }
-
-/* ── S1 RING / DOT ANIMATIONS ───────────────────────────────────*/
-.s1-ring { animation:ringRotate 24s linear infinite; transform-origin:center; }
-.s1-ring1 { animation-duration:30s; }
-.s1-ring2 { animation-duration:22s; animation-direction:reverse; }
-.s1-ring3 { animation-duration:15s; }
-@keyframes ringRotate {
-  from { transform:translate(-50%,-50%) rotate(0deg); }
-  to   { transform:translate(-50%,-50%) rotate(360deg); }
-}
-.s1-dot { animation:dotFloat 4s ease-in-out infinite alternate; }
-.s1-dot1 { animation-duration:4.2s; }
-.s1-dot2 { animation-duration:3.5s; animation-delay:.5s; }
-.s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
-@keyframes dotFloat { to { transform:translateY(-8px); } }
-
-/* ================================================================
-   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
-   Shared keyword + diagram vocabulary for all episodes.
-================================================================ */
-.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
-.aflow.sm{gap:.4em;}
-.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
-  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
-.aflow.sm .achip{padding:.45em .7em;}
-.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
-.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
-.aghost{opacity:.4;}
-.aarrow{color:var(--accent);font-weight:900;}
-/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
-   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
-.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
-.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
-  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
-.tag.acc{border-color:var(--accent);color:var(--accent);}
-.tag.ng{border-color:var(--red);color:var(--red);}
-.tag.ok{border-color:var(--green);color:var(--green);}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
-.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
-  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
-.pcard .ph{font-weight:900;line-height:1.1;}
-.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
-.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
-.bignum{color:var(--accent);font-weight:900;line-height:1;}
-.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
-.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
-.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
-.jcell .jv{font-weight:900;line-height:1;}
-.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
-.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
-.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
-.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
-.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
-
 </style>
-
 <style id="ep-css">
+/* ── AB comparison ───────────────────────────────── */
+.ab-wrap{display:flex;gap:.7em;margin:.5em 0;}
+.ab-box{flex:1;border-radius:10px;padding:.7em .9em;font-size:clamp(11px,1.45vw,18px);}
+.ab-box.spec{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.3);}
+.ab-box.bene{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);}
+.ab-box .ab-hd{font-weight:700;margin-bottom:.4em;font-size:1.1em;}
+.ab-box.spec .ab-hd{color:var(--blue);}
+.ab-box.bene .ab-hd{color:var(--green);}
+.ab-box .ab-row{color:var(--muted2);padding:.1em 0;font-family:monospace;font-size:.95em;}
+.ab-box.bene .ab-row{font-family:inherit;font-size:1em;color:#e0e0f0;line-height:1.5;}
 
-/* ── vertical centering override ── */
-.pad   { justify-content: center; }
-.pad-t { justify-content: center; }
+/* ── Feature→Benefit conversion ─────────────────── */
+.conv-row{display:flex;align-items:center;gap:.5em;margin:.25em 0;}
+.conv-feat{
+  background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.3);
+  border-radius:6px;padding:.35em .7em;font-size:clamp(11px,1.4vw,17px);
+  color:var(--muted2);flex:1.1;
+}
+.conv-arr{color:var(--accent);font-size:1.2em;flex-shrink:0;}
+.conv-bene{
+  background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.3);
+  border-radius:6px;padding:.35em .7em;font-size:clamp(11px,1.4vw,17px);
+  color:#e0e0f0;flex:1.4;
+}
 
-/* ── EP07 accent: purple ── */
-:root { --accent:#7C6FFF; --glow-acc:rgba(124,111,255,.25); }
+/* ── Drill chain ─────────────────────────────────── */
+.drill-chain{display:flex;align-items:center;justify-content:center;
+  flex-wrap:wrap;gap:.3em;margin:.4em 0;}
+.dc-box{
+  border-radius:8px;padding:.45em .8em;text-align:center;
+  font-size:clamp(11px,1.45vw,18px);font-weight:700;
+}
+.dc-box.tool{background:rgba(96,165,250,0.15);border:1px solid rgba(96,165,250,0.35);color:rgba(180,200,255,1);}
+.dc-box.res1{background:rgba(250,204,21,0.12);border:1px solid rgba(250,204,21,0.3);color:var(--yellow);}
+.dc-box.res2{background:rgba(248,135,100,0.12);border:1px solid rgba(248,135,100,0.3);color:var(--acc2);}
+.dc-box.res3{background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.3);color:var(--green);}
+.dc-arr{color:var(--accent);font-size:1.1em;}
+.dc-depth{font-size:clamp(9px,1.1vw,13px);font-weight:400;color:var(--muted2);margin-top:.15em;}
 
-/* ── S1 ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #1a0a2e 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
-#s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
-#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
+/* ── Benefit pyramid ─────────────────────────────── */
+.pyramid-wrap{position:relative;max-width:420px;margin:.3em auto;}
+.pyr-layer{
+  display:flex;align-items:center;justify-content:center;
+  border-radius:6px;margin:0 auto;padding:.5em .7em;
+  text-align:center;position:relative;
+}
+.pyr-layer .pl-title{font-size:clamp(12px,1.6vw,20px);font-weight:800;}
+.pyr-layer .pl-desc {font-size:clamp(10px,1.3vw,15px);color:var(--muted2);margin-top:.15em;}
+.pyr-top   {width:55%; background:rgba(124,111,255,0.2);border:1.5px solid rgba(124,111,255,0.5);}
+.pyr-mid   {width:75%; background:rgba(248,135,100,0.15);border:1.5px solid rgba(248,135,100,0.4);margin-top:.3em;}
+.pyr-bot   {width:100%;background:rgba(74,222,128,0.12);border:1.5px solid rgba(74,222,128,0.4);margin-top:.3em;}
+.pyr-top .pl-title{color:rgba(180,170,255,1);}
+.pyr-mid .pl-title{color:var(--acc2);}
+.pyr-bot .pl-title{color:var(--green);}
+.pyr-label{
+  position:absolute;right:-2em;top:50%;transform:translateY(-50%);
+  font-size:clamp(9px,1.1vw,13px);color:var(--muted2);white-space:nowrap;
+}
+@media(max-width:640px){.pyr-label{display:none;}}
 
-/* Minimal design helpers + type scale live in the shared base CSS. */
+/* ── iPhone 4-level breakdown ────────────────────── */
+.iphone-wrap{display:flex;flex-direction:column;gap:.65em;max-width:550px;margin:.3em auto;}
+.iphone-row{display:flex;align-items:center;gap:.5em;}
+.iphone-arrow{color:var(--accent);font-size:1em;flex-shrink:0;text-align:center;width:1.2em;}
+.iphone-box{
+  flex:1;border-radius:8px;padding:.85em .9em;
+  font-size:clamp(11px,1.4vw,17px);
+}
+.iphone-box.feat{background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.25);color:var(--muted2);}
+.iphone-box.func{background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.25);}
+.iphone-box.emot{background:rgba(248,135,100,0.1);border:1px solid rgba(248,135,100,0.25);}
+.iphone-box.self{background:rgba(124,111,255,0.15);border:1.5px solid rgba(124,111,255,0.4);}
+.iphone-box .ib-tag{font-size:.8em;font-weight:700;margin-bottom:.15em;}
+.func .ib-tag{color:var(--green);}
+.emot .ib-tag{color:var(--acc2);}
+.self .ib-tag{color:rgba(180,170,255,1);}
 
+/* ── 5-step framework ────────────────────────────── */
+.steps5-wrap{display:flex;flex-direction:column;gap:.3em;max-width:480px;margin:.3em auto;}
+.step5-row{display:flex;align-items:center;gap:.6em;}
+.step5-num{
+  width:clamp(28px,3.5vw,44px);height:clamp(28px,3.5vw,44px);
+  border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:clamp(12px,1.6vw,20px);font-weight:900;flex-shrink:0;
+}
+.step5-body{flex:1;border-radius:8px;padding:.4em .7em;font-size:clamp(11px,1.4vw,17px);}
+.step5-body .s5-q{color:var(--muted2);font-size:.9em;}
+.step5-body .s5-a{color:#e0e0f0;font-weight:700;}
+/* ── compact overrides ───────────────────────────── */
+.sum-item{font-size:clamp(11px,1.55vw,20px);padding:.5em .9em;margin-bottom:.3em;}
+/* ── Last slide (S14) ────────────────────────────── */
+#s14{background:radial-gradient(ellipse 80% 65% at 40% 50%, #0c1f10 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
+#s14-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px var(--glow-grn),0 8px 32px rgba(0,0,0,0.5);}
+#s14-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--acc2);display:flex;align-items:center;justify-content:center;gap:.55em;}
 </style>
 </head>
 <body>
@@ -1077,6 +788,8 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
+
+
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1084,197 +797,394 @@ body {
     <div class="s1-ring s1-ring3" aria-hidden="true"></div>
     <div class="s1-dot s1-dot1" aria-hidden="true"></div>
     <div class="s1-dot s1-dot2" aria-hidden="true"></div>
-    <div class="s1-dot s1-dot3" aria-hidden="true"></div>
-    <div class="slide-num">01 / 13</div><div class="step-dots" id="sd1"></div>
+    <div class="slide-num">01 / 14</div><div class="step-dots" id="sd1"></div>
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
-      <div id="s1-ep" class="se">第7回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;">4P と 4C</div>
-      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">マーケティングミックス</div>
-      <div id="s1-catch" class="se">戦略を施策に落とす設計図</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">「ベネフィット」と「特徴」の違い</div>
+      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">高性能なのに売れない謎を解く</div>
     </div>
   </section>
 
-  <!-- S2: Hook — scattered tactics 30-80s -->
+  <!-- S2: Hook – A vs B 30-80s -->
   <section class="slide" id="s2">
-    <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad">
-      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">なぜ施策が<span style="color:#fff;">バラバラ</span>になる？</div>
-      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin:.25em 0 .15em;">戦略と施策が<br>噛み合わない</div>
-      <div id="s2-flow" class="se aflow t-md" style="margin-top:.2em;">
-        <span class="achip">製品</span><span class="achip">価格</span><span class="achip">流通</span><span class="achip">販促</span>
+    <div class="slide-num">02 / 14</div><div class="step-dots" id="sd2"></div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s2-q" class="sh se">どちらのコピーが「買いたくなる」と思いますか？</div>
+      <div id="s2-ab" class="se">
+        <div class="ab-wrap">
+          <div class="ab-box spec">
+            <div class="ab-hd">A：スペック型</div>
+            <div class="ab-row">バッテリー：5,000 mAh</div>
+            <div class="ab-row">充電：USB-C 65W 急速対応</div>
+            <div class="ab-row">重量：185g / 7.8mm</div>
+          </div>
+          <div class="ab-box bene">
+            <div class="ab-hd">B：ベネフィット型</div>
+            <div class="ab-row">朝フル充電すれば、夜の帰宅まで充電ゼロの心配なし。急いでいるときも20分で1日分充電できます。</div>
+          </div>
+        </div>
       </div>
-      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">4つが噛み合えば少ない力で大きな成果</div>
+      <div id="s2-conc" class="se" style="display:flex;align-items:center;gap:.5em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);flex-shrink:0;"></i>
+        <span class="t-md">ほぼ全員が <strong style="color:var(--green);">B</strong> を選ぶ——その理由がわかれば、<strong style="color:#fff;">売れるコミュニケーション</strong>が作れる</span>
+      </div>
     </div>
   </section>
 
-  <!-- S3: Origin of 4P 80-120s -->
+  <!-- S3: Feature defined 80-120s -->
   <section class="slide" id="s3">
-    <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
-    <div class="pad-t">
-      <div id="s3-hd" class="sh se">マーケティングミックスの誕生</div>
-      <div id="s3-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip">McCarthy<small>1960 ／ 4P体系化</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip on">Borden<small>1964 ／ 概念を確立</small></span>
+    <div class="slide-num">03 / 14</div><div class="step-dots" id="sd3"></div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s3-hd" class="sh se" style="color:var(--blue);">特徴（Feature）とは</div>
+      <div id="s3-def" class="card card-l se">
+        <div class="sh-sm" style="color:var(--accent);margin-bottom:.3em;">定義</div>
+        <div style="font-size:clamp(13px,1.9vw,24px);font-weight:700;color:#fff;">「商品・サービスが持つ<em style="color:var(--blue);font-style:normal;">客観的な属性・仕様・性能</em>」</div>
       </div>
-      <div id="s3-key" class="se t-md" style="text-align:center;margin-top:.5em;">企業が<span style="color:var(--accent);">コントロールできる</span>4変数</div>
-      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">戦略を実行可能な施策に落とす設計図</div>
+      <div id="s3-ex" class="se mt-s">
+        <div class="conv-row"><div class="conv-feat"><i class="fa-solid fa-capsules" style="color:var(--blue);"></i> ビタミンC 1,000mg 配合</div></div>
+        <div class="conv-row"><div class="conv-feat"><i class="fa-solid fa-droplet" style="color:var(--blue);"></i> 防水・撥水加工</div></div>
+        <div class="conv-row"><div class="conv-feat"><i class="fa-solid fa-microchip" style="color:var(--blue);"></i> 処理速度 3.2 GHz</div></div>
+        <div class="conv-row"><div class="conv-feat"><i class="fa-solid fa-ruler" style="color:var(--blue);"></i> A4 サイズ対応</div></div>
+      </div>
+      <div id="s3-pt" class="se" style="display:flex;align-items:center;gap:.5em;margin-top:.5em;background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.25);border-radius:8px;padding:.55em .9em;">
+        <i class="fa-solid fa-circle-question" style="color:var(--red);font-size:1.3em;flex-shrink:0;"></i>
+        <span class="t-md">特徴は<strong style="color:#fff;">事実の記述</strong>——それだけでは <strong style="color:var(--red);">「だから何？」</strong> が答えられていない</span>
+      </div>
     </div>
   </section>
 
-  <!-- S4: Product — 3 layers 120-180s -->
+  <!-- S4: Benefit defined 120-170s -->
   <section class="slide" id="s4">
-    <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
-    <div class="pad-t">
-      <div id="s4-hd" class="sh se">Product ／ 製品</div>
-      <div id="s4-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip on">コア<small>本当に求める便益</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip">実体<small>品質・機能</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip">拡張<small>保証・サポート</small></span>
+    <div class="slide-num">04 / 14</div><div class="step-dots" id="sd4"></div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s4-hd" class="sh se" style="color:var(--green);">ベネフィット（Benefit）とは</div>
+      <div id="s4-def" class="card card-gr se">
+        <div class="sh-sm" style="color:var(--green);margin-bottom:.3em;">定義</div>
+        <div style="font-size:clamp(13px,1.9vw,24px);font-weight:700;color:#fff;">「顧客が商品を使うことで得られる<em style="color:var(--green);font-style:normal;">価値・結果・変化</em>」</div>
       </div>
-      <div id="s4-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">欲しいのは「穴」ではなく「棚を作る体験」</div>
+      <div id="s4-rule" class="se mt-s">
+        <div class="card" style="padding:.5em 1em;border:1px solid rgba(255,255,255,0.1);">
+          <div class="sh-sm" style="color:var(--accent);margin-bottom:.4em;">変換ルール</div>
+          <div class="t-md" style="color:var(--muted2);">「<strong style="color:#fff;">〇〇（特徴）</strong>、だから <strong style="color:var(--green);">〇〇（ベネフィット）</strong>」</div>
+        </div>
+      </div>
+      <div id="s4-ex" class="se mt-s">
+        <div class="conv-row">
+          <div class="conv-feat"><i class="fa-solid fa-capsules"></i> ビタミンC 1,000mg</div>
+          <div class="conv-arr"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="conv-bene">風邪をひきにくい体に</div>
+        </div>
+        <div class="conv-row">
+          <div class="conv-feat"><i class="fa-solid fa-droplet"></i> 防水加工</div>
+          <div class="conv-arr"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="conv-bene">雨の日も気にせず使える</div>
+        </div>
+        <div class="conv-row">
+          <div class="conv-feat"><i class="fa-solid fa-microchip"></i> 処理速度 3.2 GHz</div>
+          <div class="conv-arr"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="conv-bene">動画編集が待ちなく快適に進む</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S5: Price — 3 approaches 180-240s -->
+  <!-- S5: Drill + hole 170-210s -->
   <section class="slide" id="s5">
-    <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
-    <div class="pad-t">
-      <div id="s5-hd" class="sh se">Price ／ 価格の3アプローチ</div>
-      <div id="s5-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">コスト積み上げ</span>
-        <span class="tag">競合ベース</span>
-        <span class="tag acc">価値ベース</span>
+    <div class="deco-quote" aria-hidden="true">"</div>
+    <div class="slide-num">05 / 14</div><div class="step-dots" id="sd5"></div>
+    <div class="pad" style="justify-content:center;gap:.9em;">
+      <div id="s5-hd" class="sh se">「ドリルと穴」の話</div>
+      <div id="s5-quote" class="card card-lb se" style="padding:1.1em 1.6em;">
+        <div style="font-size:clamp(19px,3.1vw,40px);font-weight:900;line-height:1.4;">
+          "顧客はドリルが欲しいのではない。<br>
+          &ensp;<em style="color:var(--blue);font-style:normal;">穴</em>が欲しいのだ。"
+        </div>
+        <div class="t-xs" style="margin-top:.65em;display:flex;align-items:center;gap:.5em;">
+          <i class="fa-solid fa-graduation-cap" style="color:var(--muted);"></i>
+          Leo McGivena（1947）/ レビット著作で引用（1969）/ Levitt "Marketing Myopia", HBR (1960)
+        </div>
       </div>
-      <div id="s5-key" class="se t-lg" style="text-align:center;margin-top:.5em;">いくらで作れるか<br>ではなく<span style="color:var(--accent);">いくらの価値か</span></div>
-      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">価格は品質のシグナル</div>
+      <div id="s5-chain" class="se">
+        <div class="drill-chain">
+          <div class="dc-box tool"><div><i class="fa-solid fa-screwdriver-wrench"></i>&ensp;ドリル</div><div class="dc-depth">商品のスペック</div></div>
+          <div class="dc-arr"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dc-box res1"><div><i class="fa-solid fa-circle-dot"></i>&ensp;穴を開ける</div><div class="dc-depth">直接的な結果</div></div>
+          <div class="dc-arr"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dc-box res2"><div><i class="fa-solid fa-shelves"></i>&ensp;棚を付ける</div><div class="dc-depth">中間的な目的</div></div>
+          <div class="dc-arr"><i class="fa-solid fa-arrow-right"></i></div>
+          <div class="dc-box res3"><div><i class="fa-solid fa-house-heart"></i>&ensp;快適な暮らし</div><div class="dc-depth">本質的な欲求</div></div>
+        </div>
+      </div>
+      <div id="s5-conc" class="se t-md c-muted" style="display:flex;align-items:center;gap:.5em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
+        ベネフィット思考の本髄は <strong style="color:#fff;">「なぜ？」を繰り返して本質的な欲求まで掘り下げること</strong>
+      </div>
     </div>
   </section>
 
-  <!-- S6: Place — channels 240-300s -->
+  <!-- S6: 3-tier benefit pyramid 210-270s -->
   <section class="slide" id="s6">
-    <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
-    <div class="pad-t">
-      <div id="s6-hd" class="sh se">Place ／ 流通チャネル</div>
-      <div id="s6-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">直販 D2C</span>
-        <span class="tag">卸・小売</span>
-        <span class="tag">EC</span>
-        <span class="tag acc">OMO</span>
+    <div class="slide-num">06 / 14</div><div class="step-dots" id="sd6"></div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s6-hd" class="sh se">ベネフィットは 3 つの層で考える</div>
+      <div id="s6-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
+        <i class="fa-solid fa-book" style="color:var(--muted);"></i>David Aaker『ブランド・エクイティ戦略』(1991) を参考に
       </div>
-      <div id="s6-key" class="se t-lg" style="text-align:center;margin-top:.5em;">どこで買えるかが<br><span style="color:var(--accent);">ブランド価値</span>を決める</div>
-      <div id="s6-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">高級時計はコンビニで売らない</div>
+      <div id="s6-pyr" class="se mt-s">
+        <div class="pyramid-wrap">
+          <div class="pyr-layer pyr-top">
+            <div>
+              <div class="pl-title">③ 自己表現的ベネフィット</div>
+              <div class="pl-desc">使うことで得られる自己イメージ・アイデンティティ</div>
+            </div>
+          </div>
+          <div class="pyr-layer pyr-mid">
+            <div>
+              <div class="pl-title">② 感情的ベネフィット</div>
+              <div class="pl-desc">使うことで生まれる感情・気持ち・満足感</div>
+            </div>
+          </div>
+          <div class="pyr-layer pyr-bot">
+            <div>
+              <div class="pl-title">① 機能的ベネフィット</div>
+              <div class="pl-desc">使うことで解決される具体的な問題</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="s6-note" class="se" style="display:flex;align-items:center;gap:.4em;margin-top:.5em;">
+        <i class="fa-solid fa-triangle-exclamation" style="color:var(--yellow);flex-shrink:0;"></i>
+        <span class="t-sm c-muted">多くの企業が <strong style="color:#fff;">①しか伝えていない</strong>——購買決定に強く影響するのは <strong style="color:var(--accent);">②③の感情・自己表現層</strong>（Kahneman, 2011）</span>
+      </div>
     </div>
   </section>
 
-  <!-- S7: Promotion — IMC 300-360s -->
+  <!-- S7: Functional benefit 270-310s -->
   <section class="slide" id="s7">
-    <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
-    <div class="pad-t">
-      <div id="s7-hd" class="sh se">Promotion ／ IMC の発想</div>
-      <div id="s7-key" class="se t-xl" style="text-align:center;">全接点で<span style="color:var(--accent);">同じトーン</span></div>
-      <div id="s7-flow" class="se aflow t-md" style="margin-top:.4em;">
-        <span class="achip">広告</span><span class="achip">PR</span><span class="achip">SNS</span><span class="achip">店舗</span>
+    <div class="slide-num">07 / 14</div><div class="step-dots" id="sd7"></div>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s7-hd" class="sh se" style="color:var(--green);">① 機能的ベネフィット：事例で理解する</div>
+      <div id="s7-def" class="se t-md c-muted">「使うことで、具体的な問題が解決される」</div>
+      <div id="s7-ex" class="se mt-s">
+        <div class="card" style="border:1px solid rgba(74,222,128,0.25);padding:.7em 1em;">
+          <div class="sh-sm" style="color:var(--green);margin-bottom:.5em;">例：スポーツドリンク</div>
+          <div class="conv-row">
+            <div class="conv-feat"><i class="fa-solid fa-flask"></i> 電解質・糖分を含む等張飲料</div>
+            <div class="conv-arr"><i class="fa-solid fa-arrow-down"></i></div>
+          </div>
+          <div style="margin-top:.4em;">
+            <div class="conv-bene" style="display:block;margin-bottom:.3em;"><i class="fa-solid fa-check" style="color:var(--green);"></i> 運動後の水分・塩分補給が素早くできる</div>
+            <div class="conv-bene" style="display:block;"><i class="fa-solid fa-check" style="color:var(--green);"></i> バテにくく、パフォーマンスが持続する</div>
+          </div>
+        </div>
       </div>
-      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">メッセージの不一致はブランドを希薄化</div>
+      <div id="s7-note" class="se mt-s">
+        <div style="display:flex;gap:1em;">
+          <div style="display:flex;align-items:center;gap:.4em;"><i class="fa-solid fa-brain" style="color:var(--green);"></i><span class="t-sm">理性的な <strong style="color:#fff;">「納得感」</strong> を生む層</span></div>
+          <div style="display:flex;align-items:center;gap:.4em;"><i class="fa-solid fa-scale-balanced" style="color:var(--green);"></i><span class="t-sm"><strong style="color:#fff;">比較検討</strong> で競合に勝つために必要</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S8: 4C shift 360-420s -->
+  <!-- S8: Emotional benefit 310-350s -->
   <section class="slide" id="s8">
-    <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
-    <div class="pad-t">
-      <div id="s8-hd" class="sh se">4C へのシフト</div>
-      <div id="s8-key" class="se t-xl" style="text-align:center;">企業視点から<br><span style="color:var(--accent);">顧客視点</span>へ</div>
-      <div id="s8-banner" class="se hl-banner" style="margin-top:.5em;">売りたいものでなく、買いたいものを売れ</div>
-      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">4Pで骨格、4Cで点検</div>
+    <div class="slide-num">08 / 14</div><div class="step-dots" id="sd8"></div>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s8-hd" class="sh se" style="color:var(--acc2);">② 感情的ベネフィット：事例で理解する</div>
+      <div id="s8-def" class="se t-md c-muted">「使うことで、どんな気持ちになるか」</div>
+      <div id="s8-ex" class="se mt-s">
+        <div class="card" style="border:1px solid rgba(248,135,100,0.3);padding:.7em 1em;">
+          <div class="sh-sm" style="color:var(--acc2);margin-bottom:.5em;">同じスポーツドリンクを感情層で表現すると</div>
+          <div class="conv-bene" style="display:block;margin-bottom:.4em;"><i class="fa-solid fa-heart" style="color:var(--acc2);"></i> 「頑張っている自分を、ちゃんとケアできている感覚」</div>
+          <div class="conv-bene" style="display:block;"><i class="fa-solid fa-heart" style="color:var(--acc2);"></i> 「疲れを乗り越えられる気がする安心感・自信」</div>
+        </div>
+      </div>
+      <div id="s8-note" class="se mt-s">
+        <div style="display:flex;flex-direction:column;gap:.3em;">
+          <div style="display:flex;align-items:center;gap:.4em;"><i class="fa-solid fa-heart" style="color:var(--acc2);"></i><span class="t-sm">「好き」「信頼」「ブランド愛着」に繋がる層</span></div>
+          <div style="display:flex;align-items:center;gap:.4em;"><i class="fa-solid fa-repeat" style="color:var(--acc2);"></i><span class="t-sm"><strong style="color:#fff;">リピート購入・口コミ</strong>を生む源泉</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S9: 4P -> 4C mapping 420-480s -->
+  <!-- S9: Self-expressive benefit 350-400s -->
   <section class="slide" id="s9">
-    <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
-    <div class="pad-t">
-      <div id="s9-hd" class="sh se" style="margin-bottom:.3em;">4P → 4C 対応表</div>
-      <div id="s9-flow" class="se" style="display:flex;flex-direction:column;align-items:center;gap:.4em;">
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--blue);color:var(--blue);">Product</span><span class="aarrow">→</span><span class="achip on">Customer Solution</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--green);color:var(--green);">Price</span><span class="aarrow">→</span><span class="achip on">Cost to Customer</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--yellow);color:var(--yellow);">Place</span><span class="aarrow">→</span><span class="achip on">Convenience</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--acc2);color:var(--acc2);">Promotion</span><span class="aarrow">→</span><span class="achip on">Communication</span></div>
+    <div class="slide-num">09 / 14</div><div class="step-dots" id="sd9"></div>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s9-hd" class="sh se" style="color:rgba(180,170,255,1);">③ 自己表現的ベネフィット：事例で理解する</div>
+      <div id="s9-def" class="se t-md c-muted">「使うことで、どんな自分を表現・体現できるか」</div>
+      <div id="s9-ex" class="se mt-s">
+        <div class="card" style="border:1px solid rgba(124,111,255,0.35);padding:.7em 1em;">
+          <div class="sh-sm" style="color:rgba(180,170,255,1);margin-bottom:.5em;">同じスポーツドリンクを自己表現層で表現すると</div>
+          <div class="conv-bene" style="display:block;margin-bottom:.4em;"><i class="fa-solid fa-user-astronaut" style="color:rgba(180,170,255,1);"></i> アスリートとしての自分のアイデンティティ</div>
+          <div class="conv-bene" style="display:block;"><i class="fa-solid fa-user-astronaut" style="color:rgba(180,170,255,1);"></i> 健康や体力を大切にする人間だという自己イメージ</div>
+        </div>
       </div>
-      <div id="s9-note" class="se note" style="margin-top:.5em;">顧客視点で設計されているか？</div>
+      <div id="s9-nike" class="card card-lb se mt-s">
+        <div class="sh-sm" style="color:var(--blue);margin-bottom:.4em;"><i class="fa-solid fa-star"></i>&ensp;Nike "Just Do It"</div>
+        <div class="t-sm c-muted">
+          → 運動靴の機能を <strong style="color:#fff;">一言も言っていない</strong><br>
+          → 「やり抜く自分」という <strong style="color:var(--blue);">アイデンティティ</strong> を売っている<br>
+          <span style="margin-top:.3em;display:block;">「なんかこのブランドが好き」の正体 = 自己表現的ベネフィット</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S10: Consistency 480-530s -->
+  <!-- S10: iPhone 3-level breakdown 400-440s -->
   <section class="slide" id="s10">
-    <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
-    <div class="pad-t">
-      <div id="s10-hd" class="sh se">4P の整合性</div>
-      <div id="s10-key" class="se t-xl" style="text-align:center;">4つが<span style="color:var(--accent);">同じ価値提案</span>を向く</div>
-      <div id="s10-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">製品×価格</span>
-        <span class="tag">製品×流通</span>
-        <span class="tag">製品×販促</span>
-        <span class="tag">価格×販促</span>
+    <div class="slide-num">10 / 14</div><div class="step-dots" id="sd10"></div>
+    <div class="pad" style="flex-direction:row;align-items:center;gap:1em;">
+      <div style="flex:0 0 auto;display:flex;align-items:center;justify-content:center;">
+        <img src="./iphone.png" alt="iPhone" style="height:clamp(230px,58vh,420px);width:auto;display:block;filter:drop-shadow(0 0 24px rgba(124,111,255,0.3));">
       </div>
-      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">ユニクロ「良いものを誰もが手軽に」</div>
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;">
+      <div id="s10-hd" class="sh se">iPhone で 3 段階を整理する</div>
+      <div id="s10-layers" class="se">
+        <div class="iphone-wrap">
+          <div class="iphone-row">
+            <div class="iphone-box feat">
+              <div class="ib-tag" style="color:var(--blue);">特徴</div>
+              最新チップ / 高画素カメラ / OLED ディスプレイ
+            </div>
+          </div>
+          <div class="iphone-row">
+            <div class="iphone-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="iphone-box func">
+              <div class="ib-tag">① 機能的ベネフィット</div>
+              処理が速くゲーム・動画編集がサクサク。暗い場所でも写真がきれいに撮れる
+            </div>
+          </div>
+          <div class="iphone-row">
+            <div class="iphone-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="iphone-box emot">
+              <div class="ib-tag">② 感情的ベネフィット</div>
+              大切な瞬間を思い通りに記録できる安心感・充実感
+            </div>
+          </div>
+          <div class="iphone-row">
+            <div class="iphone-arrow"><i class="fa-solid fa-arrow-down"></i></div>
+            <div class="iphone-box self">
+              <div class="ib-tag">③ 自己表現的ベネフィット</div>
+              洗練されたセンスと美意識を持つ人間だというアイデンティティ
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="s10-note" class="se t-sm c-muted" style="display:flex;align-items:center;gap:.4em;margin-top:.4em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
+        Apple のコミュニケーションは <strong style="color:#fff;">スペックより上の2層</strong> を中心に設計されている
+      </div>
+      </div><!-- /right column -->
     </div>
   </section>
 
-  <!-- S11: D2C case 530-560s -->
+  <!-- S11: 5-step framework 440-490s -->
   <section class="slide" id="s11">
-    <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
-    <div class="pad-t">
-      <div id="s11-hd" class="sh se">実践：D2Cスキンケア</div>
-      <div id="s11-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip">4Cで点検</span>
-        <span class="aarrow">→</span>
-        <span class="achip on">施策を改善</span>
+    <div class="slide-num">11 / 14</div><div class="step-dots" id="sd11"></div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s11-hd" class="sh se">今日から使える：ベネフィット変換テンプレート</div>
+      <div id="s11-steps" class="se">
+        <div class="steps5-wrap">
+          <div class="step5-row">
+            <div class="step5-num" style="background:rgba(96,165,250,0.2);border:1.5px solid rgba(96,165,250,0.4);color:var(--blue);">1</div>
+            <div class="step5-body" style="background:rgba(96,165,250,0.07);border:1px solid rgba(96,165,250,0.2);">
+              <div class="s5-q">最初に</div><div class="s5-a">商品・サービスの特徴を書き出す</div>
+            </div>
+          </div>
+          <div class="step5-row">
+            <div class="step5-num" style="background:rgba(74,222,128,0.2);border:1.5px solid rgba(74,222,128,0.4);color:var(--green);">2</div>
+            <div class="step5-body" style="background:rgba(74,222,128,0.07);border:1px solid rgba(74,222,128,0.2);">
+              <div class="s5-q">問いかけ：「だから何？」</div><div class="s5-a">→ 機能的ベネフィットに変換</div>
+            </div>
+          </div>
+          <div class="step5-row">
+            <div class="step5-num" style="background:rgba(248,135,100,0.2);border:1.5px solid rgba(248,135,100,0.4);color:var(--acc2);">3</div>
+            <div class="step5-body" style="background:rgba(248,135,100,0.07);border:1px solid rgba(248,135,100,0.2);">
+              <div class="s5-q">問いかけ：「それで、どんな気持ちになる？」</div><div class="s5-a">→ 感情的ベネフィットに変換</div>
+            </div>
+          </div>
+          <div class="step5-row">
+            <div class="step5-num" style="background:rgba(124,111,255,0.2);border:1.5px solid rgba(124,111,255,0.5);color:rgba(180,170,255,1);">4</div>
+            <div class="step5-body" style="background:rgba(124,111,255,0.07);border:1px solid rgba(124,111,255,0.25);">
+              <div class="s5-q">問いかけ：「それを使う自分は、どんな人物？」</div><div class="s5-a">→ 自己表現的ベネフィットに変換</div>
+            </div>
+          </div>
+          <div class="step5-row">
+            <div class="step5-num" style="background:rgba(250,204,21,0.2);border:1.5px solid rgba(250,204,21,0.5);color:var(--yellow);">5</div>
+            <div class="step5-body" style="background:rgba(250,204,21,0.07);border:1px solid rgba(250,204,21,0.25);">
+              <div class="s5-q">最後に</div><div class="s5-a">ターゲットに最も刺さる層でメッセージを作る</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="s11-kpi" class="se" style="text-align:center;margin-top:.5em;">
-        <span class="t-md" style="color:var(--muted2);">初回購入率</span>
-        <span class="bignum t-xl" style="display:inline-block;margin:0 .4em;">+38%</span>
-        <span class="t-md" style="color:var(--muted2);">／ リピート</span>
-        <span class="bignum t-xl" style="display:inline-block;margin-left:.3em;">+52%</span>
-      </div>
-      <div id="s11-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">顧客視点が成果を変える</div>
     </div>
   </section>
 
-  <!-- S12: Summary 560-590s -->
+  <!-- S12: When features matter 490-520s -->
   <section class="slide" id="s12">
-    <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
-    <div class="pad-t">
-      <div id="s12-hd" class="sh se">まとめ</div>
-      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
-        <span class="tag">4Pは一貫した設計図</span>
-        <span class="tag">価値ベース価格</span>
-        <span class="tag">IMCで統一</span>
-        <span class="tag acc">4Cで顧客視点点検</span>
+    <div class="slide-num">12 / 14</div><div class="step-dots" id="sd12"></div>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s12-hd" class="sh se">補足：特徴（スペック）が重要な場面もある</div>
+      <div class="cols2" style="gap:.8em;">
+        <div id="s12-bene" class="se">
+          <div class="col-hd" style="color:var(--green);"><i class="fa-solid fa-circle-check"></i>&ensp;ベネフィット優先が有効</div>
+          <div class="card card-gr col-body">
+            <div class="citem"><i class="fa-solid fa-check dot" style="color:var(--green);font-size:.8em;"></i>認知獲得・ブランディング</div>
+            <div class="citem"><i class="fa-solid fa-check dot" style="color:var(--green);font-size:.8em;"></i>SNS・動画広告</div>
+            <div class="citem"><i class="fa-solid fa-check dot" style="color:var(--green);font-size:.8em;"></i>感情訴求が強いカテゴリ<br><span class="t-xs c-muted">（食品・ファッション・体験）</span></div>
+          </div>
+        </div>
+        <div id="s12-spec" class="se">
+          <div class="col-hd" style="color:var(--yellow);"><i class="fa-solid fa-triangle-exclamation"></i>&ensp;特徴が重要になる場面</div>
+          <div class="card col-body" style="border:1px solid rgba(250,204,21,0.25);">
+            <div class="citem"><i class="fa-solid fa-arrow-right dot" style="color:var(--yellow);font-size:.8em;"></i>比較検討の最終段階</div>
+            <div class="citem"><i class="fa-solid fa-arrow-right dot" style="color:var(--yellow);font-size:.8em;"></i>BtoB・専門家向け</div>
+            <div class="citem"><i class="fa-solid fa-arrow-right dot" style="color:var(--yellow);font-size:.8em;"></i>信頼性・安全性の証明</div>
+          </div>
+        </div>
       </div>
-      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">整合しない箇所を1つ改善する</div>
+      <div id="s12-conc" class="se" style="display:flex;align-items:center;gap:.4em;margin-top:.6em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
+        <span class="t-md">「特徴を捨てろ」ではなく、<strong style="color:var(--accent);">「何を先に伝えるか」</strong> の話</span>
+      </div>
     </div>
   </section>
 
-  <!-- S13: Next 590-600s -->
+  <!-- S13: Summary 520-580s -->
   <section class="slide" id="s13">
-    <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div class="pad" style="text-align:center;align-items:center;">
-      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第8回</div>
-      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">USP と差別化</div>
-      <div id="s13-sub" class="se t-md" style="color:var(--accent);">選ばれる理由を言語化</div>
-      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
+    <div class="slide-num">13 / 14</div><div class="step-dots" id="sd13"></div>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s13-hd" class="sh se">今日のまとめ</div>
+      <div id="s13-i1" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">特徴（Feature）：商品の客観的な属性・仕様</div><div class="sum-sub">→「だから何？」に答えられていない</div></div></div>
+      <div id="s13-i2" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">ベネフィット（Benefit）：顧客が得る価値・結果・変化</div><div class="sum-sub">→「顧客の人生にどんな良いことが起きるか」</div></div></div>
+      <div id="s13-i3" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">ベネフィットは 3 段階</div><div class="sum-sub">① 機能的（問題解決・納得）　② 感情的（愛着・リピート）　③ 自己表現的（アイデンティティ）</div></div></div>
+      <div id="s13-i4" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">変換の問いかけ</div><div class="sum-sub">→「だから何？」→「どんな気持ち？」→「どんな自分？」</div></div></div>
     </div>
   </section>
 
+  <!-- S14: Next episode 580-600s -->
+  <section class="slide" id="s14">
+    <div class="slide-num">14 / 14</div><div class="step-dots" id="sd14"></div>
+    <div id="s12-inner">
+      <div id="s14-card" class="se">
+        <div class="next-lbl"><i class="fa-solid fa-forward-step"></i> 次回</div>
+        <div class="next-title">買いたくなる流れを作る<br>「カスタマージャーニー」の描き方</div>
+        <div id="s14-pts" class="se">
+          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>顧客は「知る→興味→比較→購入→リピート」と動く</div>
+          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>各ステージで何をすべきか？</div>
+          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>カスタマージャーニーマップの作り方・使い方</div>
+        </div>
+      </div>
+      <div id="s14-cta" class="se"><i class="fa-solid fa-bell"></i> チャンネル登録 &amp; 高評価をぜひお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
+    </div>
+  </section>
 </div><!-- /stage --></div><!-- /stage-wrap -->
 
 <!-- Progress Bar -->
-<div id="prog-wrap"><div id="prog-fill"></div></div>
+<div id="prog-bar"><div id="prog-fill"></div></div>
 
 <!-- Controls -->
 <div id="ctrl">
@@ -1286,7 +1196,7 @@ body {
   <button id="btn-step"    title="次のアニメーション (Enter)">→ 次のアニメーション</button>
   <div class="ctrl-sep"></div>
   <span class="ctrl-info" id="timer-disp">0:00 / 10:00</span>
-  <span class="ctrl-info" id="slide-disp">Slide 1 / 13</span>
+  <span class="ctrl-info" id="slide-disp">Slide 1 / 12</span>
   <span class="ctrl-info"><span id="step-label">Step&nbsp;—</span></span>
   <button id="btn-narr">ナレーション 表示/隠す (H)</button>
 </div>
@@ -1299,86 +1209,86 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
-  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
-  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
-  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
-  {si:1,  t:38,   ids:['s2-ans'],     anim:'rv-scale'},
-  {si:1,  t:55,   ids:['s2-flow'],    anim:'rv-up'},
-  {si:1,  t:70,   ids:['s2-note'],    anim:'rv-fade'},
-  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
-  {si:2,  t:88,   ids:['s3-flow'],    anim:'rv-up'},
-  {si:2,  t:104,  ids:['s3-key'],     anim:'rv-scale'},
-  {si:2,  t:114,  ids:['s3-note'],    anim:'rv-fade'},
-  {si:3,  t:120,  ids:['s4-hd'],      anim:'rv-fade'},
-  {si:3,  t:132,  ids:['s4-flow'],    anim:'rv-up'},
-  {si:3,  t:165,  ids:['s4-note'],    anim:'rv-pop'},
-  {si:4,  t:180,  ids:['s5-hd'],      anim:'rv-fade'},
-  {si:4,  t:192,  ids:['s5-tags'],    anim:'rv-up'},
-  {si:4,  t:215,  ids:['s5-key'],     anim:'rv-scale'},
-  {si:4,  t:230,  ids:['s5-note'],    anim:'rv-fade'},
-  {si:5,  t:240,  ids:['s6-hd'],      anim:'rv-fade'},
-  {si:5,  t:252,  ids:['s6-tags'],    anim:'rv-up'},
-  {si:5,  t:275,  ids:['s6-key'],     anim:'rv-scale'},
-  {si:5,  t:290,  ids:['s6-note'],    anim:'rv-fade'},
-  {si:6,  t:300,  ids:['s7-hd'],      anim:'rv-fade'},
-  {si:6,  t:312,  ids:['s7-key'],     anim:'rv-scale'},
-  {si:6,  t:335,  ids:['s7-flow'],    anim:'rv-up'},
-  {si:6,  t:350,  ids:['s7-note'],    anim:'rv-fade'},
-  {si:7,  t:360,  ids:['s8-hd'],      anim:'rv-fade'},
-  {si:7,  t:372,  ids:['s8-key'],     anim:'rv-scale'},
-  {si:7,  t:395,  ids:['s8-banner'],  anim:'rv-pop'},
-  {si:7,  t:410,  ids:['s8-note'],    anim:'rv-fade'},
-  {si:8,  t:420,  ids:['s9-hd'],      anim:'rv-fade'},
-  {si:8,  t:432,  ids:['s9-flow'],    anim:'rv-up'},
-  {si:8,  t:468,  ids:['s9-note'],    anim:'rv-fade'},
-  {si:9,  t:480,  ids:['s10-hd'],     anim:'rv-fade'},
-  {si:9,  t:490,  ids:['s10-key'],    anim:'rv-scale'},
-  {si:9,  t:505,  ids:['s10-tags'],   anim:'rv-up'},
-  {si:9,  t:520,  ids:['s10-note'],   anim:'rv-fade'},
-  {si:10, t:530,  ids:['s11-hd'],     anim:'rv-fade'},
-  {si:10, t:538,  ids:['s11-flow'],   anim:'rv-up'},
-  {si:10, t:548,  ids:['s11-kpi'],    anim:'rv-scale'},
-  {si:10, t:555,  ids:['s11-note'],   anim:'rv-fade'},
-  {si:11, t:560,  ids:['s12-hd'],     anim:'rv-fade'},
-  {si:11, t:568,  ids:['s12-tags'],   anim:'rv-up'},
-  {si:11, t:580,  ids:['s12-note'],   anim:'rv-fade'},
-  {si:12, t:590,  ids:['s13-lbl'],    anim:'rv-fade'},
-  {si:12, t:592,  ids:['s13-title'],  anim:'rv-up'},
-  {si:12, t:595,  ids:['s13-sub'],    anim:'rv-fade'},
-  {si:12, t:598,  ids:['s13-cta'],    anim:'rv-pop'}
+  {si:0,  t:0,    ids:['s1-badge'],            anim:'rv-fade'},
+  {si:0,  t:0.8,  ids:['s1-title'],            anim:'rv-up'},
+  {si:0,  t:1.8,  ids:['s1-sub'],              anim:'rv-up'},
+  {si:1,  t:30,   ids:['s2-q'],                anim:'rv-fade'},
+  {si:1,  t:32,   ids:['s2-ab'],               anim:'rv-scale'},
+  {si:1,  t:40,   ids:['s2-conc'],             anim:'rv-up'},
+  {si:2,  t:80,   ids:['s3-hd'],               anim:'rv-fade'},
+  {si:2,  t:82,   ids:['s3-def'],              anim:'rv-scale'},
+  {si:2,  t:87,   ids:['s3-ex'],               anim:'rv-up'},
+  {si:2,  t:93,   ids:['s3-pt'],               anim:'rv-fade'},
+  {si:3,  t:120,  ids:['s4-hd'],               anim:'rv-fade'},
+  {si:3,  t:122,  ids:['s4-def'],              anim:'rv-scale'},
+  {si:3,  t:127,  ids:['s4-rule'],             anim:'rv-fade'},
+  {si:3,  t:131,  ids:['s4-ex'],               anim:'rv-up'},
+  {si:4,  t:170,  ids:['s5-hd'],               anim:'rv-fade'},
+  {si:4,  t:172,  ids:['s5-quote'],            anim:'rv-scale'},
+  {si:4,  t:178,  ids:['s5-chain'],            anim:'rv-up'},
+  {si:4,  t:186,  ids:['s5-conc'],             anim:'rv-fade'},
+  {si:5,  t:210,  ids:['s6-hd','s6-src'],      anim:'rv-fade'},
+  {si:5,  t:213,  ids:['s6-pyr'],              anim:'rv-scale'},
+  {si:5,  t:222,  ids:['s6-note'],             anim:'rv-fade'},
+  {si:6,  t:270,  ids:['s7-hd','s7-def'],      anim:'rv-fade'},
+  {si:6,  t:273,  ids:['s7-ex'],               anim:'rv-up'},
+  {si:6,  t:280,  ids:['s7-note'],             anim:'rv-fade'},
+  {si:7,  t:310,  ids:['s8-hd','s8-def'],      anim:'rv-fade'},
+  {si:7,  t:313,  ids:['s8-ex'],               anim:'rv-up'},
+  {si:7,  t:320,  ids:['s8-note'],             anim:'rv-fade'},
+  {si:8,  t:350,  ids:['s9-hd','s9-def'],      anim:'rv-fade'},
+  {si:8,  t:353,  ids:['s9-ex'],               anim:'rv-up'},
+  {si:8,  t:360,  ids:['s9-nike'],             anim:'rv-scale'},
+  {si:9,  t:400,  ids:['s10-hd'],              anim:'rv-fade'},
+  {si:9,  t:402,  ids:['s10-layers'],          anim:'rv-up'},
+  {si:9,  t:412,  ids:['s10-note'],            anim:'rv-fade'},
+  {si:10, t:440,  ids:['s11-hd'],              anim:'rv-fade'},
+  {si:10, t:442,  ids:['s11-steps'],           anim:'rv-up'},
+  {si:11, t:490,  ids:['s12-hd'],              anim:'rv-fade'},
+  {si:11, t:492,  ids:['s12-bene'],            anim:'rv-right'},
+  {si:11, t:498,  ids:['s12-spec'],            anim:'rv-left'},
+  {si:11, t:504,  ids:['s12-conc'],            anim:'rv-up'},
+  {si:12, t:520,  ids:['s13-hd'],              anim:'rv-fade'},
+  {si:12, t:522,  ids:['s13-i1'],              anim:'rv-up'},
+  {si:12, t:526,  ids:['s13-i2'],              anim:'rv-up'},
+  {si:12, t:530,  ids:['s13-i3'],              anim:'rv-up'},
+  {si:12, t:534,  ids:['s13-i4'],              anim:'rv-up'},
+  {si:13, t:580,  ids:['s14-card'],            anim:'rv-scale'},
+  {si:13, t:583,  ids:['s14-pts'],             anim:'rv-fade'},
+  {si:13, t:586,  ids:['s14-cta'],             anim:'rv-up'},
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
   {id:'s2',  start:30,  end:80,  dotContainerId:'sd2'},
   {id:'s3',  start:80,  end:120, dotContainerId:'sd3'},
-  {id:'s4',  start:120, end:180, dotContainerId:'sd4'},
-  {id:'s5',  start:180, end:240, dotContainerId:'sd5'},
-  {id:'s6',  start:240, end:300, dotContainerId:'sd6'},
-  {id:'s7',  start:300, end:360, dotContainerId:'sd7'},
-  {id:'s8',  start:360, end:420, dotContainerId:'sd8'},
-  {id:'s9',  start:420, end:480, dotContainerId:'sd9'},
-  {id:'s10', start:480, end:530, dotContainerId:'sd10'},
-  {id:'s11', start:530, end:560, dotContainerId:'sd11'},
-  {id:'s12', start:560, end:590, dotContainerId:'sd12'},
-  {id:'s13', start:590, end:600, dotContainerId:'sd13'},
+  {id:'s4',  start:120, end:170, dotContainerId:'sd4'},
+  {id:'s5',  start:170, end:210, dotContainerId:'sd5'},
+  {id:'s6',  start:210, end:270, dotContainerId:'sd6'},
+  {id:'s7',  start:270, end:310, dotContainerId:'sd7'},
+  {id:'s8',  start:310, end:350, dotContainerId:'sd8'},
+  {id:'s9',  start:350, end:400, dotContainerId:'sd9'},
+  {id:'s10', start:400, end:440, dotContainerId:'sd10'},
+  {id:'s11', start:440, end:490, dotContainerId:'sd11'},
+  {id:'s12', start:490, end:520, dotContainerId:'sd12'},
+  {id:'s13', start:520, end:580, dotContainerId:'sd13'},
+  {id:'s14', start:580, end:600, dotContainerId:'sd14'},
 ];
 const NARRATIONS = [
-  `第7回のテーマは、マーケティングミックス——4Pと4Cです。\n実は第2回のSTP分析の回で、「4Pの話は第7回でしますね」とお伝えしていました。お待たせしました、今回その約束を果たします。\n4Pという言葉は知っている。でもいざ施策に当てはめると要素がバラバラになってしまう——そんな方はとても多いです。今日は4Pを「設計図」として使いこなし施策全体を整合させる方法と、顧客視点の4Cへのアップデートをお伝えします。`,
-  `あなたの会社の施策は一貫していますか。良い製品なのに安売りしてブランドが伝わらない。高級路線なのにディスカウントチャネルで販売している。広告と製品の訴求がまったく違う——これらはすべて4つの施策がバラバラになっているサインです。\n原因は「戦略と施策が繋がっていない」ことにあります。4つの歯車がかみ合って初めてマーケティングの力が発揮されます。今日はその噛み合わせをどう作るかをお伝えします。`,
-  `4Pはどこから来たのでしょうか。1960年、マッカーシーが「Basic Marketing」でProduct・Price・Place・Promotionの4変数を体系化し、1964年にボーデンが「マーケティングミックス」という言葉を定着させました。\n4Pの本質は「企業がコントロールできる変数の組み合わせ」にあります。景気や競合はコントロールできませんが、この4つは自社で決められます。コトラーとケラーも2016年版で「4Pは施策設計の基本骨格」と述べており、60年以上経っても現役です。`,
-  `最初のPはProduct、製品です。コトラーが提唱した3層モデルで考えましょう。\n一番内側のコア製品は顧客が本当に求める便益です。ドリルを買う人が欲しいのはドリルではなく「棚を設置したい体験」——製品の機能より、顧客の目的に着目することが核心です。\nその外側が実体製品（品質・デザイン・機能）、さらに外側が拡張製品（保証・サポート・コミュニティ）です。現代では拡張製品が差別化の主な戦場になっています。コアから設計を始めるのが正しい順序です。`,
-  `2つ目のPはPrice、価格です。アプローチは3つ——コスト積み上げ・競合ベース・価値ベースです。\nコスト積み上げは計算が簡単ですが需要を無視するリスクがあります。競合ベースは差別化できません。最もおすすめは価値ベース——「顧客にとっていくらの価値があるか」から出発します。ユニクロはSPAで原価を抑え「この品質でこの価格」という価値ベースの訴求を実現しています。\n注意点として、価格は他の3Pと整合しなければなりません。高品質の製品を極端に低価格で売ると顧客は品質を疑います。価格はそれ自体が品質のシグナルです。`,
-  `3つ目のPはPlace、流通・チャネルです。D2C・卸小売・EC・OMOなど選択肢があります。\nチャネル選択で問うべきは3つ。顧客はどこで購買を決めるか。そのチャネルはブランドイメージと合っているか。利益率を最大化できるチャネルはどこか。\n高級時計ブランドがコンビニで販売しない理由は明快です。「どこで買えるか」がブランドの価値そのものを体現しているからです。Placeは物流の話ではなく、ブランドを表現する施策です。`,
-  `4つ目のPはPromotion、プロモーションです。広告・PR・SNS・販売促進など複数の手段があります。\nここで重要な概念がIMC（統合マーケティングコミュニケーション）です。シュルツ、タネンバウム、ラウターボーンが1993年に体系化しました。「すべての顧客接点からのメッセージを統一する」発想です。\nテレビでは革新的ブランドを打ち出しているのに、SNSではセール情報ばかり、店舗では製品を知らないスタッフ——これではブランドメッセージがバラバラになります。すべてのタッチポイントで同じ価値観・同じトーンを届けてこそ、ブランドとして記憶に残ります。`,
-  `4Pを理解したうえで、4Cへのシフトを学びましょう。\n1990年、ラウターボーンがアドバタイジング・エイジ誌で「4Pはもう古い。C-ワードに置き換えよ」と提唱しました。4Pは「企業視点」で設計されており、顧客の実感が後回しになりやすいという限界があります。\n4Cでは4Pを顧客視点で読み替えます。ProductはCustomer Solution、PriceはCost to the Customer、PlaceはConvenience、PromotionはCommunicationです。\n4Pで骨格を作り、4Cで顧客視点をチェックする——これが現代マーケティング設計の基本です。`,
-  `4Pの4要素は同じ価値提案を指し示す必要があります。これが整合性です。\n確認すべき組み合わせは4つ。製品と価格——品質と価格帯は釣り合っているか。製品と流通——ブランドポジションとチャネルは合っているか。製品とプロモーション——本当の強みを訴求しているか。価格とプロモーション——安さと品質訴求が矛盾していないか。\nユニクロは4Pが見事に整合しています。製品は高品質ベーシック、価格はSPAで実現した手頃さ、流通は大型店とECで利便性確保、プロモーションは「LifeWear」で一貫したブランド発信。4つすべてが「良いものを誰もが手軽に」を体現しています。`,
-  `実践例を見てみましょう。あるD2Cスキンケアブランドの事例です。\n当初の4Pは、天然成分スキンケアをコスト積み上げで4800円、自社ECのみ、Instagram広告のみでした。しかし購入率が低くリピートも続きませんでした。\n4Cで問い直すと問題が見えました。顧客が求めるのは「天然成分」ではなく「敏感肌の不安を解消したい」体験。送料込みの総コストが心理的障壁に。自社ECのみで試したい層の入口が狭い。一方向の広告で顧客の声を拾えていない——この4点を改善したところ、初回購入率が38%増、3ヶ月リピート率が52%増と大幅に改善しました。`,
-  `4Pと4Cの活用でよく起きる罠を3つお伝えします。\n1つ目は4Pを「項目埋め」と捉えること。戦略と施策が繋がらない表面的な設計になります。STPで定めた価値提案から逆算して設計してください。\n2つ目は4Cを「4Pの後付け翻訳」と考えること。4P設計と並行して4Cの4つの問いでチェックし、整合しない部分を修正するのが正しいやり方です。\n3つ目は整合性を確認しないこと。どれか1つの施策が他を引き倒します。設計後にProduct×Price・Product×Place・Product×Promotionの3組を必ずクロスチェックしてください。`,
-  `今日のポイントをまとめます。\nマーケティングミックスとは、企業がコントロールできる4Pを一貫した戦略のもとで組み合わせることです。Productは3層モデルでコアから設計、Priceは価値ベースを起点に、Placeはブランドと整合するチャネルを選び、PromotionはIMCで全接点を統一する——これが核心です。\nそして4Cの視点——Customer Solution・Cost to the Customer・Convenience・Communication——で常に顧客目線から設計を点検することが現代マーケティングの要です。\n実践ステップは3つ。自社の4Pを書き出す。4Cの問いで検証する。整合していない箇所を1つ改善する——ここから始めましょう。`,
-  `次回は第8回、USPと差別化戦略がテーマです。\n4Pと4Cで施策の骨格が整ったとして、次の問いは「なぜ顧客は競合ではなくあなたを選ぶのか」です。この問いに答えるのがUSP、独自の強みです。\n次回は自社の「これだけは負けない1点」を見つけ、コピーや施策に落とし込む実践法を解説します。\nチャンネル登録と高評価、ぜひよろしくお願いします。次回もお楽しみに！`,
+
+  `第4回のテーマは「ベネフィット」と「特徴」の違いです。\n商品のスペックや機能を丁寧に説明しているのに、なぜか反応が薄い——こんな経験はありませんか？\nその根本的な原因は、伝えるべきことを間違えていることにあります。今日でその謎が解けます。`,
+  `どちらのコピーが気になりますか？\nAは完全に正確なスペック情報です。Bは同じ商品を、使うシーンに置き換えて表現しています。\nほぼ全員がBのほうが「刺さる」と感じます。その理由がわかれば、売れるコミュニケーションが作れます。`,
+  `まず特徴、英語でFeatureとは、商品が持つ客観的な属性や仕様のことです。\nビタミンC 1,000mg配合、防水加工、処理速度3.2GHz——これらはすべて特徴です。\n特徴は事実の記述であって、それ自体は良いも悪いもありません。\n問題は、特徴だけを伝えると顧客の頭の中で「だから何？」という疑問が生まれることです。`,
+  `ベネフィットとは、顧客がその商品を使ったことで得られる価値・結果・変化のことです。\n変換のルールはシンプルで、「○○（特徴）だから○○（ベネフィット）ができる」と繋げるだけです。\n防水加工——だから雨の日も傘を持ちながらスマホを見ても大丈夫。\nベネフィットの本質は「顧客の人生にどんな良いことが起きるか」です。これが伝わると、人は動きます。`,
+  `第1回でも少し触れた、マーケティングの古典的な言葉を今日は深掘りします。\n「顧客はドリルが欲しいのではない。穴が欲しいのだ」。\nドリル会社は電動工具を売っていると思いがちですが、本当に売っているのは「穴を開けるという結果」です。\nでもさらに考えると、顧客は穴が欲しいのでもありません。棚を取り付けて部屋を整えたい。家族が快適に暮らせる空間を作りたい——そこまで深くニーズを掘ることが、ベネフィット思考の本髄です。`,
+  `ベネフィットはデービッド・アーカーのブランド理論を参考にすると、3つの層に分けて考えられます。\n最下層は機能的ベネフィット。具体的な問題が解決されること。\n中層は感情的ベネフィット。使ったときに感じる気持ちや満足感。\n最上層は自己表現的ベネフィット。それを使うことで、どんな自分を表現できるか。\n多くの企業が機能的ベネフィットしか伝えていませんが、カーネマンの研究が示すように、人間の意思決定は感情に大きく左右されます。`,
+  `機能的ベネフィットは最も基本的な層で、商品を使うことで具体的な問題が解決されることです。\nスポーツドリンクで例えると、「電解質を含む」という特徴を機能的ベネフィットに変換すると、「運動後のバテを防ぎ、パフォーマンスが持続する」になります。\nこの層は顧客の理性的な「納得感」を生みます。比較検討の場で競合に勝つためには、機能的ベネフィットをしっかり伝えることが必要です。`,
+  `同じスポーツドリンクを、感情的ベネフィットで表現すると全く変わります。\n「頑張っている自分を、ちゃんとケアできている」という達成感。「疲れを乗り越えられる気がする」という自信と安心感。\n機能的な説明は理性に届きますが、感情的なベネフィットは心に届きます。\nリピート購入や口コミが生まれるのは、この感情的な満足があるからです。`,
+  `最上層の自己表現的ベネフィットは、その商品を使うことで表現できる自己イメージのことです。\nNikeのJust Do Itは最高の例です。靴の機能は一言も言っていないのに、なぜ刺さるか。\nやり抜く自分・限界に挑む自分——そのアイデンティティを体現させてくれるブランドだからです。\nカーネマンの研究通り、人間は感情で選んで、論理で正当化する生き物ですから。`,
+  `iPhoneで3段階を整理してみましょう。\n特徴は最新チップ・カメラ画素数・ディスプレイのスペック。\n機能的ベネフィットは、動画編集がサクサク、暗い場所でも写真がきれい。\n感情的ベネフィットは、大切な瞬間を確実に記録できる安心感や充実感。\nそして自己表現的ベネフィットは、洗練されたセンスと美意識を持つ人間だというアイデンティティ。`,
+  `ベネフィットを言語化するシンプルなフレームワークをご紹介します。\nまず商品の特徴を書き出します。次に「だから何？」と問いかけて機能的ベネフィットを引き出す。\nさらに「それでどんな気持ちになる？」と問いかけて感情的ベネフィットを。\n最後に「それを使う自分はどんな人物？」と問いかけて自己表現的ベネフィットを引き出す。\nこの問いを繰り返すだけで、スペックの羅列が感情に訴えるメッセージに生まれ変わります。`,
+  `補足として、特徴が重要な場面もあります。\nSNSや動画広告などで新しい顧客に届けたい場合は、ベネフィット優先が原則です。\nでも購入を迷っているお客さんが仕様を調べているタイミング、あるいはBtoB取引のように判断基準がスペックである場合には、特徴の詳細が決め手になります。\n「特徴を伝えるな」ではありません。「何を先に伝えるか」の順序が大事なのです。`,
+  `今日のポイントをまとめます。\n特徴は商品の仕様の記述であり、それだけでは「だから何？」に答えられていません。\nベネフィットは、顧客がその商品を通じて得る価値・結果・変化です。\nベネフィットは3段階——機能的・感情的・自己表現的——に分けて考えるとより深く言語化できます。\n変換の問いかけは、「だから何？」→「どんな気持ち？」→「どんな自分？」の3ステップです。`,
+  `次回は第5回、カスタマージャーニーの描き方です。\n顧客が商品を知ってから購入・リピートに至るまでの旅を設計する方法を解説します。\nこの講座が役に立ったと感じていただけたら、チャンネル登録と高評価をぜひお願いします！次回もお楽しみに。`,
 ];
 const TOTAL_SECS = 600;
 

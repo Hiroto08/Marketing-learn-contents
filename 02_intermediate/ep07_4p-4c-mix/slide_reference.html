@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第7回 デジタル時代の4Pと4C | AI時代のマーケティング・ラボ</title>
+<title>第7回 デジタル時代の「4P」と「4C」 | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -69,7 +69,6 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
-  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -137,26 +136,22 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
 
 /* section header */
 .sh {
-  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
-  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
-  letter-spacing:.01em;
+  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
+  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
 }
-.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes — large for mobile/YouTube legibility (bold gothic).
-   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
-.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
-.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
-.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
-.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
-.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
+/* body text sizes */
+.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
+.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
+.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
+.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
+.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -370,7 +365,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  color:var(--muted2);
+  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -439,7 +434,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  color:var(--muted2);
+  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -623,7 +618,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-weight:700; color:var(--acc2);
+  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -919,8 +914,7 @@ body {
    </div>  */
 .hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
   background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
-  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
+  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
 .hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
 .hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
 .hb-text strong { color:var(--text); }
@@ -1011,64 +1005,94 @@ body {
 .s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
 @keyframes dotFloat { to { transform:translateY(-8px); } }
 
-/* ================================================================
-   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
-   Shared keyword + diagram vocabulary for all episodes.
-================================================================ */
-.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
-.aflow.sm{gap:.4em;}
-.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
-  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
-.aflow.sm .achip{padding:.45em .7em;}
-.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
-.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
-.aghost{opacity:.4;}
-.aarrow{color:var(--accent);font-weight:900;}
-/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
-   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
-.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
-.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
-  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
-.tag.acc{border-color:var(--accent);color:var(--accent);}
-.tag.ng{border-color:var(--red);color:var(--red);}
-.tag.ok{border-color:var(--green);color:var(--green);}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
-.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
-  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
-.pcard .ph{font-weight:900;line-height:1.1;}
-.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
-.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
-.bignum{color:var(--accent);font-weight:900;line-height:1;}
-.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
-.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
-.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
-.jcell .jv{font-weight:900;line-height:1;}
-.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
-.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
-.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
-.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
-.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
-
 </style>
 
 <style id="ep-css">
-
 /* ── vertical centering override ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── EP07 accent: purple ── */
-:root { --accent:#7C6FFF; --glow-acc:rgba(124,111,255,.25); }
+/* ── accent: violet (4P/4C theme) ── */
+:root{--accent:#7C6FFF;--glow-acc:rgba(124,111,255,.25);}
 
-/* ── S1 ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #1a0a2e 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+/* ── 4P color coding ── */
+.c-product  { color:#60A5FA; }   /* blue */
+.c-price    { color:#4ADE80; }   /* green */
+.c-place    { color:#FB923C; }   /* orange */
+.c-promo    { color:#C084FC; }   /* purple */
+
+/* ── 4C color coding ── */
+.c-cs   { color:#60A5FA; }
+.c-cost { color:#4ADE80; }
+.c-conv { color:#FB923C; }
+.c-comm { color:#C084FC; }
+
+/* ── gear/info boxes ── */
+.info-box{background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin:.3em 0;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);line-height:1.6;}
+.info-box strong{color:#fff;}
+
+/* ── cause highlight ── */
+.cause-box{background:rgba(124,111,255,0.08);border:1px solid rgba(124,111,255,0.4);border-radius:9px;padding:.55em 1em;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);margin:.4em 0;display:flex;align-items:center;gap:.6em;}
+.cause-box i{color:var(--accent);flex-shrink:0;}
+
+/* ── 3-layer model cards ── */
+.layer-cards{display:flex;flex-direction:column;gap:.4em;width:100%;}
+.layer-card{border-radius:9px;padding:.55em 1em;font-size:clamp(10px,1.4vw,17px);}
+.layer-card.lc-core{background:rgba(124,111,255,0.14);border:1px solid rgba(124,111,255,0.5);}
+.layer-card.lc-actual{background:rgba(96,165,250,0.10);border:1px solid rgba(96,165,250,0.35);}
+.layer-card.lc-aug{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);}
+.layer-card .lc-num{font-weight:900;font-size:1.05em;margin-right:.4em;}
+.layer-card .lc-hd{font-weight:700;}
+.layer-card.lc-core .lc-num,.layer-card.lc-core .lc-hd{color:var(--accent);}
+.layer-card.lc-actual .lc-num,.layer-card.lc-actual .lc-hd{color:var(--blue);}
+.layer-card.lc-aug .lc-num,.layer-card.lc-aug .lc-hd{color:var(--green);}
+.layer-card .lc-sub{color:var(--muted);font-size:.9em;margin-top:.15em;}
+
+/* ── price approach cards ── */
+.price-card{border-radius:9px;padding:.5em .9em;margin:.3em 0;font-size:clamp(10px,1.35vw,17px);}
+.price-card.pc1{background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.3);}
+.price-card.pc2{background:rgba(124,111,255,0.10);border:1px solid rgba(124,111,255,0.4);}
+.price-card.pc3{background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);}
+.price-card .pc-hd{font-weight:700;margin-bottom:.2em;}
+.price-card.pc1 .pc-hd{color:var(--blue);}
+.price-card.pc2 .pc-hd{color:var(--accent);}
+.price-card.pc3 .pc-hd{color:var(--yellow);}
+.price-card .pc-note{font-size:.9em;color:var(--muted);margin-top:.1em;}
+.price-card .pc-recommend{background:rgba(124,111,255,0.12);border-radius:5px;padding:.1em .4em;font-size:.8em;color:var(--accent);font-weight:700;margin-left:.4em;}
+
+/* ── channel flow styles ── */
+.ch-label{font-size:clamp(10px,1.3vw,16px);color:var(--muted2);font-weight:700;margin-bottom:.1em;text-align:center;}
+
+/* ── IMC note ── */
+.imc-note{background:rgba(192,132,252,0.08);border:1px solid rgba(192,132,252,0.35);border-radius:9px;padding:.55em 1em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);margin:.3em 0;}
+.imc-note .imc-hd{color:#C084FC;font-weight:700;margin-bottom:.15em;}
+
+/* ── 4C shift arrow ── */
+.shift-arrow{color:var(--accent);font-size:clamp(14px,2vw,26px);text-align:center;margin:.1em 0;}
+
+/* ── check items ── */
+.check-items{display:flex;flex-direction:column;gap:.35em;width:100%;}
+.check-item{display:flex;align-items:flex-start;gap:.6em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);line-height:1.5;}
+.check-item i.ci-ok{color:var(--green);flex-shrink:0;margin-top:.1em;}
+.check-item i.ci-no{color:var(--red);flex-shrink:0;margin-top:.1em;}
+
+/* ── summary icon rows ── */
+.icon-rows{display:flex;flex-direction:column;gap:.4em;width:100%;}
+.icon-row{display:flex;align-items:flex-start;gap:.65em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);padding:.35em .6em;border-radius:8px;background:var(--surf);border:1px solid var(--border);}
+.icon-row .ir-icon{color:var(--accent);flex-shrink:0;width:1.4em;text-align:center;margin-top:.1em;}
+.icon-row strong{color:#fff;}
+
+/* ── last slide ── */
+#s13{background:radial-gradient(ellipse 80% 65% at 40% 50%, #0e0b2e 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
+#s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px rgba(124,111,255,0.3),0 8px 32px rgba(0,0,0,0.5);}
+#s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--accent);display:flex;align-items:center;justify-content:center;gap:.55em;}
+
+/* ── s1 overrides ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 62% 45%, #1a1260 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px);}
 #s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
-#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
-
-/* Minimal design helpers + type scale live in the shared base CSS. */
-
+#s1-ep{font-size:clamp(11px,1.5vw,18px);color:var(--muted2);font-weight:700;margin-bottom:.3em;letter-spacing:.05em;}
+#s1-catch{color:var(--muted2);font-size:clamp(11px,1.6vw,20px);margin-top:.6em;}
 </style>
 </head>
 <body>
@@ -1077,6 +1101,7 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
+
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1089,159 +1114,370 @@ body {
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
       <div id="s1-ep" class="se">第7回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;">4P と 4C</div>
-      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">マーケティングミックス</div>
-      <div id="s1-catch" class="se">戦略を施策に落とす設計図</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">デジタル時代の「4P」と「4C」</div>
+      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">現代版マーケティングミックス</div>
+      <div id="s1-catch" class="se">戦略を施策に落とす設計図を、顧客目線でアップデートする</div>
     </div>
   </section>
 
-  <!-- S2: Hook — scattered tactics 30-80s -->
+  <!-- S2: Hook 30-80s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad">
-      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">なぜ施策が<span style="color:#fff;">バラバラ</span>になる？</div>
-      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin:.25em 0 .15em;">戦略と施策が<br>噛み合わない</div>
-      <div id="s2-flow" class="se aflow t-md" style="margin-top:.2em;">
-        <span class="achip">製品</span><span class="achip">価格</span><span class="achip">流通</span><span class="achip">販促</span>
+    <div class="pad-t">
+      <div id="s2-hd" class="sh se">なぜ施策がバラバラになるのか？</div>
+      <div class="verdict-rows se" id="s2-rows">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>高品質な製品</strong>なのに<strong>超低価格</strong>で売る→ブランドイメージが崩れる</div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>高級路線の戦略</strong>なのに<strong>大量流通チャネル</strong>に乗せてしまう</div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>良いプロモーション</strong>なのに<strong>製品の強みと全く違う</strong>ことを訴求している</div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body"><strong>4P を一貫した戦略のもとで設計</strong>すれば、少ない力で大きな成果が出る</div>
+        </div>
       </div>
-      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">4つが噛み合えば少ない力で大きな成果</div>
+      <div id="s2-cause" class="cause-box se">
+        <i class="fa-solid fa-gear"></i>
+        <span>根本原因：<strong style="color:#fff;">「戦略と施策が繋がっていない」</strong>——4つの歯車が噛み合って初めてマーケティングの力が発揮される</span>
+      </div>
     </div>
   </section>
 
-  <!-- S3: Origin of 4P 80-120s -->
+  <!-- S3: Marketing Mix Overview 80-120s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
       <div id="s3-hd" class="sh se">マーケティングミックスの誕生</div>
-      <div id="s3-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip">McCarthy<small>1960 ／ 4P体系化</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip on">Borden<small>1964 ／ 概念を確立</small></span>
+      <div id="s3-history" class="se" style="display:flex;gap:1em;margin:.4em 0;flex-wrap:wrap;">
+        <div class="info-box" style="flex:1;min-width:180px;">
+          <div style="color:var(--accent);font-weight:900;font-size:clamp(14px,2vw,26px);margin-bottom:.2em;">1960年</div>
+          <div style="font-weight:700;color:#fff;">E. Jerome McCarthy</div>
+          <div>『Basic Marketing』<br>→ <strong>4P</strong>（Product / Price / Place / Promotion）を体系化</div>
+        </div>
+        <div class="info-box" style="flex:1;min-width:180px;">
+          <div style="color:var(--accent);font-weight:900;font-size:clamp(14px,2vw,26px);margin-bottom:.2em;">1964年</div>
+          <div style="font-weight:700;color:#fff;">Neil H. Borden</div>
+          <div>"The Concept of the Marketing Mix"<br>→ <strong>「マーケティングミックス」</strong>という概念・名称を確立</div>
+        </div>
       </div>
-      <div id="s3-key" class="se t-md" style="text-align:center;margin-top:.5em;">企業が<span style="color:var(--accent);">コントロールできる</span>4変数</div>
-      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">戦略を実行可能な施策に落とす設計図</div>
+      <div id="s3-flow" class="se">
+        <div class="h-flow" style="justify-content:center;">
+          <div class="h-flow-node accent"><span class="c-product">Product</span><span class="fn-sub">製品</span></div>
+          <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="h-flow-node grn"><span class="c-price">Price</span><span class="fn-sub">価格</span></div>
+          <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="h-flow-node ylw"><span class="c-place">Place</span><span class="fn-sub">流通</span></div>
+          <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <div class="h-flow-node acc2"><span class="c-promo">Promotion</span><span class="fn-sub">プロモーション</span></div>
+        </div>
+      </div>
+      <blockquote class="quote-blk se" id="s3-quote">
+        <p class="qb-text">「4Pは企業が<em>コントロールできる</em>マーケティング変数の組み合わせ——戦略を実行可能な施策に落とし込む設計図」</p>
+        <cite class="qb-cite">Kotler &amp; Keller『マーケティング・マネジメント』第15版（2016）</cite>
+      </blockquote>
     </div>
   </section>
 
-  <!-- S4: Product — 3 layers 120-180s -->
+  <!-- S4: Product 120-180s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">Product ／ 製品</div>
-      <div id="s4-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip on">コア<small>本当に求める便益</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip">実体<small>品質・機能</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip">拡張<small>保証・サポート</small></span>
+      <div id="s4-hd" class="sh se"><span class="c-product">Product（製品）</span>——3層モデルで設計する</div>
+      <div class="n-steps" id="s4-steps">
+        <div class="n-step se" id="s4-s1">
+          <div class="n-num">①</div>
+          <div class="n-body">
+            <strong class="c-product">コア製品（Core Product）</strong>
+            <div class="t-sm">顧客が本当に求める<em>便益・価値</em>。例：ドリルを買う人が欲しいのは「穴」ではなく「棚を作りたい体験」</div>
+          </div>
+        </div>
+        <div class="n-step se" id="s4-s2">
+          <div class="n-num b">②</div>
+          <div class="n-body">
+            <strong style="color:var(--blue);">実体製品（Actual Product）</strong>
+            <div class="t-sm">物理的な仕様→ 品質・デザイン・ブランド名・パッケージ・機能</div>
+          </div>
+        </div>
+        <div class="n-step se" id="s4-s3">
+          <div class="n-num g">③</div>
+          <div class="n-body">
+            <strong style="color:var(--green);">拡張製品（Augmented Product）</strong>
+            <div class="t-sm">付随サービス→ 保証・アフターサービス・配送・設置・コミュニティ（現代の差別化の主戦場）</div>
+          </div>
+        </div>
       </div>
-      <div id="s4-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">欲しいのは「穴」ではなく「棚を作る体験」</div>
+      <div id="s4-apple" class="info-box se" style="border-color:rgba(124,111,255,0.4);margin-top:.5em;">
+        <span style="color:var(--accent);font-weight:700;">Apple iPhone 例：</span>
+        コア＝繋がる・表現できる・ステータス &nbsp;|&nbsp;
+        実体＝スペック・デザイン・iOS &nbsp;|&nbsp;
+        拡張＝AppleCare・App Store・Genius Bar
+      </div>
     </div>
   </section>
 
-  <!-- S5: Price — 3 approaches 180-240s -->
+  <!-- S5: Price 180-240s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">Price ／ 価格の3アプローチ</div>
-      <div id="s5-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">コスト積み上げ</span>
-        <span class="tag">競合ベース</span>
-        <span class="tag acc">価値ベース</span>
+      <div id="s5-hd" class="sh se"><span class="c-price">Price（価格）</span>——3つのアプローチ</div>
+      <div id="s5-cards" class="se" style="display:flex;flex-direction:column;gap:.4em;width:100%;margin:.4em 0;">
+        <div class="price-card pc1">
+          <div class="pc-hd"><i class="fa-solid fa-calculator"></i> ① コスト積み上げ</div>
+          <div>原価 + 利益率 ＝ 価格　→ 計算が簡単だが市場・需要を無視するリスク</div>
+        </div>
+        <div class="price-card pc2">
+          <div class="pc-hd"><i class="fa-solid fa-star"></i> ② 価値ベース<span class="pc-recommend">推奨</span></div>
+          <div>顧客が感じる価値 ＝ 価格の出発点　→ 高マージン可・価値の説明が必要<br>
+          <span style="color:var(--muted);font-size:.9em;">例：ユニクロはSPAで原価を抑え「この品質でこの価格」を実現</span></div>
+        </div>
+        <div class="price-card pc3">
+          <div class="pc-hd"><i class="fa-solid fa-scale-balanced"></i> ③ 競合ベース</div>
+          <div>競合の価格を基準に設定　→ 安全だが差別化できない</div>
+        </div>
       </div>
-      <div id="s5-key" class="se t-lg" style="text-align:center;margin-top:.5em;">いくらで作れるか<br>ではなく<span style="color:var(--accent);">いくらの価値か</span></div>
-      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">価格は品質のシグナル</div>
+      <div class="verdict-rows se" id="s5-warn">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body">高品質製品 × 極端な低価格 → 顧客は品質を疑う（価格はブランドのシグナル）</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S6: Place — channels 240-300s -->
+  <!-- S6: Place 240-300s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">Place ／ 流通チャネル</div>
-      <div id="s6-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">直販 D2C</span>
-        <span class="tag">卸・小売</span>
-        <span class="tag">EC</span>
-        <span class="tag acc">OMO</span>
+      <div id="s6-hd" class="sh se"><span class="c-place">Place（流通）</span>——顧客に届けるチャネル設計</div>
+      <div id="s6-channels" class="se" style="display:flex;flex-direction:column;gap:.35em;width:100%;margin:.35em 0;">
+        <div class="info-box" style="display:flex;align-items:center;gap:.7em;">
+          <span style="color:var(--accent);font-weight:700;min-width:5em;">直販 D2C</span>
+          <div class="h-flow" style="flex:1;gap:.3em;">
+            <div class="h-flow-node" style="font-size:clamp(9px,1.2vw,14px);">メーカー</div>
+            <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="h-flow-node accent" style="font-size:clamp(9px,1.2vw,14px);">顧客</div>
+          </div>
+        </div>
+        <div class="info-box" style="display:flex;align-items:center;gap:.7em;">
+          <span style="color:var(--blue);font-weight:700;min-width:5em;">卸・小売</span>
+          <div class="h-flow" style="flex:1;gap:.3em;">
+            <div class="h-flow-node" style="font-size:clamp(9px,1.2vw,14px);">メーカー</div>
+            <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="h-flow-node" style="font-size:clamp(9px,1.2vw,14px);">卸</div>
+            <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="h-flow-node" style="font-size:clamp(9px,1.2vw,14px);">小売</div>
+            <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="h-flow-node blu" style="font-size:clamp(9px,1.2vw,14px);">顧客</div>
+          </div>
+        </div>
+        <div class="info-box" style="display:flex;align-items:center;gap:.7em;">
+          <span style="color:var(--yellow);font-weight:700;min-width:5em;">EC</span>
+          <div class="h-flow" style="flex:1;gap:.3em;">
+            <div class="h-flow-node" style="font-size:clamp(9px,1.2vw,14px);">メーカー</div>
+            <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="h-flow-node" style="font-size:clamp(9px,1.2vw,14px);">EC PF</div>
+            <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div class="h-flow-node ylw" style="font-size:clamp(9px,1.2vw,14px);">顧客</div>
+          </div>
+        </div>
       </div>
-      <div id="s6-key" class="se t-lg" style="text-align:center;margin-top:.5em;">どこで買えるかが<br><span style="color:var(--accent);">ブランド価値</span>を決める</div>
-      <div id="s6-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">高級時計はコンビニで売らない</div>
+      <div id="s6-qa" class="cause-box se">
+        <i class="fa-solid fa-circle-question"></i>
+        <div>チャネル選択の問い：<strong>①どこで購買意思決定するか</strong> ／ <strong>②ブランドと整合するか</strong> ／ <strong>③利益率が最大化できるか</strong></div>
+      </div>
+      <div id="s6-luxury" class="info-box se" style="font-size:clamp(10px,1.3vw,16px);color:var(--muted);">
+        <i class="fa-solid fa-gem" style="color:var(--accent);"></i>&ensp;高級時計ブランドがコンビニで販売しない理由→「<strong style="color:#fff;">どこで買えるか</strong>」がブランド価値そのもの
+      </div>
     </div>
   </section>
 
-  <!-- S7: Promotion — IMC 300-360s -->
+  <!-- S7: Promotion / IMC 300-360s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">Promotion ／ IMC の発想</div>
-      <div id="s7-key" class="se t-xl" style="text-align:center;">全接点で<span style="color:var(--accent);">同じトーン</span></div>
-      <div id="s7-flow" class="se aflow t-md" style="margin-top:.4em;">
-        <span class="achip">広告</span><span class="achip">PR</span><span class="achip">SNS</span><span class="achip">店舗</span>
+      <div id="s7-hd" class="sh se"><span class="c-promo">Promotion（プロモーション）</span>——IMCの発想で統合する</div>
+      <div id="s7-mix" class="se">
+        <div class="h-flow" style="flex-wrap:wrap;justify-content:center;gap:.5em .3em;">
+          <div class="h-flow-node" style="font-size:clamp(9px,1.2vw,14px);">広告</div>
+          <div class="h-flow-node blu" style="font-size:clamp(9px,1.2vw,14px);">PR・パブリシティ</div>
+          <div class="h-flow-node grn" style="font-size:clamp(9px,1.2vw,14px);">販売促進</div>
+          <div class="h-flow-node ylw" style="font-size:clamp(9px,1.2vw,14px);">ダイレクト<span class="fn-sub">DM/メール</span></div>
+          <div class="h-flow-node acc2" style="font-size:clamp(9px,1.2vw,14px);">SNS・デジタル</div>
+          <div class="h-flow-node accent" style="font-size:clamp(9px,1.2vw,14px);">人的販売</div>
+        </div>
       </div>
-      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">メッセージの不一致はブランドを希薄化</div>
+      <blockquote class="quote-blk se" id="s7-imc">
+        <p class="qb-text">「<em>すべての顧客接点から届けるメッセージを統一し</em>、一貫したブランド体験を生み出す」——IMC（統合マーケティングコミュニケーション）</p>
+        <cite class="qb-cite">Schultz, Tannenbaum &amp; Lauterborn『Integrated Marketing Communications』1993</cite>
+      </blockquote>
+      <div class="verdict-rows se" id="s7-compare">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body">TV「革新的ブランド」/ SNS「セール情報ばかり」/ 店舗「製品を知らないスタッフ」→ <strong>ブランドが希薄化</strong></div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body">すべての接点で<strong>「同じ価値観・同じトーン」</strong>を届ける→ ブランドとして記憶に残る</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S8: 4C shift 360-420s -->
+  <!-- S8: 4P→4C Shift 360-420s -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">4C へのシフト</div>
-      <div id="s8-key" class="se t-xl" style="text-align:center;">企業視点から<br><span style="color:var(--accent);">顧客視点</span>へ</div>
-      <div id="s8-banner" class="se hl-banner" style="margin-top:.5em;">売りたいものでなく、買いたいものを売れ</div>
-      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">4Pで骨格、4Cで点検</div>
+      <div id="s8-hd" class="sh se">4Cへのシフト——顧客目線で4Pを読み替える</div>
+      <blockquote class="quote-blk se" id="s8-quote" style="margin-bottom:.5em;">
+        <p class="qb-text">「企業が売りたいものを売るのではなく、<em>顧客が買いたいものを売れ</em>」</p>
+        <cite class="qb-cite">Robert Lauterborn "New Marketing Litany: 4Ps Passe; C-Words Take Over", Advertising Age 1990</cite>
+      </blockquote>
+      <div class="comp-tbl se" id="s8-tbl">
+        <div class="comp-row comp-head">
+          <span class="comp-label"></span>
+          <span class="comp-a">企業視点（4P）</span>
+          <span class="comp-b">顧客視点（4C）</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label c-product">Product</span>
+          <span class="comp-a">何を作るか・売るか</span>
+          <span class="comp-b c-cs"><strong>Customer Solution</strong><br><span style="font-size:.85em;">顧客の問題を解くか</span></span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label c-price">Price</span>
+          <span class="comp-a">いくらで売るか</span>
+          <span class="comp-b c-cost"><strong>Cost to the Customer</strong><br><span style="font-size:.85em;">金銭＋時間＋心理コスト</span></span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label c-place">Place</span>
+          <span class="comp-a">どこで売るか</span>
+          <span class="comp-b c-conv"><strong>Convenience</strong><br><span style="font-size:.85em;">入手しやすさ・使いやすさ</span></span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label c-promo">Promotion</span>
+          <span class="comp-a">どう告知するか</span>
+          <span class="comp-b c-comm"><strong>Communication</strong><br><span style="font-size:.85em;">双方向の対話</span></span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S9: 4P -> 4C mapping 420-480s -->
+  <!-- S9: 4P Coherence / Alignment 420-480s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se" style="margin-bottom:.3em;">4P → 4C 対応表</div>
-      <div id="s9-flow" class="se" style="display:flex;flex-direction:column;align-items:center;gap:.4em;">
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--blue);color:var(--blue);">Product</span><span class="aarrow">→</span><span class="achip on">Customer Solution</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--green);color:var(--green);">Price</span><span class="aarrow">→</span><span class="achip on">Cost to Customer</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--yellow);color:var(--yellow);">Place</span><span class="aarrow">→</span><span class="achip on">Convenience</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--acc2);color:var(--acc2);">Promotion</span><span class="aarrow">→</span><span class="achip on">Communication</span></div>
+      <div id="s9-hd" class="sh se">4Pの整合性チェック——一貫性が成果を生む</div>
+      <div class="verdict-rows se" id="s9-checks">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>Product × Price</strong>：ハイエンド素材の製品を「980円」で販売 → 品質への不信感</div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>Product × Place</strong>：ラグジュアリーブランドが量販店に並ぶ → ブランド毀損</div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>Product × Promotion</strong>：「環境にやさしい」訴求 + 過剰包装 → 矛盾で信頼喪失</div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body"><strong>ユニクロ</strong>：製品（高品質ベーシック）× 価格（SPA実現）× 流通（大型店+EC）× 訴求（LifeWear） = 完全整合</div>
+        </div>
       </div>
-      <div id="s9-note" class="se note" style="margin-top:.5em;">顧客視点で設計されているか？</div>
+      <div id="s9-msg" class="cause-box se">
+        <i class="fa-solid fa-arrows-to-circle"></i>
+        <span>4つのPは常に<strong style="color:#fff;">「同じターゲット・同じ価値提案」</strong>を向いていなければならない</span>
+      </div>
     </div>
   </section>
 
-  <!-- S10: Consistency 480-530s -->
+  <!-- S10: D2C Case Study 480-530s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s10-hd" class="sh se">4P の整合性</div>
-      <div id="s10-key" class="se t-xl" style="text-align:center;">4つが<span style="color:var(--accent);">同じ価値提案</span>を向く</div>
-      <div id="s10-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">製品×価格</span>
-        <span class="tag">製品×流通</span>
-        <span class="tag">製品×販促</span>
-        <span class="tag">価格×販促</span>
+      <div id="s10-hd" class="sh se">実践例：D2Cスキンケアブランドの4P→4C改善</div>
+      <div class="kpi-wrap se" id="s10-kpi">
+        <div class="kpi-big" style="--c:var(--green)">
+          <div class="kpi-num">+38%</div>
+          <div class="kpi-sub">初回購入率</div>
+        </div>
+        <div class="kpi-big" style="--c:var(--accent)">
+          <div class="kpi-num">+52%</div>
+          <div class="kpi-sub">3ヶ月リピート率</div>
+        </div>
+        <div class="kpi-ctx">
+          4Cの視点で問い直し、<br>施策を4点改善した結果
+        </div>
       </div>
-      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">ユニクロ「良いものを誰もが手軽に」</div>
+      <div class="comp-tbl se" id="s10-tbl">
+        <div class="comp-row comp-head">
+          <span class="comp-label">4C視点</span>
+          <span class="comp-a">改善前</span>
+          <span class="comp-b">改善後</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label c-cs" style="font-size:.85em;">Customer Solution</span>
+          <span class="comp-a">「天然成分」訴求</span>
+          <span class="comp-b c-green">「敏感肌の不安を解消」に刷新</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label c-cost" style="font-size:.85em;">Cost</span>
+          <span class="comp-a">送料600円+3日待ち</span>
+          <span class="comp-b c-green">送料無料化・初回割引</span>
+        </div>
+        <div class="comp-row">
+          <span class="comp-label c-conv" style="font-size:.85em;">Convenience</span>
+          <span class="comp-a">自社ECのみ</span>
+          <span class="comp-b c-green">定期便+Amazon出品</span>
+        </div>
+        <div class="comp-row hi">
+          <span class="comp-label c-comm" style="font-size:.85em;">Communication</span>
+          <span class="comp-a">一方向の広告のみ</span>
+          <span class="comp-b c-green">DMで肌悩みを聞く+UGC拡散</span>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S11: D2C case 530-560s -->
+  <!-- S11: Common Traps 530-560s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">実践：D2Cスキンケア</div>
-      <div id="s11-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip">4Cで点検</span>
-        <span class="aarrow">→</span>
-        <span class="achip on">施策を改善</span>
+      <div id="s11-hd" class="sh se">よくある罠——失敗パターンとその解決策</div>
+      <div class="verdict-rows se" id="s11-rows">
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>罠①：4Pを「項目埋め」と捉える</strong>→ 戦略と施策が繋がらない表面的な設計になる</div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body"><strong>解決：</strong>STPで定めたターゲット・価値提案から逆算して4Pを設計する</div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>罠②：4Cを「4Pの後付け翻訳」と考える</strong>→ 顧客視点の洞察が施策に反映されない</div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body"><strong>解決：</strong>4P設計と並行して4Cの4つの問いでチェックし、整合しない部分を修正する</div>
+        </div>
+        <div class="verdict-row ng">
+          <i class="fa-solid fa-xmark v-icon"></i>
+          <div class="v-body"><strong>罠③：整合性を確認しない</strong>→ どれか1つの施策が他を引き倒す（高品質×格安価格など）</div>
+        </div>
+        <div class="verdict-row ok">
+          <i class="fa-solid fa-check v-icon"></i>
+          <div class="v-body"><strong>解決：</strong>4P設計後にProduct×Price・Product×Place・Product×Promotionの3組を必ずクロスチェックする</div>
+        </div>
       </div>
-      <div id="s11-kpi" class="se" style="text-align:center;margin-top:.5em;">
-        <span class="t-md" style="color:var(--muted2);">初回購入率</span>
-        <span class="bignum t-xl" style="display:inline-block;margin:0 .4em;">+38%</span>
-        <span class="t-md" style="color:var(--muted2);">／ リピート</span>
-        <span class="bignum t-xl" style="display:inline-block;margin-left:.3em;">+52%</span>
-      </div>
-      <div id="s11-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">顧客視点が成果を変える</div>
     </div>
   </section>
 
@@ -1249,25 +1485,52 @@ body {
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">まとめ</div>
-      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
-        <span class="tag">4Pは一貫した設計図</span>
-        <span class="tag">価値ベース価格</span>
-        <span class="tag">IMCで統一</span>
-        <span class="tag acc">4Cで顧客視点点検</span>
+      <div id="s12-hd" class="sh se">今日のまとめ</div>
+      <div class="icon-rows se" id="s12-items">
+        <div class="icon-row">
+          <i class="fa-solid fa-layer-group ir-icon"></i>
+          <div><strong>マーケティングミックス</strong>：企業がコントロールできる4変数（4P）を一貫した戦略のもとで組み合わせる設計図</div>
+        </div>
+        <div class="icon-row">
+          <i class="fa-solid fa-cube ir-icon c-product"></i>
+          <div><strong class="c-product">Product</strong>：3層モデル（コア→実体→拡張）でコアの便益から設計する</div>
+        </div>
+        <div class="icon-row">
+          <i class="fa-solid fa-tag ir-icon c-price"></i>
+          <div><strong class="c-price">Price</strong>：価値ベース価格設定を起点に、他のPと整合させる</div>
+        </div>
+        <div class="icon-row">
+          <i class="fa-solid fa-truck ir-icon c-place"></i>
+          <div><strong class="c-place">Place</strong>：ブランドポジションと整合するチャネルを選ぶ</div>
+        </div>
+        <div class="icon-row">
+          <i class="fa-solid fa-bullhorn ir-icon c-promo"></i>
+          <div><strong class="c-promo">Promotion</strong>：IMCで全接点のメッセージを統一する</div>
+        </div>
+        <div class="icon-row">
+          <i class="fa-solid fa-arrows-rotate ir-icon"></i>
+          <div><strong>4C（Lauterborn 1990）</strong>：Customer Solution / Cost / Convenience / Communication で常に顧客視点をチェック</div>
+        </div>
       </div>
-      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">整合しない箇所を1つ改善する</div>
+      <div id="s12-steps" class="cause-box se">
+        <i class="fa-solid fa-list-check"></i>
+        <div>実践ステップ：<strong>①自社の4Pを書き出す</strong> → <strong>②4Cで顧客視点を検証</strong> → <strong>③整合していない箇所を1つ改善する</strong></div>
+      </div>
     </div>
   </section>
 
-  <!-- S13: Next 590-600s -->
+  <!-- S13: Next Preview 590-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div class="pad" style="text-align:center;align-items:center;">
-      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第8回</div>
-      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">USP と差別化</div>
-      <div id="s13-sub" class="se t-md" style="color:var(--accent);">選ばれる理由を言語化</div>
-      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
+    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
+      <div id="s13-card" class="se">
+        <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
+        <div class="next-title">第8回「選ばれる理由」を言語化する<br>USP（独自の強み）と差別化戦略</div>
+        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>なぜ「良い製品」だけでは選ばれないのか</span></div>
+        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>競合と比べて「これだけは負けない」1点を見つける方法</span></div>
+        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>USPをコピー・コンセプト・施策に落とし込む実践法</span></div>
+      </div>
+      <div id="s13-cta" class="se"><i class="fa-solid fa-heart"></i> チャンネル登録 &amp; 高評価をぜひお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
     </div>
   </section>
 
@@ -1299,56 +1562,50 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
-  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
-  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
-  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
-  {si:1,  t:38,   ids:['s2-ans'],     anim:'rv-scale'},
-  {si:1,  t:55,   ids:['s2-flow'],    anim:'rv-up'},
-  {si:1,  t:70,   ids:['s2-note'],    anim:'rv-fade'},
-  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
-  {si:2,  t:88,   ids:['s3-flow'],    anim:'rv-up'},
-  {si:2,  t:104,  ids:['s3-key'],     anim:'rv-scale'},
-  {si:2,  t:114,  ids:['s3-note'],    anim:'rv-fade'},
-  {si:3,  t:120,  ids:['s4-hd'],      anim:'rv-fade'},
-  {si:3,  t:132,  ids:['s4-flow'],    anim:'rv-up'},
-  {si:3,  t:165,  ids:['s4-note'],    anim:'rv-pop'},
-  {si:4,  t:180,  ids:['s5-hd'],      anim:'rv-fade'},
-  {si:4,  t:192,  ids:['s5-tags'],    anim:'rv-up'},
-  {si:4,  t:215,  ids:['s5-key'],     anim:'rv-scale'},
-  {si:4,  t:230,  ids:['s5-note'],    anim:'rv-fade'},
-  {si:5,  t:240,  ids:['s6-hd'],      anim:'rv-fade'},
-  {si:5,  t:252,  ids:['s6-tags'],    anim:'rv-up'},
-  {si:5,  t:275,  ids:['s6-key'],     anim:'rv-scale'},
-  {si:5,  t:290,  ids:['s6-note'],    anim:'rv-fade'},
-  {si:6,  t:300,  ids:['s7-hd'],      anim:'rv-fade'},
-  {si:6,  t:312,  ids:['s7-key'],     anim:'rv-scale'},
-  {si:6,  t:335,  ids:['s7-flow'],    anim:'rv-up'},
-  {si:6,  t:350,  ids:['s7-note'],    anim:'rv-fade'},
-  {si:7,  t:360,  ids:['s8-hd'],      anim:'rv-fade'},
-  {si:7,  t:372,  ids:['s8-key'],     anim:'rv-scale'},
-  {si:7,  t:395,  ids:['s8-banner'],  anim:'rv-pop'},
-  {si:7,  t:410,  ids:['s8-note'],    anim:'rv-fade'},
-  {si:8,  t:420,  ids:['s9-hd'],      anim:'rv-fade'},
-  {si:8,  t:432,  ids:['s9-flow'],    anim:'rv-up'},
-  {si:8,  t:468,  ids:['s9-note'],    anim:'rv-fade'},
-  {si:9,  t:480,  ids:['s10-hd'],     anim:'rv-fade'},
-  {si:9,  t:490,  ids:['s10-key'],    anim:'rv-scale'},
-  {si:9,  t:505,  ids:['s10-tags'],   anim:'rv-up'},
-  {si:9,  t:520,  ids:['s10-note'],   anim:'rv-fade'},
-  {si:10, t:530,  ids:['s11-hd'],     anim:'rv-fade'},
-  {si:10, t:538,  ids:['s11-flow'],   anim:'rv-up'},
-  {si:10, t:548,  ids:['s11-kpi'],    anim:'rv-scale'},
-  {si:10, t:555,  ids:['s11-note'],   anim:'rv-fade'},
-  {si:11, t:560,  ids:['s12-hd'],     anim:'rv-fade'},
-  {si:11, t:568,  ids:['s12-tags'],   anim:'rv-up'},
-  {si:11, t:580,  ids:['s12-note'],   anim:'rv-fade'},
-  {si:12, t:590,  ids:['s13-lbl'],    anim:'rv-fade'},
-  {si:12, t:592,  ids:['s13-title'],  anim:'rv-up'},
-  {si:12, t:595,  ids:['s13-sub'],    anim:'rv-fade'},
-  {si:12, t:598,  ids:['s13-cta'],    anim:'rv-pop'}
+  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
+  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
+  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
+  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
+  {si:1,  t:34,   ids:['s2-rows'],           anim:'rv-up'},
+  {si:1,  t:50,   ids:['s2-cause'],          anim:'rv-scale'},
+  {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
+  {si:2,  t:83,   ids:['s3-history'],        anim:'rv-up'},
+  {si:2,  t:92,   ids:['s3-flow'],           anim:'rv-up'},
+  {si:2,  t:100,  ids:['s3-quote'],          anim:'rv-fade'},
+  {si:3,  t:120,  ids:['s4-hd'],             anim:'rv-fade'},
+  {si:3,  t:124,  ids:['s4-s1'],             anim:'rv-up'},
+  {si:3,  t:134,  ids:['s4-s2'],             anim:'rv-up'},
+  {si:3,  t:144,  ids:['s4-s3'],             anim:'rv-up'},
+  {si:3,  t:155,  ids:['s4-apple'],          anim:'rv-fade'},
+  {si:4,  t:180,  ids:['s5-hd'],             anim:'rv-fade'},
+  {si:4,  t:183,  ids:['s5-cards'],          anim:'rv-up'},
+  {si:4,  t:200,  ids:['s5-warn'],           anim:'rv-fade'},
+  {si:5,  t:240,  ids:['s6-hd'],             anim:'rv-fade'},
+  {si:5,  t:243,  ids:['s6-channels'],       anim:'rv-up'},
+  {si:5,  t:258,  ids:['s6-qa'],             anim:'rv-up'},
+  {si:5,  t:270,  ids:['s6-luxury'],         anim:'rv-fade'},
+  {si:6,  t:300,  ids:['s7-hd'],             anim:'rv-fade'},
+  {si:6,  t:303,  ids:['s7-mix'],            anim:'rv-up'},
+  {si:6,  t:315,  ids:['s7-imc'],            anim:'rv-up'},
+  {si:6,  t:330,  ids:['s7-compare'],        anim:'rv-fade'},
+  {si:7,  t:360,  ids:['s8-hd'],             anim:'rv-fade'},
+  {si:7,  t:363,  ids:['s8-quote'],          anim:'rv-up'},
+  {si:7,  t:375,  ids:['s8-tbl'],            anim:'rv-up'},
+  {si:8,  t:420,  ids:['s9-hd'],             anim:'rv-fade'},
+  {si:8,  t:423,  ids:['s9-checks'],         anim:'rv-up'},
+  {si:8,  t:450,  ids:['s9-msg'],            anim:'rv-scale'},
+  {si:9,  t:480,  ids:['s10-hd'],            anim:'rv-fade'},
+  {si:9,  t:483,  ids:['s10-kpi'],           anim:'rv-scale'},
+  {si:9,  t:498,  ids:['s10-tbl'],           anim:'rv-up'},
+  {si:10, t:530,  ids:['s11-hd'],            anim:'rv-fade'},
+  {si:10, t:533,  ids:['s11-rows'],          anim:'rv-up'},
+  {si:11, t:560,  ids:['s12-hd'],            anim:'rv-fade'},
+  {si:11, t:563,  ids:['s12-items'],         anim:'rv-up'},
+  {si:11, t:580,  ids:['s12-steps'],         anim:'rv-fade'},
+  {si:12, t:590,  ids:['s13-card'],          anim:'rv-scale'},
+  {si:12, t:595,  ids:['s13-cta'],           anim:'rv-up'},
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},

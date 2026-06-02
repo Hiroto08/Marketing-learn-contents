@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第1回 そもそもマーケティングとは？ | YouTubeマーケティング講座</title>
+<title>第1回 そもそもマーケティングとは？ | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -69,6 +69,7 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
+  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -136,22 +137,26 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
-.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
+   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
+.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
+.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
 
 /* section header */
 .sh {
-  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
-  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
+  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
+  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
+  letter-spacing:.01em;
 }
-.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes */
-.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
-.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
-.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
-.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
-.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
+/* body text sizes — large for mobile/YouTube legibility (bold gothic).
+   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
+.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
+.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
+.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
+.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
+.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -365,7 +370,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
+  color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -434,7 +439,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
+  color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -618,7 +623,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
+  font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -684,6 +689,386 @@ body {
   display:flex; align-items:center; gap:.4em;
 }
 #narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
+
+/* ================================================================
+   SVG UTILITY COMPONENTS — v2 design system
+================================================================ */
+
+/* ── GAUGE BAR ──────────────────────────────────────────────────
+   <div class="gauge-wrap se" id="...">
+     <div class="gauge-hd">LTV÷CPA</div>
+     <div class="gauge-track">
+       <div class="gauge-fill" style="--v:.75;--c:var(--green)"></div>
+       <span class="gauge-marker" style="left:33%">3×</span>
+     </div>
+     <div class="gauge-legs"><span>0</span><span>3×</span><span>10+</span></div>
+   </div>  */
+.gauge-wrap  { background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.75em 1.1em; }
+.gauge-hd    { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); font-weight:700; margin-bottom:.55em; }
+.gauge-track { height:clamp(10px,1.2vw,16px); background:var(--surf2); border-radius:9999px; position:relative; }
+.gauge-fill  { height:100%; border-radius:9999px;
+  background:linear-gradient(90deg, var(--c-from,#4ade80), var(--c,var(--accent)));
+  width:0; box-shadow:0 0 10px var(--c,var(--accent));
+  animation:gaugeFill 1.3s .35s cubic-bezier(.4,0,.2,1) forwards;
+  animation-play-state:paused; }
+.gauge-marker { position:absolute; top:-200%; height:300%; transform:translateX(-50%);
+  border-left:1.5px dashed var(--border); padding-left:.35em;
+  font-size:clamp(8px,.9vw,12px); color:var(--muted); white-space:nowrap;
+  display:flex; align-items:flex-start; }
+.gauge-legs  { display:flex; justify-content:space-between;
+  font-size:clamp(8px,.85vw,12px); color:var(--muted); margin-top:.3em; }
+@keyframes gaugeFill { to { width:calc(var(--v,.5)*100%); } }
+.rv-fade .gauge-fill,.rv-up .gauge-fill,.rv-scale .gauge-fill,.rv-pop .gauge-fill { animation-play-state:running; }
+
+/* ── KPI BIG NUMBER ─────────────────────────────────────────────
+   <div class="kpi-big se" id="..." style="--c:var(--green)">
+     <div class="kpi-num">9.9×</div><div class="kpi-sub">LTV/CPA</div>
+   </div>  */
+.kpi-wrap { display:flex; align-items:center; justify-content:center; gap:1.5em; flex-wrap:wrap; }
+.kpi-big  { text-align:center; }
+.kpi-num  { font-size:clamp(36px,6vw,80px); font-weight:900; color:var(--c,var(--accent));
+  line-height:1; font-family:'Inter',sans-serif;
+  filter:drop-shadow(0 0 18px var(--c,var(--accent))); }
+.kpi-sub  { font-size:clamp(9px,1.15vw,15px); color:var(--muted2); margin-top:.3em; display:block; }
+.kpi-ctx  { font-size:clamp(11px,1.4vw,18px); color:var(--muted2);
+  border-left:1px solid var(--border); padding-left:1em; line-height:1.6; }
+
+/* ── HORIZONTAL BAR CHART ───────────────────────────────────────
+   <div class="bar-chart-h">
+     <div class="bh-row">
+       <span class="bh-lbl">A案</span>
+       <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--accent)"></div></div>
+       <span class="bh-val" style="color:var(--accent)">75%</span>
+     </div>
+   </div>  */
+.bar-chart-h { display:flex; flex-direction:column; gap:.55em; }
+.bh-row  { display:flex; align-items:center; gap:.65em; font-size:clamp(10px,1.3vw,17px); }
+.bh-lbl  { flex:0 0 clamp(60px,9vw,120px); text-align:right; color:var(--muted2); font-size:.9em; }
+.bh-track{ flex:1; height:clamp(8px,.9vw,14px); background:var(--surf2); border-radius:9999px; overflow:hidden; }
+.bh-fill { height:100%; border-radius:9999px; box-shadow:0 0 8px var(--c,var(--accent));
+  background:linear-gradient(90deg,var(--c-from,var(--c,var(--accent))),var(--c,var(--accent)));
+  width:0; animation:barFill 1s .2s ease-out forwards; animation-play-state:paused; }
+.bh-val  { flex:0 0 3.2em; text-align:left; font-weight:700; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; font-size:.9em; }
+@keyframes barFill { to { width:calc(var(--v,50)*1%); } }
+.rv-fade .bh-fill,.rv-up .bh-fill,.rv-scale .bh-fill { animation-play-state:running; }
+
+/* ── 2×2 MATRIX ─────────────────────────────────────────────────
+   <div class="matrix-2x2">
+     <div class="mx-cell mx-tl"><div class="mx-hd">...</div><div class="mx-body">...</div></div>
+     <div class="mx-cell mx-tr hi">...</div>
+     <div class="mx-cell mx-bl">...</div>
+     <div class="mx-cell mx-br hi-g">...</div>
+   </div>  */
+.matrix-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:2px;
+  border-radius:10px; overflow:hidden; background:var(--border); }
+.mx-cell    { background:var(--surf); padding:.65em .9em; transition:background .3s; }
+.mx-cell.hi   { background:rgba(124,111,255,.12); }
+.mx-cell.hi-g { background:rgba(74,222,128,.08); }
+.mx-cell.hi-r { background:rgba(248,113,113,.08); }
+.mx-cell.hi-y { background:rgba(251,191,36,.08); }
+.mx-tl { border-radius:10px 0 0 0; } .mx-tr { border-radius:0 10px 0 0; }
+.mx-bl { border-radius:0 0 0 10px; } .mx-br { border-radius:0 0 10px 0; }
+.mx-hd   { font-weight:700; font-size:clamp(10px,1.35vw,18px); color:var(--accent); margin-bottom:.25em; }
+.mx-body { font-size:clamp(9px,1.2vw,15px); color:var(--muted2); line-height:1.5; }
+.mx-labels { display:flex; justify-content:space-between; align-items:center; margin-top:.35em; }
+.mx-lbl-x  { font-size:clamp(8px,.9vw,12px); color:var(--muted); letter-spacing:.05em; }
+
+/* ── STAT RING (SVG donut) ──────────────────────────────────────
+   Circumference of r=38 ≈ 238.76 → use 239
+   <div class="stat-ring" style="--v:75;--c:#4ade80">
+     <svg viewBox="0 0 100 100">
+       <circle class="sr-track" cx="50" cy="50" r="38"/>
+       <circle class="sr-fill"  cx="50" cy="50" r="38"/>
+     </svg>
+     <div class="sr-inner"><div class="sr-val">75%</div><div class="sr-lbl">継続率</div></div>
+   </div>  */
+.stat-rings  { display:flex; gap:1.5em; align-items:center; justify-content:center; flex-wrap:wrap; }
+.stat-ring   { position:relative; display:inline-flex; align-items:center; justify-content:center;
+  width:clamp(80px,10vw,130px); height:clamp(80px,10vw,130px); }
+.stat-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
+.sr-track { fill:none; stroke:var(--surf2); stroke-width:7; }
+.sr-fill  { fill:none; stroke:var(--c,var(--accent)); stroke-width:7; stroke-linecap:round;
+  stroke-dasharray:0 239;
+  animation:ringFill 1.3s .35s ease-out forwards; animation-play-state:paused; }
+.sr-inner { position:relative; z-index:1; text-align:center; }
+.sr-val   { font-size:clamp(14px,1.8vw,22px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; line-height:1; }
+.sr-lbl   { font-size:clamp(7px,.85vw,11px); color:var(--muted); }
+.stat-ring-wrap { text-align:center; }
+.stat-ring-ttl  { font-size:clamp(9px,1.1vw,14px); color:var(--muted2); margin-top:.35em; font-weight:700; }
+@keyframes ringFill { to { stroke-dasharray:calc(var(--v,75)*2.39) 239; } }
+.rv-fade .sr-fill,.rv-up .sr-fill,.rv-scale .sr-fill,.rv-pop .sr-fill { animation-play-state:running; }
+
+/* ── NUMBER STEPS ───────────────────────────────────────────────
+   <div class="n-steps">
+     <div class="n-step se" id="...">
+       <div class="n-num">1</div>
+       <div class="n-body"><strong>見出し</strong><div class="t-sm">補足</div></div>
+     </div>
+   </div>  */
+.n-steps { display:flex; flex-direction:column; gap:.5em; }
+.n-step  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); }
+.n-num   { min-width:clamp(24px,2.8vw,36px); height:clamp(24px,2.8vw,36px); border-radius:50%;
+  background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
+  font-weight:900; font-size:.82em; flex-shrink:0; margin-top:.1em;
+  box-shadow:0 0 14px var(--glow-acc); font-family:'Inter',sans-serif; }
+.n-num.g { background:var(--green); box-shadow:0 0 14px var(--glow-grn); color:#000; }
+.n-num.r { background:var(--red);   box-shadow:0 0 14px rgba(248,113,113,.3); }
+.n-num.b { background:var(--blue);  box-shadow:0 0 14px rgba(96,165,250,.3); }
+.n-body  { color:var(--muted2); line-height:1.5; }
+.n-body strong { color:var(--text); }
+
+/* ── HORIZONTAL FLOW ────────────────────────────────────────────
+   <div class="h-flow">
+     <div class="h-flow-node accent">Aware<span class="fn-sub">認知</span></div>
+     <svg class="h-arrow" viewBox="0 0 24 24" fill="none">
+       <path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"/>
+     </svg>
+     <div class="h-flow-node grn">Act<span class="fn-sub">行動</span></div>
+   </div>  */
+.h-flow { display:flex; align-items:center; gap:.35em; flex-wrap:wrap; justify-content:center; }
+.h-flow-node { background:var(--surf); border:1px solid var(--border); border-radius:9px;
+  padding:.45em .9em; font-size:clamp(10px,1.35vw,18px); font-weight:700;
+  text-align:center; flex-shrink:0; line-height:1.3; }
+.h-flow-node .fn-sub { font-size:.72em; font-weight:400; color:var(--muted2); display:block; margin-top:.05em; }
+.h-flow-node.accent { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.4); color:var(--accent); }
+.h-flow-node.acc2   { background:rgba(255,107,138,.12); border-color:rgba(255,107,138,.4); color:var(--acc2); }
+.h-flow-node.grn    { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.4);  color:var(--green); }
+.h-flow-node.blu    { background:rgba(96,165,250,.12);  border-color:rgba(96,165,250,.4);  color:var(--blue); }
+.h-flow-node.ylw    { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.4);  color:var(--yellow); }
+.h-arrow { width:clamp(14px,1.8vw,24px); color:var(--muted); flex-shrink:0; }
+
+/* ── QUOTE BLOCK ────────────────────────────────────────────────
+   <blockquote class="quote-blk se" id="...">
+     <p class="qb-text">「...」</p>
+     <cite class="qb-cite">Author, Source (Year)</cite>
+   </blockquote>  */
+.quote-blk { position:relative; background:var(--surf); border-radius:10px;
+  padding:1em 1.3em 1em 2.5em; border:1px solid var(--border);
+  border-left:4px solid var(--accent); overflow:hidden; }
+.quote-blk::before { content:'\201C'; font-size:clamp(50px,8vw,100px); font-weight:900;
+  color:rgba(124,111,255,.15); position:absolute; top:-.1em; left:.15em;
+  line-height:1; pointer-events:none; font-family:'Inter','Georgia',serif; }
+.qb-text { font-size:clamp(13px,1.8vw,24px); line-height:1.65; color:var(--text);
+  position:relative; z-index:1; }
+.qb-text em { color:var(--accent); font-style:normal; font-weight:700; }
+.qb-text .hl { color:var(--acc2); }
+.qb-cite { display:block; margin-top:.55em; font-size:clamp(9px,1.1vw,14px);
+  color:var(--muted); font-style:italic; position:relative; z-index:1; }
+
+/* ── COMPARISON TABLE ───────────────────────────────────────────
+   <div class="comp-tbl">
+     <div class="comp-row comp-head">
+       <span class="comp-label"></span><span class="comp-a">Before</span><span class="comp-b">After</span>
+     </div>
+     <div class="comp-row hi">
+       <span class="comp-label">CVR</span>
+       <span class="comp-a c-red">1.2%</span><span class="comp-b c-green">2.3%</span>
+     </div>
+   </div>  */
+.comp-tbl { display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
+.comp-row { display:flex; align-items:stretch; background:var(--surf); }
+.comp-row.hi   .comp-b { background:rgba(74,222,128,.08); color:var(--green); }
+.comp-row.lo   .comp-a { background:rgba(248,113,113,.08); color:var(--red); }
+.comp-label { flex:0 0 clamp(80px,12vw,160px); padding:.55em .9em;
+  font-size:clamp(10px,1.3vw,16px); color:var(--muted2);
+  border-right:1px solid var(--border); display:flex; align-items:center; }
+.comp-a,.comp-b { flex:1; padding:.55em .9em;
+  font-size:clamp(11px,1.5vw,20px); display:flex; align-items:center;
+  justify-content:center; font-weight:700; }
+.comp-a { border-right:1px solid var(--border); }
+.comp-row.comp-head { background:var(--surf2); }
+.comp-row.comp-head .comp-label,
+.comp-row.comp-head .comp-a,
+.comp-row.comp-head .comp-b { font-size:clamp(9px,1.1vw,14px); font-weight:700; color:var(--muted); }
+
+/* ── TAGS / CHIPS ───────────────────────────────────────────────
+   <span class="tag tag-a">変更コスト低</span>  */
+.tag   { display:inline-flex; align-items:center; gap:.3em; padding:.2em .7em;
+  border-radius:9999px; font-size:clamp(9px,1.1vw,14px); font-weight:700;
+  border:1px solid transparent; line-height:1.3; }
+.tag-a { background:rgba(124,111,255,.12); border-color:rgba(124,111,255,.35); color:var(--accent); }
+.tag-g { background:rgba(74,222,128,.1);  border-color:rgba(74,222,128,.35);  color:var(--green); }
+.tag-r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.35); color:var(--red); }
+.tag-b { background:rgba(96,165,250,.1);  border-color:rgba(96,165,250,.35);  color:var(--blue); }
+.tag-y { background:rgba(251,191,36,.1);  border-color:rgba(251,191,36,.35);  color:var(--yellow); }
+
+/* ── ICON ROW LIST ───────────────────────────────────────────────
+   <div class="icon-rows">
+     <div class="icon-row se" id="...">
+       <i class="fa-solid fa-arrow-trend-up c-green"></i>
+       <div><strong>タイトル</strong><div class="t-sm">説明</div></div>
+     </div>
+   </div>  */
+.icon-rows { display:flex; flex-direction:column; gap:.5em; }
+.icon-row  { display:flex; align-items:flex-start; gap:.8em; font-size:clamp(12px,1.7vw,22px); }
+.icon-row > i { font-size:1.05em; flex-shrink:0; margin-top:.1em; }
+.icon-row > div > strong { color:var(--text); }
+.icon-row > div > .t-sm { margin-top:.1em; }
+
+/* ── COLS3 / COLS4 ──────────────────────────────────────────────*/
+.cols3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; }
+.cols4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5%; }
+
+/* ── HIGHLIGHT BANNER ───────────────────────────────────────────
+   <div class="hl-banner" style="--c:var(--green)">
+     <i class="fa-solid fa-circle-check hb-icon"></i>
+     <div class="hb-text"><strong>見出し</strong><br>本文</div>
+   </div>  */
+.hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
+  background:var(--surf); border:1px solid var(--border);
+  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
+  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
+.hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
+.hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
+.hb-text strong { color:var(--text); }
+
+/* ── VERDICT ROWS ───────────────────────────────────────────────*/
+.verdict-rows { display:flex; flex-direction:column; gap:.4em; }
+.verdict-row  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); padding:.3em 0; }
+.v-icon { width:clamp(18px,2vw,26px); flex-shrink:0; margin-top:.15em; text-align:center; }
+.verdict-row.ok .v-icon { color:var(--green); }
+.verdict-row.ng .v-icon { color:var(--red); }
+.v-body { color:var(--muted2); line-height:1.5; }
+.verdict-row.ok .v-body strong { color:var(--text); }
+.verdict-row.ng .v-body strong { color:var(--red); }
+
+/* ── SVG INLINE HELPERS ─────────────────────────────────────────*/
+.svg-il      { width:100%; height:auto; display:block; overflow:visible; }
+.svg-il text { font-family:'Inter','Noto Sans JP',sans-serif; }
+.svg-grid    { stroke:var(--border); stroke-width:.5; }
+.svg-axis    { stroke:var(--muted); stroke-width:1; fill:none; }
+.svg-curve   { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; }
+.svg-curve2  { fill:none; stroke:var(--acc2);   stroke-width:2.5; stroke-linecap:round; }
+.svg-area    { fill:rgba(124,111,255,.15); stroke:none; }
+.svg-area2   { fill:rgba(255,107,138,.12); stroke:none; }
+.svg-area-g  { fill:rgba(74,222,128,.12);  stroke:none; }
+.svg-lbl     { fill:var(--muted2); font-size:11px; }
+.svg-lbl-a   { fill:var(--accent); font-weight:bold; font-size:11px; }
+.svg-lbl-2   { fill:var(--acc2);   font-size:11px; }
+.svg-bar-a   { fill:rgba(124,111,255,.7); }
+.svg-bar-g   { fill:rgba(74,222,128,.7); }
+.svg-bar-r   { fill:rgba(248,113,113,.7); }
+.svg-marker  { stroke:var(--acc2); stroke-width:1.5; stroke-dasharray:4 3; fill:none; }
+
+/* ── FORMULA DISPLAY ────────────────────────────────────────────
+   <div class="formula se" id="...">
+     <span class="fm-var" style="--c:var(--accent)">LTV</span>
+     <span class="fm-op">÷</span>
+     <span class="fm-var" style="--c:var(--acc2)">CPA</span>
+     <span class="fm-op">&gt;</span>
+     <span class="fm-val" style="--c:var(--green)">3</span>
+   </div>  */
+.formula    { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.4em; }
+.fm-var     { font-size:clamp(20px,3.5vw,46px); font-weight:900; color:var(--c,var(--accent));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 10px var(--c,var(--accent))); }
+.fm-op      { font-size:clamp(16px,2.8vw,36px); font-weight:900; color:var(--muted);
+  font-family:'Inter',sans-serif; }
+.fm-val     { font-size:clamp(24px,4.5vw,60px); font-weight:900; color:var(--c,var(--green));
+  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 14px var(--c,var(--green))); }
+.formula-sub { text-align:center; font-size:clamp(10px,1.3vw,17px); color:var(--muted2); margin-top:.3em; }
+
+/* ── STEP-FLOW (vertical with connector) ────────────────────────
+   <div class="step-flow">
+     <div class="sf-item se" id="...">
+       <div class="sf-dot"></div>
+       <div class="sf-body"><strong>ステップ1</strong><span class="t-sm">説明</span></div>
+     </div>
+   </div>  */
+.step-flow { position:relative; padding-left:1.6em; display:flex; flex-direction:column; gap:.55em; }
+.step-flow::before { content:''; position:absolute; left:.55em; top:.8em; bottom:.8em;
+  width:2px; background:linear-gradient(to bottom,var(--accent),var(--border)); border-radius:1px; }
+.sf-item { display:flex; align-items:flex-start; gap:.75em; position:relative; }
+.sf-dot  { width:clamp(14px,1.6vw,20px); height:clamp(14px,1.6vw,20px); border-radius:50%;
+  background:var(--accent); border:2px solid var(--slide-bg);
+  box-shadow:0 0 10px var(--glow-acc); flex-shrink:0; margin-top:.2em; z-index:1; }
+.sf-body { font-size:clamp(11px,1.55vw,20px); color:var(--muted2); line-height:1.5; }
+.sf-body strong { color:var(--text); }
+
+/* ── PILL BADGE ─────────────────────────────────────────────────*/
+.pill     { display:inline-flex; align-items:center; gap:.3em;
+  background:var(--surf2); border:1px solid var(--border); border-radius:6px;
+  padding:.15em .6em; font-size:clamp(9px,1.1vw,14px); font-weight:700; }
+.pill.acc { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.3); color:var(--accent); }
+.pill.grn { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.3);  color:var(--green); }
+.pill.red { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:var(--red); }
+.pill.ylw { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.3);  color:var(--yellow); }
+
+/* ── S1 RING / DOT ANIMATIONS ───────────────────────────────────*/
+.s1-ring { animation:ringRotate 24s linear infinite; transform-origin:center; }
+.s1-ring1 { animation-duration:30s; }
+.s1-ring2 { animation-duration:22s; animation-direction:reverse; }
+.s1-ring3 { animation-duration:15s; }
+@keyframes ringRotate {
+  from { transform:translate(-50%,-50%) rotate(0deg); }
+  to   { transform:translate(-50%,-50%) rotate(360deg); }
+}
+.s1-dot { animation:dotFloat 4s ease-in-out infinite alternate; }
+.s1-dot1 { animation-duration:4.2s; }
+.s1-dot2 { animation-duration:3.5s; animation-delay:.5s; }
+.s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
+@keyframes dotFloat { to { transform:translateY(-8px); } }
+
+/* ================================================================
+   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
+   Shared keyword + diagram vocabulary for all episodes.
+================================================================ */
+.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
+.aflow.sm{gap:.4em;}
+.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
+  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
+.aflow.sm .achip{padding:.45em .7em;}
+.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
+.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
+.aghost{opacity:.4;}
+.aarrow{color:var(--accent);font-weight:900;}
+/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
+   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
+.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
+.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
+  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
+.tag.acc{border-color:var(--accent);color:var(--accent);}
+.tag.ng{border-color:var(--red);color:var(--red);}
+.tag.ok{border-color:var(--green);color:var(--green);}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
+.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
+  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
+.pcard .ph{font-weight:900;line-height:1.1;}
+.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
+.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
+.bignum{color:var(--accent);font-weight:900;line-height:1;}
+.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
+.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
+.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
+.jcell .jv{font-weight:900;line-height:1;}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
+.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
+.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
+.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
+.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
+
+</style>
+
+<style id="ep-css">
+
+/* ── vertical centering override ── */
+.pad   { justify-content: center; }
+.pad-t { justify-content: center; }
+
+/* ── EP01 accent: purple (default) ── */
+:root { --accent:#7c6fff; --glow-acc:rgba(124,111,255,.25); }
+
+/* ── S1 ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #1a0a2e 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+#s1-badge i{color:var(--accent);}
+#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
+#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
+
+/* Minimal design helpers + type scale live in the shared base CSS. */
+
 </style>
 </head>
 <body>
@@ -692,473 +1077,182 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-
-  <!-- ──────────────────────────────────────────
-       SLIDE 1: Title  (0–30s)  /  4 steps
-  ────────────────────────────────────────────── -->
+  <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
-    <!-- decorative background elements (no JS control) -->
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
     <div class="s1-ring s1-ring2" aria-hidden="true"></div>
     <div class="s1-ring s1-ring3" aria-hidden="true"></div>
     <div class="s1-dot s1-dot1" aria-hidden="true"></div>
     <div class="s1-dot s1-dot2" aria-hidden="true"></div>
     <div class="s1-dot s1-dot3" aria-hidden="true"></div>
-    <svg class="s1-chart-deco" viewBox="0 0 220 130" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <polyline points="10,110 50,80 95,90 140,45 185,22" stroke="rgba(124,111,255,0.3)" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <polyline points="10,110 50,80 95,90 140,45 185,22" stroke="rgba(124,111,255,0.08)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-      <circle cx="10"  cy="110" r="4" fill="rgba(124,111,255,0.35)"/>
-      <circle cx="50"  cy="80"  r="4" fill="rgba(124,111,255,0.35)"/>
-      <circle cx="95"  cy="90"  r="4" fill="rgba(124,111,255,0.35)"/>
-      <circle cx="140" cy="45"  r="4" fill="rgba(124,111,255,0.5)"/>
-      <circle cx="185" cy="22"  r="6" fill="rgba(124,111,255,0.7)"/>
-      <line x1="10" y1="120" x2="200" y2="120" stroke="rgba(124,111,255,0.12)" stroke-width="1"/>
-      <line x1="5"  y1="120" x2="5"   y2="10"  stroke="rgba(124,111,255,0.12)" stroke-width="1"/>
-    </svg>
-
-    <div class="slide-num">01 / 12</div>
-    <div class="step-dots" id="sd1"></div>
-
+    <div class="slide-num">01 / 12</div><div class="step-dots" id="sd1"></div>
     <div class="s1-content">
-      <div id="s1-ep-badge" class="se">
-        <i class="fa-solid fa-circle-play"></i>
-        &ensp;AI時代のマーケティング・ラボ
-      </div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">
-        そもそも<br>マーケティングとは？
-      </div>
-      <div id="s1-subtitle" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">
-        「売れる仕組み」の正体
-      </div>
-      <div id="s1-deco" class="se"></div>
+      <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
+      <div id="s1-ep" class="se">第1回</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">マーケティングとは？</div>
+      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">売れる仕組みの正体</div>
+      <div id="s1-catch" class="se">広告 ＝ ほんの一部</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 2: Misconceptions  (30–90s)  /  5 steps
-  ────────────────────────────────────────────── -->
+  <!-- S2: Hook — common misconception 30-90s -->
   <section class="slide" id="s2">
-    <div class="slide-num">02 / 12</div>
-    <div class="step-dots" id="sd2"></div>
-    <div class="pad" style="justify-content:center;">
-
-      <div id="s2-q" class="sh se">マーケティングって、何だと思いますか？</div>
-
-      <div id="s2-ng1" class="ng-row se">
-        <div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div>
-        <i class="fa-brands fa-instagram ng-icon"></i>
-        <span>SNS投稿・運用すること</span>
+    <div class="slide-num">02 / 12</div><div class="step-dots" id="sd2"></div>
+    <div class="pad">
+      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">マーケティングって<br><span style="color:#fff;">何だと思う？</span></div>
+      <div id="s2-tags" class="se taglist t-md" style="margin-top:.4em;">
+        <span class="tag ng">✕ SNS投稿</span><span class="tag ng">✕ チラシ配り</span><span class="tag ng">✕ 広告を出す</span>
       </div>
-      <div id="s2-ng2" class="ng-row se">
-        <div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div>
-        <i class="fa-solid fa-file-lines ng-icon"></i>
-        <span>チラシを配ること</span>
-      </div>
-      <div id="s2-ng3" class="ng-row se">
-        <div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div>
-        <i class="fa-solid fa-rectangle-ad ng-icon"></i>
-        <span>広告を出すこと</span>
-      </div>
-
-      <div id="s2-conc" class="se">
-        <i class="fa-solid fa-arrow-right arr"></i>
-        <span class="t-md">これらはすべて <strong style="color:#fff;">「マーケティングの手段」</strong> の一部に過ぎない</span>
-      </div>
+      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin-top:.3em;">どれも<span style="color:#fff;">手段</span>の一部</div>
+      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">広告は最後の一手にすぎない</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 3: AMA Definition  (90–150s)  /  5 steps
-  ────────────────────────────────────────────── -->
+  <!-- S3: Official definition (AMA) 90-150s -->
   <section class="slide" id="s3">
-    <div class="slide-num">03 / 12</div>
-    <div class="step-dots" id="sd3"></div>
-    <div class="pad" style="justify-content:center;">
-
-      <div id="s3-hd" class="sh se">マーケティングとは？（公式定義）</div>
-      <div id="s3-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
-        <i class="fa-solid fa-landmark" style="color:var(--accent);font-size:.9em;"></i>
-        アメリカ・マーケティング協会（AMA）2007年制定・2017年再承認
+    <div class="slide-num">03 / 12</div><div class="step-dots" id="sd3"></div>
+    <div class="pad-t">
+      <div id="s3-hd" class="sh se">マーケティングとは（AMA定義）</div>
+      <div id="s3-key" class="se t-xl" style="text-align:center;">価値を<span style="color:var(--accent);">届ける活動</span></div>
+      <div id="s3-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip">創る</span><span class="aarrow">→</span>
+        <span class="achip">伝える</span><span class="aarrow">→</span>
+        <span class="achip">届ける</span><span class="aarrow">→</span>
+        <span class="achip on">交換</span>
       </div>
-
-      <div id="s3-en" class="se" style="padding-left:2em;">
-        "Marketing is the activity, set of institutions, and processes for
-        <em>creating, communicating, delivering, and exchanging</em>
-        offerings that have value for customers, clients, partners, and society at large."
-      </div>
-
-      <div id="s3-ja" class="card card-l se mt-m">
-        <div class="sh-sm" style="color:var(--accent);margin-bottom:.4em;">日本語の要点</div>
-        <div style="font-size:clamp(13px,1.9vw,24px);font-weight:700;line-height:1.5;color:#fff;margin-bottom:.6em;">
-          顧客・社会にとって価値ある「提供物」を…
-        </div>
-        <div class="process-flow">
-          <div class="pf-step">
-            <div class="pf-icon"><i class="fa-solid fa-hammer"></i></div>
-            <div class="pf-lbl">創る</div>
-          </div>
-          <i class="fa-solid fa-chevron-right pf-arrow"></i>
-          <div class="pf-step">
-            <div class="pf-icon"><i class="fa-solid fa-bullhorn"></i></div>
-            <div class="pf-lbl">伝える</div>
-          </div>
-          <i class="fa-solid fa-chevron-right pf-arrow"></i>
-          <div class="pf-step">
-            <div class="pf-icon"><i class="fa-solid fa-truck"></i></div>
-            <div class="pf-lbl">届ける</div>
-          </div>
-          <i class="fa-solid fa-chevron-right pf-arrow"></i>
-          <div class="pf-step">
-            <div class="pf-icon"><i class="fa-solid fa-handshake"></i></div>
-            <div class="pf-lbl">交換する</div>
-          </div>
-        </div>
-      </div>
-
-      <div id="s3-note" class="t-sm se mt-s" style="display:flex;align-items:center;gap:.4em;">
-        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
-        広告は「<span style="color:var(--accent);font-weight:700;">伝える</span>」のひとつに過ぎない
-      </div>
+      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">広告は「伝える」の一部</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 4: Drucker  (150–210s)  /  4 steps
-  ────────────────────────────────────────────── -->
+  <!-- S4: Drucker quote 150-210s -->
   <section class="slide" id="s4">
-    <div class="deco-quote" aria-hidden="true">"</div>
-    <div class="slide-num">04 / 12</div>
-    <div class="step-dots" id="sd4"></div>
-    <div class="pad" style="justify-content:center;gap:.9em;">
-
-      <div id="s4-hd" class="sh se">ドラッカーの名言</div>
-
-      <div id="s4-quote" class="card card-l se" style="padding:1.1em 1.6em;">
-        <div id="s4-qt" style="font-size:clamp(19px,3.1vw,40px);font-weight:900;line-height:1.4;">
-          "マーケティングの目的は、<br>
-          &ensp;<em style="color:var(--accent);font-style:normal;">販売を不要にすることである</em>。"
-        </div>
-        <div id="s4-qs" class="t-xs">
-          <i class="fa-solid fa-book"></i>
-          ― ピーター・ドラッカー（経営学者）　『マネジメント』（1973）
-        </div>
-      </div>
-
-      <div id="s4-supp1" class="t-md c-muted se">
-        顧客を深く理解すれば、<strong style="color:var(--text);">製品・サービスは自然に売れる状態になる</strong>
-      </div>
-      <div id="s4-supp2" class="t-md c-muted se" style="display:flex;align-items:center;gap:.5em;">
-        <i class="fa-solid fa-arrow-right" style="color:var(--accent);flex-shrink:0;"></i>
-        これが「売る」と <strong style="color:var(--text);">「売れる仕組みを作る」</strong> の根本的な違い
-      </div>
+    <div class="slide-num">04 / 12</div><div class="step-dots" id="sd4"></div>
+    <div class="pad">
+      <div id="s4-quote" class="se t-xl" style="text-align:center;">「販売を<span style="color:var(--accent);">不要</span>にする」</div>
+      <div id="s4-by" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">― ドラッカー『マネジメント』1973</div>
+      <div id="s4-note" class="se hl-banner" style="margin-top:.6em;">自然に「選ばれる」状態をつくる</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 5: Comparison  (210–270s)  /  4 steps
-  ────────────────────────────────────────────── -->
+  <!-- S5: "sell" vs "build a system" 210-270s -->
   <section class="slide" id="s5">
-    <div class="slide-num">05 / 12</div>
-    <div class="step-dots" id="sd5"></div>
-    <div class="pad-t" style="justify-content:center;">
-
-      <div id="s5-hd" class="sh se">「売る」vs「売れる仕組みを作る」</div>
-
-      <div class="cols2">
-        <div id="s5-bad" class="se">
-          <div class="col-hd" style="color:var(--red);">
-            <i class="fa-solid fa-xmark"></i>&ensp;旧来の発想
-          </div>
-          <div class="card card-r col-body">
-            <div class="citem"><i class="fa-solid fa-hand-point-right dot" style="color:var(--red);font-size:.8em;"></i>「どうやって売るか」が出発点</div>
-            <div class="citem"><i class="fa-solid fa-hand-point-right dot" style="color:var(--red);font-size:.8em;"></i>商品ありき</div>
-            <div class="citem"><i class="fa-solid fa-hand-point-right dot" style="color:var(--red);font-size:.8em;"></i>一方的に押し込む（Push）</div>
-            <div class="citem"><i class="fa-solid fa-hand-point-right dot" style="color:var(--red);font-size:.8em;"></i>短期的な売上が目標</div>
-          </div>
+    <div class="slide-num">05 / 12</div><div class="step-dots" id="sd5"></div>
+    <div class="pad-t">
+      <div id="s5-hd" class="sh se">発想がそもそも違う</div>
+      <div id="s5-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--red);">
+          <div class="ph t-lg" style="color:var(--red);">旧来<small>どう売るか</small></div>
+          <div class="taglist t-sm"><span class="tag ng">商品ありき</span><span class="tag ng">押し込む</span><span class="tag ng">短期売上</span></div>
         </div>
-        <div class="vs-badge" aria-hidden="true">VS</div>
-        <div id="s5-good" class="se">
-          <div class="col-hd" style="color:var(--green);">
-            <i class="fa-solid fa-check"></i>&ensp;マーケティング思考
-          </div>
-          <div class="card card-gr col-body">
-            <div class="citem"><i class="fa-solid fa-star dot" style="color:var(--green);font-size:.8em;"></i>「なぜ選ばれるか」が出発点</div>
-            <div class="citem"><i class="fa-solid fa-star dot" style="color:var(--green);font-size:.8em;"></i>顧客ありき</div>
-            <div class="citem"><i class="fa-solid fa-star dot" style="color:var(--green);font-size:.8em;"></i>自然に引き寄せる（Pull）</div>
-            <div class="citem"><i class="fa-solid fa-star dot" style="color:var(--green);font-size:.8em;"></i>長期的な関係構築が目的</div>
-          </div>
+        <div class="pcard" style="border-top-color:var(--accent);">
+          <div class="ph t-lg" style="color:var(--accent);">思考<small>なぜ選ばれるか</small></div>
+          <div class="taglist t-sm"><span class="tag ok">顧客ありき</span><span class="tag ok">引き寄せる</span><span class="tag ok">長期の関係</span></div>
         </div>
       </div>
-
-      <div id="s5-arrow" class="se" style="font-size:clamp(11px,1.6vw,21px);color:var(--muted2);text-align:center;margin-top:.8em;">
-        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>&ensp;この方向の違いが、<strong style="color:var(--accent);">すべての戦略の出発点</strong>になる
-      </div>
+      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">Push から Pull へ</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 6: 4 Functions  (270–330s)  /  6 steps
-  ────────────────────────────────────────────── -->
+  <!-- S6: 4 functions 270-330s -->
   <section class="slide" id="s6">
-    <div class="slide-num">06 / 12</div>
-    <div class="step-dots" id="sd6"></div>
-    <div class="pad-t" style="justify-content:center;">
-
-      <div id="s6-hd" class="se">
-        <div class="sh">マーケティングが担う4つの機能</div>
-        <div class="sh-sm mb-s" style="display:flex;align-items:center;gap:.35em;">
-          <i class="fa-solid fa-book-open" style="color:var(--muted);font-size:.9em;"></i>
-          Kotler &amp; Keller, 2016 を基に
-        </div>
+    <div class="slide-num">06 / 12</div><div class="step-dots" id="sd6"></div>
+    <div class="pad-t">
+      <div id="s6-hd" class="sh se">マーケティングの4機能</div>
+      <div id="s6-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">理解<small>市場</small></span><span class="aarrow">→</span>
+        <span class="achip">戦略<small>狙い</small></span><span class="aarrow">→</span>
+        <span class="achip">創造<small>価値</small></span><span class="aarrow">→</span>
+        <span class="achip on">伝達<small>広告</small></span>
       </div>
-
-      <div id="s6-fn1" class="fn-card se">
-        <div class="fn-num"><i class="fa-solid fa-magnifying-glass"></i></div>
-        <div><div class="fn-label">① 市場を理解する</div><div class="fn-desc">誰が・何を・なぜ求めているか を調査する</div></div>
-      </div>
-      <div id="s6-fn2" class="fn-card se">
-        <div class="fn-num" style="background:var(--blue);box-shadow:0 0 10px rgba(96,165,250,0.3);"><i class="fa-solid fa-chess-knight"></i></div>
-        <div><div class="fn-label">② 戦略を設計する</div><div class="fn-desc">ターゲット・ポジションを決める</div></div>
-      </div>
-      <div id="s6-fn3" class="fn-card se">
-        <div class="fn-num" style="background:var(--green);box-shadow:0 0 10px var(--glow-grn);color:#000;"><i class="fa-solid fa-gem"></i></div>
-        <div><div class="fn-label">③ 価値を創造する</div><div class="fn-desc">製品・価格・流通を設計する</div></div>
-      </div>
-      <div id="s6-fn4" class="fn-card se" style="border:1px solid rgba(255,107,138,0.3);">
-        <div class="fn-num" style="background:var(--acc2);box-shadow:0 0 10px var(--glow-acc2);"><i class="fa-solid fa-bullhorn"></i></div>
-        <div><div class="fn-label">④ 価値を伝える</div><div class="fn-desc">広告・PR・コンテンツで届ける　← ここだけが「マーケ」ではない</div></div>
-      </div>
-
-      <div id="s6-note" class="se" style="font-size:clamp(10px,1.4vw,17px);color:var(--muted2);text-align:right;margin-top:.5em;">
-        <strong style="color:var(--accent);">広告は最後のステップ</strong>。①〜③の土台がなければ効果は出ない
-      </div>
+      <div id="s6-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">広告は最後の1ステップ</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 7: Starbucks  (330–405s)  /  8 steps
-  ────────────────────────────────────────────── -->
+  <!-- S7: Starbucks example 330-405s -->
   <section class="slide" id="s7">
-    <div class="slide-num">07 / 12</div>
-    <div class="step-dots" id="sd7"></div>
-    <div class="pad-t" style="justify-content:center;">
-
-      <div id="s7-hd" class="sh se" style="display:flex;align-items:center;gap:.5em;">
-        具体例：スターバックスはなぜ高くても売れる？
+    <div class="slide-num">07 / 12</div><div class="step-dots" id="sd7"></div>
+    <div class="pad-t">
+      <div id="s7-hd" class="sh se">例：スターバックス</div>
+      <div id="s7-key" class="se t-xl" style="text-align:center;">売るのは<span style="color:var(--accent);">第3の居場所</span></div>
+      <div id="s7-kpi" class="se" style="text-align:center;margin-top:.3em;">
+        <span class="t-md" style="color:var(--muted2);">コンビニの</span>
+        <span class="bignum t-xl" style="display:block;">5〜7倍</span>
       </div>
-
-      <div id="s7-price" class="se">
-        <span class="price-icon"><i class="fa-solid fa-mug-hot"></i></span>
-        <span style="color:var(--muted2);">コーヒー1杯</span>
-        <span class="price-val">600〜700円</span>
-        <span class="price-note">（コンビニの約5〜7倍）</span>
-      </div>
-
-      <div id="s7-why" class="se" style="display:flex;align-items:center;gap:.5em;">
-        <i class="fa-solid fa-circle-question" style="color:var(--yellow);flex-shrink:0;"></i>
-        それでも世界中で売れる理由 ——
-      </div>
-
-      <div id="s7-f1" class="f-row se"><span class="f-num">①</span><span><strong>市場理解：</strong>「カフェで過ごす時間」に価値を感じる層がいる</span></div>
-      <div id="s7-f2" class="f-row se"><span class="f-num">②</span><span><strong>戦略設計：</strong>「サードプレイス（第3の居場所）」として競合と差別化</span></div>
-      <div id="s7-f3" class="f-row se"><span class="f-num">③</span><span><strong>価値創造：</strong>店舗空間・接客・カスタマイズ体験がすべてセット</span></div>
-      <div id="s7-f4" class="f-row se"><span class="f-num">④</span><span><strong>価値伝達：</strong>ブランドストーリー・SNS・カップデザイン</span></div>
-
-      <div id="s7-verdict" class="se">
-        <i class="fa-solid fa-circle-check"></i>
-        高くても「選ばれる理由」が4つの機能すべてで設計されている
-      </div>
+      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">高くても「選ばれる理由」を設計</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 8: Iceberg  (405–450s)  /  5 steps
-  ────────────────────────────────────────────── -->
+  <!-- S8: Iceberg model 405-450s -->
   <section class="slide" id="s8">
-    <div class="slide-num">08 / 12</div>
-    <div class="step-dots" id="sd8"></div>
-    <div class="pad" style="height:100%;">
-
-      <div id="s8-hd" class="sh se">マーケティング ≠ 広告・宣伝</div>
-
-      <div class="ice-wrap">
-        <div id="s8-above" class="ice-above se">
-          <div class="lbl">
-            <i class="fa-solid fa-eye"></i> 見えている部分（水面上）
-          </div>
-          <strong>広告・宣伝・SNS投稿</strong>
-        </div>
-
-        <div id="s8-wl" class="ice-wl se">
-          <svg viewBox="0 0 400 28" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-            <path d="M0,14 C40,6 80,22 120,14 C160,6 200,22 240,14 C280,6 320,22 360,14 C380,10 400,16 400,14 L400,28 L0,28 Z" fill="rgba(22,34,128,0.55)"/>
-            <path d="M0,19 C50,11 100,27 150,19 C200,11 250,27 300,19 C340,13 375,23 400,19 L400,28 L0,28 Z" fill="rgba(12,20,80,0.35)"/>
-            <text x="50%" y="10" font-size="7.5" fill="rgba(120,160,220,0.65)" text-anchor="middle" font-family="sans-serif" letter-spacing="2">── 水面 ──</text>
-          </svg>
-        </div>
-
-        <div id="s8-below" class="ice-below se">
-          <div class="lbl">
-            <i class="fa-solid fa-eye-slash"></i> 水面下（マーケティングの本体）
-          </div>
-          <strong>顧客理解 &nbsp;/&nbsp; 戦略設計</strong><br>
-          商品・価格・流通の設計<br>
-          ブランド・文化・体験設計
-        </div>
+    <div class="slide-num">08 / 12</div><div class="step-dots" id="sd8"></div>
+    <div class="pad-t">
+      <div id="s8-hd" class="sh se">氷山モデル</div>
+      <div id="s8-top" class="se taglist t-md" style="margin-top:.2em;">
+        <span class="tag acc">広告・宣伝＝見える部分</span>
       </div>
-
-      <div id="s8-cap" class="se mt-m" style="display:flex;align-items:center;justify-content:center;gap:.5em;font-size:clamp(11px,1.6vw,21px);color:var(--muted2);">
-        <i class="fa-solid fa-triangle-exclamation" style="color:var(--yellow);"></i>
-        水面下の土台があって、初めて広告が <strong style="color:var(--accent);">機能する</strong>
+      <div id="s8-line" class="se t-md" style="text-align:center;color:var(--muted2);margin:.3em 0;">〜〜〜 水面 〜〜〜</div>
+      <div id="s8-tags" class="se taglist t-md">
+        <span class="tag">顧客理解</span><span class="tag">戦略設計</span><span class="tag">商品・価格</span><span class="tag">体験設計</span>
       </div>
+      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">水面下こそ本体</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 9: Timeline  (450–495s)  /  6 steps
-  ────────────────────────────────────────────── -->
+  <!-- S9: Timeline 450-510s -->
   <section class="slide" id="s9">
-    <div class="slide-num">09 / 12</div>
-    <div class="step-dots" id="sd9"></div>
-    <div class="pad-t" style="justify-content:center;">
-
-      <div id="s9-hd" class="sh se">現代のマーケティングの変化</div>
-
-      <div class="tl-wrap">
-        <div id="s9-t1" class="tl-item se">
-          <div class="tl-icon-wrap"><i class="fa-solid fa-tv"></i></div>
-          <div class="tl-era">1950〜80年代</div>
-          <div class="tl-desc"><strong>大量生産・大量広告</strong>の時代。テレビCM・新聞広告が主役</div>
-        </div>
-        <div id="s9-t2" class="tl-item se">
-          <div class="tl-icon-wrap" style="border-color:var(--blue);color:var(--blue);box-shadow:0 0 8px rgba(96,165,250,0.25);"><i class="fa-solid fa-globe"></i></div>
-          <div class="tl-era">1990〜2000年代</div>
-          <div class="tl-desc"><strong>インターネット登場</strong>。ウェブ広告・メールマーケティング</div>
-        </div>
-        <div id="s9-t3" class="tl-item se">
-          <div class="tl-icon-wrap" style="border-color:var(--green);color:var(--green);box-shadow:0 0 8px var(--glow-grn);"><i class="fa-solid fa-mobile-screen"></i></div>
-          <div class="tl-era">2010年代〜</div>
-          <div class="tl-desc"><strong>SNS・スマホ普及</strong>。顧客自身が情報発信者になる時代</div>
-        </div>
-        <div id="s9-t4" class="tl-item se">
-          <div class="tl-icon-wrap" style="border-color:var(--acc2);color:var(--acc2);box-shadow:0 0 8px var(--glow-acc2);"><i class="fa-solid fa-robot"></i></div>
-          <div class="tl-era">現在</div>
-          <div class="tl-desc"><strong>AI・データ活用</strong>。個別最適化（パーソナライゼーション）</div>
-        </div>
+    <div class="slide-num">09 / 12</div><div class="step-dots" id="sd9"></div>
+    <div class="pad-t">
+      <div id="s9-hd" class="sh se">手段は変わり続ける</div>
+      <div id="s9-flow" class="se aflow sm t-md" style="margin-top:.3em;">
+        <span class="achip">〜80s<small>マス広告</small></span><span class="aarrow">→</span>
+        <span class="achip">90s<small>ネット</small></span><span class="aarrow">→</span>
+        <span class="achip">10s<small>SNS</small></span><span class="aarrow">→</span>
+        <span class="achip on">現在<small>AI・データ</small></span>
       </div>
-
-      <div id="s9-conc" class="se mt-m">
-        <i class="fa-solid fa-infinity" style="color:var(--accent);"></i>
-        &ensp;手段は変わっても本質は不変 ―― <strong>「顧客を理解し、価値を届ける」</strong>
-      </div>
+      <div id="s9-note" class="se hl-banner" style="margin-top:.6em;">本質は不変 ＝ 顧客理解と価値提供</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 10: Levitt  (495–530s)  /  4 steps
-  ────────────────────────────────────────────── -->
+  <!-- S10: Levitt quote 510-545s -->
   <section class="slide" id="s10">
-    <div class="deco-quote" style="color:rgba(96,165,250,0.1);" aria-hidden="true">"</div>
-    <div class="slide-num">10 / 12</div>
-    <div class="step-dots" id="sd10"></div>
-    <div class="pad" style="justify-content:center;gap:.9em;">
-
-      <div id="s10-hd" class="sh se">レビットの「マーケティング近視眼」</div>
-
-      <div id="s10-quote" class="card card-lb se" style="padding:1.1em 1.6em;">
-        <div id="s10-qt" style="font-size:clamp(19px,3.1vw,40px);font-weight:900;line-height:1.4;">
-          "顧客は<em style="color:var(--blue);font-style:normal;">ドリル</em>が欲しいのではない。<br>
-          &ensp;<em style="color:var(--blue);font-style:normal;">穴</em>が欲しいのだ。"
-        </div>
-        <div class="t-xs" style="margin-top:.65em;display:flex;align-items:center;gap:.5em;">
-          <i class="fa-solid fa-graduation-cap" style="color:var(--muted);"></i>
-          Theodore Levitt, "Marketing Myopia"&ensp;/&ensp;Harvard Business Review（1960）
-        </div>
-      </div>
-
-      <div id="s10-supp1" class="t-md c-muted se">
-        売るべきは <strong style="color:var(--text);">「商品のスペック」</strong> ではなく、顧客が得る「結果・体験・感情」
-      </div>
-      <div id="s10-supp2" class="t-sm se" style="display:flex;align-items:center;gap:.4em;">
-        <i class="fa-solid fa-arrow-right" style="color:var(--accent);flex-shrink:0;"></i>
-        第4回でさらに深く掘り下げます
-      </div>
+    <div class="slide-num">10 / 12</div><div class="step-dots" id="sd10"></div>
+    <div class="pad">
+      <div id="s10-quote" class="se t-xl" style="text-align:center;">欲しいのは<br><span style="color:var(--accent);">ドリルより穴</span></div>
+      <div id="s10-by" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">― レビット『近視眼』1960</div>
+      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">売るのはスペックでなく結果・体験</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 11: Summary  (530–580s)  /  5 steps
-  ────────────────────────────────────────────── -->
+  <!-- S11: Summary 545-580s -->
   <section class="slide" id="s11">
-    <div class="slide-num">11 / 12</div>
-    <div class="step-dots" id="sd11"></div>
-    <div class="pad-t" style="justify-content:center;">
-
-      <div id="s11-hd" class="sh se">今日のまとめ</div>
-
-      <div id="s11-it1" class="sum-item se">
-        <div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div>
-        <div>
-          <div class="sum-main">マーケティング ≠ 広告・宣伝</div>
-          <div class="sum-sub">→ 顧客に価値を届ける「仕組み全体」を指す</div>
-        </div>
+    <div class="slide-num">11 / 12</div><div class="step-dots" id="sd11"></div>
+    <div class="pad-t">
+      <div id="s11-hd" class="sh se">まとめ</div>
+      <div id="s11-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+        <span class="tag">広告 ≠ 全体</span>
+        <span class="tag">売れる状態をつくる</span>
+        <span class="tag">理解→戦略→創造→伝達</span>
+        <span class="tag acc">本質は不変</span>
       </div>
-      <div id="s11-it2" class="sum-item se">
-        <div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div>
-        <div>
-          <div class="sum-main">本質は「売る」ではなく「売れる状態を作る」</div>
-          <div class="sum-sub">→ ドラッカー：「販売を不要にすること」</div>
-        </div>
-      </div>
-      <div id="s11-it3" class="sum-item se">
-        <div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div>
-        <div>
-          <div class="sum-main">4つの機能：理解 → 戦略 → 創造 → 伝達</div>
-          <div class="sum-sub">→ 広告は最後の「伝達」に過ぎない</div>
-        </div>
-      </div>
-      <div id="s11-it4" class="sum-item se">
-        <div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div>
-        <div>
-          <div class="sum-main">手段は変わっても本質は不変</div>
-          <div class="sum-sub">→ 「顧客を深く理解し、価値を届ける」</div>
-        </div>
-      </div>
+      <div id="s11-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">「どんな仕組みで売れてる？」と問う</div>
     </div>
   </section>
 
-  <!-- ──────────────────────────────────────────
-       SLIDE 12: Next Episode  (580–600s)  /  3 steps
-  ────────────────────────────────────────────── -->
+  <!-- S12: Next 580-600s -->
   <section class="slide" id="s12">
-    <div class="slide-num">12 / 12</div>
-    <div class="step-dots" id="sd12"></div>
-
-    <div id="s12-inner">
-      <div id="s12-card" class="se">
-        <div class="next-lbl">
-          <i class="fa-solid fa-forward-step"></i> 次回
-        </div>
-        <div class="next-title">誰に何を売る？<br>「3C分析」と「STP分析」の超基本</div>
-        <div id="s12-pts" class="se">
-          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>市場を正しく「見る」2つのフレームワーク</div>
-          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>なぜ「全員に売ろうとする」のが失敗するか</div>
-          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>具体例：コンビニコーヒー市場で実践</div>
-        </div>
-      </div>
-      <div id="s12-cta" class="se">
-        <i class="fa-solid fa-bell"></i>
-        チャンネル登録 &amp; 高評価をぜひお願いします！
-        <i class="fa-solid fa-thumbs-up"></i>
-      </div>
+    <div class="slide-num">12 / 12</div><div class="step-dots" id="sd12"></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s12-lbl" class="se t-md" style="color:var(--muted2);">次回・第2回</div>
+      <div id="s12-title" class="se t-xl" style="color:#fff;margin:.2em 0;">誰に何を売る？</div>
+      <div id="s12-sub" class="se t-md" style="color:var(--accent);">3C分析 と STP分析</div>
+      <div id="s12-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
     </div>
   </section>
 
-</div><!-- /stage -->
-</div><!-- /stage-wrap -->
+</div><!-- /stage --></div><!-- /stage-wrap -->
 
 <!-- Progress Bar -->
-<div id="prog-bar"><div id="prog-fill"></div></div>
+<div id="prog-wrap"><div id="prog-fill"></div></div>
 
 <!-- Controls -->
 <div id="ctrl">
@@ -1170,7 +1264,7 @@ body {
   <button id="btn-step"    title="次のアニメーション (Enter)">→ 次のアニメーション</button>
   <div class="ctrl-sep"></div>
   <span class="ctrl-info" id="timer-disp">0:00 / 10:00</span>
-  <span class="ctrl-info" id="slide-disp">Slide 1 / 12</span>
+  <span class="ctrl-info" id="slide-disp">Slide 1 / 13</span>
   <span class="ctrl-info"><span id="step-label">Step&nbsp;—</span></span>
   <button id="btn-narr">ナレーション 表示/隠す (H)</button>
 </div>
@@ -1182,90 +1276,52 @@ body {
 </div>
 
 <script>
-/* ================================================================
-   STEP TABLE
-   Each entry = one "次のアニメーション" click
-   si  : slide index (0-based)
-   t   : absolute auto-advance time (seconds from start)
-   ids : element IDs to reveal
-   anim: animation class to add
-================================================================ */
 const STEPS = [
-  // Slide 1 (0-30s)
-  {si:0,  t:0,    ids:['s1-ep-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.7,  ids:['s1-title'],             anim:'rv-up'},
-  {si:0,  t:1.6,  ids:['s1-subtitle'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-deco'],              anim:'rv-fade'},
-  // Slide 2 (30-90s)
-  {si:1,  t:30,   ids:['s2-q'],                 anim:'rv-fade'},
-  {si:1,  t:30.8, ids:['s2-ng1'],               anim:'rv-left'},
-  {si:1,  t:32.5, ids:['s2-ng2'],               anim:'rv-left'},
-  {si:1,  t:34,   ids:['s2-ng3'],               anim:'rv-left'},
-  {si:1,  t:38,   ids:['s2-conc'],              anim:'rv-up'},
-  // Slide 3 (90-150s)
-  {si:2,  t:90,   ids:['s3-hd','s3-src'],       anim:'rv-fade'},
-  {si:2,  t:91.5, ids:['s3-en'],                anim:'rv-fade'},
-  {si:2,  t:94,   ids:['s3-ja'],                anim:'rv-up'},
-  {si:2,  t:98,   ids:['s3-note'],              anim:'rv-fade'},
-  // Slide 4 (150-210s)
-  {si:3,  t:150,  ids:['s4-hd'],                anim:'rv-fade'},
-  {si:3,  t:151.5,ids:['s4-quote'],             anim:'rv-scale'},
-  {si:3,  t:156,  ids:['s4-supp1'],             anim:'rv-up'},
-  {si:3,  t:159,  ids:['s4-supp2'],             anim:'rv-up'},
-  // Slide 5 (210-270s)
-  {si:4,  t:210,  ids:['s5-hd'],                anim:'rv-fade'},
-  {si:4,  t:211.5,ids:['s5-bad'],               anim:'rv-right'},
-  {si:4,  t:215,  ids:['s5-good'],              anim:'rv-left'},
-  {si:4,  t:220,  ids:['s5-arrow'],             anim:'rv-up'},
-  // Slide 6 (270-330s)
-  {si:5,  t:270,  ids:['s6-hd'],                anim:'rv-fade'},
-  {si:5,  t:272,  ids:['s6-fn1'],               anim:'rv-up'},
-  {si:5,  t:275,  ids:['s6-fn2'],               anim:'rv-up'},
-  {si:5,  t:278,  ids:['s6-fn3'],               anim:'rv-up'},
-  {si:5,  t:281,  ids:['s6-fn4'],               anim:'rv-up'},
-  {si:5,  t:285,  ids:['s6-note'],              anim:'rv-fade'},
-  // Slide 7 (330-405s)
-  {si:6,  t:330,  ids:['s7-hd'],                anim:'rv-fade'},
-  {si:6,  t:331.5,ids:['s7-price'],             anim:'rv-fade'},
-  {si:6,  t:334,  ids:['s7-why'],               anim:'rv-up'},
-  {si:6,  t:337,  ids:['s7-f1'],                anim:'rv-left'},
-  {si:6,  t:340,  ids:['s7-f2'],                anim:'rv-left'},
-  {si:6,  t:343,  ids:['s7-f3'],                anim:'rv-left'},
-  {si:6,  t:346,  ids:['s7-f4'],                anim:'rv-left'},
-  {si:6,  t:352,  ids:['s7-verdict'],           anim:'rv-up'},
-  // Slide 8 (405-450s)
-  {si:7,  t:405,  ids:['s8-hd'],                anim:'rv-fade'},
-  {si:7,  t:407,  ids:['s8-above'],             anim:'rv-fade'},
-  {si:7,  t:410,  ids:['s8-wl'],                anim:'rv-fade'},
-  {si:7,  t:413,  ids:['s8-below'],             anim:'rv-up'},
-  {si:7,  t:418,  ids:['s8-cap'],               anim:'rv-fade'},
-  // Slide 9 (450-495s)
-  {si:8,  t:450,  ids:['s9-hd'],                anim:'rv-fade'},
-  {si:8,  t:452,  ids:['s9-t1'],                anim:'rv-left'},
-  {si:8,  t:455,  ids:['s9-t2'],                anim:'rv-left'},
-  {si:8,  t:458,  ids:['s9-t3'],                anim:'rv-left'},
-  {si:8,  t:461,  ids:['s9-t4'],                anim:'rv-left'},
-  {si:8,  t:466,  ids:['s9-conc'],              anim:'rv-up'},
-  // Slide 10 (495-530s)
-  {si:9,  t:495,  ids:['s10-hd'],               anim:'rv-fade'},
-  {si:9,  t:497,  ids:['s10-quote'],            anim:'rv-scale'},
-  {si:9,  t:503,  ids:['s10-supp1'],            anim:'rv-up'},
-  {si:9,  t:506,  ids:['s10-supp2'],            anim:'rv-fade'},
-  // Slide 11 (530-580s)
-  {si:10, t:530,  ids:['s11-hd'],               anim:'rv-fade'},
-  {si:10, t:532,  ids:['s11-it1'],              anim:'rv-up'},
-  {si:10, t:536,  ids:['s11-it2'],              anim:'rv-up'},
-  {si:10, t:540,  ids:['s11-it3'],              anim:'rv-up'},
-  {si:10, t:544,  ids:['s11-it4'],              anim:'rv-up'},
-  // Slide 12 (580-600s)
-  {si:11, t:580,  ids:['s12-card'],             anim:'rv-scale'},
-  {si:11, t:582,  ids:['s12-pts'],              anim:'rv-fade'},
-  {si:11, t:585,  ids:['s12-cta'],              anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
+  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
+  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
+  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
+  {si:1,  t:42,   ids:['s2-tags'],    anim:'rv-up'},
+  {si:1,  t:68,   ids:['s2-ans'],     anim:'rv-scale'},
+  {si:1,  t:80,   ids:['s2-note'],    anim:'rv-fade'},
+  {si:2,  t:90,   ids:['s3-hd'],      anim:'rv-fade'},
+  {si:2,  t:98,   ids:['s3-key'],     anim:'rv-scale'},
+  {si:2,  t:115,  ids:['s3-flow'],    anim:'rv-up'},
+  {si:2,  t:140,  ids:['s3-note'],    anim:'rv-fade'},
+  {si:3,  t:150,  ids:['s4-quote'],   anim:'rv-scale'},
+  {si:3,  t:170,  ids:['s4-by'],      anim:'rv-fade'},
+  {si:3,  t:190,  ids:['s4-note'],    anim:'rv-pop'},
+  {si:4,  t:210,  ids:['s5-hd'],      anim:'rv-fade'},
+  {si:4,  t:220,  ids:['s5-duo'],     anim:'rv-up'},
+  {si:4,  t:255,  ids:['s5-note'],    anim:'rv-fade'},
+  {si:5,  t:270,  ids:['s6-hd'],      anim:'rv-fade'},
+  {si:5,  t:280,  ids:['s6-flow'],    anim:'rv-up'},
+  {si:5,  t:315,  ids:['s6-note'],    anim:'rv-pop'},
+  {si:6,  t:330,  ids:['s7-hd'],      anim:'rv-fade'},
+  {si:6,  t:340,  ids:['s7-key'],     anim:'rv-scale'},
+  {si:6,  t:365,  ids:['s7-kpi'],     anim:'rv-up'},
+  {si:6,  t:390,  ids:['s7-note'],    anim:'rv-fade'},
+  {si:7,  t:405,  ids:['s8-hd'],      anim:'rv-fade'},
+  {si:7,  t:413,  ids:['s8-top'],     anim:'rv-up'},
+  {si:7,  t:423,  ids:['s8-line'],    anim:'rv-fade'},
+  {si:7,  t:430,  ids:['s8-tags'],    anim:'rv-up'},
+  {si:7,  t:442,  ids:['s8-note'],    anim:'rv-pop'},
+  {si:8,  t:450,  ids:['s9-hd'],      anim:'rv-fade'},
+  {si:8,  t:460,  ids:['s9-flow'],    anim:'rv-up'},
+  {si:8,  t:490,  ids:['s9-note'],    anim:'rv-pop'},
+  {si:9,  t:510,  ids:['s10-quote'],  anim:'rv-scale'},
+  {si:9,  t:525,  ids:['s10-by'],     anim:'rv-fade'},
+  {si:9,  t:535,  ids:['s10-note'],   anim:'rv-fade'},
+  {si:10, t:545,  ids:['s11-hd'],     anim:'rv-fade'},
+  {si:10, t:553,  ids:['s11-tags'],   anim:'rv-up'},
+  {si:10, t:572,  ids:['s11-note'],   anim:'rv-fade'},
+  {si:11, t:580,  ids:['s12-lbl'],    anim:'rv-fade'},
+  {si:11, t:585,  ids:['s12-title'],  anim:'rv-up'},
+  {si:11, t:590,  ids:['s12-sub'],    anim:'rv-fade'},
+  {si:11, t:595,  ids:['s12-cta'],    anim:'rv-pop'}
 ];
-
-/* ================================================================
-   SLIDE METADATA
-================================================================ */
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
   {id:'s2',  start:30,  end:90,  dotContainerId:'sd2'},
@@ -1275,51 +1331,27 @@ const SLIDES_META = [
   {id:'s6',  start:270, end:330, dotContainerId:'sd6'},
   {id:'s7',  start:330, end:405, dotContainerId:'sd7'},
   {id:'s8',  start:405, end:450, dotContainerId:'sd8'},
-  {id:'s9',  start:450, end:495, dotContainerId:'sd9'},
-  {id:'s10', start:495, end:530, dotContainerId:'sd10'},
-  {id:'s11', start:530, end:580, dotContainerId:'sd11'},
-  {id:'s12', start:580, end:600, dotContainerId:'sd12'},
+  {id:'s9',  start:450, end:510, dotContainerId:'sd9'},
+  {id:'s10', start:510, end:545, dotContainerId:'sd10'},
+  {id:'s11', start:545, end:580, dotContainerId:'sd11'},
+  {id:'s12', start:580, end:600, dotContainerId:'sd12'}
 ];
-
 const NARRATIONS = [
-  /* S1 — タイトル (0-30s / 目安 ~135字) */
   `こんにちは。このチャンネルでは、マーケティングを基礎から実践まで、体系的に学んでいきます。\n第1回のテーマは「そもそもマーケティングとは何か」。マーケティングは聞き慣れた言葉ですが、正しく説明できる人は意外と少ないんです。広告のことだと思っている方もいるかもしれませんが、それは一部に過ぎません。\n通勤や寝る前の10分で、ぜひ一緒に確認していきましょう。`,
-
-  /* S2 — よくある誤解 (30-90s / 目安 ~270字) */
-  `マーケティングと聞いて、何を思い浮かべますか？\nまず「SNS運用」。\n次に「チラシ配り」。\nそして「広告を打つこと」——よく挙がるのはこのあたりですよね。\nでも実は、これらはどれも「マーケティングの手段」であって、マーケティングそのものではありません。つまり、マーケティングの一部に過ぎないんです。\n広告を打てばマーケティングをやっていると思いがちですが、それは最後の一手でしかない。手段だけを先に学んでも、なぜか成果につながらない——その根本的な理由が、今日でわかります。\nまずは「そもそもマーケティングとは何か」という問いから、一緒に整理していきましょう。`,
-
-  /* S3 — AMA定義 (90-150s / 目安 ~270字) */
-  `マーケティングの世界標準の定義を見てみましょう。\nアメリカ・マーケティング協会——AMAが2007年に制定し、2017年に再承認された公式定義です。\n英語の原文が難しく感じるかもしれませんが、要点はシンプルです。「顧客にとって価値があるものを作り、伝え、届け、交換する——その一連の活動すべて」これがマーケティングです。\n注目してほしいのは、「創る・伝える・届ける・交換する」という4つのプロセスです。これらすべてをまとめてマーケティングと呼ぶんです。\nつまり、広告は最後の「伝える」というステップのひとつに過ぎません。マーケティングは、広告よりもはるかに広い概念なんです。`,
-
-  /* S4 — ドラッカー (150-210s / 目安 ~270字) */
-  `経営学の父と呼ばれる、ピーター・ドラッカー。1973年の著書『マネジメント』の中でこんな言葉を残しています。\n「マーケティングの目的は、販売を不要にすることである」——一見、逆説的に聞こえますよね。売ることが目的なのに、販売を不要にするとはどういうことか。\nこれが本質を突いた言葉で、本当に優れたマーケティングができれば、セールスや説得をしなくても、商品が「自然に選ばれる状態」を作り出せるんです。お客さんが「これだ！」と自分から選びにきてくれる。\nこれが「売る」という行為と、「売れる仕組みを作る」という発想の根本的な違いです。`,
-
-  /* S5 — 比較 (210-270s / 目安 ~270字) */
-  `わかりやすく左右に並べて比べてみましょう。\n旧来の発想は「どうやって売るか」が出発点です。商品ありきで、いかに顧客を説得するかを考える。一方的に押し込む、いわゆる「プッシュ型」の発想ですね。目的も短期的な売上が中心になりがちです。\n一方、マーケティング思考は「なぜ選ばれるか」が出発点。顧客が何を求めているかをまず理解して、その答えとして商品・サービスを設計します。引き寄せる「プル」の発想で、目的は長期的な関係構築です。\nこの根本的な方向の違いが、すべてのマーケティング戦略の出発点になります。`,
-
-  /* S6 — 4つの機能 (270-330s / 目安 ~270字) */
-  `コトラーの教科書的な整理をすると、マーケティングには大きく4つの機能があります。\nまず①「市場を理解する」——誰が何に困っていて、何を求めているかをリサーチする段階です。次に②「戦略を設計する」——どの顧客層を狙い、どんな立ち位置で価値を届けるかを決める。\nそして③「価値を創造する」——商品・価格・流通の仕方を設計する段階。最後が④「価値を伝える」——これが広告やSNSにあたる部分ですね。\n重要なのは、広告は最後のステップだということです。①〜③の土台をしっかり作ってからこそ、④の広告が初めて効果を発揮できる。逆に、土台がなければいくら広告を打っても成果が出ないのはこのためです。`,
-
-  /* S7 — スターバックス (330-405s / 目安 ~338字) */
-  `具体例で理解しましょう。スターバックスのコーヒーは1杯600〜700円ほど。コンビニコーヒーの5〜7倍の価格です。それでも世界中で売れ続けている。なぜでしょうか？\n実はスターバックスは、コーヒーを売っているわけではないんです。「第3の居場所（サードプレイス）」——家でも職場でもない、自分だけの落ち着ける時間と空間を売っています。\n①市場理解として、カフェで過ごす時間に価値を感じる層がいることを発見した。②それを戦略として、他のカフェとは違う「居場所」として差別化した。③店舗空間・接客・カスタマイズという体験全体を価値として創造し、④ブランドストーリーやSNSを通じて伝えてきた。\n価格ではなく、体験そのものに価値がある——これが「売れる仕組み」の設計です。スタバの広告は、この土台があって初めて機能しているんです。`,
-
-  /* S8 — 氷山モデル (405-450s / 目安 ~200字) */
-  `これを氷山に例えると、広告・宣伝は水面の上に出ている、誰もが見える部分です。でも水面下には、顧客理解・戦略設計・商品開発・価格設計・流通設計——これだけ大きな土台があって、初めて広告が機能するんです。\n氷山の大半が水面下にあるのと同じように、マーケティングの本体も、表から見えない部分にあります。多くの人が「マーケティング＝広告・宣伝」と思ってしまうのは、水面上の部分しか見えていないから。\nこの講座では、水面下の本質から順番に積み上げていきます。`,
-
-  /* S9 — タイムライン (450-495s / 目安 ~200字) */
+  `マーケティングと聞いて、何を思い浮かべますか。\n「SNS運用」「チラシ配り」「広告を打つこと」——よく挙がるのはこのあたりですよね。\nでも実は、これらはどれも「マーケティングの手段」であって、マーケティングそのものではありません。つまり、マーケティングの一部に過ぎないんです。\n広告を打てばマーケティングをやっていると思いがちですが、それは最後の一手でしかない。手段だけを先に学んでも、なぜか成果につながらない——その根本的な理由が、今日でわかります。`,
+  `マーケティングの世界標準の定義を見てみましょう。\nアメリカ・マーケティング協会——AMAが2007年に制定し、2017年に再承認した公式定義です。\n英語の原文は難しく感じるかもしれませんが、要点はシンプルです。「顧客にとって価値があるものを作り、伝え、届け、交換する——その一連の活動すべて」これがマーケティングです。\n注目してほしいのは、創る・伝える・届ける・交換するという4つのプロセス。つまり広告は最後の「伝える」というステップのひとつに過ぎません。マーケティングは広告よりはるかに広い概念なんです。`,
+  `経営学の父と呼ばれる、ピーター・ドラッカー。1973年の著書「マネジメント」の中でこんな言葉を残しています。\n「マーケティングの目的は、販売を不要にすることである」——一見、逆説的に聞こえますよね。\nこれが本質を突いた言葉で、本当に優れたマーケティングができれば、セールスや説得をしなくても、商品が「自然に選ばれる状態」を作り出せるんです。お客さんが自分から選びにきてくれる。\nこれが「売る」という行為と、「売れる仕組みを作る」という発想の根本的な違いです。`,
+  `わかりやすく左右に並べて比べてみましょう。\n旧来の発想は「どうやって売るか」が出発点です。商品ありきで、いかに顧客を説得するか。一方的に押し込む、いわゆるプッシュ型ですね。目的も短期的な売上が中心になりがちです。\n一方、マーケティング思考は「なぜ選ばれるか」が出発点。顧客が何を求めているかをまず理解して、その答えとして商品を設計します。引き寄せるプルの発想で、目的は長期的な関係構築です。\nこの方向の違いが、すべての戦略の出発点になります。`,
+  `コトラーの教科書的な整理をすると、マーケティングには大きく4つの機能があります。\nまず市場を理解する——誰が何に困っていて、何を求めているかをリサーチする段階。次に戦略を設計する——どの顧客層を狙い、どんな立ち位置で価値を届けるかを決める。\nそして価値を創造する——商品・価格・流通の仕方を設計する段階。最後が価値を伝える——これが広告やSNSにあたる部分です。\n重要なのは、広告は最後のステップだということ。土台をしっかり作ってからこそ、広告が初めて効果を発揮できます。`,
+  `具体例で理解しましょう。スターバックスのコーヒーは1杯600〜700円ほど。コンビニコーヒーの5〜7倍の価格です。それでも世界中で売れ続けている。なぜでしょうか。\n実はスターバックスは、コーヒーを売っているわけではないんです。「第3の居場所」——家でも職場でもない、自分だけの落ち着ける時間と空間を売っています。\nカフェで過ごす時間に価値を感じる層を発見し、居場所として差別化し、空間・接客・体験全体を価値として創造し、ブランドストーリーで伝えてきた。\n価格ではなく体験に価値がある——これが「売れる仕組み」の設計です。`,
+  `これを氷山に例えると、広告・宣伝は水面の上に出ている、誰もが見える部分です。でも水面下には、顧客理解・戦略設計・商品開発・価格設計・流通設計——これだけ大きな土台があって、初めて広告が機能するんです。\n氷山の大半が水面下にあるのと同じように、マーケティングの本体も、表から見えない部分にあります。多くの人が「マーケティング＝広告」と思ってしまうのは、水面上しか見えていないから。\nこの講座では、水面下の本質から順番に積み上げていきます。`,
   `マーケティングの手段は時代とともに大きく変わってきました。\n1950〜80年代はテレビCMや新聞広告の時代で、企業が一方的に情報を届ける形でした。インターネットの登場で双方向になり、SNSの普及で今度は顧客自身が情報発信者になった。そして今はAIとデータを使った個別最適化の時代に入っています。\n手段は変わり続けますが、本質は1960年代から一切変わっていません。「顧客を深く理解して、価値を届ける」——この一点だけです。`,
-
-  /* S10 — レビット (495-530s / 目安 ~158字) */
   `もう一つ、マーケティングの古典的な教えをご紹介します。ハーバード・ビジネス・レビューに掲載されたレビットの論文の一節です。\n「顧客はドリルが欲しいのではない。穴が欲しいのだ」——60年以上経った今でも語り継がれる言葉です。売るべきは商品のスペックではなく、顧客がその商品を使って得る「結果」や「体験」なんです。\nこの考え方は第4回でさらに深く掘り下げますので、今は頭の片隅に置いておいてください。`,
-
-  /* S11 — まとめ (530-580s / 目安 ~225字) */
-  `今日のポイントを整理しましょう。\n一つ目。マーケティングは広告・宣伝ではなく、顧客に価値を届ける仕組み全体のことです。二つ目。本質は「売ること」ではなく、ドラッカーの言葉通り「売れる状態を作ること」です。\n三つ目。マーケティングには4つの機能があり、広告は最後のステップに過ぎません。四つ目。手段は時代で変わりますが、「顧客理解と価値提供」という本質は変わらない。\nこの4つの土台を持つだけで、マーケティングの見方がガラッと変わるはずです。日常の中で「これはどんな仕組みで売れているのか」と考える習慣をつけていきましょう。`,
-
-  /* S12 — 次回予告 (580-600s / 目安 ~90字) */
-  `次回は「3C分析」と「STP分析」をテーマに、市場を正しく見るための2大フレームワークを解説します。「全員に売ろうとする」がなぜ失敗するのか、具体例で解説します。チャンネル登録と高評価をぜひお願いします。次回もお楽しみに！`,
+  `今日のポイントを整理しましょう。\n一つ目。マーケティングは広告・宣伝ではなく、顧客に価値を届ける仕組み全体のことです。二つ目。本質は「売ること」ではなく、ドラッカーの言葉通り「売れる状態を作ること」です。\n三つ目。マーケティングには理解・戦略・創造・伝達という4つの機能があり、広告は最後のステップに過ぎません。四つ目。手段は時代で変わりますが、顧客理解と価値提供という本質は変わらない。\n日常の中で「これはどんな仕組みで売れているのか」と考える習慣をつけていきましょう。`,
+  `次回は「3C分析」と「STP分析」をテーマに、市場を正しく見るための2大フレームワークを解説します。「全員に売ろうとする」がなぜ失敗するのか、具体例で解説します。チャンネル登録と高評価をぜひお願いします。次回もお楽しみに。`
 ];
-
 const TOTAL_SECS = 600;
+
 
 /* ================================================================
    DERIVED LOOKUPS

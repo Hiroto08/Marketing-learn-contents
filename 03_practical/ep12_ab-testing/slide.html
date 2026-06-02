@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第12回 データで改善！A/Bテストの正しいやり方 | AI時代のマーケティング・ラボ</title>
+<title>第12回 ABテストの正しいやり方 | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -69,6 +69,7 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
+  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -136,22 +137,26 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
-.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
+   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
+.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
+.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
 
 /* section header */
 .sh {
-  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
-  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
+  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
+  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
+  letter-spacing:.01em;
 }
-.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes */
-.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
-.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
-.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
-.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
-.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
+/* body text sizes — large for mobile/YouTube legibility (bold gothic).
+   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
+.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
+.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
+.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
+.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
+.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -365,7 +370,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
+  color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -434,7 +439,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
+  color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -618,7 +623,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
+  font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -914,7 +919,8 @@ body {
    </div>  */
 .hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
   background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
+  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
 .hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
 .hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
 .hb-text strong { color:var(--text); }
@@ -1005,166 +1011,69 @@ body {
 .s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
 @keyframes dotFloat { to { transform:translateY(-8px); } }
 
+/* ================================================================
+   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
+   Shared keyword + diagram vocabulary for all episodes.
+================================================================ */
+.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
+.aflow.sm{gap:.4em;}
+.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
+  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
+.aflow.sm .achip{padding:.45em .7em;}
+.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
+.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
+.aghost{opacity:.4;}
+.aarrow{color:var(--accent);font-weight:900;}
+/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
+   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
+.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
+.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
+  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
+.tag.acc{border-color:var(--accent);color:var(--accent);}
+.tag.ng{border-color:var(--red);color:var(--red);}
+.tag.ok{border-color:var(--green);color:var(--green);}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
+.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
+  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
+.pcard .ph{font-weight:900;line-height:1.1;}
+.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
+.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
+.bignum{color:var(--accent);font-weight:900;line-height:1;}
+.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
+.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
+.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
+.jcell .jv{font-weight:900;line-height:1;}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
+.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
+.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
+.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
+.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
+
 </style>
 
 <style id="ep-css">
-/* ── vertical centering（必ず先頭に含める） ── */
+
+/* ── vertical centering override ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── EP12 accent: green / data analytics ── */
-:root { --accent: #22C55E; --glow-acc: rgba(34,197,94,.25); --acc2: #06b6d4; }
+/* ── EP12 accent: green ── */
+:root { --accent:#22C55E; --glow-acc:rgba(34,197,94,.25); }
 
-/* ── S1 overrides ── */
-#s1 { background: radial-gradient(ellipse 90% 75% at 62% 45%, #06210f 0%, var(--slide-bg) 68%); align-items:center; justify-content:center; text-align:center; }
-#s1-badge { display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(34,197,94,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px); }
-#s1-badge i { color:var(--accent); }
-#s1-ep { font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em; }
-#s1-catch { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em; }
+/* ── S1 (cloned from EP05, recolored) ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #07241a 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(34,197,94,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+#s1-badge i{color:var(--accent);}
+#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
+#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── A vs B compare blocks ── */
-.ab-row { display:flex;gap:.6em;margin:.35em 0; }
-.ab-card { flex:1;border-radius:10px;padding:.6em .9em;font-size:clamp(11px,1.45vw,18px); }
-.ab-card.a { background:rgba(96,165,250,0.08);border:1px solid rgba(96,165,250,0.35); }
-.ab-card.b { background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.4); }
-.ab-card .ab-hd { font-weight:700;margin-bottom:.25em; }
-.ab-card.a .ab-hd { color:var(--blue); }
-.ab-card.b .ab-hd { color:var(--green); }
-.ab-card .ab-bd { color:var(--muted2);line-height:1.5; }
+/* ── EP12 SVG line chart (early-stopping) — keep inner labels large ── */
+.s6-svg{display:block;margin:0 auto;width:min(78%,640px);height:auto;}
+.s6-svg .ab-lbl{font-size:30px;font-weight:900;}
+.s6-svg .ax-lbl{font-size:26px;font-weight:700;fill:var(--muted2);}
 
-/* ── verdict rows ── */
-.verdict-rows { display:flex;flex-direction:column;gap:.45em;margin:.35em 0; }
-.verdict-row { display:flex;align-items:flex-start;gap:.7em;padding:.5em .8em;border-radius:9px;font-size:clamp(11px,1.5vw,19px); }
-.verdict-row.ng { background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.3); }
-.verdict-row.ok { background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35); }
-.v-icon { flex-shrink:0;font-size:1.1em;margin-top:2px; }
-.verdict-row.ng .v-icon { color:var(--red); }
-.verdict-row.ok .v-icon { color:var(--green); }
-.v-body { color:var(--muted2);line-height:1.5; }
+/* Minimal design helpers + type scale live in the shared base CSS. */
 
-/* ── matrix 2x2 ── */
-.matrix-2x2 { display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:.4em;margin:.3em 0;height:auto; }
-.mx-cell { border-radius:9px;padding:.55em .8em;font-size:clamp(10px,1.35vw,17px);background:var(--surf);border:1px solid var(--border); }
-.mx-cell .mx-hd { font-weight:700;color:#fff;margin-bottom:.15em;font-size:1em; }
-.mx-cell .mx-body { color:var(--muted2);font-size:.88em;line-height:1.4; }
-.mx-cell.hi { border:1px solid rgba(34,197,94,0.45);background:rgba(34,197,94,0.09); }
-.mx-cell.hi .mx-hd { color:var(--green); }
-.mx-cell.hi-g { border:1px solid rgba(6,182,212,0.4);background:rgba(6,182,212,0.07); }
-.mx-cell.hi-g .mx-hd { color:var(--acc2); }
-.mx-labels { display:flex;justify-content:space-between;font-size:clamp(9px,1.2vw,13px);color:var(--muted);margin-top:.15em; }
-
-/* ── step flow (vertical) ── */
-.step-flow { display:flex;flex-direction:column;gap:0;margin:.3em 0; }
-.sf-item { display:flex;align-items:flex-start;gap:.75em;padding:.4em 0; }
-.sf-item + .sf-item { border-top:1px dashed var(--border); }
-.sf-dot { flex-shrink:0;width:.75em;height:.75em;border-radius:50%;background:var(--accent);margin-top:.35em;box-shadow:0 0 6px var(--glow-acc); }
-.sf-body { color:var(--muted2);font-size:clamp(11px,1.5vw,19px);line-height:1.5; }
-.sf-body strong { color:#fff; }
-
-/* ── n-steps (numbered) ── */
-.n-steps { display:flex;flex-direction:column;gap:.35em;margin:.3em 0; }
-.n-step { display:flex;align-items:flex-start;gap:.65em; }
-.n-num { flex-shrink:0;width:1.6em;height:1.6em;border-radius:50%;background:var(--accent);color:#04210f;font-weight:900;font-size:.82em;display:flex;align-items:center;justify-content:center;margin-top:2px; }
-.n-num.r { background:var(--red);color:#fff; }
-.n-body { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);line-height:1.5; }
-.n-body strong { color:#fff; }
-
-/* ── gauge wrap ── */
-.gauge-wrap { margin:.4em 0; }
-.gauge-hd { font-size:clamp(11px,1.5vw,19px);font-weight:700;color:#fff;margin-bottom:.3em; }
-.gauge-track { position:relative;height:.9em;background:var(--surf2);border-radius:99px;overflow:visible;margin:.15em 0; }
-.gauge-fill { height:100%;border-radius:99px;background:var(--c,var(--green));width:calc(var(--v,0) * 100%);transition:width 1s ease; }
-.gauge-marker { position:absolute;top:-1.6em;font-size:.78em;color:var(--muted2);transform:translateX(-50%);white-space:nowrap; }
-.gauge-marker::after { content:'';position:absolute;bottom:-1.3em;left:50%;transform:translateX(-50%);width:1px;height:1em;background:var(--muted); }
-.gauge-legs { display:flex;justify-content:space-between;font-size:.78em;color:var(--muted);margin-top:.25em; }
-
-/* ── formula ── */
-.formula { display:flex;align-items:center;gap:.5em;flex-wrap:wrap;margin:.4em 0;justify-content:center; }
-.fm-var { font-size:clamp(18px,2.5vw,32px);font-weight:900;color:var(--c,#fff);padding:.1em .35em;background:rgba(255,255,255,0.05);border-radius:7px;border:1px solid rgba(255,255,255,0.1); }
-.fm-op { font-size:clamp(16px,2.2vw,28px);font-weight:900;color:var(--muted2); }
-.fm-val { font-size:clamp(18px,2.5vw,32px);font-weight:900;color:var(--c,var(--green)); }
-.formula-sub { text-align:center;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.15em; }
-
-/* ── hl-banner ── */
-.hl-banner { display:flex;align-items:center;gap:.8em;padding:.6em 1em;border-radius:10px;border:1px solid rgba(34,197,94,0.4);background:rgba(34,197,94,0.07);margin:.4em 0; }
-.hb-icon { font-size:clamp(18px,2.5vw,30px);color:var(--c,var(--green));flex-shrink:0; }
-.hb-text { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);line-height:1.5; }
-
-/* ── bar chart horizontal ── */
-.bar-chart-h { display:flex;flex-direction:column;gap:.5em;margin:.3em 0; }
-.bh-row { display:flex;align-items:center;gap:.6em; }
-.bh-lbl { min-width:7em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);flex-shrink:0;text-align:right; }
-.bh-track { flex:1;height:.75em;background:var(--surf2);border-radius:99px;overflow:hidden; }
-.bh-fill { height:100%;border-radius:99px;background:var(--c,var(--green));width:calc(var(--v,0) * 1%);transition:width 1.2s ease; }
-.bh-val { min-width:6em;font-size:clamp(10px,1.35vw,17px);font-weight:700; }
-
-/* ── comp table ── */
-.comp-tbl { display:flex;flex-direction:column;gap:.2em;margin:.3em 0; }
-.comp-row { display:flex;gap:.4em;padding:.35em .5em;border-radius:7px;font-size:clamp(11px,1.5vw,19px); }
-.comp-row.comp-head { background:rgba(255,255,255,0.04);font-weight:700;color:var(--muted2); }
-.comp-label { flex:1.4;color:var(--muted2); }
-.comp-a { flex:1;text-align:center;color:var(--muted2); }
-.comp-b { flex:1;text-align:center;color:var(--muted2); }
-.comp-row.hi { background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.25); }
-.c-red { color:var(--red);font-weight:700; }
-.c-green { color:var(--green);font-weight:700; }
-
-/* ── kpi big ── */
-.kpi-wrap { display:flex;align-items:center;gap:1em;margin:.4em 0; }
-.kpi-big { text-align:center;min-width:6em; }
-.kpi-num { font-size:clamp(32px,5.5vw,70px);font-weight:900;color:var(--c,var(--green));line-height:1; }
-.kpi-sub { font-size:clamp(9px,1.2vw,14px);color:var(--muted2);margin-top:.2em; }
-.kpi-ctx { font-size:clamp(11px,1.5vw,19px);color:var(--muted2);line-height:1.6; }
-
-/* ── SVG inline ── */
-.svg-il { display:block;width:100%;max-height:130px;overflow:visible; }
-.svg-grid { stroke:rgba(255,255,255,0.1);stroke-width:1; }
-.svg-area { fill:rgba(96,165,250,0.18); }
-.svg-curve { fill:none;stroke:rgba(96,165,250,0.9);stroke-width:2; }
-.svg-area2 { fill:rgba(34,197,94,0.18); }
-.svg-curve2 { fill:none;stroke:rgba(34,197,94,0.9);stroke-width:2; }
-.svg-marker { stroke:rgba(251,191,36,0.85);stroke-width:1.5;stroke-dasharray:4 3; }
-.svg-lbl { fill:var(--muted2);font-size:10px; }
-.svg-lbl-a { fill:rgba(96,165,250,0.9);font-size:10px;font-weight:700; }
-.svg-lbl-2 { fill:rgba(34,197,94,0.9);font-size:10px;font-weight:700; }
-
-/* ── fcard (fail / fix) ── */
-.fcard { border-radius:9px;padding:.55em .9em;margin-bottom:.35em;font-size:clamp(11px,1.45vw,18px); }
-.fcard.bad { background:rgba(248,113,113,0.08);border:1px solid rgba(248,113,113,0.32); }
-.fcard.good { background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.35); }
-.fcard.info { background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.35); }
-.fcard .fc-hd { font-weight:700;margin-bottom:.2em; }
-.fcard.bad .fc-hd { color:var(--red); }
-.fcard.good .fc-hd { color:var(--green); }
-.fcard.info .fc-hd { color:var(--acc2); }
-.fcard .fc-bd { color:var(--muted2);font-size:.92em;line-height:1.45; }
-
-/* ── data table ── */
-.dtbl { width:100%;border-collapse:collapse;font-size:clamp(10px,1.3vw,16px); }
-.dtbl th { background:rgba(255,255,255,0.05);padding:.35em .55em;text-align:center;border:1px solid var(--border);color:var(--muted2);font-weight:700; }
-.dtbl td { padding:.32em .55em;border:1px solid var(--border);color:var(--muted2);text-align:center;vertical-align:middle;line-height:1.4; }
-.dtbl td.hl { color:var(--green);font-weight:700; }
-.dtbl .row-hd { background:rgba(255,255,255,0.03);font-weight:700;color:var(--muted2);text-align:left;padding-left:.6em; }
-
-/* ── last slide ── */
-#s13 { background:radial-gradient(ellipse 80% 65% at 45% 50%, #06210f 0%, var(--slide-bg) 65%);align-items:center;justify-content:center; }
-#s13-card { background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.2em 1.7em;width:80%;box-shadow:0 0 30px rgba(34,197,94,0.25),0 8px 32px rgba(0,0,0,0.5); }
-#s13-cta { margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--acc2);display:flex;align-items:center;justify-content:center;gap:.55em; }
-.road-row { display:flex;align-items:flex-start;gap:.6em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);padding:.18em 0; }
-.road-row .rd-tag { flex-shrink:0;font-weight:700;min-width:6.5em; }
-
-/* ── sum items (S12) ── */
-.sum-item { display:flex;align-items:flex-start;gap:.7em;padding:.3em 0;border-bottom:1px dashed var(--border); }
-.sum-item:last-child { border-bottom:none; }
-.sum-icon { flex-shrink:0;width:1.5em;height:1.5em;border-radius:50%;background:rgba(34,197,94,0.2);display:flex;align-items:center;justify-content:center;color:var(--green);font-size:.85em;margin-top:2px; }
-.sum-main { font-size:clamp(11px,1.5vw,19px);color:#fff;font-weight:700; }
-.sum-sub { font-size:clamp(9px,1.2vw,14px);color:var(--muted2);margin-top:.1em; }
-
-/* ── coin row ── */
-.coin-row { display:flex;gap:.4em;justify-content:center;margin:.3em 0;flex-wrap:wrap; }
-.coin { width:clamp(30px,4vw,50px);height:clamp(30px,4vw,50px);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:clamp(12px,1.6vw,20px);border:2px solid var(--border); }
-.coin.h { background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.5);color:var(--green); }
-.coin.t { background:rgba(120,120,168,0.12);border-color:var(--border);color:var(--muted2); }
 </style>
 </head>
 <body>
@@ -1173,7 +1082,6 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1184,398 +1092,193 @@ body {
     <div class="s1-dot s1-dot3" aria-hidden="true"></div>
     <div class="slide-num">01 / 13</div><div class="step-dots" id="sd1"></div>
     <div class="s1-content">
-      <div id="s1-badge" class="se"><i class="fa-solid fa-flask-vial"></i>&ensp;AI時代のマーケティング・ラボ ／ 実践編ファイナル</div>
-      <div id="s1-ep" class="se">第12回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">データで改善！<br>「A/Bテスト」の正しいやり方</div>
-      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">感覚の改善から、証明できる改善へ</div>
-      <div id="s1-catch" class="se">「変えたら売上が上がった気がする」から卒業しよう</div>
+      <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
+      <div id="s1-ep" class="se">第12回 ／ 実践編ファイナル</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">ABテスト</div>
+      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">証明できる改善へ</div>
+      <div id="s1-catch" class="se">「気がする」から卒業</div>
     </div>
   </section>
 
-  <!-- S2: Hook 30-80s — verdict-rows パラダイムシフト -->
+  <!-- S2: Hook 30-80s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad-t">
-      <div id="s2-hd" class="sh se">「ボタンを赤に変えたら売上が上がった」は本当か？</div>
-      <div id="s2-verdict" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>感覚の改善：</strong>変える → 数字を見る →「増えた！ 赤ボタンが効いた」<br><span style="font-size:.88em;">同週SNS話題／季節変動／競合停止…別の要因かもしれない</span></div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>ヘッドラインを変えた → CVR上昇：</strong>「この文章が刺さった！」<br><span style="font-size:.88em;">本当に文章が原因？ 検証なしには言い切れない</span></div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>証明できる改善：</strong>仮説を立てる → 正しく比較する → 統計で判断する<br><span style="font-size:.88em;">Amazon は年間数千の A/B テストで感覚でなく「実験」で進化</span></div>
-        </div>
+    <div class="pad">
+      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">「赤いボタンで<span style="color:#fff;">売れた</span>」は<br>本当か</div>
+      <div id="s2-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">変えた</span><span class="aarrow">≠</span><span class="achip aghost">原因</span>
       </div>
-      <div id="s2-amz" class="se hl-banner" style="--c:var(--acc2)">
-        <i class="fa-solid fa-flask-vial hb-icon"></i>
-        <div class="hb-text"><strong>「気がする改善」を卒業し、数字で証明できる改善サイクルを手に入れよう</strong></div>
-      </div>
+      <div id="s2-ans" class="se t-xl" style="text-align:center;margin:.2em 0 .1em;">感覚 → <span style="color:var(--accent);">実験</span></div>
+      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">Amazonは年間数千のテスト</div>
     </div>
   </section>
 
-  <!-- S3: Definition + Fisher 80-130s — matrix-2x2 でA/B群 -->
+  <!-- S3: Definition + Fisher 80-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
-      <div id="s3-hd" class="sh se">A/Bテストとは何か — 実験で「原因」を特定する</div>
-      <div id="s3-def" class="se card card-l" style="margin-bottom:.45em;">
-        <div style="font-size:clamp(12px,1.7vw,22px);font-weight:700;color:#fff;">同じ条件下で<em style="color:var(--accent);font-style:normal;">1つの変数だけ</em>を変えた2つを<br><em style="color:var(--acc2);font-style:normal;">ランダムに振り分けて比較</em>し、統計的に判断する手法</div>
+      <div id="s3-hd" class="sh se">ABテストとは</div>
+      <div id="s3-key" class="se t-xl" style="text-align:center;">1変数で<span style="color:var(--accent);">比較</span></div>
+      <div id="s3-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">A<small>現行</small></span><span class="aarrow">vs</span><span class="achip on">B<small>改善案</small></span>
       </div>
-      <div id="s3-matrix" class="matrix-2x2 se">
-        <div class="mx-cell mx-tl">
-          <div class="mx-hd"><i class="fa-solid fa-a" style="color:var(--blue);"></i> A：コントロール群</div>
-          <div class="mx-body">現在のバージョン（変えない）<br>基準値として比較に使う</div>
-        </div>
-        <div class="mx-cell mx-tr hi">
-          <div class="mx-hd"><i class="fa-solid fa-b" style="color:var(--green);"></i> B：テスト群</div>
-          <div class="mx-body">改善案（1か所だけ変える）<br>同時・ランダムに振り分け</div>
-        </div>
-        <div class="mx-cell mx-bl hi-g">
-          <div class="mx-hd"><i class="fa-solid fa-seedling"></i> Fisher（1935）</div>
-          <div class="mx-body">① ランダム化（偏りを排除）<br>② 反復（十分なサンプル）<br>③ 局所管理（条件を揃える）</div>
-        </div>
-        <div class="mx-cell mx-br">
-          <div class="mx-hd"><i class="fa-solid fa-globe"></i> ウェブへの応用</div>
-          <div class="mx-body">農業実験の原則がそのまま<br>ウェブCVR改善に使われている</div>
-        </div>
+      <div id="s3-pts" class="se taglist t-md" style="margin-top:.5em;">
+        <span class="tag">ランダム化</span><span class="tag">反復</span><span class="tag acc">局所管理</span>
       </div>
-      <div id="s3-fisher" class="se" style="margin-top:.3em;font-size:clamp(10px,1.3vw,16px);color:var(--muted2);text-align:center;"><i class="fa-solid fa-book-open" style="color:var(--acc2);"></i> Ronald A. Fisher 『The Design of Experiments』（1935）— 農業実験で確立した実験計画法の3原則</div>
+      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.45em;">起源は Fisher 1935・実験計画法</div>
     </div>
   </section>
 
-  <!-- S4: What to test 130-180s — matrix-2x2 インパクト×変更しやすさ -->
+  <!-- S4: What to test — matrix 130-180s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">何をテストすべきか — インパクト × 変更しやすさで優先度を決める</div>
-      <div id="s4-matrix" class="matrix-2x2 se">
-        <div class="mx-cell mx-tl hi">
-          <div class="mx-hd"><i class="fa-solid fa-star"></i> ★★★ ヘッドライン</div>
-          <div class="mx-body">最初に読まれる。CVRへの影響が最大<br><span style="color:var(--green);font-weight:700;">最優先でテスト</span></div>
-        </div>
-        <div class="mx-cell mx-tr hi">
-          <div class="mx-hd"><i class="fa-solid fa-star"></i> ★★★ CTAボタン</div>
-          <div class="mx-body">文言・色・サイズ・配置<br>変更コスト低く即試せる</div>
-        </div>
-        <div class="mx-cell mx-bl">
-          <div class="mx-hd">★★ 価格表示・オファー</div>
-          <div class="mx-body">「送料無料」「今だけ」など<br>購買意欲に直結する訴求</div>
-        </div>
-        <div class="mx-cell mx-br hi-g">
-          <div class="mx-hd">★★ メイン画像・動画</div>
-          <div class="mx-body">感情的な引きつけに影響<br>制作コストは高め</div>
-        </div>
+      <div id="s4-hd" class="sh se">何をテストするか</div>
+      <div id="s4-map" class="se jmini t-lg" style="margin-top:.3em;">
+        <div class="jcell"><span class="jn">見出し</span><span class="jv" style="color:var(--accent);">★★★</span></div>
+        <div class="jcell"><span class="jn">CTAボタン</span><span class="jv" style="color:var(--accent);">★★★</span></div>
+        <div class="jcell"><span class="jn">価格訴求</span><span class="jv" style="color:var(--yellow);">★★</span></div>
+        <div class="jcell"><span class="jn">画像</span><span class="jv" style="color:var(--blue);">★</span></div>
       </div>
-      <div class="mx-labels se" id="s4-labels">
-        <span class="mx-lbl-x">← 変更しにくい ── 変更しやすい →</span>
-        <span class="mx-lbl-x">↑ インパクト大</span>
-      </div>
-      <div id="s4-quote" class="se" style="background:var(--surf);border-left:4px solid var(--acc2);border-radius:0 9px 9px 0;padding:.5em .9em;margin-top:.35em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <i class="fa-solid fa-quote-left" style="color:var(--acc2);"></i> Optimizely：「インパクトが大きく、実装コストが小さいものから始めよ」
-      </div>
+      <div id="s4-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">インパクト大 × 変えやすい から</div>
     </div>
   </section>
 
-  <!-- S5: Sample size 180-230s — formula + hl-banner「最低1,000人ルール」 -->
+  <!-- S5: Sample size + p-value 180-230s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">サンプルサイズ — テスト前に「何人必要か」を必ず計算する</div>
-      <div id="s5-coin" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-bottom:.35em;">
-        <div style="font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-bottom:.2em;">「5人に見せて4人が良いと言った」→ コイン5回投げて4回表でも偏りとは言えない</div>
-        <div class="coin-row">
-          <div class="coin h">表</div><div class="coin h">表</div><div class="coin h">表</div><div class="coin h">表</div><div class="coin t">裏</div>
-        </div>
-        <div style="font-size:clamp(10px,1.4vw,17px);color:var(--red);text-align:center;margin-top:.2em;">少ないサンプル = 偶然の差を「効果あり」と誤判断する</div>
+      <div id="s5-hd" class="sh se">サンプルサイズ</div>
+      <div id="s5-key" class="se t-lg" style="text-align:center;color:var(--muted2);">5人では<span style="color:#fff;">わからない</span></div>
+      <div id="s5-p" class="se" style="text-align:center;margin-top:.3em;">
+        <span class="bignum t-xl">p &lt; 0.05</span>
       </div>
-      <div id="s5-formula" class="se">
-        <div class="formula">
-          <span class="fm-var" style="--c:var(--acc2)">p値</span>
-          <span class="fm-op">&lt;</span>
-          <span class="fm-val" style="--c:var(--green)">0.05</span>
-        </div>
-        <div class="formula-sub">「この差が偶然起きる確率が5%以下」＝95%の確率でBが本当に良い</div>
-      </div>
-      <div id="s5-banner" class="se hl-banner" style="--c:var(--green);margin:.3em 0;">
-        <i class="fa-solid fa-circle-check hb-icon"></i>
-        <div class="hb-text"><strong>最低サンプルの目安：CVR 1% → 約4,000〜8,000 / CVR 3% → 約1,500〜3,000 / CVR 5% → 約800〜1,500 セッション（各群）</strong><br>→ テスト開始前に Evan Miller の Sample Size Calculator 等で必ず計算</div>
-      </div>
+      <div id="s5-pn" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.1em;">95%の確率で本物の差</div>
+      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">開始前に必要数を計算する</div>
     </div>
   </section>
 
-  <!-- S6: Fail 1 early stop 230-280s — bar-chart-h 期間別信頼性 + ベルカーブSVG説明 -->
+  <!-- S6: Failure 1 — early stopping (SVG) 230-280s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">よくある失敗 ① 早期終了 — 「良さそうだから終了」は危険</div>
-      <div id="s6-bars" class="bar-chart-h se">
-        <div class="bh-row">
-          <span class="bh-lbl" style="color:var(--red);">100人時点</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:15;--c:var(--red)"></div></div>
-          <span class="bh-val" style="color:var(--red);">B優勢→早期終了 ⚠</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl" style="color:var(--yellow);">500人時点</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:45;--c:var(--yellow)"></div></div>
-          <span class="bh-val" style="color:var(--yellow);">A・Bほぼ同等</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl" style="color:var(--green);">1000人時点</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:80;--c:var(--green)"></div></div>
-          <span class="bh-val" style="color:var(--green);">実はAが優勢！</span>
-        </div>
-      </div>
-      <div id="s6-fp" class="se fcard bad" style="margin-bottom:.3em;">
-        <div class="fc-hd"><i class="fa-solid fa-triangle-exclamation"></i> フォールスポジティブ（偽の陽性）— Evan Miller 2010</div>
-        <div class="fc-bd">途中チェックを繰り返すと、5%水準でも偽陽性率が<strong style="color:var(--red);">20〜30%超</strong>に膨れ上がる。「効果なし」を「効果あり」と誤判断してしまう</div>
-      </div>
-      <div id="s6-fix" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num">1</div>
-          <div class="n-body"><strong>開始前に必要サンプル数を決める</strong></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num">2</div>
-          <div class="n-body"><strong>達成するまで結果を見ない（判断しない）</strong></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num">3</div>
-          <div class="n-body"><strong>事前設定した期間が終わってから判断する</strong></div>
-        </div>
-      </div>
+      <div id="s6-hd" class="sh se">失敗① 早期終了</div>
+      <svg id="s6-svg" class="se s6-svg" viewBox="0 0 640 260" role="img" aria-label="A/Bの逆転">
+        <line x1="60" y1="220" x2="620" y2="220" stroke="#3a3a4a" stroke-width="2"/>
+        <line x1="60" y1="20"  x2="60"  y2="220" stroke="#3a3a4a" stroke-width="2"/>
+        <path d="M60 150 C160 60, 220 70, 300 120 S480 175, 620 170" fill="none" stroke="var(--accent)" stroke-width="6"/>
+        <path d="M60 165 C160 175, 240 160, 320 130 S500 95, 620 100" fill="none" stroke="var(--blue)" stroke-width="6"/>
+        <line x1="180" y1="20" x2="180" y2="232" stroke="var(--red)" stroke-width="3" stroke-dasharray="8 6"/>
+        <text class="ab-lbl" x="150" y="58" fill="var(--accent)">B</text>
+        <text class="ab-lbl" x="150" y="192" fill="var(--blue)">A</text>
+        <text class="ax-lbl" x="196" y="250">早期終了で逆転</text>
+      </svg>
+      <div id="s6-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.35em;">決めた数に達するまで判断しない</div>
     </div>
   </section>
 
-  <!-- S7: Early termination bell curve 280-330s — インラインSVGベルカーブ -->
+  <!-- S7: Failure 2 — multiple variables 280-330s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">なぜ早期終了が危険か — ベルカーブで見る「揺らぎ」</div>
-      <svg class="svg-il se" id="s7-bell" viewBox="0 0 400 130" aria-hidden="true">
-        <!-- グリッド -->
-        <line class="svg-grid" x1="0" y1="110" x2="400" y2="110"/>
-        <line class="svg-grid" x1="0" y1="55" x2="400" y2="55" stroke-dasharray="4 3"/>
-        <!-- A案（対照）ベルカーブ：中央寄り -->
-        <path class="svg-area" d="M30,110 C70,110 90,10 170,10 C250,10 270,110 310,110 Z"/>
-        <path class="svg-curve" d="M30,110 C70,110 90,10 170,10 C250,10 270,110 310,110"/>
-        <!-- B案（改善）ベルカーブ：少し右にシフト -->
-        <path class="svg-area2" d="M70,110 C110,110 130,18 210,18 C290,18 310,110 355,110 Z"/>
-        <path class="svg-curve2" d="M70,110 C110,110 130,18 210,18 C290,18 310,110 355,110"/>
-        <!-- 差の矢印（点線） -->
-        <line class="svg-marker" x1="170" y1="10" x2="210" y2="18"/>
-        <!-- 早期終了ゾーン（赤ハイライト） -->
-        <rect x="0" y="0" width="90" height="110" fill="rgba(248,113,113,0.07)" rx="4"/>
-        <line x1="90" y1="0" x2="90" y2="110" stroke="rgba(248,113,113,0.5)" stroke-width="1.5" stroke-dasharray="5 3"/>
-        <!-- ラベル -->
-        <text class="svg-lbl-a" x="165" y="8" text-anchor="middle">A案（対照）</text>
-        <text class="svg-lbl-2" x="215" y="16" text-anchor="start">B案（＋差）</text>
-        <text class="svg-lbl" x="45" y="125" text-anchor="middle" style="fill:rgba(248,113,113,0.9);font-size:9px;">早期終了ゾーン</text>
-        <text class="svg-lbl" x="200" y="125" text-anchor="middle">コンバージョン率</text>
-      </svg>
-      <div id="s7-explain" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;margin-top:.3em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <div style="padding:.1em 0;"><span style="color:var(--red);font-weight:700;">少ないサンプル段階では</span>——2つの分布が大きく重なり合い、差が偶然か本物か判断できない</div>
-        <div style="padding:.1em 0;"><span style="color:var(--green);font-weight:700;">十分なサンプルを集めると</span>——分布が安定し、本当の差（シフト）が統計的に確認できる</div>
+      <div id="s7-hd" class="sh se">失敗② 複数変数</div>
+      <div id="s7-bad" class="se taglist t-md" style="margin-top:.2em;">
+        <span class="tag ng">色</span><span class="tag ng">見出し</span><span class="tag ng">画像</span>
+        <span class="tag" style="border-color:var(--red);color:var(--red);">→ どれが効いた？</span>
       </div>
-      <div id="s7-rule" class="se hl-banner" style="--c:var(--green);margin-top:.3em;">
-        <i class="fa-solid fa-shield-halved hb-icon"></i>
-        <div class="hb-text"><strong>鉄則：決めたサンプル数に達するまで判断しない</strong> — 分布が安定してはじめて差が見える</div>
-      </div>
+      <div id="s7-key" class="se t-xl" style="text-align:center;margin-top:.2em;">1テスト<span style="color:var(--accent);">1変数</span></div>
+      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">原因が1つに絞れて次に活きる</div>
     </div>
   </section>
 
-  <!-- S8: Fail 2 multi-variable 330-380s — verdict-rows NG→OK -->
+  <!-- S8: Failure 3 — biased period 330-380s -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">よくある失敗 ② 複数変数の同時変更 — 「何が効いたか」が不明になる</div>
-      <div id="s8-verdict" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body">
-            <strong>NG：複数変数を同時に変える</strong><br>
-            A：青ボタン＋現行ヘッドライン＋通常画像<br>
-            B：<span style="color:var(--red);">赤ボタン＋新ヘッドライン＋新画像</span><br>
-            <span style="font-size:.88em;">→ BのCVRが高くてもボタン？ヘッドライン？画像？改善要因が特定できない</span>
-          </div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body">
-            <strong>OK：1テスト1変数の原則</strong><br>
-            A：青ボタン＋現行ヘッドライン＋通常画像<br>
-            B：<span style="color:var(--green);">赤ボタン</span>＋現行ヘッドライン＋通常画像<br>
-            <span style="font-size:.88em;">→ 差異の原因が「ボタンの色」だけになり、因果関係が明確になる</span>
-          </div>
-        </div>
+      <div id="s8-hd" class="sh se">失敗③ 偏った期間</div>
+      <div id="s8-bad" class="se taglist t-md" style="margin-top:.2em;">
+        <span class="tag ng">月曜だけ</span><span class="tag ng">年末商戦</span><span class="tag ng">セール中</span>
       </div>
-      <div id="s8-mvt" class="se fcard info" style="margin-top:.3em;margin-bottom:0;">
-        <div class="fc-hd"><i class="fa-solid fa-layer-group"></i> 例外：多変数テスト（MVT）— 月間10万PV以上の規模がなければ非推奨</div>
-        <div class="fc-bd">複数要素を同時に組み合わせる高度な手法。必要サンプルが膨大になるため、スモール規模ではまず「1テスト1変数」から</div>
-      </div>
+      <div id="s8-key" class="se t-xl" style="text-align:center;margin-top:.2em;">最低<span style="color:var(--accent);">7日間</span></div>
+      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">理想は2〜4週・祝日とセールは避ける</div>
     </div>
   </section>
 
-  <!-- S9: Statistical significance 380-430s — gauge-wrap p値ゲージ -->
+  <!-- S9: Tools / implementation 380-430s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se">統計的有意性 — p値と信頼区間の正しい読み方</div>
-      <div id="s9-gauge" class="gauge-wrap se">
-        <div class="gauge-hd">信頼水準（Confidence Level）— テスト期間・サンプル数が増えるほど上昇</div>
-        <div class="gauge-track">
-          <div class="gauge-fill" style="--v:.95;--c:var(--green)"></div>
-          <span class="gauge-marker" style="left:95%">95% ライン</span>
+      <div id="s9-hd" class="sh se">ツールと始め方</div>
+      <div id="s9-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--blue);">
+          <div class="ph t-lg" style="color:var(--blue);">無料で<small>スモールスタート</small></div>
+          <div class="taglist t-sm"><span class="tag">GA4</span><span class="tag">URL分岐</span></div>
         </div>
-        <div class="gauge-legs"><span>0%</span><span>50%</span><span>95%（有意）</span><span>100%</span></div>
+        <div class="pcard" style="border-top-color:var(--accent);">
+          <div class="ph t-lg" style="color:var(--accent);">本格運用<small>中規模以上</small></div>
+          <div class="taglist t-sm"><span class="tag">Optimizely</span><span class="tag">VWO</span></div>
+        </div>
       </div>
-      <div id="s9-pval" class="se" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.3);border-radius:9px;padding:.55em .9em;margin:.35em 0;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <strong style="color:var(--acc2);">p値 &lt; 0.05</strong> ＝「この差が偶然起きる確率が5%以下」<br>
-        → <strong style="color:#fff;">95%の確率でBは本当にAより優れている</strong>という統計的根拠
-      </div>
-      <div id="s9-ci" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);">
-        <strong style="color:#fff;">信頼区間（CI）</strong>が重要：「BはAより○〜○%優れる」という<em style="font-style:normal;color:var(--green);">範囲</em>で示す<br>
-        <span style="color:var(--red);">信頼区間がゼロをまたぐ場合</span>は「有意差なし」と判断する
-      </div>
-      <div id="s9-tip" class="se" style="margin-top:.3em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);text-align:center;">
-        <i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i> テスト期間が長く・サンプルが多いほど信頼区間は<strong style="color:var(--accent);">狭く（精度が高く）</strong>なる
-      </div>
+      <div id="s9-note" class="se hl-banner" style="margin-top:.55em;">URL半々で疑似ABテストも可</div>
     </div>
   </section>
 
-  <!-- S10: 3 traps summary 430-480s — n-steps 3つの落とし穴 -->
+  <!-- S10: Reading results — 3 metrics 430-480s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s10-hd" class="sh se">3つの落とし穴 — よくある失敗をまとめる</div>
-      <div id="s10-traps" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num r">1</div>
-          <div class="n-body">
-            <strong>早期終了（Evan Miller 2010）</strong>
-            <div class="t-sm">途中でのぞいて「Bが優勢→終了」→ 偽陽性率が20〜30%超に<br>✅ 対策：決めたサンプル数・期間が来るまで判断しない</div>
-          </div>
-        </div>
-        <div class="n-step">
-          <div class="n-num r">2</div>
-          <div class="n-body">
-            <strong>複数変数の同時変更</strong>
-            <div class="t-sm">ボタン＋ヘッドライン＋画像を一度に変える → 改善要因が特定不能<br>✅ 対策：1テスト1変数の鉄則を守る</div>
-          </div>
-        </div>
-        <div class="n-step">
-          <div class="n-num r">3</div>
-          <div class="n-body">
-            <strong>実施期間が短い・偏っている</strong>
-            <div class="t-sm">月曜3日だけ / 年末商戦中 → 曜日・季節・時間帯の影響を混入<br>✅ 対策：最低7日間（理想2〜4週間）、特別期間をまたがない</div>
-          </div>
-        </div>
+      <div id="s10-hd" class="sh se">結果の読み方</div>
+      <div id="s10-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+        <span class="tag">CVR</span><span class="tag acc">リフト率</span><span class="tag">信頼区間</span>
       </div>
-      <div id="s10-sum" class="se hl-banner" style="--c:var(--accent);margin-top:.3em;">
-        <i class="fa-solid fa-shield-halved hb-icon"></i>
-        <div class="hb-text"><strong>この3つを避けるだけで、A/Bテストの信頼性は劇的に向上する</strong></div>
-      </div>
+      <div id="s10-lift" class="se t-md" style="text-align:center;margin-top:.45em;">0.4pt より <span class="bignum" style="font-size:1.3em;">20%改善</span></div>
+      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.45em;">負けたテストも学習・次の仮説へ</div>
     </div>
   </section>
 
-  <!-- S11: Case study 480-530s — comp-tbl + kpi-big -->
+  <!-- S11: Case study — 32% lift 480-530s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">実践例：商品ページの画像A/BテストでCVR 32%改善</div>
-      <div id="s11-setup" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-bottom:.35em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <div style="margin-bottom:.2em;"><strong style="color:#fff;">状況：</strong>中小ECサイト（ハンドメイドアクセサリー・架空）月間約8,000セッション／CVR 3.2%</div>
-        <div><strong style="color:var(--accent);">仮説：</strong>「単品白抜き写真より着用シーン写真の方が購買意欲を引き出せる」— 変更はメイン画像1か所のみ（21日間・各群2,000セッション事前計算済み）</div>
-      </div>
-      <div id="s11-tbl" class="comp-tbl se">
-        <div class="comp-row comp-head">
-          <span class="comp-label">指標</span>
-          <span class="comp-a">A：単品画像（現行）</span>
-          <span class="comp-b">B：シーン画像（改善）</span>
+      <div id="s11-hd" class="sh se">実践例：商品ページ</div>
+      <div id="s11-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--blue);">
+          <div class="ph t-lg" style="color:var(--blue);">A 単品画像<small>CVR 3.2%</small></div>
         </div>
-        <div class="comp-row">
-          <span class="comp-label">セッション</span>
-          <span class="comp-a">2,000</span>
-          <span class="comp-b">2,000</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">CV件数</span>
-          <span class="comp-a">64件</span>
-          <span class="comp-b c-green">84件</span>
-        </div>
-        <div class="comp-row hi">
-          <span class="comp-label">CVR</span>
-          <span class="comp-a c-red">3.2%</span>
-          <span class="comp-b c-green">4.2%</span>
+        <div class="pcard" style="border-top-color:var(--accent);">
+          <div class="ph t-lg" style="color:var(--accent);">B シーン画像<small>CVR 4.2%</small></div>
         </div>
       </div>
-      <div id="s11-kpi" class="kpi-wrap se" style="margin-top:.4em;">
-        <div class="kpi-big" style="--c:var(--green)">
-          <div class="kpi-num">+32%</div>
-          <div class="kpi-sub">リフト率（CVR改善）</div>
-        </div>
-        <div class="kpi-ctx">
-          <strong>p値 0.018（p &lt; 0.05）→ 統計的有意差あり</strong><br>
-          信頼水準95%以上<br>
-          <span style="color:var(--accent);">次の仮説：着用<strong>動画</strong>はさらに効果があるか？</span>
-        </div>
+      <div id="s11-kpi" class="se" style="text-align:center;margin-top:.45em;">
+        <span class="bignum t-xl">32%改善</span>
+        <span class="t-sm" style="display:block;color:var(--muted2);">p=0.018・有意差あり</span>
       </div>
     </div>
   </section>
 
-  <!-- S12: Summary 530-580s — step-flow 実践ロードマップ -->
+  <!-- S12: Summary 530-580s -->
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">今日のまとめ ＋ A/Bテスト実践ロードマップ</div>
-      <div id="s12-flow" class="step-flow se">
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>① 仮説を立てる</strong>：Who（誰の）・Problem（何の問題）・Action（何を変える）・Metric（何で測る）</div>
-        </div>
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>② テスト設計：</strong>1変数のみ変更 ／ サンプルサイズ事前計算 ／ 最低7日間確保</div>
-        </div>
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>③ テスト実施：</strong>サンプル達成まで途中判断しない ／ 特別期間を避ける</div>
-        </div>
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>④ 結果を読む：</strong>CVR・リフト率・信頼区間で判断 ／ 失敗も「仮説を棄却できた」知見として活かす</div>
-        </div>
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>⑤ 次の仮説へ：</strong>結果から新しい問いを立て、テストサイクルを回す</div>
-        </div>
+      <div id="s12-hd" class="sh se">まとめ</div>
+      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+        <span class="tag">1変数で比較</span>
+        <span class="tag">サンプル先決め</span>
+        <span class="tag">3つの罠を回避</span>
+        <span class="tag acc">失敗も学習</span>
       </div>
-      <div id="s12-do" class="se hl-banner" style="--c:var(--accent);margin-top:.3em;">
-        <i class="fa-solid fa-rocket hb-icon"></i>
-        <div class="hb-text"><strong>今すぐできる実践：自社で「最初にテストする1か所」を今日決める</strong><br>ヘッドラインかCTAボタン——そこから実験文化が始まる</div>
-      </div>
+      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">最初にテストする1か所を今日決める</div>
     </div>
   </section>
 
-  <!-- S13: Course complete / next 580-600s -->
+  <!-- S13: Course complete + next 580-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
-      <div id="s13-card" class="se">
-        <div class="next-lbl"><i class="fa-solid fa-trophy"></i>&ensp;実践編 全12回 修了おめでとうございます！</div>
-        <div class="road-row"><span class="rd-tag" style="color:var(--blue);">入門編 1〜4</span><span>基礎・3C・STP・ペルソナ・ベネフィット</span></div>
-        <div class="road-row"><span class="rd-tag" style="color:var(--yellow);">中級編 5〜8</span><span>ジャーニー・価格心理・4P/4C・USP差別化</span></div>
-        <div class="road-row"><span class="rd-tag" style="color:var(--green);">実践編 9〜12</span><span>CPA/LTV・コピーライティング・SNS運用・A/Bテスト</span></div>
-        <div class="next-lbl" style="margin-top:.7em;"><i class="fa-solid fa-forward"></i>&ensp;次のフェーズ：上級編（第13〜16回）予告</div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>AI活用によるマーケットリサーチの自動化</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>AIコンテンツ生成とブランドトーンの維持</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>データ分析×AIで改善サイクルを加速する</span></div>
-      </div>
-      <div id="s13-cta" class="se"><i class="fa-solid fa-heart"></i> チャンネル登録 &amp; 高評価をお願いします！実践編の感想もコメントで <i class="fa-solid fa-thumbs-up"></i></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s13-lbl" class="se t-md" style="color:var(--accent);font-weight:800;">実践編 全12回 修了</div>
+      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">次は上級編</div>
+      <div id="s13-sub" class="se t-md" style="color:var(--accent);">AI × マーケティング</div>
+      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
     </div>
   </section>
 
@@ -1607,54 +1310,56 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
-  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-verdict'],        anim:'rv-up'},
-  {si:1,  t:50,   ids:['s2-amz'],            anim:'rv-scale'},
-  {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:83,   ids:['s3-def'],            anim:'rv-scale'},
-  {si:2,  t:93,   ids:['s3-matrix'],         anim:'rv-up'},
-  {si:2,  t:108,  ids:['s3-fisher'],         anim:'rv-fade'},
-  {si:3,  t:130,  ids:['s4-hd'],             anim:'rv-fade'},
-  {si:3,  t:133,  ids:['s4-matrix'],         anim:'rv-scale'},
-  {si:3,  t:148,  ids:['s4-labels'],         anim:'rv-fade'},
-  {si:3,  t:158,  ids:['s4-quote'],          anim:'rv-fade'},
-  {si:4,  t:180,  ids:['s5-hd'],             anim:'rv-fade'},
-  {si:4,  t:183,  ids:['s5-coin'],           anim:'rv-scale'},
-  {si:4,  t:197,  ids:['s5-formula'],        anim:'rv-up'},
-  {si:4,  t:210,  ids:['s5-banner'],         anim:'rv-fade'},
-  {si:5,  t:230,  ids:['s6-hd'],             anim:'rv-fade'},
-  {si:5,  t:233,  ids:['s6-bars'],           anim:'rv-up'},
-  {si:5,  t:248,  ids:['s6-fp'],             anim:'rv-scale'},
-  {si:5,  t:260,  ids:['s6-fix'],            anim:'rv-up'},
-  {si:6,  t:280,  ids:['s7-hd'],             anim:'rv-fade'},
-  {si:6,  t:283,  ids:['s7-bell'],           anim:'rv-fade'},
-  {si:6,  t:300,  ids:['s7-explain'],        anim:'rv-up'},
-  {si:6,  t:315,  ids:['s7-rule'],           anim:'rv-scale'},
-  {si:7,  t:330,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:333,  ids:['s8-verdict'],        anim:'rv-up'},
-  {si:7,  t:355,  ids:['s8-mvt'],            anim:'rv-fade'},
-  {si:8,  t:380,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:383,  ids:['s9-gauge'],          anim:'rv-scale'},
-  {si:8,  t:398,  ids:['s9-pval'],           anim:'rv-up'},
-  {si:8,  t:410,  ids:['s9-ci'],             anim:'rv-up'},
-  {si:8,  t:422,  ids:['s9-tip'],            anim:'rv-fade'},
-  {si:9,  t:430,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:433,  ids:['s10-traps'],         anim:'rv-up'},
-  {si:9,  t:465,  ids:['s10-sum'],           anim:'rv-scale'},
-  {si:10, t:480,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:483,  ids:['s11-setup'],         anim:'rv-up'},
-  {si:10, t:497,  ids:['s11-tbl'],           anim:'rv-up'},
-  {si:10, t:510,  ids:['s11-kpi'],           anim:'rv-scale'},
-  {si:11, t:530,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:533,  ids:['s12-flow'],          anim:'rv-up'},
-  {si:11, t:565,  ids:['s12-do'],            anim:'rv-scale'},
-  {si:12, t:580,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:593,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
+  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
+  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
+  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
+  {si:1,  t:40,   ids:['s2-flow'],    anim:'rv-up'},
+  {si:1,  t:55,   ids:['s2-ans'],     anim:'rv-scale'},
+  {si:1,  t:70,   ids:['s2-note'],    anim:'rv-fade'},
+  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
+  {si:2,  t:86,   ids:['s3-key'],     anim:'rv-scale'},
+  {si:2,  t:98,   ids:['s3-flow'],    anim:'rv-up'},
+  {si:2,  t:112,  ids:['s3-pts'],     anim:'rv-up'},
+  {si:2,  t:122,  ids:['s3-note'],    anim:'rv-fade'},
+  {si:3,  t:130,  ids:['s4-hd'],      anim:'rv-fade'},
+  {si:3,  t:140,  ids:['s4-map'],     anim:'rv-up'},
+  {si:3,  t:168,  ids:['s4-note'],    anim:'rv-fade'},
+  {si:4,  t:180,  ids:['s5-hd'],      anim:'rv-fade'},
+  {si:4,  t:188,  ids:['s5-key'],     anim:'rv-fade'},
+  {si:4,  t:200,  ids:['s5-p'],       anim:'rv-scale'},
+  {si:4,  t:210,  ids:['s5-pn'],      anim:'rv-up'},
+  {si:4,  t:222,  ids:['s5-note'],    anim:'rv-fade'},
+  {si:5,  t:230,  ids:['s6-hd'],      anim:'rv-fade'},
+  {si:5,  t:240,  ids:['s6-svg'],     anim:'rv-up'},
+  {si:5,  t:270,  ids:['s6-note'],    anim:'rv-pop'},
+  {si:6,  t:280,  ids:['s7-hd'],      anim:'rv-fade'},
+  {si:6,  t:290,  ids:['s7-bad'],     anim:'rv-up'},
+  {si:6,  t:308,  ids:['s7-key'],     anim:'rv-scale'},
+  {si:6,  t:320,  ids:['s7-note'],    anim:'rv-fade'},
+  {si:7,  t:330,  ids:['s8-hd'],      anim:'rv-fade'},
+  {si:7,  t:340,  ids:['s8-bad'],     anim:'rv-up'},
+  {si:7,  t:358,  ids:['s8-key'],     anim:'rv-scale'},
+  {si:7,  t:370,  ids:['s8-note'],    anim:'rv-fade'},
+  {si:8,  t:380,  ids:['s9-hd'],      anim:'rv-fade'},
+  {si:8,  t:390,  ids:['s9-duo'],     anim:'rv-up'},
+  {si:8,  t:418,  ids:['s9-note'],    anim:'rv-pop'},
+  {si:9,  t:430,  ids:['s10-hd'],     anim:'rv-fade'},
+  {si:9,  t:440,  ids:['s10-tags'],   anim:'rv-up'},
+  {si:9,  t:458,  ids:['s10-lift'],   anim:'rv-scale'},
+  {si:9,  t:470,  ids:['s10-note'],   anim:'rv-fade'},
+  {si:10, t:480,  ids:['s11-hd'],     anim:'rv-fade'},
+  {si:10, t:490,  ids:['s11-duo'],    anim:'rv-up'},
+  {si:10, t:512,  ids:['s11-kpi'],    anim:'rv-scale'},
+  {si:11, t:530,  ids:['s12-hd'],     anim:'rv-fade'},
+  {si:11, t:540,  ids:['s12-tags'],   anim:'rv-up'},
+  {si:11, t:565,  ids:['s12-note'],   anim:'rv-fade'},
+  {si:12, t:580,  ids:['s13-lbl'],    anim:'rv-fade'},
+  {si:12, t:585,  ids:['s13-title'],  anim:'rv-up'},
+  {si:12, t:590,  ids:['s13-sub'],    anim:'rv-fade'},
+  {si:12, t:595,  ids:['s13-cta'],    anim:'rv-pop'}
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},

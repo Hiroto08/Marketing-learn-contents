@@ -69,6 +69,7 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
+  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -136,22 +137,26 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
-.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
+   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
+.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
+.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
 
 /* section header */
 .sh {
-  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
-  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
+  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
+  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
+  letter-spacing:.01em;
 }
-.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes */
-.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
-.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
-.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
-.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
-.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
+/* body text sizes — large for mobile/YouTube legibility (bold gothic).
+   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
+.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
+.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
+.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
+.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
+.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -365,7 +370,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
+  color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -434,7 +439,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
+  color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -618,7 +623,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
+  font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -914,7 +919,8 @@ body {
    </div>  */
 .hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
   background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
+  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
 .hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
 .hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
 .hb-text strong { color:var(--text); }
@@ -1005,56 +1011,64 @@ body {
 .s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
 @keyframes dotFloat { to { transform:translateY(-8px); } }
 
+/* ================================================================
+   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
+   Shared keyword + diagram vocabulary for all episodes.
+================================================================ */
+.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
+.aflow.sm{gap:.4em;}
+.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
+  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
+.aflow.sm .achip{padding:.45em .7em;}
+.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
+.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
+.aghost{opacity:.4;}
+.aarrow{color:var(--accent);font-weight:900;}
+/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
+   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
+.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
+.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
+  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
+.tag.acc{border-color:var(--accent);color:var(--accent);}
+.tag.ng{border-color:var(--red);color:var(--red);}
+.tag.ok{border-color:var(--green);color:var(--green);}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
+.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
+  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
+.pcard .ph{font-weight:900;line-height:1.1;}
+.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
+.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
+.bignum{color:var(--accent);font-weight:900;line-height:1;}
+.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
+.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
+.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
+.jcell .jv{font-weight:900;line-height:1;}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
+.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
+.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
+.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
+.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
+
 </style>
 
 <style id="ep-css">
+
 /* ── vertical centering override ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── accent: teal (numbers / investment theme) ── */
-:root { --accent: #14B8A6; --glow-acc: rgba(20,184,166,.25); --acc2: #f59e0b; }
+/* ── EP09 accent: teal ── */
+:root { --accent:#14B8A6; --glow-acc:rgba(20,184,166,.25); }
 
-/* ── note / source ── */
-.src-note { font-size: clamp(9px,1.15vw,14px); color: var(--muted); }
+/* ── S1 ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #062a27 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(20,184,166,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+#s1-badge i{color:var(--accent);}
+#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
+#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── loss / red emphasis ── */
-.loss-box { background: rgba(248,100,100,0.10); border: 2px solid rgba(248,100,100,0.4); border-radius: 10px; padding: .55em 1em; text-align: center; font-size: clamp(15px,2.4vw,30px); font-weight: 900; color: var(--red); margin: .4em 0; }
+/* Minimal design helpers and type scale live in the shared base CSS — not redefined here. */
 
-/* ── ratio bands (S5) ── */
-.ratio-band { border-radius: 9px; padding: .5em .9em; margin: .3em 0; font-size: clamp(11px,1.55vw,20px); display: flex; align-items: center; gap: .6em; }
-.ratio-band.good { background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.4); }
-.ratio-band.warn { background: rgba(251,191,36,0.10); border: 1px solid rgba(251,191,36,0.4); }
-.ratio-band.bad  { background: rgba(248,100,100,0.10); border: 1px solid rgba(248,100,100,0.4); }
-.ratio-band .rb-num { font-weight: 900; min-width: 6.5em; flex-shrink: 0; font-size: 1.05em; }
-.ratio-band.good .rb-num { color: var(--green); }
-.ratio-band.warn .rb-num { color: var(--yellow); }
-.ratio-band.bad  .rb-num { color: var(--red); }
-
-/* ── cohort table (S9) ── */
-.coh { width: 100%; border-collapse: collapse; font-size: clamp(9px,1.25vw,16px); }
-.coh th { background: rgba(255,255,255,0.05); padding: .35em .5em; text-align: center; border: 1px solid var(--border); color: var(--muted2); font-weight: 700; }
-.coh td { padding: .32em .5em; border: 1px solid var(--border); color: var(--muted2); text-align: center; }
-.coh .row-hd { background: rgba(255,255,255,0.03); font-weight: 700; color: var(--muted2); text-align: left; padding-left: .7em; }
-.coh tr.hi td { background: rgba(20,184,166,0.14); color: #fff; font-weight: 700; }
-
-/* ── summary list (S12) ── */
-.sum-item { display: flex; gap: .55em; align-items: flex-start; padding: .25em 0; font-size: clamp(10px,1.45vw,19px); }
-.sum-icon { color: var(--accent); flex-shrink: 0; margin-top: .18em; }
-.sum-main { font-weight: 700; color: #fff; }
-.sum-sub  { color: var(--muted2); font-size: .88em; margin-top: .08em; }
-
-/* ── last slide ── */
-#s13 { background: radial-gradient(ellipse 80% 65% at 40% 50%, #07201d 0%, var(--slide-bg) 65%); align-items: center; justify-content: center; }
-#s13-card { background: var(--surf); border: 1px solid var(--border); border-radius: 14px; padding: 1.3em 1.8em; width: 76%; box-shadow: 0 0 30px rgba(20,184,166,0.3), 0 8px 32px rgba(0,0,0,0.5); }
-#s13-cta { margin-top: 1em; text-align: center; font-size: clamp(12px,1.75vw,22px); font-weight: 700; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: .55em; }
-
-/* ── s1 overrides ── */
-#s1 { background: radial-gradient(ellipse 90% 75% at 65% 45%, #07201d 0%, var(--slide-bg) 68%); align-items: center; justify-content: center; text-align: center; }
-#s1-badge { display: inline-flex; align-items: center; gap: .5em; background: var(--surf2); border: 1px solid rgba(20,184,166,0.4); color: var(--muted2); border-radius: 20px; padding: .3em 1.2em; margin-bottom: .75em; font-size: clamp(9px,1.2vw,14px); }
-#s1-badge i { color: var(--accent); }
-#s1-ep { font-size: clamp(10px,1.4vw,18px); color: var(--accent); font-weight: 700; margin-bottom: .4em; }
-#s1-catch { font-size: clamp(11px,1.5vw,19px); color: var(--muted2); margin-top: .7em; }
 </style>
 </head>
 <body>
@@ -1063,7 +1077,6 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1074,260 +1087,104 @@ body {
     <div class="s1-dot s1-dot3" aria-hidden="true"></div>
     <div class="slide-num">01 / 13</div><div class="step-dots" id="sd1"></div>
     <div class="s1-content">
-      <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ｜実践編スタート</div>
-      <div id="s1-ep" class="se">第9回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">広告費を無駄にしない！</div>
-      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">「CPA」と「LTV」の考え方</div>
-      <div id="s1-catch" class="se">広告費は「コスト」ではなく「投資」——その判断基準を数字で持つ</div>
+      <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
+      <div id="s1-ep" class="se">第9回 ／ 実践編</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">広告費は投資</div>
+      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">CPA と LTV</div>
+      <div id="s1-catch" class="se">コスト → 数字で判断</div>
     </div>
   </section>
 
   <!-- S2: Hook 30-80s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad-t">
-      <div id="s2-hd" class="sh se">なぜ広告費をかけても利益が出ないのか？</div>
-      <div class="comp-tbl se" id="s2-tbl">
-        <div class="comp-row comp-head">
-          <span class="comp-label">指標</span>
-          <span class="comp-a">CPA視点のみ</span>
-          <span class="comp-b">LTV視点で見ると</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">広告費</span>
-          <span class="comp-a">100,000円</span>
-          <span class="comp-b">100,000円</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">獲得件数</span>
-          <span class="comp-a">10件</span>
-          <span class="comp-b">10件</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">CPA</span>
-          <span class="comp-a" style="color:var(--green);font-weight:700;">10,000円/件 ✅</span>
-          <span class="comp-b" style="color:var(--muted2);">10,000円/件</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">1回購入単価</span>
-          <span class="comp-a" style="color:var(--muted);">（考慮せず）</span>
-          <span class="comp-b" style="color:var(--red);">8,000円</span>
-        </div>
-        <div class="comp-row hi">
-          <span class="comp-label">損益</span>
-          <span class="comp-a c-green">「安く獲れた！」</span>
-          <span class="comp-b c-red">赤字 20,000円 ❌</span>
-        </div>
+    <div class="pad">
+      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">CPAが安くても<span style="color:#fff;">赤字</span>？</div>
+      <div id="s2-flow" class="se aflow t-md" style="margin-top:.25em;">
+        <span class="achip">売上<small>8万円</small></span><span class="aarrow">&lt;</span><span class="achip aghost">広告費<small>10万円</small></span>
       </div>
-      <div id="s2-core" class="hl-banner se" style="--c:var(--accent);margin-top:.5em;">
-        <i class="fa-solid fa-lightbulb hb-icon"></i>
-        <div class="hb-text"><strong>CPAは入口の数字に過ぎない</strong><br>その顧客が生涯でいくら買うか（LTV）を見なければ、本当の費用対効果は判断できない</div>
+      <div id="s2-kpi" class="se" style="text-align:center;margin-top:.15em;">
+        <span class="bignum t-xl" style="color:var(--red);">−2万円</span>
       </div>
+      <div id="s2-note" class="se note" style="margin-top:.35em;">CPAは入口の数字にすぎない</div>
     </div>
   </section>
 
-  <!-- S3: CPA Definition 80-130s -->
+  <!-- S3: CPA definition 80-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
-      <div id="s3-hd" class="sh se">CPA（Cost Per Acquisition）とは</div>
-      <div class="formula se" id="s3-formula">
-        <span class="fm-var" style="--c:var(--accent)">CPA</span>
-        <span class="fm-op">=</span>
-        <span class="fm-var" style="--c:var(--muted2)">広告費</span>
-        <span class="fm-op">÷</span>
-        <span class="fm-var" style="--c:var(--muted2)">獲得件数</span>
+      <div id="s3-hd" class="sh se">CPA とは</div>
+      <div id="s3-key" class="se t-lg" style="text-align:center;">顧客獲得の<span style="color:var(--accent);">単価</span></div>
+      <div id="s3-fm" class="se formula" style="margin-top:.35em;">
+        <span class="fm-var">CPA</span><span class="fm-op">=</span>
+        <span class="fm-var" style="--c:#fff;">広告費</span><span class="fm-op">÷</span>
+        <span class="fm-var" style="--c:#fff;">獲得件数</span>
       </div>
-      <div class="formula-sub se" id="s3-fml-ex">例：広告費 50,000円 ÷ 獲得 5件 ＝ <strong style="color:var(--accent)">CPA 10,000円</strong></div>
-      <div class="bar-chart-h se" id="s3-bench" style="margin-top:.5em;">
-        <div style="font-size:clamp(10px,1.3vw,16px);font-weight:700;color:var(--accent);margin-bottom:.4em;">業種別CPA目安 <span class="src-note">（参考：Neil Patel / 業界ベンチマーク）</span></div>
-        <div class="bh-row">
-          <span class="bh-lbl">EC（物販）</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:10;--c:var(--accent)"></div></div>
-          <span class="bh-val" style="color:var(--accent)">〜5,000円</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">SaaS・IT</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:35;--c:var(--blue)"></div></div>
-          <span class="bh-val" style="color:var(--blue)">〜30,000円</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">士業・コンサル</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:55;--c:var(--yellow)"></div></div>
-          <span class="bh-val" style="color:var(--yellow)">〜50,000円</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">不動産・保険</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:100;--c:var(--red)"></div></div>
-          <span class="bh-val" style="color:var(--red)">100,000円超</span>
-        </div>
-      </div>
-      <div id="s3-myth" class="se" style="background:rgba(20,184,166,0.08);border:1px solid rgba(20,184,166,0.35);border-radius:9px;padding:.55em .9em;font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.4em;">
-        <span style="color:var(--red);font-weight:900;">×</span> CPAが低い ＝ 良い顧客　…ではない&ensp;
-        <span style="color:var(--accent);font-weight:900;">◎</span> CPAは<strong style="color:#fff;">LTVとセット</strong>で評価する
-      </div>
+      <div id="s3-note" class="se note" style="margin-top:.5em;">「低い＝良い」とは限らない</div>
     </div>
   </section>
 
-  <!-- S4: LTV Definition 130-190s -->
+  <!-- S4: LTV definition 130-190s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">LTV（Life Time Value）とは</div>
-      <div id="s4-def" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:10px;padding:.6em 1em;margin-bottom:.45em;font-size:clamp(12px,1.7vw,22px);color:var(--muted2);line-height:1.6;">
-        <strong style="color:#fff;">1人の顧客が取引を続ける期間に、企業にもたらす<em style="color:var(--accent);font-style:normal;">利益の合計</em></strong><br>
-        <span class="src-note">── Philip Kotler『マーケティング・マネジメント』</span>
+      <div id="s4-hd" class="sh se">LTV とは</div>
+      <div id="s4-key" class="se t-lg" style="text-align:center;">顧客の<span style="color:var(--accent);">生涯価値</span></div>
+      <div id="s4-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">単価</span><span class="aarrow">×</span>
+        <span class="achip">頻度</span><span class="aarrow">×</span>
+        <span class="achip on">継続期間</span>
       </div>
-      <div class="formula se" id="s4-formula">
-        <span class="fm-var" style="--c:var(--accent)">LTV</span>
-        <span class="fm-op">=</span>
-        <span class="fm-var" style="--c:var(--acc2)">単価</span>
-        <span class="fm-op">×</span>
-        <span class="fm-var" style="--c:var(--blue)">頻度</span>
-        <span class="fm-op">×</span>
-        <span class="fm-var" style="--c:var(--green)">期間</span>
-      </div>
-      <div class="n-steps se" id="s4-calc">
-        <div class="n-step" id="s4-step1">
-          <div class="n-num" style="background:var(--acc2);color:#000;">単価</div>
-          <div class="n-body"><strong>平均購入単価：5,000円</strong><div class="t-sm">アップセル・高価格帯商品で引き上げ可能</div></div>
-        </div>
-        <div class="n-step" id="s4-step2">
-          <div class="n-num b">頻度</div>
-          <div class="n-body"><strong>購入頻度：月2回（年24回）</strong><div class="t-sm">サブスク・リピート施策で増加</div></div>
-        </div>
-        <div class="n-step" id="s4-step3">
-          <div class="n-num g">期間</div>
-          <div class="n-body"><strong>継続期間：2年</strong><div class="t-sm">解約防止・オンボーディングで延長</div></div>
-        </div>
-      </div>
-      <div class="formula-sub se" id="s4-result">LTV ＝ 5,000円 × 24回 × 2年 ＝ <strong style="color:var(--accent);font-size:1.15em;">240,000円</strong></div>
+      <div id="s4-note" class="se note" style="margin-top:.5em;">1万円で24万円の客なら好投資</div>
     </div>
   </section>
 
-  <!-- S5: Golden Ratio 190-240s -->
+  <!-- S5: Golden ratio 190-240s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">LTV÷CPA——広告投資の判断基準</div>
-      <div class="formula se" id="s5-formula">
-        <span class="fm-var" style="--c:var(--accent)">LTV</span>
-        <span class="fm-op">÷</span>
-        <span class="fm-var" style="--c:var(--acc2)">CPA</span>
+      <div id="s5-hd" class="sh se">投資判断の黄金比</div>
+      <div id="s5-fm" class="se formula" style="margin-top:.2em;">
+        <span class="fm-var">LTV</span><span class="fm-op">÷</span>
+        <span class="fm-var" style="--c:var(--acc2);">CPA</span>
         <span class="fm-op">&gt;</span>
-        <span class="fm-val" style="--c:var(--green)">3</span>
+        <span class="fm-val">3</span>
       </div>
-      <div class="formula-sub se" id="s5-fsub">これが「健全な投資」の目安（業界ベンチマーク）</div>
-      <div class="gauge-wrap se" id="s5-gauge" style="margin:.5em 0;">
-        <div class="gauge-hd">LTV ÷ CPA 比率ゾーン</div>
-        <div class="gauge-track">
-          <div class="gauge-fill" style="--v:.33;--c:var(--red)"></div>
-          <div class="gauge-fill" style="--v:.67;--c:var(--yellow);opacity:.7;"></div>
-          <div class="gauge-fill" style="--v:1;--c:var(--green);opacity:.5;"></div>
-          <span class="gauge-marker" style="left:33%">3× 目安</span>
-        </div>
-        <div class="gauge-legs"><span style="color:var(--red);">❌ &lt;1</span><span style="color:var(--yellow);">⚠️ 1〜3</span><span style="color:var(--green);">✅ 3+</span></div>
+      <div id="s5-tags" class="se taglist t-md" style="margin-top:.5em;">
+        <span class="tag ok">&gt;3 健全</span><span class="tag">1〜3 要改善</span><span class="tag ng">&lt;1 危険</span>
       </div>
-      <div id="s5-bands" class="se">
-        <div class="ratio-band good"><span class="rb-num">＞ 3</span><span><i class="fa-solid fa-circle-check"></i> 健全：広告投資を増やす余地あり</span></div>
-        <div class="ratio-band warn"><span class="rb-num">1〜3</span><span><i class="fa-solid fa-triangle-exclamation"></i> 要注意：利益が薄い・改善が必要</span></div>
-        <div class="ratio-band bad"><span class="rb-num">＜ 1</span><span><i class="fa-solid fa-circle-xmark"></i> 危険：広告費が顧客価値を上回る → 事業が成立しない</span></div>
-      </div>
-      <div id="s5-why" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-top:.35em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);">
-        <strong style="color:var(--accent);">なぜ3倍か：</strong>広告費以外に商品原価・人件費・運営費・サポートコストがかかるため
-      </div>
+      <div id="s5-note" class="se note" style="margin-top:.45em;">3倍で全コストをカバー</div>
     </div>
   </section>
 
-  <!-- S6: 3 LTV Levers 240-300s -->
+  <!-- S6: 3 levers to raise LTV 240-300s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">LTVを上げる3つのレバー</div>
-      <div class="formula se" id="s6-formula">
-        <span class="fm-var" style="--c:var(--accent)">LTV</span>
-        <span class="fm-op">=</span>
-        <span class="fm-var" style="--c:var(--acc2)">平均単価</span>
-        <span class="fm-op">×</span>
-        <span class="fm-var" style="--c:var(--blue)">購入頻度</span>
-        <span class="fm-op">×</span>
-        <span class="fm-var" style="--c:var(--green)">継続期間</span>
+      <div id="s6-hd" class="sh se">LTVを上げる3レバー</div>
+      <div id="s6-flow" class="se aflow t-md" style="margin-top:.25em;">
+        <span class="achip">単価<small>アップセル</small></span>
+        <span class="achip">頻度<small>リピート</small></span>
+        <span class="achip on">継続<small>解約防止</small></span>
       </div>
-      <div class="n-steps" style="margin-top:.4em;">
-        <div class="n-step se" id="s6-l1">
-          <div class="n-num" style="background:var(--acc2);color:#000;">①</div>
-          <div class="n-body">
-            <strong>平均単価を上げる（アップセル・クロスセル）</strong>
-            <div class="t-sm">上位プランへの誘導 / 関連商品の同時購入を促す<br>目標：単価10〜30%向上でLTVは比例して向上</div>
-          </div>
-        </div>
-        <div class="n-step se" id="s6-l2">
-          <div class="n-num b">②</div>
-          <div class="n-body">
-            <strong>購入頻度を上げる（リテンション施策）</strong>
-            <div class="t-sm">定期購入・リピート特典・パーソナライズリマインド<br>目標：購入頻度が1.5倍になればLTVも1.5倍</div>
-          </div>
-        </div>
-        <div class="n-step se" id="s6-l3">
-          <div class="n-num g">③</div>
-          <div class="n-body">
-            <strong>継続期間を延ばす（解約防止・サポート強化）</strong>
-            <div class="t-sm">オンボーディング充実・解約検討者の早期フォロー<br>目標：継続が2年→3年でLTVは1.5倍</div>
-          </div>
-        </div>
-      </div>
+      <div id="s6-note" class="se note" style="margin-top:.55em;">少しずつで複利的に伸びる</div>
     </div>
   </section>
 
-  <!-- S7: 3 CPA Approaches 300-360s -->
+  <!-- S7: 3 ways to lower CPA 300-360s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">CPAを下げる3つのアプローチ</div>
-      <div class="formula se" id="s7-formula">
-        <span class="fm-var" style="--c:var(--acc2)">CPA</span>
-        <span class="fm-op">=</span>
-        <span class="fm-var" style="--c:var(--muted2)">広告費</span>
-        <span class="fm-op">÷</span>
-        <span class="fm-var" style="--c:var(--muted2)">獲得件数</span>
-        <span class="fm-op" style="font-size:.8em;color:var(--muted);">→ 同じ広告費でより多く獲得</span>
+      <div id="s7-hd" class="sh se">CPAを下げる3手</div>
+      <div id="s7-tags" class="se taglist t-md" style="margin-top:.25em;">
+        <span class="tag acc">CTR改善</span><span class="tag acc">LP最適化</span><span class="tag acc">ターゲティング</span>
       </div>
-      <div class="n-steps" style="margin-top:.4em;">
-        <div class="n-step se" id="s7-a1">
-          <div class="n-num b">①</div>
-          <div class="n-body">
-            <strong>クリエイティブ改善（CTR向上）</strong>
-            <div class="t-sm">コピー・ビジュアルのA/Bテスト / 「痛み・理想の未来」を訴求</div>
-          </div>
-        </div>
-        <div class="n-step se" id="s7-a2">
-          <div class="n-num" style="background:var(--acc2);color:#000;">②</div>
-          <div class="n-body">
-            <strong>ランディングページ最適化（CVR向上）</strong>
-            <div class="t-sm">FVに「誰向け・何を解決するか」を明示 / 社会的証明を追加</div>
-          </div>
-        </div>
-        <div class="n-step se" id="s7-a3">
-          <div class="n-num g">③</div>
-          <div class="n-body">
-            <strong>ターゲティング精度向上（無駄な配信を減らす）</strong>
-            <div class="t-sm">LTV高顧客の共通属性を抽出・類似オーディエンス活用</div>
-          </div>
-        </div>
+      <div id="s7-kpi" class="se" style="text-align:center;margin-top:.45em;">
+        <span class="t-md" style="color:var(--muted2);">CVR 2倍なら</span>
+        <span class="bignum t-xl" style="display:block;">CPA 半分</span>
       </div>
-      <div class="bar-chart-h se" id="s7-impact" style="margin-top:.4em;">
-        <div style="font-size:clamp(9px,1.2vw,15px);font-weight:700;color:var(--muted2);margin-bottom:.3em;">改善効果の目安</div>
-        <div class="bh-row">
-          <span class="bh-lbl">CTR 1%（改善前）</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:50;--c:var(--muted)"></div></div>
-          <span class="bh-val" style="color:var(--muted)">CPA 20,000円</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">CTR 2%（改善後）</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:100;--c:var(--green)"></div></div>
-          <span class="bh-val" style="color:var(--green)">CPA 10,000円 🎯</span>
-        </div>
-      </div>
+      <div id="s7-note" class="se note" style="margin-top:.35em;">同じ予算でより多く獲得</div>
     </div>
   </section>
 
@@ -1335,36 +1192,13 @@ body {
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">リテンション率の威力</div>
-      <div class="kpi-wrap se" id="s8-kpi">
-        <div class="kpi-big" style="--c:var(--green)">
-          <div class="kpi-num">25〜95%</div>
-          <div class="kpi-sub">利益増加</div>
-        </div>
-        <div class="kpi-ctx">
-          <strong>たった5%の維持率改善で</strong><br>
-          Bain &amp; Company研究<br>
-          <span style="font-size:.85em;color:var(--muted);">Reichheld『The Loyalty Effect』(1996)</span>
-        </div>
+      <div id="s8-hd" class="sh se">リテンションの威力</div>
+      <div id="s8-flow" class="se aflow t-lg" style="margin-top:.2em;">
+        <span class="achip">維持率<small>+5%</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on" style="border-color:var(--green);color:var(--green);box-shadow:0 0 24px rgba(74,222,128,.3);">利益<small>+25〜95%</small></span>
       </div>
-      <div id="s8-mech" class="se" style="margin-top:.35em;">
-        <div class="hl-banner" style="--c:var(--accent);margin-bottom:.3em;">
-          <i class="fa-solid fa-circle-check hb-icon"></i>
-          <div class="hb-text"><strong>① 新規獲得コストがゼロ</strong> — 既存顧客の維持コストは新規獲得の約1/5〜1/7</div>
-        </div>
-        <div class="hl-banner" style="--c:var(--acc2);margin-bottom:.3em;">
-          <i class="fa-solid fa-circle-check hb-icon"></i>
-          <div class="hb-text"><strong>② 購入単価が上がる</strong> — 継続顧客は信頼から高価格帯も購入しやすい</div>
-        </div>
-        <div class="hl-banner" style="--c:var(--blue);margin-bottom:.3em;">
-          <i class="fa-solid fa-circle-check hb-icon"></i>
-          <div class="hb-text"><strong>③ 紹介・口コミが生まれる</strong> — 紹介獲得のCPAは実質ゼロ</div>
-        </div>
-        <div class="hl-banner" style="--c:var(--green);">
-          <i class="fa-solid fa-circle-check hb-icon"></i>
-          <div class="hb-text"><strong>④ オペレーションコストが下がる</strong> — 既存対応は習熟により効率化</div>
-        </div>
-      </div>
+      <div id="s8-note" class="se note" style="margin-top:.5em;">水を注ぐ前に、バケツの穴を塞ぐ</div>
     </div>
   </section>
 
@@ -1372,117 +1206,45 @@ body {
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se">コホート分析でLTVを可視化する</div>
-      <div id="s9-def" class="se src-note" style="margin-bottom:.35em;font-size:clamp(10px,1.35vw,16px);">同時期に獲得した顧客グループ（コホート）を追跡し、購買行動の時間変化を可視化する手法 <span style="color:var(--muted);">※数値は架空データ</span></div>
-      <div class="comp-tbl se" id="s9-tbl">
-        <div class="comp-row comp-head" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
-          <span class="comp-label">獲得月後→</span>
-          <span class="comp-a">0ヶ月</span>
-          <span class="comp-b">1ヶ月</span>
-          <span class="comp-b">2ヶ月</span>
-          <span class="comp-b">3ヶ月</span>
-        </div>
-        <div class="comp-row" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
-          <span class="comp-label">1月獲得</span>
-          <span class="comp-a">100%</span>
-          <span class="comp-b">45%</span>
-          <span class="comp-b">30%</span>
-          <span class="comp-b">28%</span>
-        </div>
-        <div class="comp-row hi" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
-          <span class="comp-label" style="color:var(--accent);font-weight:700;">2月獲得 ★</span>
-          <span class="comp-a">100%</span>
-          <span class="comp-b c-green">50%</span>
-          <span class="comp-b c-green">38%</span>
-          <span class="comp-b c-green">35%</span>
-        </div>
-        <div class="comp-row" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
-          <span class="comp-label">3月獲得</span>
-          <span class="comp-a">100%</span>
-          <span class="comp-b c-red">40%</span>
-          <span class="comp-b c-red">25%</span>
-          <span class="comp-b c-red">20%</span>
-        </div>
-        <div class="comp-row hi" style="grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;">
-          <span class="comp-label" style="color:var(--accent);font-weight:700;">4月獲得 ★</span>
-          <span class="comp-a">100%</span>
-          <span class="comp-b c-green">55%</span>
-          <span class="comp-b c-green">42%</span>
-          <span class="comp-b c-green">40%</span>
-        </div>
+      <div id="s9-hd" class="sh se">コホート分析</div>
+      <div id="s9-key" class="se t-lg" style="text-align:center;">良い顧客層を<span style="color:var(--accent);">見抜く</span></div>
+      <div id="s9-map" class="se jmini t-lg" style="margin-top:.4em;">
+        <div class="jcell"><span class="jn">1月</span><span class="jv" style="color:var(--muted2);">28%</span></div>
+        <div class="jcell"><span class="jn">2月</span><span class="jv" style="color:var(--green);">35%</span></div>
+        <div class="jcell"><span class="jn">3月</span><span class="jv" style="color:var(--red);">20%</span></div>
+        <div class="jcell"><span class="jn">4月</span><span class="jv" style="color:var(--green);">40%</span></div>
       </div>
-      <div id="s9-find" class="se" style="font-size:clamp(10px,1.35vw,17px);color:var(--muted2);line-height:1.55;margin:.3em 0;">
-        ① どのチャネルの顧客がリピートしやすいか ② どの時期の施策が良質な顧客を獲得したか<br>③ 離脱ピークはいつか（フォローのタイミング） ④ LTVを正確に予測できる
-      </div>
-      <div id="s9-google" class="se" style="background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.35);border-radius:9px;padding:.5em .9em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);">
-        <strong style="color:var(--red);">Google「Think With Google」研究：</strong>CPAが高いチャネルほどLTVも高い傾向 → CPAだけで評価すると最も良質な顧客チャネルを切り捨てるリスク
-      </div>
+      <div id="s9-note" class="se note" style="margin-top:.45em;">CPAだけで良い客を切り捨てない</div>
     </div>
   </section>
 
-  <!-- S10: Case study A 480-530s -->
+  <!-- S10: EC case 480-530s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s10-hd" class="sh se">実践例：ECサイトA社の「損益逆転」 <span class="src-note">※架空のECサイト</span></div>
-      <div class="kpi-wrap se" id="s10-kpi">
-        <div class="kpi-big" style="--c:var(--accent)">
-          <div class="kpi-num">9.9×</div>
-          <div class="kpi-sub">LTV / CPA 比率</div>
-        </div>
-        <div class="kpi-ctx">
-          <strong>黄金比率（3倍）を<br>大幅に超えた！</strong><br>
-          <span style="font-size:.85em;color:var(--muted);">スキンケアサプリ月額サブスク<br>CPA 8,000円 → LTV 79,500円</span>
-        </div>
+      <div id="s10-hd" class="sh se">実践例：ECサイトA社</div>
+      <div id="s10-flow" class="se aflow t-md" style="margin-top:.2em;">
+        <span class="achip" style="border-color:var(--red);color:var(--red);">初回視点<small>赤字に見える</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on">LTV視点<small>優秀な投資</small></span>
       </div>
-      <div class="comp-tbl se" id="s10-tbl">
-        <div class="comp-row comp-head">
-          <span class="comp-label">指標</span>
-          <span class="comp-a">初回購入視点</span>
-          <span class="comp-b">LTV視点（18ヶ月）</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">CPA</span>
-          <span class="comp-a">8,000円</span>
-          <span class="comp-b">8,000円</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">売上</span>
-          <span class="comp-a c-red">3,000円（初回割引）</span>
-          <span class="comp-b c-green">79,500円</span>
-        </div>
-        <div class="comp-row hi">
-          <span class="comp-label">判断</span>
-          <span class="comp-a c-red">❌ 大赤字に見える</span>
-          <span class="comp-b c-green">✅ 優秀な投資（9.9倍）</span>
-        </div>
+      <div id="s10-kpi" class="se" style="text-align:center;margin-top:.4em;">
+        <span class="t-md" style="color:var(--muted2);">LTV ÷ CPA</span>
+        <span class="bignum t-xl" style="display:block;">9.9倍</span>
       </div>
-      <div id="s10-fix" class="hl-banner se" style="--c:var(--green);margin-top:.4em;">
-        <i class="fa-solid fa-arrow-trend-up hb-icon"></i>
-        <div class="hb-text"><strong>さらに改善：LTV 79,500円→約95,000円</strong><br>2ヶ月目フォローメール（継続率+5%）＋6ヶ月継続者に上位プラン案内（単価+1,500円）→ 広告予算1.5倍でも収益プラス</div>
-      </div>
+      <div id="s10-note" class="se note" style="margin-top:.3em;">黄金比3を大きく超える</div>
     </div>
   </section>
 
-  <!-- S11: 3 Traps 530-560s -->
+  <!-- S11: 3 traps 530-560s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">よくある罠——LTV計算の3つの落とし穴</div>
-      <div class="verdict-rows se" id="s11-verdicts">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>罠① LTVを楽観的に見積もりすぎる</strong><br>「最も良い顧客」で全体を計算 → 平均には低LTV顧客も多い<br><span style="color:var(--green);font-size:.9em;">✅ 対策：中央値またはコホート実績値で計算。計画は保守的に</span></div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>罠② チャネル別のCPAを混在させる</strong><br>SEO・SNS・リスティングを合計し一つのCPAを出す → 良質チャネルを評価できない<br><span style="color:var(--green);font-size:.9em;">✅ 対策：チャネル別にCPA・LTV・LTV/CPAを管理する</span></div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>罠③ 計測期間が短すぎる</strong><br>3ヶ月でLTVを確定 → サブスクは12〜24ヶ月後に大きく変動<br><span style="color:var(--green);font-size:.9em;">✅ 対策：最低12ヶ月で評価。コホートで離脱ピーク月を特定しフォロー設計</span></div>
-        </div>
+      <div id="s11-hd" class="sh se">LTV計算 3つの罠</div>
+      <div id="s11-tags" class="se taglist t-md" style="margin-top:.3em;">
+        <span class="tag ng">楽観見積もり</span><span class="tag ng">CPA混在</span><span class="tag ng">期間が短い</span>
       </div>
+      <div id="s11-note" class="se note" style="margin-top:.55em;">実績値・チャネル別・12ヶ月で見る</div>
     </div>
   </section>
 
@@ -1490,43 +1252,25 @@ body {
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">今日のまとめ</div>
-      <div id="s12-items" class="se">
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">CPA ＝ 広告費 ÷ 獲得件数</div><div class="sum-sub">「安く獲れた＝成功」ではない。LTVとセットで評価する</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">LTV ＝ 平均購入単価 × 購入頻度 × 継続期間</div><div class="sum-sub">顧客が生涯にもたらす価値の合計（Kotler）</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">LTV÷CPAの黄金比率：3以上で健全・1未満は危険水域</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">LTVを上げる3つのレバー</div><div class="sum-sub">①単価（アップセル）②頻度（リテンション）③継続期間（解約防止）</div></div></div>
-        <div class="sum-item"><span class="sum-icon"><i class="fa-solid fa-check"></i></span><div><div class="sum-main">リテンションの威力（Reichheld / Bain）</div><div class="sum-sub">維持率5%改善で利益25〜95%増。新規獲得は維持の5〜7倍</div></div></div>
+      <div id="s12-hd" class="sh se">まとめ</div>
+      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+        <span class="tag">CPAは入口</span>
+        <span class="tag">LTVとセット</span>
+        <span class="tag acc">LTV÷CPA&gt;3</span>
+        <span class="tag">維持率5%で利益増</span>
       </div>
-      <div class="n-steps se" id="s12-steps" style="margin-top:.5em;">
-        <div class="n-step" id="s12-st1">
-          <div class="n-num">①</div>
-          <div class="n-body"><strong>自社のLTVを計算する</strong><div class="t-sm">平均単価・頻度・継続期間を調べてLTV計算</div></div>
-        </div>
-        <div class="n-step" id="s12-st2">
-          <div class="n-num b">②</div>
-          <div class="n-body"><strong>チャネル別にLTV÷CPAを算出</strong><div class="t-sm">主な広告チャネルのCPAを計算し比率を出す</div></div>
-        </div>
-        <div class="n-step" id="s12-st3">
-          <div class="n-num g">③</div>
-          <div class="n-body"><strong>コホート分析で残存率を毎月追跡</strong><div class="t-sm">3ヶ月後残存率をKPIに設定して継続モニタリング</div></div>
-        </div>
-      </div>
+      <div id="s12-note" class="se note" style="margin-top:.55em;">まず自社のLTVを1つ計算する</div>
     </div>
   </section>
 
-  <!-- S13: Next Episode 590-600s -->
+  <!-- S13: Next 590-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div class="pad" style="align-items:center;justify-content:center;text-align:center;">
-      <div id="s13-card" class="se">
-        <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
-        <div class="next-title">第10回 読まれる・刺さる・動かす コピーライティング5つの法則</div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>なぜ良い製品でも「言葉」で売れ方が変わるのか</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>読まれるタイトル・見出しの作り方</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>顧客を行動させる「CTA」の設計法</span></div>
-      </div>
-      <div id="s13-cta" class="se"><i class="fa-solid fa-heart"></i> チャンネル登録 &amp; 高評価をぜひお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第10回</div>
+      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">コピーライティング</div>
+      <div id="s13-sub" class="se t-md" style="color:var(--accent);">読まれる・刺さる・動かす</div>
+      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 &amp; 高評価</div>
     </div>
   </section>
 
@@ -1558,60 +1302,55 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
-  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-tbl'],            anim:'rv-up'},
-  {si:1,  t:50,   ids:['s2-core'],           anim:'rv-fade'},
-  {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:83,   ids:['s3-formula'],        anim:'rv-scale'},
-  {si:2,  t:89,   ids:['s3-fml-ex'],         anim:'rv-fade'},
-  {si:2,  t:93,   ids:['s3-bench'],          anim:'rv-up'},
-  {si:2,  t:108,  ids:['s3-myth'],           anim:'rv-fade'},
-  {si:3,  t:130,  ids:['s4-hd'],             anim:'rv-fade'},
-  {si:3,  t:133,  ids:['s4-def'],            anim:'rv-up'},
-  {si:3,  t:140,  ids:['s4-formula'],        anim:'rv-scale'},
-  {si:3,  t:147,  ids:['s4-calc'],           anim:'rv-up'},
-  {si:3,  t:168,  ids:['s4-result'],         anim:'rv-scale'},
-  {si:4,  t:190,  ids:['s5-hd'],             anim:'rv-fade'},
-  {si:4,  t:193,  ids:['s5-formula'],        anim:'rv-scale'},
-  {si:4,  t:199,  ids:['s5-fsub'],           anim:'rv-fade'},
-  {si:4,  t:204,  ids:['s5-gauge'],          anim:'rv-up'},
-  {si:4,  t:211,  ids:['s5-bands'],          anim:'rv-up'},
-  {si:4,  t:226,  ids:['s5-why'],            anim:'rv-fade'},
-  {si:5,  t:240,  ids:['s6-hd'],             anim:'rv-fade'},
-  {si:5,  t:243,  ids:['s6-formula'],        anim:'rv-scale'},
-  {si:5,  t:250,  ids:['s6-l1'],             anim:'rv-up'},
-  {si:5,  t:262,  ids:['s6-l2'],             anim:'rv-up'},
-  {si:5,  t:274,  ids:['s6-l3'],             anim:'rv-up'},
-  {si:6,  t:300,  ids:['s7-hd'],             anim:'rv-fade'},
-  {si:6,  t:303,  ids:['s7-formula'],        anim:'rv-scale'},
-  {si:6,  t:310,  ids:['s7-a1'],             anim:'rv-up'},
-  {si:6,  t:320,  ids:['s7-a2'],             anim:'rv-up'},
-  {si:6,  t:330,  ids:['s7-a3'],             anim:'rv-up'},
-  {si:6,  t:342,  ids:['s7-impact'],         anim:'rv-up'},
-  {si:7,  t:360,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:363,  ids:['s8-kpi'],            anim:'rv-scale'},
-  {si:7,  t:375,  ids:['s8-mech'],           anim:'rv-up'},
-  {si:8,  t:410,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:413,  ids:['s9-def'],            anim:'rv-fade'},
-  {si:8,  t:418,  ids:['s9-tbl'],            anim:'rv-up'},
-  {si:8,  t:445,  ids:['s9-find'],           anim:'rv-up'},
-  {si:8,  t:460,  ids:['s9-google'],         anim:'rv-fade'},
-  {si:9,  t:480,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:483,  ids:['s10-kpi'],           anim:'rv-scale'},
-  {si:9,  t:497,  ids:['s10-tbl'],           anim:'rv-up'},
-  {si:9,  t:515,  ids:['s10-fix'],           anim:'rv-fade'},
-  {si:10, t:530,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:533,  ids:['s11-verdicts'],      anim:'rv-up'},
-  {si:11, t:560,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:563,  ids:['s12-items'],         anim:'rv-up'},
-  {si:11, t:578,  ids:['s12-steps'],         anim:'rv-up'},
-  {si:12, t:590,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:595,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
+  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
+  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
+  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
+  {si:1,  t:40,   ids:['s2-flow'],    anim:'rv-up'},
+  {si:1,  t:55,   ids:['s2-kpi'],     anim:'rv-scale'},
+  {si:1,  t:70,   ids:['s2-note'],    anim:'rv-fade'},
+  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
+  {si:2,  t:88,   ids:['s3-key'],     anim:'rv-scale'},
+  {si:2,  t:100,  ids:['s3-fm'],      anim:'rv-up'},
+  {si:2,  t:118,  ids:['s3-note'],    anim:'rv-fade'},
+  {si:3,  t:130,  ids:['s4-hd'],      anim:'rv-fade'},
+  {si:3,  t:138,  ids:['s4-key'],     anim:'rv-scale'},
+  {si:3,  t:152,  ids:['s4-flow'],    anim:'rv-up'},
+  {si:3,  t:175,  ids:['s4-note'],    anim:'rv-fade'},
+  {si:4,  t:190,  ids:['s5-hd'],      anim:'rv-fade'},
+  {si:4,  t:198,  ids:['s5-fm'],      anim:'rv-scale'},
+  {si:4,  t:212,  ids:['s5-tags'],    anim:'rv-up'},
+  {si:4,  t:228,  ids:['s5-note'],    anim:'rv-fade'},
+  {si:5,  t:240,  ids:['s6-hd'],      anim:'rv-fade'},
+  {si:5,  t:250,  ids:['s6-flow'],    anim:'rv-up'},
+  {si:5,  t:285,  ids:['s6-note'],    anim:'rv-fade'},
+  {si:6,  t:300,  ids:['s7-hd'],      anim:'rv-fade'},
+  {si:6,  t:310,  ids:['s7-tags'],    anim:'rv-up'},
+  {si:6,  t:335,  ids:['s7-kpi'],     anim:'rv-scale'},
+  {si:6,  t:350,  ids:['s7-note'],    anim:'rv-fade'},
+  {si:7,  t:360,  ids:['s8-hd'],      anim:'rv-fade'},
+  {si:7,  t:370,  ids:['s8-flow'],    anim:'rv-up'},
+  {si:7,  t:395,  ids:['s8-note'],    anim:'rv-fade'},
+  {si:8,  t:410,  ids:['s9-hd'],      anim:'rv-fade'},
+  {si:8,  t:420,  ids:['s9-key'],     anim:'rv-scale'},
+  {si:8,  t:435,  ids:['s9-map'],     anim:'rv-up'},
+  {si:8,  t:465,  ids:['s9-note'],    anim:'rv-fade'},
+  {si:9,  t:480,  ids:['s10-hd'],     anim:'rv-fade'},
+  {si:9,  t:490,  ids:['s10-flow'],   anim:'rv-up'},
+  {si:9,  t:508,  ids:['s10-kpi'],    anim:'rv-scale'},
+  {si:9,  t:522,  ids:['s10-note'],   anim:'rv-fade'},
+  {si:10, t:530,  ids:['s11-hd'],     anim:'rv-fade'},
+  {si:10, t:540,  ids:['s11-tags'],   anim:'rv-up'},
+  {si:10, t:552,  ids:['s11-note'],   anim:'rv-pop'},
+  {si:11, t:560,  ids:['s12-hd'],     anim:'rv-fade'},
+  {si:11, t:568,  ids:['s12-tags'],   anim:'rv-up'},
+  {si:11, t:580,  ids:['s12-note'],   anim:'rv-fade'},
+  {si:12, t:590,  ids:['s13-lbl'],    anim:'rv-fade'},
+  {si:12, t:592,  ids:['s13-title'],  anim:'rv-up'},
+  {si:12, t:595,  ids:['s13-sub'],    anim:'rv-fade'},
+  {si:12, t:598,  ids:['s13-cta'],    anim:'rv-pop'}
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},

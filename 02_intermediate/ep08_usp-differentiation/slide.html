@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第8回 USPと差別化の作り方 | AI時代のマーケティング・ラボ</title>
+<title>第8回 USP（独自の強み）の見つけ方 | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -69,6 +69,7 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
+  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -136,22 +137,26 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
-.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
+   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
+.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
+.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
 
 /* section header */
 .sh {
-  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
-  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
+  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
+  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
+  letter-spacing:.01em;
 }
-.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes */
-.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
-.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
-.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
-.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
-.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
+/* body text sizes — large for mobile/YouTube legibility (bold gothic).
+   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
+.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
+.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
+.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
+.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
+.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -365,7 +370,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
+  color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -434,7 +439,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
+  color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -618,7 +623,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
+  font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -914,7 +919,8 @@ body {
    </div>  */
 .hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
   background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
+  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
 .hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
 .hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
 .hb-text strong { color:var(--text); }
@@ -1005,66 +1011,64 @@ body {
 .s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
 @keyframes dotFloat { to { transform:translateY(-8px); } }
 
+/* ================================================================
+   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
+   Shared keyword + diagram vocabulary for all episodes.
+================================================================ */
+.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
+.aflow.sm{gap:.4em;}
+.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
+  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
+.aflow.sm .achip{padding:.45em .7em;}
+.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
+.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
+.aghost{opacity:.4;}
+.aarrow{color:var(--accent);font-weight:900;}
+/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
+   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
+.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
+.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
+  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
+.tag.acc{border-color:var(--accent);color:var(--accent);}
+.tag.ng{border-color:var(--red);color:var(--red);}
+.tag.ok{border-color:var(--green);color:var(--green);}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
+.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
+  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
+.pcard .ph{font-weight:900;line-height:1.1;}
+.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
+.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
+.bignum{color:var(--accent);font-weight:900;line-height:1;}
+.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
+.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
+.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
+.jcell .jv{font-weight:900;line-height:1;}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
+.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
+.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
+.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
+.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
+
 </style>
 
 <style id="ep-css">
+
 /* ── vertical centering override ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── accent: pink/magenta (USP/differentiation theme) ── */
-:root { --accent: #FF6B8A; --glow-acc: rgba(255,107,138,.25); --acc2: #fb923c; }
+/* ── EP08 accent: pink ── */
+:root { --accent:#FF6B8A; --glow-acc:rgba(255,107,138,.25); }
 
-/* ── s1 overrides ── */
-#s1 { background: radial-gradient(ellipse 90% 75% at 65% 45%, #2a0a14 0%, var(--slide-bg) 68%); align-items: center; justify-content: center; text-align: center; }
-#s1-badge { display: inline-flex; align-items: center; gap: .5em; background: var(--surf2); border: 1px solid rgba(255,107,138,0.4); color: var(--muted2); border-radius: 20px; padding: .3em 1.2em; margin-bottom: .75em; font-size: clamp(9px,1.2vw,14px); }
-#s1-badge i { color: var(--accent); }
-#s1-ep { font-size: clamp(10px,1.4vw,18px); color: var(--accent); font-weight: 700; margin-bottom: .4em; }
-#s1-catch { font-size: clamp(11px,1.5vw,19px); color: var(--muted2); margin-top: .7em; }
+/* ── S1 (copied from ep05, colors only) ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2e0a18 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(255,107,138,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+#s1-badge i{color:var(--accent);}
+#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
+#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── last slide ── */
-#s13 { background: radial-gradient(ellipse 80% 65% at 40% 50%, #250a14 0%, var(--slide-bg) 65%); align-items: center; justify-content: center; }
-#s13-card { background: var(--surf); border: 1px solid var(--border); border-radius: 14px; padding: 1.3em 1.8em; width: 76%; box-shadow: 0 0 30px rgba(255,107,138,0.3), 0 8px 32px rgba(0,0,0,0.5); }
-#s13-cta { margin-top: 1em; text-align: center; font-size: clamp(12px,1.75vw,22px); font-weight: 700; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: .55em; }
+/* Minimal design helpers + type scale live in shared base CSS — not redefined here. */
 
-/* ── Porter 3 strategy cols ── */
-.porter-col { flex: 1; border-radius: 10px; padding: .7em .9em; font-size: clamp(10px,1.35vw,17px); }
-.porter-col .pc-hd { font-weight: 700; font-size: clamp(12px,1.6vw,20px); margin-bottom: .4em; }
-.porter-col .pc-ex { font-size: .88em; color: var(--muted); margin-top: .3em; }
-.porter-col.cost { background: rgba(96,165,250,0.10); border: 1px solid rgba(96,165,250,0.4); }
-.porter-col.cost .pc-hd { color: #60a5fa; }
-.porter-col.diff { background: rgba(255,107,138,0.10); border: 1px solid rgba(255,107,138,0.4); }
-.porter-col.diff .pc-hd { color: var(--accent); }
-.porter-col.focus { background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.4); }
-.porter-col.focus .pc-hd { color: var(--green); }
-
-/* ── ERRC action cards ── */
-.errc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: .5em; margin-top: .35em; }
-.errc-card { border-radius: 9px; padding: .55em .9em; font-size: clamp(10px,1.35vw,17px); }
-.errc-card .ec-hd { font-weight: 700; margin-bottom: .3em; font-size: clamp(11px,1.5vw,19px); }
-.errc-card.eliminate { background: rgba(248,100,100,0.10); border: 1px solid rgba(248,100,100,0.4); }
-.errc-card.eliminate .ec-hd { color: var(--red); }
-.errc-card.reduce { background: rgba(251,191,36,0.10); border: 1px solid rgba(251,191,36,0.4); }
-.errc-card.reduce .ec-hd { color: var(--yellow); }
-.errc-card.raise { background: rgba(96,165,250,0.10); border: 1px solid rgba(96,165,250,0.4); }
-.errc-card.raise .ec-hd { color: #60a5fa; }
-.errc-card.create { background: rgba(74,222,128,0.10); border: 1px solid rgba(74,222,128,0.4); }
-.errc-card.create .ec-hd { color: var(--green); }
-
-/* ── USP formula ── */
-.usp-formula { display: flex; align-items: center; gap: .5em; flex-wrap: wrap; justify-content: center; font-size: clamp(13px,2vw,26px); font-weight: 700; margin: .5em 0; }
-.usp-formula .uf-var { background: rgba(255,107,138,0.15); border: 1px solid rgba(255,107,138,0.4); border-radius: 8px; padding: .2em .6em; color: var(--accent); }
-.usp-formula .uf-op { color: var(--muted); font-weight: 400; }
-
-/* ── icon rows (summary) ── */
-.icon-rows { display: flex; flex-direction: column; gap: .35em; }
-.icon-row { display: flex; align-items: flex-start; gap: .7em; background: var(--surf); border: 1px solid var(--border); border-radius: 9px; padding: .5em .9em; font-size: clamp(10px,1.35vw,17px); }
-.icon-row .ir-icon { font-size: 1.2em; flex-shrink: 0; margin-top: .05em; }
-.icon-row .ir-main { font-weight: 700; color: #fff; }
-.icon-row .ir-sub { color: var(--muted2); font-size: .9em; margin-top: .1em; }
-
-/* ── source note ── */
-.src-note { font-size: clamp(9px,1.1vw,13px); color: var(--muted); }
 </style>
 </head>
 <body>
@@ -1073,7 +1077,6 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1086,256 +1089,118 @@ body {
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
       <div id="s1-ep" class="se">第8回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">選ばれ続ける</div>
-      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">「USP」と差別化の作り方</div>
-      <div id="s1-catch" class="se">「なぜ他でなくうちで買うのか」——に答えられますか？</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">競合と差別化する</div>
+      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">USP・独自の強み</div>
+      <div id="s1-catch" class="se">なぜ他でなく、うちで買うのか</div>
     </div>
   </section>
 
   <!-- S2: Hook 30-80s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad-t">
-      <div id="s2-hd" class="sh se">「なぜ他でなくうちで買うのか」——これに答えられないと価格競争に負け続ける</div>
-      <div id="s2-rows" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>「品質が良いから」</strong>——競合も同じことを言っている</div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>「サービスが丁寧だから」</strong>——証明できない・印象と変わらない</div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>「歴史があるから」</strong>——顧客にとってのベネフィットが不明</div>
-        </div>
+    <div class="pad">
+      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">「なぜ<span style="color:#fff;">うち</span>で買うのか」<br>に答えられる？</div>
+      <div id="s2-bad" class="se taglist t-md" style="margin-top:.35em;">
+        <span class="tag ng">✕ 品質が良い</span>
+        <span class="tag ng">✕ 丁寧</span>
+        <span class="tag ng">✕ 歴史がある</span>
       </div>
-      <div id="s2-flow" class="se" style="display:flex;align-items:center;gap:.5em;flex-wrap:wrap;margin:.4em 0;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);">
-        <span style="background:rgba(248,100,100,0.12);border:1px solid rgba(248,100,100,0.4);border-radius:7px;padding:.25em .7em;">違いが伝わらない</span>
-        <i class="fa-solid fa-arrow-right" style="color:var(--muted);"></i>
-        <span style="background:rgba(248,100,100,0.12);border:1px solid rgba(248,100,100,0.4);border-radius:7px;padding:.25em .7em;">「どこも同じ」と判断される</span>
-        <i class="fa-solid fa-arrow-right" style="color:var(--muted);"></i>
-        <span style="background:rgba(248,100,100,0.18);border:1px solid rgba(248,100,100,0.55);border-radius:7px;padding:.25em .7em;color:var(--red);font-weight:700;">価格だけで比較される</span>
+      <div id="s2-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip aghost">どこでも同じ</span><span class="aarrow">→</span><span class="achip on">価格競争</span>
       </div>
-      <div id="s2-contrast" class="se" style="display:flex;gap:.5em;margin-top:.2em;">
-        <div style="flex:1;background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.3);border-radius:9px;padding:.5em .8em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-          <div style="color:var(--red);font-weight:700;margin-bottom:.2em;"><i class="fa-solid fa-arrow-trend-down"></i> 差別化なし</div>
-          価格↓↓ → 利益↓↓ → 消耗戦
-        </div>
-        <div style="flex:1;background:rgba(255,107,138,0.08);border:1px solid rgba(255,107,138,0.3);border-radius:9px;padding:.5em .8em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-          <div style="color:var(--accent);font-weight:700;margin-bottom:.2em;"><i class="fa-solid fa-arrow-trend-up"></i> 差別化あり</div>
-          価格維持 → 利益確保 → ブランド成長
-        </div>
-      </div>
+      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">競合も同じことを言っている</div>
     </div>
   </section>
 
-  <!-- S3: USP Definition 80-130s -->
+  <!-- S3: USP definition 80-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
-      <div id="s3-hd" class="sh se">USPとは何か——Rosser Reeves（1961）の定義</div>
-      <blockquote id="s3-quote" class="quote-blk se">
-        <p class="qb-text">「Unique Selling Proposition——他社が言っていない、<em>あなただけのセールス提案</em>で、顧客の購買を動かすもの」</p>
-        <cite class="qb-cite">Rosser Reeves 『Reality in Advertising』（1961）</cite>
-      </blockquote>
-      <div id="s3-steps" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num">1</div>
-          <div class="n-body"><strong>独自性（Unique）</strong><div class="t-sm">競合が言っていない、あなただけの主張であること</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num">2</div>
-          <div class="n-body"><strong>競合未提供（Selling）</strong><div class="t-sm">競合は提供できていない、または提供していない強み</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num">3</div>
-          <div class="n-body"><strong>購買を動かす（Proposition）</strong><div class="t-sm">顧客が「だから買おう」と思える具体的なベネフィット</div></div>
-        </div>
+      <div id="s3-hd" class="sh se">USPとは何か</div>
+      <div id="s3-key" class="se t-xl" style="text-align:center;"><span style="color:var(--accent);">独自</span>のセールス提案</div>
+      <div id="s3-cond" class="se taglist t-md" style="margin-top:.45em;">
+        <span class="tag">独自性</span><span class="tag">競合未提供</span><span class="tag acc">購買を動かす</span>
       </div>
-      <div id="s3-ex" class="se" style="background:rgba(255,107,138,0.08);border:1px solid rgba(255,107,138,0.3);border-radius:9px;padding:.5em .9em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);margin-top:.3em;">
-        <strong style="color:var(--accent);">完璧なUSP例 M&amp;M's：</strong>「チョコレートは手の中で溶けず、<strong style="color:#fff;">口の中で溶ける</strong>」——独自・競合未提供・ベネフィット（手が汚れない）が明確
-      </div>
+      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">M&amp;M's「手で溶けず、口で溶ける」</div>
     </div>
   </section>
 
-  <!-- S4: Porter's 3 Strategies 130-190s -->
+  <!-- S4: Porter 3 strategies 130-190s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">ポーターの3つの競争戦略——どの土俵で戦うか</div>
-      <div id="s4-src" class="se src-note" style="margin-bottom:.4em;">Michael E. Porter 『Competitive Strategy』（1980）</div>
-      <div id="s4-cols" class="se" style="display:flex;gap:.6em;margin-bottom:.4em;">
-        <div class="porter-col cost">
-          <div class="pc-hd"><i class="fa-solid fa-tag"></i> コストリーダーシップ</div>
-          <div style="color:var(--muted2);">業界最低コストで価格競争に勝つ</div>
-          <div class="pc-ex">例：ユニクロ・ウォルマート</div>
-        </div>
-        <div class="porter-col diff">
-          <div class="pc-hd"><i class="fa-solid fa-star"></i> 差別化戦略</div>
-          <div style="color:var(--muted2);">独自の価値で価格プレミアムを獲得</div>
-          <div class="pc-ex">例：Apple・ルイ・ヴィトン</div>
-        </div>
-        <div class="porter-col focus">
-          <div class="pc-hd"><i class="fa-solid fa-crosshairs"></i> 集中戦略</div>
-          <div style="color:var(--muted2);">特定市場・顧客層に絞り込む</div>
-          <div class="pc-ex">例：高級旅館・専門ブティック</div>
-        </div>
+      <div id="s4-hd" class="sh se">どの土俵で戦うか</div>
+      <div id="s4-map" class="se jmini t-lg" style="margin-top:.4em;">
+        <div class="jcell"><span class="jv" style="color:var(--blue);">コスト</span><span class="jn">最安で勝つ</span></div>
+        <div class="jcell"><span class="jv" style="color:var(--accent);">差別化</span><span class="jn">独自価値で勝つ</span></div>
+        <div class="jcell"><span class="jv" style="color:var(--green);">集中</span><span class="jn">特定市場に絞る</span></div>
       </div>
-      <div id="s4-warn" class="se" style="background:rgba(248,100,100,0.10);border:2px solid rgba(248,100,100,0.45);border-radius:9px;padding:.55em .9em;font-size:clamp(11px,1.55vw,20px);text-align:center;">
-        <i class="fa-solid fa-triangle-exclamation" style="color:var(--red);"></i>&ensp;<strong style="color:var(--red);">ポーターの警告：</strong><span style="color:var(--muted2);">「中間に留まること（Stuck in the Middle）は最も危険」——どれで戦うかを明確に決めることが第一歩</span>
-      </div>
+      <div id="s4-warn" class="se hl-banner" style="margin-top:.6em;">中間に留まるが最も危険</div>
     </div>
   </section>
 
-  <!-- S5: Positioning 190-250s -->
+  <!-- S5: Positioning & USP 190-250s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">ポジショニングとUSP——顧客の頭の中に「場所」を確保する</div>
-      <blockquote id="s5-quote" class="quote-blk se">
-        <p class="qb-text">「ポジショニングとは、顧客の頭の中に<em>自社ブランドの場所（ポジション）</em>を確保することである」</p>
-        <cite class="qb-cite">Al Ries &amp; Jack Trout 『Positioning: The Battle for Your Mind』（1981）</cite>
-      </blockquote>
-      <div id="s5-matrix" class="matrix-2x2 se">
-        <div class="mx-cell mx-tl hi">
-          <div class="mx-hd"><i class="fa-solid fa-mug-hot"></i> 高級コーヒー</div>
-          <div class="mx-body">スターバックス</div>
-        </div>
-        <div class="mx-cell mx-tr" style="background:rgba(96,165,250,0.08);border-color:rgba(96,165,250,0.3);">
-          <div class="mx-hd" style="color:#60a5fa;"><i class="fa-solid fa-bolt"></i> スポーツ飲料</div>
-          <div class="mx-body">ゲータレード</div>
-        </div>
-        <div class="mx-cell mx-bl" style="background:rgba(74,222,128,0.08);border-color:rgba(74,222,128,0.3);">
-          <div class="mx-hd" style="color:var(--green);"><i class="fa-solid fa-magnifying-glass"></i> 検索</div>
-          <div class="mx-body">Google</div>
-        </div>
-        <div class="mx-cell mx-br hi-y">
-          <div class="mx-hd"><i class="fa-solid fa-mobile-screen"></i> ミニマルスマホ</div>
-          <div class="mx-body">iPhone（登場当時）</div>
-        </div>
+      <div id="s5-hd" class="sh se">ポジショニングとUSP</div>
+      <div id="s5-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip">USP<small>発信側の主張</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on">ポジション<small>頭の中の場所</small></span>
       </div>
-      <div id="s5-rel" class="se" style="display:flex;align-items:center;gap:.6em;font-size:clamp(11px,1.5vw,18px);color:var(--muted2);margin-top:.35em;flex-wrap:wrap;">
-        <span style="background:rgba(255,107,138,0.12);border:1px solid rgba(255,107,138,0.4);border-radius:7px;padding:.2em .7em;"><strong style="color:var(--accent);">USP</strong>：発信側の主張</span>
-        <i class="fa-solid fa-arrow-right" style="color:var(--muted);"></i>
-        <span style="background:rgba(255,107,138,0.12);border:1px solid rgba(255,107,138,0.4);border-radius:7px;padding:.2em .7em;"><strong style="color:var(--accent);">ポジション</strong>：受け手の記憶</span>
-        <span style="color:var(--muted);">記憶の第一位を狙えるカテゴリを見つけよ</span>
-      </div>
+      <div id="s5-key" class="se t-lg" style="text-align:center;color:var(--accent);margin-top:.55em;font-weight:800;">記憶の<span style="color:#fff;">第一位</span>を狙う</div>
+      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">人は1位しか覚えない</div>
     </div>
   </section>
 
-  <!-- S6: Customer Interview 250-310s -->
+  <!-- S6: Method 1 interview 250-310s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">USPの見つけ方 ① 顧客インタビュー</div>
-      <div id="s6-why" class="se" style="background:rgba(255,107,138,0.08);border:1px solid rgba(255,107,138,0.3);border-radius:9px;padding:.45em .9em;font-size:clamp(10px,1.4vw,18px);color:var(--muted2);margin-bottom:.4em;">
-        <i class="fa-solid fa-lightbulb" style="color:var(--accent);"></i>&ensp;自社の強みは「顧客が感じた価値」の中にある——会議室より顧客の声から見えてくる
+      <div id="s6-hd" class="sh se">見つけ方① 顧客インタビュー</div>
+      <div id="s6-key" class="se t-xl" style="text-align:center;">強みは<span style="color:var(--accent);">顧客の声</span>に</div>
+      <div id="s6-tags" class="se taglist t-md" style="margin-top:.45em;">
+        <span class="tag">なぜ選んだ？</span><span class="tag">何が良い？</span><span class="tag acc">どう紹介する？</span>
       </div>
-      <div id="s6-flow" class="step-flow se">
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>Q1「なぜ最初に私たちを選びましたか？」</strong><div class="t-sm">→ 競合ではなくこちらを選んだ理由（差別化ポイント）</div></div>
-        </div>
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>Q2「使い始めて、一番驚いたこと・良かったことは？」</strong><div class="t-sm">→ 自分たちが気づいていない強みが出てくる</div></div>
-        </div>
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>Q3「もし私たちのサービスがなくなったら何が困りますか？」</strong><div class="t-sm">→ 顧客にとっての本質的な価値（代替不可能性）</div></div>
-        </div>
-        <div class="sf-item">
-          <div class="sf-dot"></div>
-          <div class="sf-body"><strong>Q4「友人に紹介するとしたら、どう説明しますか？」</strong><div class="t-sm">→ 顧客の言葉でのUSP表現</div></div>
-        </div>
-      </div>
-      <div id="s6-tip" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.45em .9em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);margin-top:.3em;">
-        <i class="fa-solid fa-circle-check" style="color:var(--accent);"></i>&ensp;<strong style="color:#fff;">5〜10名のインタビュー</strong>で共通するキーワードがUSP候補——Airbnbも初期ユーザーのインタビューから「地元の家に泊まる体験」を発見した
-      </div>
+      <div id="s6-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">5〜10人で共通する言葉が候補</div>
     </div>
   </section>
 
-  <!-- S7: Competitive Analysis 310-370s -->
+  <!-- S7: Method 2 competitor analysis 310-370s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">USPの見つけ方 ② 競合分析——「誰もやっていないこと」を見つける</div>
-      <div id="s7-chart" class="bar-chart-h se">
-        <div class="bh-row">
-          <span class="bh-lbl">価格</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:90;--c:var(--green)"></div></div>
-          <span class="bh-val" style="color:var(--green);">自社◎ / 競合○</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">カスタマイズ</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:95;--c:var(--accent)"></div></div>
-          <span class="bh-val" style="color:var(--accent);">自社◎ / 競合× ← USP候補</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">アフター対応</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:88;--c:var(--accent)"></div></div>
-          <span class="bh-val" style="color:var(--accent);">自社◎ / 競合△ ← USP候補</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">専門サポート</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:100;--c:var(--accent)"></div></div>
-          <span class="bh-val" style="color:var(--accent);">自社◎ / 競合全員× ← 最強USP</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">配送スピード</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:45;--c:var(--muted)"></div></div>
-          <span class="bh-val" style="color:var(--muted);">自社△ / 競合◎（戦場）</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl">ブランド認知</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:35;--c:var(--muted)"></div></div>
-          <span class="bh-val" style="color:var(--muted);">自社△ / 競合◎（戦場）</span>
-        </div>
+      <div id="s7-hd" class="sh se">見つけ方② 競合分析</div>
+      <div id="s7-map" class="se jmini t-lg" style="margin-top:.35em;">
+        <div class="jcell"><span class="jn">自社</span><span class="jv" style="color:var(--accent);">◎</span></div>
+        <div class="jcell"><span class="jn">競合A</span><span class="jv" style="color:var(--muted2);">×</span></div>
+        <div class="jcell"><span class="jn">競合B</span><span class="jv" style="color:var(--muted2);">△</span></div>
+        <div class="jcell"><span class="jn">競合C</span><span class="jv" style="color:var(--muted2);">×</span></div>
       </div>
-      <div id="s7-note" class="se" style="display:flex;gap:.5em;margin-top:.35em;font-size:clamp(9px,1.3vw,16px);">
-        <div style="flex:1;background:rgba(255,107,138,0.08);border:1px solid rgba(255,107,138,0.3);border-radius:8px;padding:.4em .7em;color:var(--muted2);">
-          <strong style="color:var(--accent);">強いUSP：</strong>競合が構造的にできない（参入障壁）
-        </div>
-        <div style="flex:1;background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.3);border-radius:8px;padding:.4em .7em;color:var(--muted2);">
-          <strong style="color:var(--red);">弱いUSP：</strong>やれるけどやっていないだけ（追随される）
-        </div>
+      <div id="s7-tags" class="se taglist t-md" style="margin-top:.5em;">
+        <span class="tag acc">自社◎・競合×</span><span class="tag">＝ USP候補</span>
       </div>
+      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">競合が構造的にできないことを探す</div>
     </div>
   </section>
 
-  <!-- S8: Value Proposition Canvas 370-430s -->
+  <!-- S8: Method 3 Value Proposition Canvas 370-430s -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">USPの見つけ方 ③ バリュープロポジションキャンバス</div>
-      <div id="s8-src" class="se src-note" style="margin-bottom:.35em;">Alexander Osterwalder et al. 『Value Proposition Design』（2014）</div>
-      <div id="s8-formula" class="se" style="margin-bottom:.4em;">
-        <div class="usp-formula">
-          <span class="uf-var">顧客のJob</span>
-          <span class="uf-op">＋</span>
-          <span class="uf-var">Pains（困りごと）</span>
-          <span class="uf-op">＋</span>
-          <span class="uf-var">Gains（嬉しいこと）</span>
-          <span class="uf-op">↔</span>
-          <span class="uf-var" style="--c:var(--green);">フィット ＝ USP核心</span>
+      <div id="s8-hd" class="sh se">見つけ方③ 価値提案キャンバス</div>
+      <div id="s8-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--blue);">
+          <div class="ph t-lg" style="color:var(--blue);">顧客<small>欲しい・困る</small></div>
+          <div class="taglist t-sm"><span class="tag">Job</span><span class="tag">Pain</span><span class="tag">Gain</span></div>
+        </div>
+        <div class="pcard" style="border-top-color:var(--accent);">
+          <div class="ph t-lg" style="color:var(--accent);">価値<small>解消・実現</small></div>
+          <div class="taglist t-sm"><span class="tag">製品</span><span class="tag">痛み解消</span><span class="tag">喜び創出</span></div>
         </div>
       </div>
-      <div id="s8-fit" class="se" style="display:flex;gap:.5em;margin-bottom:.4em;font-size:clamp(10px,1.35vw,17px);">
-        <div style="flex:1;background:rgba(255,107,138,0.08);border:1px solid rgba(255,107,138,0.3);border-radius:9px;padding:.5em .8em;">
-          <div style="color:var(--accent);font-weight:700;margin-bottom:.3em;"><i class="fa-solid fa-user"></i> 顧客プロフィール</div>
-          <div style="color:var(--muted2);">Job：やりたいこと<br>Pains：困りごと・不満<br>Gains：嬉しいこと・期待</div>
-        </div>
-        <div style="display:flex;align-items:center;font-size:1.5em;color:var(--accent);"><i class="fa-solid fa-arrows-left-right"></i></div>
-        <div style="flex:1;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:9px;padding:.5em .8em;">
-          <div style="color:var(--green);font-weight:700;margin-bottom:.3em;"><i class="fa-solid fa-box"></i> 価値マップ</div>
-          <div style="color:var(--muted2);">製品・サービス<br>ペインリリーバー（痛みを除く）<br>ゲインクリエイター（喜びを生む）</div>
-        </div>
-      </div>
-      <div id="s8-ex" class="se" style="background:rgba(248,100,100,0.06);border:1px solid rgba(248,100,100,0.25);border-radius:9px;padding:.5em .9em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);">
-        <strong style="color:var(--red);">例 コカ・コーラ：</strong>Job＝気分転換したい / Pain＝単調な飲み物に飽きる / Gain＝爽快感・特別な瞬間<br>→「赤と笑顔のハッピネス」がフィットし、<strong style="color:#fff;">競合との比較を無意味化</strong>した
-      </div>
+      <div id="s8-fit" class="se hl-banner" style="margin-top:.6em;">フィット＝USPの核心</div>
     </div>
   </section>
 
@@ -1343,122 +1208,58 @@ body {
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se">ブルーオーシャン戦略——競争のない市場を創る</div>
-      <div id="s9-src" class="se src-note" style="margin-bottom:.35em;">W. Chan Kim &amp; Renée Mauborgne 『Blue Ocean Strategy』（2005）</div>
-      <div id="s9-verdict" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>レッドオーシャン（既存の市場）</strong>——競争が激しく血みどろの状態。差別化のない消耗戦が続く</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>ブルーオーシャン（未開拓の市場）</strong>——競争相手がいない新しい価値空間を自ら創り出す</div>
-        </div>
+      <div id="s9-hd" class="sh se">ブルーオーシャン戦略</div>
+      <div id="s9-flow" class="se aflow t-md" style="margin-top:.25em;">
+        <span class="achip aghost" style="border-color:var(--red);color:var(--red);">赤・消耗戦</span>
+        <span class="aarrow">→</span>
+        <span class="achip on">青・競争なし</span>
       </div>
-      <div id="s9-errc" class="errc-grid se">
-        <div class="errc-card eliminate">
-          <div class="ec-hd"><i class="fa-solid fa-minus-circle"></i> ① 取り除く（Eliminate）</div>
-          <div style="color:var(--muted2);">業界の常識だが顧客に不要なものを排除</div>
-        </div>
-        <div class="errc-card reduce">
-          <div class="ec-hd"><i class="fa-solid fa-arrow-down"></i> ② 減らす（Reduce）</div>
-          <div style="color:var(--muted2);">業界標準以下に水準を下げるもの</div>
-        </div>
-        <div class="errc-card raise">
-          <div class="ec-hd"><i class="fa-solid fa-arrow-up"></i> ③ 増やす（Raise）</div>
-          <div style="color:var(--muted2);">業界標準以上に引き上げるもの</div>
-        </div>
-        <div class="errc-card create">
-          <div class="ec-hd"><i class="fa-solid fa-plus-circle"></i> ④ 付け加える（Create）</div>
-          <div style="color:var(--muted2);">業界にない新要素を加える</div>
-        </div>
+      <div id="s9-errc" class="se taglist t-md" style="margin-top:.5em;">
+        <span class="tag ng">取り除く</span><span class="tag">減らす</span><span class="tag">増やす</span><span class="tag acc">付け加える</span>
       </div>
-      <div id="s9-ex" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.45em .9em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);margin-top:.3em;">
-        <strong style="color:var(--accent);">例 シルク・ドゥ・ソレイユ：</strong>動物・スター出演を「取り除き」、芸術性・ストーリーを「付け加え」→ 新カテゴリを創出し競合を無意味化
-      </div>
+      <div id="s9-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">シルク・ドゥ・ソレイユが新カテゴリ創出</div>
     </div>
   </section>
 
-  <!-- S10: USP Verbalization 490-540s -->
+  <!-- S10: Language formula 490-540s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s10-hd" class="sh se">USPを一文で言語化する——3要素の公式</div>
-      <div id="s10-formula" class="se" style="margin:.3em 0;">
-        <div class="usp-formula">
-          <span class="uf-var">顧客（誰に）</span>
-          <span class="uf-op">×</span>
-          <span class="uf-var">ベネフィット（何が得られるか）</span>
-          <span class="uf-op">×</span>
-          <span class="uf-var">根拠（なぜ信頼できるか）</span>
-        </div>
+      <div id="s10-hd" class="sh se">USPを一文に言語化</div>
+      <div id="s10-flow" class="se aflow t-lg" style="margin-top:.3em;">
+        <span class="achip">顧客</span><span class="aarrow">×</span>
+        <span class="achip">ベネフィット</span><span class="aarrow">×</span>
+        <span class="achip on">根拠</span>
       </div>
-      <div id="s10-steps" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num">1</div>
-          <div class="n-body"><strong>顧客を絞る</strong><div class="t-sm">ターゲットを絞るほどUSPは鋭くなる。「多忙な中小企業経営者」のように</div></div>
+      <div id="s10-duo" class="se duo" style="margin-top:.5em;">
+        <div class="pcard" style="border-top-color:var(--green);">
+          <div class="ph t-md" style="color:var(--green);">◎ 良い例</div>
+          <div class="taglist t-sm"><span class="tag">週3時間→30分</span></div>
         </div>
-        <div class="n-step">
-          <div class="n-num g">2</div>
-          <div class="n-body"><strong>ベネフィットを数字で語る</strong><div class="t-sm">「気持ちよい」→「週3時間が30分になる」のように具体的な数字で</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num">3</div>
-          <div class="n-body"><strong>根拠・仕組みを示す</strong><div class="t-sm">「AI自動照合で誤処理ゼロ」のように、なぜ価値が生まれるかの証拠</div></div>
-        </div>
-      </div>
-      <div id="s10-check" class="se" style="display:flex;gap:.5em;margin-top:.3em;font-size:clamp(9px,1.3vw,16px);">
-        <div style="flex:1;background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.3);border-radius:8px;padding:.45em .7em;color:var(--muted2);">
-          <div style="color:var(--green);font-weight:700;margin-bottom:.2em;"><i class="fa-solid fa-circle-check"></i> 良いUSP例</div>
-          「多忙な中小企業経営者が、請求書作業を週3時間→30分以内に。競合は手動確認が必要だが弊社はAI自動照合で誤処理ゼロ」
-        </div>
-        <div style="flex:1;background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.3);border-radius:8px;padding:.45em .7em;color:var(--muted2);">
-          <div style="color:var(--red);font-weight:700;margin-bottom:.2em;"><i class="fa-solid fa-circle-xmark"></i> 悪いUSP例</div>
-          「高品質で丁寧なサービス」——独自性なし・ベネフィット曖昧・根拠ゼロ
+        <div class="pcard" style="border-top-color:var(--red);">
+          <div class="ph t-md" style="color:var(--red);">✕ 悪い例</div>
+          <div class="taglist t-sm"><span class="tag">高品質・丁寧</span></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- S11: Success & Failure Cases 540-570s -->
+  <!-- S11: Case studies 540-570s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">差別化の成功と失敗——実践から学ぶ</div>
-      <div id="s11-tbl" class="comp-tbl se">
-        <div class="comp-row comp-head">
-          <span class="comp-label">事例</span>
-          <span class="comp-a">Before / 状況</span>
-          <span class="comp-b">After / 結果</span>
+      <div id="s11-hd" class="sh se">成功と失敗</div>
+      <div id="s11-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--accent);">
+          <div class="ph t-lg" style="color:var(--accent);">成功<small>意味で勝つ</small></div>
+          <div class="taglist t-sm"><span class="tag">Apple</span><span class="tag">Airbnb</span></div>
         </div>
-        <div class="comp-row hi">
-          <span class="comp-label">Apple「Think Different」</span>
-          <span class="comp-a">スペック競争の時代</span>
-          <span class="comp-b c-green">アイデンティティ訴求で価格プレミアム維持・熱狂ファン</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">Airbnb「Belong Anywhere」</span>
-          <span class="comp-a">安い宿泊施設として参入</span>
-          <span class="comp-b c-green">「地元の家に泊まる体験」でホテルとの比較を無意味化</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">差別化できないEC事業</span>
-          <span class="comp-a c-red">品質・配送・返品対応が「業界標準レベル」</span>
-          <span class="comp-b c-red">最安値競争に巻き込まれ利益ゼロ</span>
+        <div class="pcard" style="border-top-color:var(--red);">
+          <div class="ph t-lg" style="color:var(--red);">失敗<small>普通で戦う</small></div>
+          <div class="taglist t-sm"><span class="tag">業界標準</span><span class="tag">最安値競争</span></div>
         </div>
       </div>
-      <div id="s11-lesson" class="se" style="margin-top:.35em;">
-        <div class="verdict-rows">
-          <div class="verdict-row ok">
-            <i class="fa-solid fa-check v-icon"></i>
-            <div class="v-body">USPは「顧客視点」で語られるとき初めて機能する。スペックより「意味・物語・アイデンティティ」のUSPが強い</div>
-          </div>
-          <div class="verdict-row ng">
-            <i class="fa-solid fa-xmark v-icon"></i>
-            <div class="v-body">失敗の本質は「差別化の言語化」を後回しにしたこと——「普通に良い」は差別化ではない</div>
-          </div>
-        </div>
-      </div>
+      <div id="s11-msg" class="se hl-banner" style="margin-top:.6em;">意味・物語のUSPが強い</div>
     </div>
   </section>
 
@@ -1466,50 +1267,25 @@ body {
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">今日のまとめ</div>
-      <div id="s12-items" class="icon-rows se">
-        <div class="icon-row">
-          <span class="ir-icon" style="color:var(--accent);"><i class="fa-solid fa-circle-check"></i></span>
-          <div><div class="ir-main">USP（Reeves 1961）＝ 独自・競合未提供・購買を動かす3条件を満たした「独自の強み」</div></div>
-        </div>
-        <div class="icon-row">
-          <span class="ir-icon" style="color:#60a5fa;"><i class="fa-solid fa-circle-check"></i></span>
-          <div><div class="ir-main">どの土俵で戦うか（Porter 1980）</div><div class="ir-sub">コストリーダーシップ・差別化・集中——「中間に留まる」は最も危険</div></div>
-        </div>
-        <div class="icon-row">
-          <span class="ir-icon" style="color:var(--yellow);"><i class="fa-solid fa-circle-check"></i></span>
-          <div><div class="ir-main">ポジショニング（Ries &amp; Trout 1981）</div><div class="ir-sub">USPが届き続けると顧客の頭の中に「場所」が確立する——記憶の第一位を狙う</div></div>
-        </div>
-        <div class="icon-row">
-          <span class="ir-icon" style="color:var(--green);"><i class="fa-solid fa-circle-check"></i></span>
-          <div><div class="ir-main">USPの見つけ方3ステップ</div><div class="ir-sub">① 顧客インタビュー → ② 競合分析 → ③ バリュープロポジションキャンバス</div></div>
-        </div>
-        <div class="icon-row">
-          <span class="ir-icon" style="color:var(--accent);"><i class="fa-solid fa-circle-check"></i></span>
-          <div><div class="ir-main">言語化＝ 顧客 × ベネフィット × 根拠の一文</div><div class="ir-sub">競合に使えない・数字で言える・顧客がイメージできること</div></div>
-        </div>
+      <div id="s12-hd" class="sh se">まとめ</div>
+      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+        <span class="tag">3条件のUSP</span>
+        <span class="tag">戦う土俵を選ぶ</span>
+        <span class="tag">3つの見つけ方</span>
+        <span class="tag acc">一文に言語化</span>
       </div>
-      <div id="s12-action" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em .9em;margin-top:.35em;font-size:clamp(10px,1.35vw,17px);color:var(--muted2);">
-        <strong style="color:var(--accent);">今すぐ実践：</strong>
-        <span>① 既存顧客3人に「なぜ私たちを選びましたか？」と聞く</span>&ensp;|&ensp;
-        <span>② 競合3社との比較表を書き出す</span>&ensp;|&ensp;
-        <span>③ バリュープロポジションキャンバスに自社を当てはめる</span>
-      </div>
+      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">顧客3人に「なぜ選んだか」を聞く</div>
     </div>
   </section>
 
-  <!-- S13: Next Episode 590-600s -->
+  <!-- S13: Next 590-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;">
-      <div id="s13-card" class="se">
-        <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
-        <div class="next-title">第9回 数字で判断するマーケティング「CPA・LTVとマーケティング投資の考え方」</div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>広告費は「コスト」ではなく「投資」——その判断基準は？</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>CPA（顧客獲得単価）とLTV（顧客生涯価値）の関係</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>LTV÷CPAで見る「マーケティング投資の費用対効果」——実践編スタート</span></div>
-      </div>
-      <div id="s13-cta" class="se"><i class="fa-solid fa-heart"></i> チャンネル登録 &amp; 高評価をぜひお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第9回</div>
+      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">CPA・LTV</div>
+      <div id="s13-sub" class="se t-md" style="color:var(--accent);">数字で判断する投資</div>
+      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 &amp; 高評価</div>
     </div>
   </section>
 
@@ -1541,56 +1317,54 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
-  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-rows'],           anim:'rv-up'},
-  {si:1,  t:45,   ids:['s2-flow'],           anim:'rv-up'},
-  {si:1,  t:55,   ids:['s2-contrast'],       anim:'rv-up'},
-  {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:83,   ids:['s3-quote'],          anim:'rv-up'},
-  {si:2,  t:92,   ids:['s3-steps'],          anim:'rv-up'},
-  {si:2,  t:108,  ids:['s3-ex'],             anim:'rv-fade'},
-  {si:3,  t:130,  ids:['s4-hd'],             anim:'rv-fade'},
-  {si:3,  t:132,  ids:['s4-src'],            anim:'rv-fade'},
-  {si:3,  t:135,  ids:['s4-cols'],           anim:'rv-up'},
-  {si:3,  t:155,  ids:['s4-warn'],           anim:'rv-scale'},
-  {si:4,  t:190,  ids:['s5-hd'],             anim:'rv-fade'},
-  {si:4,  t:193,  ids:['s5-quote'],          anim:'rv-up'},
-  {si:4,  t:205,  ids:['s5-matrix'],         anim:'rv-up'},
-  {si:4,  t:222,  ids:['s5-rel'],            anim:'rv-fade'},
-  {si:5,  t:250,  ids:['s6-hd'],             anim:'rv-fade'},
-  {si:5,  t:253,  ids:['s6-why'],            anim:'rv-fade'},
-  {si:5,  t:258,  ids:['s6-flow'],           anim:'rv-up'},
-  {si:5,  t:290,  ids:['s6-tip'],            anim:'rv-fade'},
-  {si:6,  t:310,  ids:['s7-hd'],             anim:'rv-fade'},
-  {si:6,  t:313,  ids:['s7-chart'],          anim:'rv-up'},
-  {si:6,  t:345,  ids:['s7-note'],           anim:'rv-fade'},
-  {si:7,  t:370,  ids:['s8-hd'],             anim:'rv-fade'},
-  {si:7,  t:372,  ids:['s8-src'],            anim:'rv-fade'},
-  {si:7,  t:375,  ids:['s8-formula'],        anim:'rv-scale'},
-  {si:7,  t:385,  ids:['s8-fit'],            anim:'rv-up'},
-  {si:7,  t:400,  ids:['s8-ex'],             anim:'rv-fade'},
-  {si:8,  t:430,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:432,  ids:['s9-src'],            anim:'rv-fade'},
-  {si:8,  t:435,  ids:['s9-verdict'],        anim:'rv-up'},
-  {si:8,  t:448,  ids:['s9-errc'],           anim:'rv-up'},
-  {si:8,  t:468,  ids:['s9-ex'],             anim:'rv-fade'},
-  {si:9,  t:490,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:493,  ids:['s10-formula'],       anim:'rv-scale'},
-  {si:9,  t:502,  ids:['s10-steps'],         anim:'rv-up'},
-  {si:9,  t:522,  ids:['s10-check'],         anim:'rv-up'},
-  {si:10, t:540,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:543,  ids:['s11-tbl'],           anim:'rv-up'},
-  {si:10, t:558,  ids:['s11-lesson'],        anim:'rv-fade'},
-  {si:11, t:570,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:573,  ids:['s12-items'],         anim:'rv-up'},
-  {si:11, t:583,  ids:['s12-action'],        anim:'rv-fade'},
-  {si:12, t:590,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:595,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
+  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
+  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
+  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
+  {si:1,  t:42,   ids:['s2-bad'],     anim:'rv-up'},
+  {si:1,  t:62,   ids:['s2-flow'],    anim:'rv-scale'},
+  {si:1,  t:74,   ids:['s2-note'],    anim:'rv-fade'},
+  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
+  {si:2,  t:88,   ids:['s3-key'],     anim:'rv-scale'},
+  {si:2,  t:104,  ids:['s3-cond'],    anim:'rv-up'},
+  {si:2,  t:120,  ids:['s3-note'],    anim:'rv-fade'},
+  {si:3,  t:130,  ids:['s4-hd'],      anim:'rv-fade'},
+  {si:3,  t:142,  ids:['s4-map'],     anim:'rv-up'},
+  {si:3,  t:172,  ids:['s4-warn'],    anim:'rv-pop'},
+  {si:4,  t:190,  ids:['s5-hd'],      anim:'rv-fade'},
+  {si:4,  t:200,  ids:['s5-flow'],    anim:'rv-up'},
+  {si:4,  t:222,  ids:['s5-key'],     anim:'rv-scale'},
+  {si:4,  t:238,  ids:['s5-note'],    anim:'rv-fade'},
+  {si:5,  t:250,  ids:['s6-hd'],      anim:'rv-fade'},
+  {si:5,  t:260,  ids:['s6-key'],     anim:'rv-scale'},
+  {si:5,  t:278,  ids:['s6-tags'],    anim:'rv-up'},
+  {si:5,  t:298,  ids:['s6-note'],    anim:'rv-fade'},
+  {si:6,  t:310,  ids:['s7-hd'],      anim:'rv-fade'},
+  {si:6,  t:320,  ids:['s7-map'],     anim:'rv-up'},
+  {si:6,  t:342,  ids:['s7-tags'],    anim:'rv-scale'},
+  {si:6,  t:358,  ids:['s7-note'],    anim:'rv-fade'},
+  {si:7,  t:370,  ids:['s8-hd'],      anim:'rv-fade'},
+  {si:7,  t:382,  ids:['s8-duo'],     anim:'rv-up'},
+  {si:7,  t:414,  ids:['s8-fit'],     anim:'rv-pop'},
+  {si:8,  t:430,  ids:['s9-hd'],      anim:'rv-fade'},
+  {si:8,  t:440,  ids:['s9-flow'],    anim:'rv-up'},
+  {si:8,  t:458,  ids:['s9-errc'],    anim:'rv-scale'},
+  {si:8,  t:478,  ids:['s9-note'],    anim:'rv-fade'},
+  {si:9,  t:490,  ids:['s10-hd'],     anim:'rv-fade'},
+  {si:9,  t:500,  ids:['s10-flow'],   anim:'rv-up'},
+  {si:9,  t:518,  ids:['s10-duo'],    anim:'rv-scale'},
+  {si:10, t:540,  ids:['s11-hd'],     anim:'rv-fade'},
+  {si:10, t:548,  ids:['s11-duo'],    anim:'rv-up'},
+  {si:10, t:562,  ids:['s11-msg'],    anim:'rv-pop'},
+  {si:11, t:570,  ids:['s12-hd'],     anim:'rv-fade'},
+  {si:11, t:578,  ids:['s12-tags'],   anim:'rv-up'},
+  {si:11, t:585,  ids:['s12-note'],   anim:'rv-fade'},
+  {si:12, t:590,  ids:['s13-lbl'],    anim:'rv-fade'},
+  {si:12, t:592,  ids:['s13-title'],  anim:'rv-up'},
+  {si:12, t:595,  ids:['s13-sub'],    anim:'rv-fade'},
+  {si:12, t:598,  ids:['s13-cta'],    anim:'rv-pop'}
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},

@@ -69,6 +69,7 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
+  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -136,22 +137,26 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
-.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
+   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
+.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
+.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
 
 /* section header */
 .sh {
-  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
-  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
+  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
+  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
+  letter-spacing:.01em;
 }
-.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes */
-.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
-.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
-.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
-.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
-.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
+/* body text sizes — large for mobile/YouTube legibility (bold gothic).
+   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
+.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
+.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
+.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
+.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
+.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -365,7 +370,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
+  color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -434,7 +439,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
+  color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -618,7 +623,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
+  font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -914,7 +919,8 @@ body {
    </div>  */
 .hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
   background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.65em 1.1em; }
+  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
+  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
 .hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
 .hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
 .hb-text strong { color:var(--text); }
@@ -1005,83 +1011,64 @@ body {
 .s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
 @keyframes dotFloat { to { transform:translateY(-8px); } }
 
+/* ================================================================
+   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
+   Shared keyword + diagram vocabulary for all episodes.
+================================================================ */
+.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
+.aflow.sm{gap:.4em;}
+.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
+  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
+.aflow.sm .achip{padding:.45em .7em;}
+.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
+.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
+.aghost{opacity:.4;}
+.aarrow{color:var(--accent);font-weight:900;}
+/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
+   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
+.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
+.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
+  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
+.tag.acc{border-color:var(--accent);color:var(--accent);}
+.tag.ng{border-color:var(--red);color:var(--red);}
+.tag.ok{border-color:var(--green);color:var(--green);}
+.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
+.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
+  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
+.pcard .ph{font-weight:900;line-height:1.1;}
+.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
+.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
+.bignum{color:var(--accent);font-weight:900;line-height:1;}
+.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
+.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
+.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
+.jcell .jv{font-weight:900;line-height:1;}
+.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
+.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
+.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
+.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
+.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
+
 </style>
 
 <style id="ep-css">
-/* ── vertical centering（必ず先頭に含める） ── */
+
+/* ── vertical centering override ── */
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── このエピソードのアクセント色上書き ── */
-:root { --accent: #F59E0B; --glow-acc: rgba(245,158,11,.25); --acc2: #f87171; }
+/* ── EP10 accent: amber ── */
+:root { --accent:#F59E0B; --glow-acc:rgba(245,158,11,.25); }
 
-/* ── law badge ── */
-.law-badge{display:inline-block;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.45);color:var(--accent);border-radius:7px;padding:.12em .7em;font-size:clamp(10px,1.35vw,17px);font-weight:700;margin-bottom:.35em;}
-
-/* ── AB compare ── */
-.ab-row{display:flex;gap:.55em;margin:.35em 0;}
-.ab-col{flex:1;border-radius:10px;padding:.6em .85em;font-size:clamp(10px,1.4vw,17px);line-height:1.45;}
-.ab-col.bad{background:rgba(248,100,100,0.07);border:1px solid rgba(248,100,100,0.3);}
-.ab-col.good{background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.35);}
-.ab-col .ab-hd{font-weight:700;margin-bottom:.3em;}
-.ab-col.bad .ab-hd{color:var(--red);}
-.ab-col.good .ab-hd{color:var(--green);}
-.ab-col .ab-metric{font-weight:900;color:var(--text);}
-
-/* ── cols2 feature/benefit ── */
-.cols2{display:grid;grid-template-columns:1fr 1fr;gap:.5em;margin:.35em 0;}
-.c2-hd{font-size:clamp(10px,1.35vw,17px);font-weight:700;text-align:center;padding:.3em .5em;border-radius:7px 7px 0 0;}
-.c2-hd.ng-hd{background:rgba(248,100,100,0.12);color:var(--red);}
-.c2-hd.ok-hd{background:rgba(74,222,128,0.12);color:var(--green);}
-.c2-items{border-radius:0 0 7px 7px;padding:.35em .6em;}
-.c2-items.ng-items{background:rgba(248,100,100,0.05);border:1px solid rgba(248,100,100,0.2);}
-.c2-items.ok-items{background:rgba(74,222,128,0.06);border:1px solid rgba(74,222,128,0.25);}
-.c2-item{font-size:clamp(9px,1.25vw,15px);padding:.2em 0;color:var(--muted2);border-bottom:1px solid var(--border);line-height:1.35;}
-.c2-item:last-child{border-bottom:none;}
-.c2-item.ng-item{color:var(--red);}
-.c2-item.ok-item{color:#fff;font-weight:600;}
-
-/* ── awareness pyramid ── */
-.pyr{display:flex;flex-direction:column;align-items:center;gap:.22em;margin:.25em 0;}
-.pyr-row{border-radius:7px;padding:.4em .7em;text-align:center;font-size:clamp(9px,1.25vw,16px);line-height:1.35;}
-.pyr-row .pl{font-weight:700;}
-.pyr-row .pc{color:var(--muted2);font-size:.88em;}
-.pyr-1{width:96%;background:rgba(96,165,250,0.10);border:1px solid rgba(96,165,250,0.3);}
-.pyr-1 .pl{color:var(--blue);}
-.pyr-2{width:80%;background:rgba(251,191,36,0.10);border:1px solid rgba(251,191,36,0.3);}
-.pyr-2 .pl{color:var(--yellow);}
-.pyr-3{width:64%;background:rgba(251,146,60,0.10);border:1px solid rgba(251,146,60,0.3);}
-.pyr-3 .pl{color:#fb923c;}
-.pyr-4{width:48%;background:rgba(74,222,128,0.10);border:1px solid rgba(74,222,128,0.3);}
-.pyr-4 .pl{color:var(--green);}
-.pyr-5{width:34%;background:rgba(245,158,11,0.14);border:1px solid rgba(245,158,11,0.45);}
-.pyr-5 .pl{color:var(--accent);}
-
-/* ── sum items ── */
-.sum-item{display:flex;align-items:flex-start;gap:.55em;padding:.28em 0;font-size:clamp(10px,1.4vw,17px);border-bottom:1px solid var(--border);}
-.sum-item:last-child{border-bottom:none;}
-.sum-icon{color:var(--accent);flex-shrink:0;margin-top:.15em;}
-.sum-main{font-weight:700;color:#fff;}
-.sum-sub{color:var(--muted2);font-size:.88em;margin-top:.1em;}
-
-/* ── last slide ── */
-#s13{background:radial-gradient(ellipse 80% 65% at 40% 50%, #2a1705 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
-#s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px rgba(245,158,11,0.25),0 8px 32px rgba(0,0,0,0.5);}
-#s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:#fb923c;display:flex;align-items:center;justify-content:center;gap:.55em;}
-
-/* ── s1 overrides ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2a1705 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(245,158,11,0.4);color:var(--muted2);border-radius:20px;padding:.3em 1.2em;margin-bottom:.75em;font-size:clamp(9px,1.2vw,14px);}
+/* ── S1 ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2e1f06 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(245,158,11,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
 #s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(10px,1.4vw,18px);color:var(--accent);font-weight:700;margin-bottom:.4em;}
-#s1-catch{font-size:clamp(11px,1.5vw,19px);color:var(--muted2);margin-top:.7em;}
+#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
+#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── kpi-wrap sizing ── */
-.kpi-wrap{display:flex;align-items:center;gap:1.2em;padding:.5em 1em;background:var(--surf);border:1px solid var(--border);border-radius:12px;}
-.kpi-big{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:5em;}
-.kpi-num{font-size:clamp(26px,4.5vw,58px);font-weight:900;line-height:1;color:var(--c,var(--accent));text-shadow:0 0 20px var(--glow-acc);}
-.kpi-sub{font-size:clamp(9px,1.2vw,14px);color:var(--muted);text-align:center;margin-top:.2em;}
-.kpi-ctx{font-size:clamp(10px,1.4vw,18px);color:var(--muted2);line-height:1.5;}
+/* Minimal design helpers and type-scale live in the shared base CSS. */
+
 </style>
 </head>
 <body>
@@ -1102,371 +1089,182 @@ body {
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
       <div id="s1-ep" class="se">第10回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">反応率が激変する</div>
-      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">「コピーライティング」5つの法則</div>
-      <div id="s1-catch" class="se">同じ商品・同じ価格でも、言葉1つで売上は3倍変わる</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">反応率が激変する</div>
+      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">コピー5つの法則</div>
+      <div id="s1-catch" class="se">言葉1つで、売上は3倍</div>
     </div>
   </section>
 
-  <!-- S2: Hook – 読まれる広告 vs 無視される広告 30-80s -->
+  <!-- S2: Hook 30-80s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
     <div class="pad">
-      <div id="s2-hd" class="sh se">なぜ同じ商品なのに売れ方が違うのか？</div>
-      <div id="s2-cond" class="se" style="font-size:clamp(11px,1.55vw,20px);color:var(--muted2);margin-bottom:.4em;">
-        <strong style="color:#fff;">ある健康食品ECの実験：</strong>商品・価格・ターゲット・広告予算はまったく同じ。変えたのは<strong style="color:var(--accent);">見出しの1行だけ</strong>。
+      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">同じ商品・同じ価格<br>なのに<span style="color:#fff;">売れ方が違う</span></div>
+      <div id="s2-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip aghost">毎日飲めるサプリ<small>CTR 1.2%</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on">40代の倦怠感が変わった理由<small>CTR 3.9%</small></span>
       </div>
-      <div id="s2-verdict" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>パターンA「毎日飲める栄養サプリ」</strong>：CTR 1.2% / CVR 0.8% → 商品説明（売り手の視点）</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>パターンB「40代の倦怠感が、3週間で変わった理由」</strong>：CTR 3.9% / CVR 2.4% → 読み手の悩み × 数字 × 解決の約束（買い手の視点）</div>
-        </div>
-      </div>
-      <div id="s2-res" class="se" style="background:rgba(245,158,11,0.10);border:2px solid rgba(245,158,11,0.4);border-radius:10px;padding:.55em 1em;margin-top:.4em;font-size:clamp(13px,2vw,26px);font-weight:900;color:var(--accent);text-align:center;">
-        結果：売上3.2倍・広告費は同じ
-      </div>
-      <div id="s2-pt" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.55em 1em;margin-top:.45em;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);display:flex;align-items:center;gap:.6em;">
-        <i class="fa-solid fa-arrow-right" style="color:var(--accent);flex-shrink:0;"></i>
-        <span>「書くのが苦手」はセンスではなく<strong style="color:#fff;">「法則を知らない」だけ</strong>——コピーには再現可能なルールがある</span>
-      </div>
+      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin-top:.3em;">売上 <span class="bignum t-xl">3.2倍</span></div>
+      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">センスではなく法則</div>
     </div>
   </section>
 
-  <!-- S3: What is copywriting (Ogilvy) 80-130s -->
+  <!-- S3: Ogilvy / what is copywriting 80-130s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
-    <div class="pad">
-      <div id="s3-hd" class="sh se">コピーライティングとは何か</div>
-      <blockquote id="s3-quote" class="quote-blk se">
-        <p class="qb-text">「コピーライティングとは、<em>紙の上のセールスマン</em>である」——24時間働き、何千人もの顧客に同時に語りかける</p>
-        <cite class="qb-cite">David Ogilvy『Ogilvy on Advertising』1983</cite>
-      </blockquote>
-      <div id="s3-binary" class="se" style="background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.3);border-radius:9px;padding:.55em 1em;margin:.35em 0;font-size:clamp(12px,1.7vw,22px);font-weight:700;color:#fff;text-align:center;">
-        「広告は<span style="color:var(--green);">読まれるか</span>、<span style="color:var(--red);">無視されるか</span>の2択しかない」<span style="display:block;font-size:.78em;font-weight:400;color:var(--muted2);margin-top:.2em;">中間はない。無視された広告は、ゼロと同じ</span>
+    <div class="pad-t">
+      <div id="s3-hd" class="sh se">コピーとは</div>
+      <div id="s3-key" class="se t-xl" style="text-align:center;">紙の上の<span style="color:var(--accent);">セールスマン</span></div>
+      <div id="s3-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip">読まれる</span><span class="aarrow">or</span><span class="achip aghost">無視</span>
       </div>
-      <div id="s3-kpi" class="kpi-wrap se">
-        <div class="kpi-big" style="--c:var(--accent)">
-          <div class="kpi-num">5×</div>
-          <div class="kpi-sub">ヘッドライン読者数</div>
-        </div>
-        <div class="kpi-ctx">
-          <strong style="color:#fff;">「ヘッドラインを読む人は、ボディコピーを読む人の5倍いる」</strong><br>
-          → 反応率はヘッドライン（見出し）の<strong style="color:var(--accent);">8割</strong>で決まる<br>
-          <span style="font-size:.88em;color:var(--muted);">活用場所：広告文 / LP / メルマガ件名 / SNS 1行目 / 商品名</span>
-        </div>
-      </div>
+      <div id="s3-note" class="se t-lg" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">勝負はヘッドラインで8割</div>
     </div>
   </section>
 
-  <!-- S4: Law 1 Benefit-first 130-180s -->
+  <!-- S4: Law1 Benefit-first 130-180s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
-    <div class="pad">
-      <div id="s4-badge" class="law-badge se">法則① ベネフィットファースト</div>
-      <div id="s4-sowhat" class="se" style="background:rgba(245,158,11,0.10);border:1px solid rgba(245,158,11,0.4);border-radius:10px;padding:.5em 1em;margin-bottom:.4em;text-align:center;font-size:clamp(14px,2.1vw,28px);font-weight:900;color:var(--accent);">
-        読み手の最初の本音 ＝「So what?（だから何？）」
+    <div class="pad-t">
+      <div id="s4-hd" class="sh se">法則① ベネフィットファースト</div>
+      <div id="s4-key" class="se t-xl" style="text-align:center;">読み手は<span style="color:var(--accent);">So what?</span></div>
+      <div id="s4-duo" class="se duo" style="margin-top:.3em;">
+        <div class="pcard"><div class="ph t-lg" style="color:var(--red);">特徴<small>売り手目線</small></div><div class="taglist t-sm"><span class="tag ng">AI搭載</span></div></div>
+        <div class="pcard"><div class="ph t-lg" style="color:var(--green);">ベネフィット<small>買い手目線</small></div><div class="taglist t-sm"><span class="tag ok">作業が自動で終わる</span></div></div>
       </div>
-      <div id="s4-cols" class="se" style="display:grid;grid-template-columns:1fr 1fr;gap:.5em;margin:.35em 0;">
-        <div>
-          <div class="c2-hd ng-hd">特徴（Feature）— NG</div>
-          <div class="c2-items ng-items">
-            <div class="c2-item ng-item">「防水仕様」</div>
-            <div class="c2-item ng-item">「500種類の栄養素配合」</div>
-            <div class="c2-item ng-item">「AI搭載」</div>
-            <div class="c2-item ng-item">「24時間サポート」</div>
-          </div>
-        </div>
-        <div>
-          <div class="c2-hd ok-hd">ベネフィット（Benefit）— OK</div>
-          <div class="c2-items ok-items">
-            <div class="c2-item ok-item">雨の日も気にせず使える</div>
-            <div class="c2-item ok-item">1本で1日分の栄養が取れる</div>
-            <div class="c2-item ok-item">毎回考えていた作業が自動で終わる</div>
-            <div class="c2-item ok-item">夜中に困っても、すぐ解決できる</div>
-          </div>
-        </div>
-      </div>
-      <div id="s4-rule" class="hl-banner se" style="--c:var(--accent)">
-        <i class="fa-solid fa-key hb-icon"></i>
-        <div class="hb-text"><strong>黄金ルール：「だから、あなたは〇〇できる」に変換できるかチェック</strong><br>Ogilvy「ヘッドラインでベネフィットを約束せよ」</div>
-      </div>
+      <div id="s4-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">最初の1文で「得」を約束</div>
     </div>
   </section>
 
-  <!-- S5: Law 2 Awareness levels (Schwartz) 180-230s -->
+  <!-- S5: Law2 Awareness levels 180-230s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
-    <div class="pad">
-      <div id="s5-badge" class="law-badge se">法則② 意識レベルに合わせる</div>
-      <div id="s5-src" class="se" style="font-size:clamp(9px,1.15vw,14px);color:var(--muted);margin-bottom:.35em;">Eugene Schwartz『Breakthrough Advertising』1966</div>
-      <div id="s5-pyr" class="pyr se">
-        <div class="pyr-row pyr-5"><span class="pl">Lv5 Most Aware（最も意識が高い）</span><span class="pc"> → 「今すぐ申し込む」「期間限定〇〇円」</span></div>
-        <div class="pyr-row pyr-4"><span class="pl">Lv4 Product Aware（商品認知）</span><span class="pc"> → 商品の優位性・他社との違い</span></div>
-        <div class="pyr-row pyr-3"><span class="pl">Lv3 Solution Aware（解決策認知）</span><span class="pc"> → どの解決策を提供するか示す</span></div>
-        <div class="pyr-row pyr-2"><span class="pl">Lv2 Problem Aware（問題認知）</span><span class="pc"> → 問題に共感し解決策を示す</span></div>
-        <div class="pyr-row pyr-1"><span class="pl">Lv1 Unaware（未認知）</span><span class="pc"> → 潜在的な問題・欲求を言語化して気づかせる</span></div>
+    <div class="pad-t">
+      <div id="s5-hd" class="sh se">法則② 意識レベルに合わせる</div>
+      <div id="s5-flow" class="se aflow sm t-md" style="margin-top:.2em;">
+        <span class="achip">未認知</span><span class="aarrow">→</span>
+        <span class="achip">問題認知</span><span class="aarrow">→</span>
+        <span class="achip">解決策</span><span class="aarrow">→</span>
+        <span class="achip">商品認知</span><span class="aarrow">→</span>
+        <span class="achip on">最も意識高</span>
       </div>
-      <div id="s5-media" class="se" style="font-size:clamp(9px,1.25vw,15px);color:var(--muted);text-align:center;margin:.3em 0;">
-        SNS広告 ＝ Lv1〜2 に届きやすい&emsp;／&emsp;リスティング広告 ＝ Lv3〜5 が集まる
-      </div>
-      <div id="s5-warn" class="hl-banner se" style="--c:var(--red)">
-        <i class="fa-solid fa-triangle-exclamation hb-icon"></i>
-        <div class="hb-text"><strong>Lv1の人に「今すぐ購入」は反応ゼロ</strong><br>意識レベルのミスマッチがコピーの失敗原因の多くを占める</div>
-      </div>
+      <div id="s5-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">ミスマッチが失敗の最大原因</div>
     </div>
   </section>
 
-  <!-- S6: Law 3 Slippery slope (Sugarman) 230-280s -->
+  <!-- S6: Law3 Slippery slope 230-280s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
-    <div class="pad">
-      <div id="s6-badge" class="law-badge se">法則③ スリッパリースロープ（滑り台理論）</div>
-      <blockquote id="s6-core" class="quote-blk se">
-        <p class="qb-text">「1行目の唯一の目的は、<em>2行目を読ませること</em>」「2行目の目的は、3行目を読ませること」——コピーは「読み続けさせる滑り台」</p>
-        <cite class="qb-cite">Joseph Sugarman『The Adweek Copywriting Handbook』2007</cite>
-      </blockquote>
-      <div id="s6-steps" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num">①</div>
-          <div class="n-body"><strong>短い文・リズム</strong><div class="t-sm">長文を避け一文を短く。テンポよく読める流れを作る<br><em style="color:var(--muted);">例：「これを読んで、後悔した人はいません。理由はシンプルです。」</em></div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num g">②</div>
-          <div class="n-body"><strong>小さなYESを積み重ねる</strong><div class="t-sm">読み手が「そうそう」と頷ける文を先に置く<br><em style="color:var(--muted);">例：「毎朝、何を着るか迷いますよね。クローゼットは服でいっぱいなのに。」</em></div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num b">③</div>
-          <div class="n-body"><strong>好奇心を刺激して次へ引く（オープンループ）</strong><div class="t-sm">答えを少し先に引き延ばす<br><em style="color:var(--muted);">例：「その秘密は、実は3つ目の法則にあります。」</em></div></div>
-        </div>
+    <div class="pad-t">
+      <div id="s6-hd" class="sh se">法則③ スリッパリースロープ</div>
+      <div id="s6-key" class="se t-xl" style="text-align:center;">1行目の目的は<br><span style="color:var(--accent);">2行目を読ませる</span></div>
+      <div id="s6-tags" class="se taglist t-md" style="margin-top:.4em;">
+        <span class="tag">短文・リズム</span><span class="tag">小さなYES</span><span class="tag acc">好奇心で引く</span>
       </div>
-      <div id="s6-ng" class="se" style="font-size:clamp(10px,1.4vw,17px);color:var(--red);text-align:center;margin-top:.3em;">
-        滑り台が止まるNG：× 長い自社紹介&emsp;／&emsp;× 専門用語の多用&emsp;／&emsp;× 「弊社は〜です」で始まるLP
-      </div>
+      <div id="s6-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「弊社は〜」始まりは即NG</div>
     </div>
   </section>
 
-  <!-- S7: Law 4 Cialdini – bar-chart-h for social proof strength 280-330s -->
+  <!-- S7: Law4 Cialdini 280-330s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
-    <div class="pad">
-      <div id="s7-badge" class="law-badge se">法則④ 社会的証明・権威・希少性</div>
-      <div id="s7-src" class="se" style="font-size:clamp(9px,1.15vw,14px);color:var(--muted);margin-bottom:.3em;">Robert Cialdini『Influence: The Psychology of Persuasion』1984</div>
-      <div id="s7-bars" class="bar-chart-h se">
-        <div class="bh-row">
-          <span class="bh-lbl"><i class="fa-solid fa-users"></i> 社会的証明</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:90;--c:var(--blue)"></div></div>
-          <span class="bh-val" style="color:var(--blue)">★4.8 / 1,240件 / 累計12,000人</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl"><i class="fa-solid fa-award"></i> 権威</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--accent)"></div></div>
-          <span class="bh-val" style="color:var(--accent)">医師監修 / 研究機関採用</span>
-        </div>
-        <div class="bh-row">
-          <span class="bh-lbl"><i class="fa-solid fa-hourglass-half"></i> 希少性</span>
-          <div class="bh-track"><div class="bh-fill" style="--v:60;--c:var(--red)"></div></div>
-          <span class="bh-val" style="color:var(--red)">残り3席 / 今月末まで</span>
-        </div>
+    <div class="pad-t">
+      <div id="s7-hd" class="sh se">法則④ 心理バイアスを使う</div>
+      <div id="s7-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+        <span class="tag">社会的証明<br><small style="font-weight:600;">12,000人が選んだ</small></span>
+        <span class="tag">権威<br><small style="font-weight:600;">医師監修</small></span>
+        <span class="tag acc">希少性<br><small style="font-weight:600;">残り3席</small></span>
       </div>
-      <div id="s7-warn" class="se" style="background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.3);border-radius:9px;padding:.45em 1em;margin:.3em 0;font-size:clamp(10px,1.4vw,17px);color:var(--red);text-align:center;">
-        注意：希少性は<strong>本物に限る</strong>。嘘の「残り3席」は信頼を崩す
-      </div>
-      <div id="s7-combo" class="hl-banner se" style="--c:var(--green)">
-        <i class="fa-solid fa-circle-check hb-icon"></i>
-        <div class="hb-text"><strong>組み合わせると最強：「医師監修・1,200件★4.8・今月末で受付終了」</strong><br>権威 × 社会的証明 × 希少性の三重構造</div>
-      </div>
+      <div id="s7-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">3つ重ねると最強・希少性は本物のみ</div>
     </div>
   </section>
 
-  <!-- S8: Law 5 Numbers 330-380s -->
+  <!-- S8: Law5 Numbers 330-380s -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
-    <div class="pad">
-      <div id="s8-badge" class="law-badge se">法則⑤ 具体的な数字を使う</div>
-      <blockquote id="s8-quote" class="quote-blk se">
-        <p class="qb-text">「数字は読まれる。なぜなら、<em>具体的だから</em>」——曖昧な言葉は流れるが、数字は目に止まり「証明された感」を生む</p>
-        <cite class="qb-cite">David Ogilvy</cite>
-      </blockquote>
-      <div id="s8-verdict" class="verdict-rows se">
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>「素早く効果が出る」</strong> → <span style="color:#fff;">「最短3日で実感（利用者の78%）」</span></div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>「多くの方に選ばれています」</strong> → <span style="color:#fff;">「6,200社・12万ユーザーが導入」</span></div>
-        </div>
-        <div class="verdict-row ng">
-          <i class="fa-solid fa-xmark v-icon"></i>
-          <div class="v-body"><strong>「短時間で作業が完了」</strong> → <span style="color:#fff;">「1日30分の作業が7分になった」</span></div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body"><strong>キリのよい数字より端数</strong>：「3倍」より<span style="color:var(--accent);font-weight:700;">「2.8倍」</span>が実測感・信頼感を高める</div>
-        </div>
+    <div class="pad-t">
+      <div id="s8-hd" class="sh se">法則⑤ 具体的な数字を使う</div>
+      <div id="s8-duo" class="se duo" style="margin-top:.3em;">
+        <div class="pcard"><div class="ph t-lg" style="color:var(--red);">曖昧<small>素通り</small></div><div class="taglist t-sm"><span class="tag ng">大幅に改善</span></div></div>
+        <div class="pcard"><div class="ph t-lg" style="color:var(--green);">数字<small>目に止まる</small></div><div class="taglist t-sm"><span class="tag ok">CVRが2.3倍</span></div></div>
       </div>
-      <div id="s8-rules" class="se" style="background:var(--surf);border:1px solid var(--border);border-radius:9px;padding:.5em 1em;margin-top:.35em;font-size:clamp(10px,1.4vw,17px);color:var(--muted2);line-height:1.5;">
-        <strong style="color:var(--accent);">3原則：</strong>① 具体的に（「約〇〇」より「〇〇」） ② 根拠を添える（「利用者調査」） ③ 端数が信頼を生む
-      </div>
+      <div id="s8-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「3倍」より「2.8倍」が信頼される</div>
     </div>
   </section>
 
-  <!-- S9: NG vs OK – comp-tbl 380-430s -->
+  <!-- S9: NG vs OK 380-430s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
-    <div class="pad">
-      <div id="s9-hd" class="sh se">NG例 vs OK例（オンラインコーチング 月3万円）</div>
-      <div id="s9-tbl" class="comp-tbl se">
-        <div class="comp-row comp-head">
-          <span class="comp-label">要素</span>
-          <span class="comp-a">法則なし（反応率：低）</span>
-          <span class="comp-b">5法則あり（反応率：高）</span>
+    <div class="pad-t">
+      <div id="s9-hd" class="sh se">NG例 vs OK例</div>
+      <div id="s9-duo" class="se duo" style="margin-top:.2em;">
+        <div class="pcard" style="border-top-color:var(--red);">
+          <div class="ph t-lg" style="color:var(--red);">法則なし</div>
+          <div class="taglist t-sm"><span class="tag ng">サービスのご案内</span></div>
         </div>
-        <div class="comp-row hi">
-          <span class="comp-label">見出し</span>
-          <span class="comp-a c-red">「ビジネスコーチングサービスのご案内」</span>
-          <span class="comp-b c-green">「売上が3ヶ月で1.8倍になった起業家が共通して変えた"1つの習慣"とは？」</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">共感</span>
-          <span class="comp-a c-red">なし</span>
-          <span class="comp-b c-green">「集客できない」不安に共感→小さなYES</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">信頼</span>
-          <span class="comp-a c-red">「様々な実績を持つコーチ」</span>
-          <span class="comp-b c-green">236名受講・満足度98%・MBAコーチ</span>
-        </div>
-        <div class="comp-row">
-          <span class="comp-label">希少性</span>
-          <span class="comp-a c-red">なし</span>
-          <span class="comp-b c-green">「今月の受付は残り4名」</span>
+        <div class="pcard" style="border-top-color:var(--green);">
+          <div class="ph t-lg" style="color:var(--green);">5法則あり</div>
+          <div class="taglist t-sm"><span class="tag ok">3ヶ月で1.8倍の理由とは？</span></div>
         </div>
       </div>
-      <div id="s9-map" class="se" style="background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.3);border-radius:9px;padding:.5em 1em;margin-top:.4em;font-size:clamp(9px,1.3vw,16px);color:var(--muted2);line-height:1.5;">
-        <strong style="color:var(--accent);">5法則すべてが組み込まれた構造：</strong>①ベネフィット（1.8倍）②問題認知Lv2 ③小さなYES ④三重信頼 ⑤具体的数字 <strong style="color:#fff;">→ どれか1つ欠けると反応は下がる</strong>
-      </div>
+      <div id="s9-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">1つ欠けると反応は下がる</div>
     </div>
   </section>
 
-  <!-- S10: A/B test – h-flow for CTA design steps 430-480s -->
+  <!-- S10: A/B test priority 430-480s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
-    <div class="pad">
-      <div id="s10-hd" class="sh se">A/Bテストで何を変えるか——優先順位</div>
-      <div id="s10-flow" class="h-flow se">
-        <div class="h-flow-node accent">①ヘッドライン<span class="fn-sub">CTR 2〜5倍</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node blu">②CTA文言<span class="fn-sub">「今すぐ3分で始める」</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node ylw">③社会的証明<span class="fn-sub">レビュー・満足率</span></div>
-        <svg class="h-arrow" viewBox="0 0 24 24" fill="none"><path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <div class="h-flow-node grn">④数字の位置<span class="fn-sub">ヘッドラインへ移す</span></div>
+    <div class="pad-t">
+      <div id="s10-hd" class="sh se">A/Bテストの優先順位</div>
+      <div id="s10-flow" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip on">① 見出し</span><span class="aarrow">→</span>
+        <span class="achip">② CTA</span><span class="aarrow">→</span>
+        <span class="achip">③ 社会的証明</span>
       </div>
-      <div id="s10-howto" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num">1</div>
-          <div class="n-body"><strong>変える要素は1つだけ</strong><div class="t-sm">複数同時変更は勝因が特定できない</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num g">2</div>
-          <div class="n-body"><strong>最低300クリック集めてから判断</strong><div class="t-sm">データ不足での判断はノイズ</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num b">3</div>
-          <div class="n-body"><strong>勝ちパターンを次のベースラインに</strong><div class="t-sm">テストを繰り返してコピーを磨く</div></div>
-        </div>
-      </div>
-      <div id="s10-first" class="hl-banner se" style="--c:var(--accent)">
-        <i class="fa-solid fa-flag-checkered hb-icon"></i>
-        <div class="hb-text"><strong>最初の一手：見出しを「ベネフィット＋数字＋好奇心」の3要素で1本書き直す</strong></div>
-      </div>
+      <div id="s10-key" class="se t-lg" style="text-align:center;margin-top:.4em;">見出しだけで<span style="color:var(--accent);">CTR 2〜5倍</span></div>
+      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">変える要素は必ず1つだけ</div>
     </div>
   </section>
 
-  <!-- S11: AIDA – h-flow Attention→Interest→Desire→Action 480-530s -->
+  <!-- S11: Halbert target 480-530s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
-    <div class="pad">
-      <div id="s11-hd" class="sh se">コピーより先に決めること——ターゲット設定</div>
-      <blockquote id="s11-quote" class="quote-blk se">
-        <p class="qb-text">「ハンバーガースタンドで欲しいのは最高のレシピでも最安値でもない。私が欲しいのは——<em>ハングリーな群衆（Starving Crowd）</em>だ」</p>
-        <cite class="qb-cite">Gary Halbert "The Boron Letters" 1984</cite>
-      </blockquote>
-      <div id="s11-mean" class="se" style="background:rgba(248,100,100,0.07);border:1px solid rgba(248,100,100,0.3);border-radius:9px;padding:.5em 1em;margin:.3em 0;font-size:clamp(11px,1.55vw,20px);color:var(--muted2);text-align:center;">
-        どんなに優れたコピーも、必要としない人に届ければ反応はゼロ <strong style="color:#fff;">→ 「誰に届けるか」がコピーの質より先に来る</strong>
+    <div class="pad-t">
+      <div id="s11-hd" class="sh se">コピーより先に決める</div>
+      <div id="s11-key" class="se t-xl" style="text-align:center;">ハングリーな<span style="color:var(--accent);">群衆</span>に売れ</div>
+      <div id="s11-tags" class="se taglist t-md" style="margin-top:.4em;">
+        <span class="tag">悩みの言葉</span><span class="tag">意識レベル</span><span class="tag">媒体</span>
       </div>
-      <div id="s11-check" class="verdict-rows se">
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body">ペルソナの<strong>毎日の悩みの言葉</strong>でヘッドラインを書いているか</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body">ペルソナの<strong>意識レベル（Schwartz）</strong>に合った構造か</div>
-        </div>
-        <div class="verdict-row ok">
-          <i class="fa-solid fa-check v-icon"></i>
-          <div class="v-body">ペルソナが最もよく見る<strong>プラットフォーム</strong>に出しているか</div>
-        </div>
-      </div>
-      <div id="s11-narrow" class="hl-banner se" style="--c:var(--accent)">
-        <i class="fa-solid fa-bullseye hb-icon"></i>
-        <div class="hb-text"><strong>「全員向け」は「誰にも刺さらない」</strong><br>「40代・子育て中・副業検討の女性」に絞ると言葉が自然と具体的になる</div>
-      </div>
+      <div id="s11-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「全員向け」は誰にも刺さらない</div>
     </div>
   </section>
 
-  <!-- S12: Summary – n-steps for 5 laws 530-585s -->
+  <!-- S12: Summary 530-585s -->
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
-    <div class="pad">
-      <div id="s12-hd" class="sh se">今日のまとめ——5つの法則</div>
-      <div id="s12-steps" class="n-steps se">
-        <div class="n-step">
-          <div class="n-num">①</div>
-          <div class="n-body"><strong>ベネフィットファースト</strong><div class="t-sm">「So what?」と自問し「あなたの得」に変換する（Ogilvy：ヘッドラインで8割が決まる）</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num g">②</div>
-          <div class="n-body"><strong>意識レベルに合わせる（Schwartz）</strong><div class="t-sm">読み手の5段階レベルを先に設定してから書く</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num b">③</div>
-          <div class="n-body"><strong>スリッパリースロープ（Sugarman）</strong><div class="t-sm">1行目の目的は2行目を読ませること。短文・小さなYES・好奇心</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num r">④</div>
-          <div class="n-body"><strong>社会的証明・権威・希少性（Cialdini）</strong><div class="t-sm">数字・専門家・期限で信頼を重ねる（希少性は本物のみ）</div></div>
-        </div>
-        <div class="n-step">
-          <div class="n-num">⑤</div>
-          <div class="n-body"><strong>具体的な数字（Ogilvy）＋ ターゲット設定（Halbert）</strong><div class="t-sm">端数が実測感を生む／「ハングリーな群衆」に届けるのが大前提</div></div>
-        </div>
+    <div class="pad-t">
+      <div id="s12-hd" class="sh se">まとめ</div>
+      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.6em;">
+        <span class="tag">①ベネフィット</span>
+        <span class="tag">②意識レベル</span>
+        <span class="tag">③滑り台</span>
+        <span class="tag">④心理バイアス</span>
+        <span class="tag">⑤数字</span>
+        <span class="tag acc">先にターゲット</span>
       </div>
-      <div id="s12-do" class="hl-banner se" style="--c:var(--accent)">
-        <i class="fa-solid fa-rocket hb-icon"></i>
-        <div class="hb-text"><strong>今すぐできる1ステップ：見出しを「法則①ベネフィット × 法則⑤数字」で書き直す</strong><br>まず1本。それだけで反応が変わり始める</div>
-      </div>
+      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">まず見出しを1本、書き直す</div>
     </div>
   </section>
 
-  <!-- S13: Next Episode 585-600s -->
+  <!-- S13: Next 585-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div class="pad" style="align-items:center;justify-content:center;text-align:center;">
-      <div id="s13-card" class="se card">
-        <div class="next-lbl"><i class="fa-solid fa-forward"></i>&ensp;次回予告</div>
-        <div class="next-title">第11回 フォロワーが「いいね」から「行動」に変わる<br>SNSエンゲージメントの設計法</div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>エンゲージメント率が上がっても売上に繋がらない理由</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>「見られる投稿」から「動かされる投稿」への転換</span></div>
-        <div class="next-pt"><i class="fa-solid fa-circle-dot"></i><span>SNS別の最適な投稿構造と反応率を高めるコピー設計</span></div>
-      </div>
-      <div id="s13-cta" class="se"><i class="fa-solid fa-heart"></i> チャンネル登録 &amp; 高評価をお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第11回</div>
+      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">SNSエンゲージメント</div>
+      <div id="s13-sub" class="se t-md" style="color:var(--accent);">「いいね」から「行動」へ</div>
+      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
     </div>
   </section>
 
@@ -1498,57 +1296,54 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],          anim:'rv-fade'},
-  {si:0,  t:0.8,  ids:['s1-ep'],             anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-title'],          anim:'rv-up'},
-  {si:0,  t:2.5,  ids:['s1-sub'],            anim:'rv-up'},
-  {si:0,  t:3.5,  ids:['s1-catch'],          anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-hd'],             anim:'rv-fade'},
-  {si:1,  t:33,   ids:['s2-cond'],           anim:'rv-fade'},
-  {si:1,  t:40,   ids:['s2-verdict'],        anim:'rv-up'},
-  {si:1,  t:52,   ids:['s2-res'],            anim:'rv-scale'},
-  {si:1,  t:60,   ids:['s2-pt'],             anim:'rv-fade'},
-  {si:2,  t:80,   ids:['s3-hd'],             anim:'rv-fade'},
-  {si:2,  t:83,   ids:['s3-quote'],          anim:'rv-up'},
-  {si:2,  t:95,   ids:['s3-binary'],         anim:'rv-scale'},
-  {si:2,  t:108,  ids:['s3-kpi'],            anim:'rv-scale'},
-  {si:3,  t:130,  ids:['s4-badge'],          anim:'rv-fade'},
-  {si:3,  t:133,  ids:['s4-sowhat'],         anim:'rv-scale'},
-  {si:3,  t:142,  ids:['s4-cols'],           anim:'rv-up'},
-  {si:3,  t:162,  ids:['s4-rule'],           anim:'rv-fade'},
-  {si:4,  t:180,  ids:['s5-badge','s5-src'], anim:'rv-fade'},
-  {si:4,  t:184,  ids:['s5-pyr'],            anim:'rv-up'},
-  {si:4,  t:207,  ids:['s5-media'],          anim:'rv-fade'},
-  {si:4,  t:214,  ids:['s5-warn'],           anim:'rv-pop'},
-  {si:5,  t:230,  ids:['s6-badge'],          anim:'rv-fade'},
-  {si:5,  t:233,  ids:['s6-core'],           anim:'rv-up'},
-  {si:5,  t:246,  ids:['s6-steps'],          anim:'rv-up'},
-  {si:5,  t:268,  ids:['s6-ng'],             anim:'rv-fade'},
-  {si:6,  t:280,  ids:['s7-badge','s7-src'], anim:'rv-fade'},
-  {si:6,  t:284,  ids:['s7-bars'],           anim:'rv-up'},
-  {si:6,  t:307,  ids:['s7-warn'],           anim:'rv-fade'},
-  {si:6,  t:317,  ids:['s7-combo'],          anim:'rv-scale'},
-  {si:7,  t:330,  ids:['s8-badge'],          anim:'rv-fade'},
-  {si:7,  t:333,  ids:['s8-quote'],          anim:'rv-up'},
-  {si:7,  t:346,  ids:['s8-verdict'],        anim:'rv-up'},
-  {si:7,  t:365,  ids:['s8-rules'],          anim:'rv-fade'},
-  {si:8,  t:380,  ids:['s9-hd'],             anim:'rv-fade'},
-  {si:8,  t:384,  ids:['s9-tbl'],            anim:'rv-up'},
-  {si:8,  t:412,  ids:['s9-map'],            anim:'rv-fade'},
-  {si:9,  t:430,  ids:['s10-hd'],            anim:'rv-fade'},
-  {si:9,  t:433,  ids:['s10-flow'],          anim:'rv-up'},
-  {si:9,  t:448,  ids:['s10-howto'],         anim:'rv-up'},
-  {si:9,  t:465,  ids:['s10-first'],         anim:'rv-scale'},
-  {si:10, t:480,  ids:['s11-hd'],            anim:'rv-fade'},
-  {si:10, t:483,  ids:['s11-quote'],         anim:'rv-up'},
-  {si:10, t:497,  ids:['s11-mean'],          anim:'rv-fade'},
-  {si:10, t:505,  ids:['s11-check'],         anim:'rv-up'},
-  {si:10, t:520,  ids:['s11-narrow'],        anim:'rv-pop'},
-  {si:11, t:530,  ids:['s12-hd'],            anim:'rv-fade'},
-  {si:11, t:533,  ids:['s12-steps'],         anim:'rv-up'},
-  {si:11, t:570,  ids:['s12-do'],            anim:'rv-scale'},
-  {si:12, t:585,  ids:['s13-card'],          anim:'rv-scale'},
-  {si:12, t:592,  ids:['s13-cta'],           anim:'rv-up'},
+  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
+  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
+  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
+  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
+  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
+  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
+  {si:1,  t:42,   ids:['s2-flow'],    anim:'rv-up'},
+  {si:1,  t:62,   ids:['s2-ans'],     anim:'rv-scale'},
+  {si:1,  t:72,   ids:['s2-note'],    anim:'rv-fade'},
+  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
+  {si:2,  t:88,   ids:['s3-key'],     anim:'rv-scale'},
+  {si:2,  t:104,  ids:['s3-flow'],    anim:'rv-up'},
+  {si:2,  t:118,  ids:['s3-note'],    anim:'rv-fade'},
+  {si:3,  t:130,  ids:['s4-hd'],      anim:'rv-fade'},
+  {si:3,  t:138,  ids:['s4-key'],     anim:'rv-scale'},
+  {si:3,  t:150,  ids:['s4-duo'],     anim:'rv-up'},
+  {si:3,  t:170,  ids:['s4-note'],    anim:'rv-fade'},
+  {si:4,  t:180,  ids:['s5-hd'],      anim:'rv-fade'},
+  {si:4,  t:190,  ids:['s5-flow'],    anim:'rv-up'},
+  {si:4,  t:215,  ids:['s5-note'],    anim:'rv-fade'},
+  {si:5,  t:230,  ids:['s6-hd'],      anim:'rv-fade'},
+  {si:5,  t:238,  ids:['s6-key'],     anim:'rv-scale'},
+  {si:5,  t:255,  ids:['s6-tags'],    anim:'rv-up'},
+  {si:5,  t:270,  ids:['s6-note'],    anim:'rv-fade'},
+  {si:6,  t:280,  ids:['s7-hd'],      anim:'rv-fade'},
+  {si:6,  t:290,  ids:['s7-tags'],    anim:'rv-up'},
+  {si:6,  t:318,  ids:['s7-note'],    anim:'rv-fade'},
+  {si:7,  t:330,  ids:['s8-hd'],      anim:'rv-fade'},
+  {si:7,  t:340,  ids:['s8-duo'],     anim:'rv-up'},
+  {si:7,  t:365,  ids:['s8-note'],    anim:'rv-fade'},
+  {si:8,  t:380,  ids:['s9-hd'],      anim:'rv-fade'},
+  {si:8,  t:390,  ids:['s9-duo'],     anim:'rv-up'},
+  {si:8,  t:418,  ids:['s9-note'],    anim:'rv-fade'},
+  {si:9,  t:430,  ids:['s10-hd'],     anim:'rv-fade'},
+  {si:9,  t:440,  ids:['s10-flow'],   anim:'rv-up'},
+  {si:9,  t:458,  ids:['s10-key'],    anim:'rv-scale'},
+  {si:9,  t:470,  ids:['s10-note'],   anim:'rv-fade'},
+  {si:10, t:480,  ids:['s11-hd'],     anim:'rv-fade'},
+  {si:10, t:490,  ids:['s11-key'],    anim:'rv-scale'},
+  {si:10, t:505,  ids:['s11-tags'],   anim:'rv-up'},
+  {si:10, t:518,  ids:['s11-note'],   anim:'rv-fade'},
+  {si:11, t:530,  ids:['s12-hd'],     anim:'rv-fade'},
+  {si:11, t:540,  ids:['s12-tags'],   anim:'rv-up'},
+  {si:11, t:570,  ids:['s12-note'],   anim:'rv-fade'},
+  {si:12, t:585,  ids:['s13-lbl'],    anim:'rv-fade'},
+  {si:12, t:588,  ids:['s13-title'],  anim:'rv-up'},
+  {si:12, t:592,  ids:['s13-sub'],    anim:'rv-fade'},
+  {si:12, t:596,  ids:['s13-cta'],    anim:'rv-pop'}
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},

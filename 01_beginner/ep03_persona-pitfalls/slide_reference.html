@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第7回 デジタル時代の4Pと4C | AI時代のマーケティング・ラボ</title>
+<title>第3回 ペルソナ設定の落とし穴 | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -69,7 +69,6 @@ body {
 #stage {
   position:relative; width:100%; padding-top:56.25%;
   background:var(--slide-bg); overflow:hidden;
-  container-type:inline-size; container-name:stage;
 }
 
 /* ================================================================
@@ -137,26 +136,22 @@ body {
 /* ================================================================
    SHARED LAYOUT HELPERS
 ================================================================ */
-/* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+.pad   { padding:5.5% 6.5%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
+.pad-t { padding:3.5% 6.5% 4%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; }
 
 /* section header */
 .sh {
-  font-size:clamp(26px,3.0cqw,42px); font-weight:800; color:var(--accent);
-  border-left:5px solid var(--accent); padding-left:.55em; margin-bottom:.9em;
-  letter-spacing:.01em;
+  font-size:clamp(13px,1.9vw,24px); font-weight:700; color:var(--accent);
+  border-left:4px solid var(--accent); padding-left:.65em; margin-bottom:.75em;
 }
-.sh-sm { font-size:clamp(13px,1.8cqw,22px); color:var(--muted2); margin-bottom:.5em; }
+.sh-sm { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); margin-bottom:.5em; }
 
-/* body text sizes — large for mobile/YouTube legibility (bold gothic).
-   At a 1280-wide stage: t-md≈36px (floor), t-lg≈47px, t-xl≈72px. */
-.t-xl { font-size:clamp(40px,5.6cqw,86px); font-weight:900; line-height:1.12; letter-spacing:.005em; }
-.t-lg { font-size:clamp(30px,3.7cqw,52px); font-weight:800; line-height:1.22; }
-.t-md { font-size:clamp(24px,2.85cqw,38px); font-weight:700; line-height:1.45; }
-.t-sm { font-size:clamp(20px,2.1cqw,28px);  font-weight:600; color:var(--muted2); line-height:1.5; }
-.t-xs { font-size:clamp(14px,1.4cqw,19px);  font-weight:600; color:var(--muted);  line-height:1.45; }
+/* body text sizes */
+.t-xl { font-size:clamp(22px,4.2vw,54px); font-weight:900; line-height:1.15; }
+.t-lg { font-size:clamp(16px,2.6vw,34px); font-weight:700; line-height:1.25; }
+.t-md { font-size:clamp(13px,1.85vw,24px);                  line-height:1.6;  }
+.t-sm { font-size:clamp(11px,1.5vw,19px);  color:var(--muted2); line-height:1.6; }
+.t-xs { font-size:clamp(9px,1.2vw,15px);   color:var(--muted);  line-height:1.5; }
 
 /* accent colors */
 .c-accent { color:var(--accent); }
@@ -370,7 +365,7 @@ body {
 }
 #s3-ja .hl { color:var(--acc2); }
 #s3-note {
-  color:var(--muted2);
+  font-size:clamp(11px,1.5vw,19px); color:var(--muted2);
 }
 #s3-note span { color:var(--accent); font-weight:700; }
 
@@ -439,7 +434,7 @@ body {
 .fn-label { font-weight:700; color:#fff; }
 .fn-desc  { color:var(--muted2); font-size:.84em; }
 #s6-note {
-  color:var(--muted2);
+  font-size:clamp(10px,1.4vw,17px); color:var(--muted2);
   text-align:right;
 }
 #s6-note strong { color:var(--accent); }
@@ -623,7 +618,7 @@ body {
 .next-pt i { color:var(--accent); flex-shrink:0; margin-top:.15em; font-size:.85em; }
 #s12-cta {
   margin-top:1em; text-align:center;
-  font-weight:700; color:var(--acc2);
+  font-size:clamp(12px,1.75vw,22px); font-weight:700; color:var(--acc2);
   display:flex; align-items:center; justify-content:center; gap:.55em;
 }
 #s12-cta i { font-size:.9em; }
@@ -689,386 +684,107 @@ body {
   display:flex; align-items:center; gap:.4em;
 }
 #narr-text { font-size:13px; line-height:1.85; color:#9090b8; }
-
-/* ================================================================
-   SVG UTILITY COMPONENTS — v2 design system
-================================================================ */
-
-/* ── GAUGE BAR ──────────────────────────────────────────────────
-   <div class="gauge-wrap se" id="...">
-     <div class="gauge-hd">LTV÷CPA</div>
-     <div class="gauge-track">
-       <div class="gauge-fill" style="--v:.75;--c:var(--green)"></div>
-       <span class="gauge-marker" style="left:33%">3×</span>
-     </div>
-     <div class="gauge-legs"><span>0</span><span>3×</span><span>10+</span></div>
-   </div>  */
-.gauge-wrap  { background:var(--surf); border:1px solid var(--border); border-radius:10px; padding:.75em 1.1em; }
-.gauge-hd    { font-size:clamp(10px,1.3vw,16px); color:var(--muted2); font-weight:700; margin-bottom:.55em; }
-.gauge-track { height:clamp(10px,1.2vw,16px); background:var(--surf2); border-radius:9999px; position:relative; }
-.gauge-fill  { height:100%; border-radius:9999px;
-  background:linear-gradient(90deg, var(--c-from,#4ade80), var(--c,var(--accent)));
-  width:0; box-shadow:0 0 10px var(--c,var(--accent));
-  animation:gaugeFill 1.3s .35s cubic-bezier(.4,0,.2,1) forwards;
-  animation-play-state:paused; }
-.gauge-marker { position:absolute; top:-200%; height:300%; transform:translateX(-50%);
-  border-left:1.5px dashed var(--border); padding-left:.35em;
-  font-size:clamp(8px,.9vw,12px); color:var(--muted); white-space:nowrap;
-  display:flex; align-items:flex-start; }
-.gauge-legs  { display:flex; justify-content:space-between;
-  font-size:clamp(8px,.85vw,12px); color:var(--muted); margin-top:.3em; }
-@keyframes gaugeFill { to { width:calc(var(--v,.5)*100%); } }
-.rv-fade .gauge-fill,.rv-up .gauge-fill,.rv-scale .gauge-fill,.rv-pop .gauge-fill { animation-play-state:running; }
-
-/* ── KPI BIG NUMBER ─────────────────────────────────────────────
-   <div class="kpi-big se" id="..." style="--c:var(--green)">
-     <div class="kpi-num">9.9×</div><div class="kpi-sub">LTV/CPA</div>
-   </div>  */
-.kpi-wrap { display:flex; align-items:center; justify-content:center; gap:1.5em; flex-wrap:wrap; }
-.kpi-big  { text-align:center; }
-.kpi-num  { font-size:clamp(36px,6vw,80px); font-weight:900; color:var(--c,var(--accent));
-  line-height:1; font-family:'Inter',sans-serif;
-  filter:drop-shadow(0 0 18px var(--c,var(--accent))); }
-.kpi-sub  { font-size:clamp(9px,1.15vw,15px); color:var(--muted2); margin-top:.3em; display:block; }
-.kpi-ctx  { font-size:clamp(11px,1.4vw,18px); color:var(--muted2);
-  border-left:1px solid var(--border); padding-left:1em; line-height:1.6; }
-
-/* ── HORIZONTAL BAR CHART ───────────────────────────────────────
-   <div class="bar-chart-h">
-     <div class="bh-row">
-       <span class="bh-lbl">A案</span>
-       <div class="bh-track"><div class="bh-fill" style="--v:75;--c:var(--accent)"></div></div>
-       <span class="bh-val" style="color:var(--accent)">75%</span>
-     </div>
-   </div>  */
-.bar-chart-h { display:flex; flex-direction:column; gap:.55em; }
-.bh-row  { display:flex; align-items:center; gap:.65em; font-size:clamp(10px,1.3vw,17px); }
-.bh-lbl  { flex:0 0 clamp(60px,9vw,120px); text-align:right; color:var(--muted2); font-size:.9em; }
-.bh-track{ flex:1; height:clamp(8px,.9vw,14px); background:var(--surf2); border-radius:9999px; overflow:hidden; }
-.bh-fill { height:100%; border-radius:9999px; box-shadow:0 0 8px var(--c,var(--accent));
-  background:linear-gradient(90deg,var(--c-from,var(--c,var(--accent))),var(--c,var(--accent)));
-  width:0; animation:barFill 1s .2s ease-out forwards; animation-play-state:paused; }
-.bh-val  { flex:0 0 3.2em; text-align:left; font-weight:700; color:var(--c,var(--accent));
-  font-family:'Inter',sans-serif; font-size:.9em; }
-@keyframes barFill { to { width:calc(var(--v,50)*1%); } }
-.rv-fade .bh-fill,.rv-up .bh-fill,.rv-scale .bh-fill { animation-play-state:running; }
-
-/* ── 2×2 MATRIX ─────────────────────────────────────────────────
-   <div class="matrix-2x2">
-     <div class="mx-cell mx-tl"><div class="mx-hd">...</div><div class="mx-body">...</div></div>
-     <div class="mx-cell mx-tr hi">...</div>
-     <div class="mx-cell mx-bl">...</div>
-     <div class="mx-cell mx-br hi-g">...</div>
-   </div>  */
-.matrix-2x2 { display:grid; grid-template-columns:1fr 1fr; gap:2px;
-  border-radius:10px; overflow:hidden; background:var(--border); }
-.mx-cell    { background:var(--surf); padding:.65em .9em; transition:background .3s; }
-.mx-cell.hi   { background:rgba(124,111,255,.12); }
-.mx-cell.hi-g { background:rgba(74,222,128,.08); }
-.mx-cell.hi-r { background:rgba(248,113,113,.08); }
-.mx-cell.hi-y { background:rgba(251,191,36,.08); }
-.mx-tl { border-radius:10px 0 0 0; } .mx-tr { border-radius:0 10px 0 0; }
-.mx-bl { border-radius:0 0 0 10px; } .mx-br { border-radius:0 0 10px 0; }
-.mx-hd   { font-weight:700; font-size:clamp(10px,1.35vw,18px); color:var(--accent); margin-bottom:.25em; }
-.mx-body { font-size:clamp(9px,1.2vw,15px); color:var(--muted2); line-height:1.5; }
-.mx-labels { display:flex; justify-content:space-between; align-items:center; margin-top:.35em; }
-.mx-lbl-x  { font-size:clamp(8px,.9vw,12px); color:var(--muted); letter-spacing:.05em; }
-
-/* ── STAT RING (SVG donut) ──────────────────────────────────────
-   Circumference of r=38 ≈ 238.76 → use 239
-   <div class="stat-ring" style="--v:75;--c:#4ade80">
-     <svg viewBox="0 0 100 100">
-       <circle class="sr-track" cx="50" cy="50" r="38"/>
-       <circle class="sr-fill"  cx="50" cy="50" r="38"/>
-     </svg>
-     <div class="sr-inner"><div class="sr-val">75%</div><div class="sr-lbl">継続率</div></div>
-   </div>  */
-.stat-rings  { display:flex; gap:1.5em; align-items:center; justify-content:center; flex-wrap:wrap; }
-.stat-ring   { position:relative; display:inline-flex; align-items:center; justify-content:center;
-  width:clamp(80px,10vw,130px); height:clamp(80px,10vw,130px); }
-.stat-ring svg { position:absolute; inset:0; width:100%; height:100%; transform:rotate(-90deg); }
-.sr-track { fill:none; stroke:var(--surf2); stroke-width:7; }
-.sr-fill  { fill:none; stroke:var(--c,var(--accent)); stroke-width:7; stroke-linecap:round;
-  stroke-dasharray:0 239;
-  animation:ringFill 1.3s .35s ease-out forwards; animation-play-state:paused; }
-.sr-inner { position:relative; z-index:1; text-align:center; }
-.sr-val   { font-size:clamp(14px,1.8vw,22px); font-weight:900; color:var(--c,var(--accent));
-  font-family:'Inter',sans-serif; line-height:1; }
-.sr-lbl   { font-size:clamp(7px,.85vw,11px); color:var(--muted); }
-.stat-ring-wrap { text-align:center; }
-.stat-ring-ttl  { font-size:clamp(9px,1.1vw,14px); color:var(--muted2); margin-top:.35em; font-weight:700; }
-@keyframes ringFill { to { stroke-dasharray:calc(var(--v,75)*2.39) 239; } }
-.rv-fade .sr-fill,.rv-up .sr-fill,.rv-scale .sr-fill,.rv-pop .sr-fill { animation-play-state:running; }
-
-/* ── NUMBER STEPS ───────────────────────────────────────────────
-   <div class="n-steps">
-     <div class="n-step se" id="...">
-       <div class="n-num">1</div>
-       <div class="n-body"><strong>見出し</strong><div class="t-sm">補足</div></div>
-     </div>
-   </div>  */
-.n-steps { display:flex; flex-direction:column; gap:.5em; }
-.n-step  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); }
-.n-num   { min-width:clamp(24px,2.8vw,36px); height:clamp(24px,2.8vw,36px); border-radius:50%;
-  background:var(--accent); color:#fff; display:flex; align-items:center; justify-content:center;
-  font-weight:900; font-size:.82em; flex-shrink:0; margin-top:.1em;
-  box-shadow:0 0 14px var(--glow-acc); font-family:'Inter',sans-serif; }
-.n-num.g { background:var(--green); box-shadow:0 0 14px var(--glow-grn); color:#000; }
-.n-num.r { background:var(--red);   box-shadow:0 0 14px rgba(248,113,113,.3); }
-.n-num.b { background:var(--blue);  box-shadow:0 0 14px rgba(96,165,250,.3); }
-.n-body  { color:var(--muted2); line-height:1.5; }
-.n-body strong { color:var(--text); }
-
-/* ── HORIZONTAL FLOW ────────────────────────────────────────────
-   <div class="h-flow">
-     <div class="h-flow-node accent">Aware<span class="fn-sub">認知</span></div>
-     <svg class="h-arrow" viewBox="0 0 24 24" fill="none">
-       <path d="M5 12h14M14 7l5 5-5 5" stroke="currentColor" stroke-width="2"
-             stroke-linecap="round" stroke-linejoin="round"/>
-     </svg>
-     <div class="h-flow-node grn">Act<span class="fn-sub">行動</span></div>
-   </div>  */
-.h-flow { display:flex; align-items:center; gap:.35em; flex-wrap:wrap; justify-content:center; }
-.h-flow-node { background:var(--surf); border:1px solid var(--border); border-radius:9px;
-  padding:.45em .9em; font-size:clamp(10px,1.35vw,18px); font-weight:700;
-  text-align:center; flex-shrink:0; line-height:1.3; }
-.h-flow-node .fn-sub { font-size:.72em; font-weight:400; color:var(--muted2); display:block; margin-top:.05em; }
-.h-flow-node.accent { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.4); color:var(--accent); }
-.h-flow-node.acc2   { background:rgba(255,107,138,.12); border-color:rgba(255,107,138,.4); color:var(--acc2); }
-.h-flow-node.grn    { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.4);  color:var(--green); }
-.h-flow-node.blu    { background:rgba(96,165,250,.12);  border-color:rgba(96,165,250,.4);  color:var(--blue); }
-.h-flow-node.ylw    { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.4);  color:var(--yellow); }
-.h-arrow { width:clamp(14px,1.8vw,24px); color:var(--muted); flex-shrink:0; }
-
-/* ── QUOTE BLOCK ────────────────────────────────────────────────
-   <blockquote class="quote-blk se" id="...">
-     <p class="qb-text">「...」</p>
-     <cite class="qb-cite">Author, Source (Year)</cite>
-   </blockquote>  */
-.quote-blk { position:relative; background:var(--surf); border-radius:10px;
-  padding:1em 1.3em 1em 2.5em; border:1px solid var(--border);
-  border-left:4px solid var(--accent); overflow:hidden; }
-.quote-blk::before { content:'\201C'; font-size:clamp(50px,8vw,100px); font-weight:900;
-  color:rgba(124,111,255,.15); position:absolute; top:-.1em; left:.15em;
-  line-height:1; pointer-events:none; font-family:'Inter','Georgia',serif; }
-.qb-text { font-size:clamp(13px,1.8vw,24px); line-height:1.65; color:var(--text);
-  position:relative; z-index:1; }
-.qb-text em { color:var(--accent); font-style:normal; font-weight:700; }
-.qb-text .hl { color:var(--acc2); }
-.qb-cite { display:block; margin-top:.55em; font-size:clamp(9px,1.1vw,14px);
-  color:var(--muted); font-style:italic; position:relative; z-index:1; }
-
-/* ── COMPARISON TABLE ───────────────────────────────────────────
-   <div class="comp-tbl">
-     <div class="comp-row comp-head">
-       <span class="comp-label"></span><span class="comp-a">Before</span><span class="comp-b">After</span>
-     </div>
-     <div class="comp-row hi">
-       <span class="comp-label">CVR</span>
-       <span class="comp-a c-red">1.2%</span><span class="comp-b c-green">2.3%</span>
-     </div>
-   </div>  */
-.comp-tbl { display:flex; flex-direction:column; gap:1px; background:var(--border); border-radius:10px; overflow:hidden; }
-.comp-row { display:flex; align-items:stretch; background:var(--surf); }
-.comp-row.hi   .comp-b { background:rgba(74,222,128,.08); color:var(--green); }
-.comp-row.lo   .comp-a { background:rgba(248,113,113,.08); color:var(--red); }
-.comp-label { flex:0 0 clamp(80px,12vw,160px); padding:.55em .9em;
-  font-size:clamp(10px,1.3vw,16px); color:var(--muted2);
-  border-right:1px solid var(--border); display:flex; align-items:center; }
-.comp-a,.comp-b { flex:1; padding:.55em .9em;
-  font-size:clamp(11px,1.5vw,20px); display:flex; align-items:center;
-  justify-content:center; font-weight:700; }
-.comp-a { border-right:1px solid var(--border); }
-.comp-row.comp-head { background:var(--surf2); }
-.comp-row.comp-head .comp-label,
-.comp-row.comp-head .comp-a,
-.comp-row.comp-head .comp-b { font-size:clamp(9px,1.1vw,14px); font-weight:700; color:var(--muted); }
-
-/* ── TAGS / CHIPS ───────────────────────────────────────────────
-   <span class="tag tag-a">変更コスト低</span>  */
-.tag   { display:inline-flex; align-items:center; gap:.3em; padding:.2em .7em;
-  border-radius:9999px; font-size:clamp(9px,1.1vw,14px); font-weight:700;
-  border:1px solid transparent; line-height:1.3; }
-.tag-a { background:rgba(124,111,255,.12); border-color:rgba(124,111,255,.35); color:var(--accent); }
-.tag-g { background:rgba(74,222,128,.1);  border-color:rgba(74,222,128,.35);  color:var(--green); }
-.tag-r { background:rgba(248,113,113,.1); border-color:rgba(248,113,113,.35); color:var(--red); }
-.tag-b { background:rgba(96,165,250,.1);  border-color:rgba(96,165,250,.35);  color:var(--blue); }
-.tag-y { background:rgba(251,191,36,.1);  border-color:rgba(251,191,36,.35);  color:var(--yellow); }
-
-/* ── ICON ROW LIST ───────────────────────────────────────────────
-   <div class="icon-rows">
-     <div class="icon-row se" id="...">
-       <i class="fa-solid fa-arrow-trend-up c-green"></i>
-       <div><strong>タイトル</strong><div class="t-sm">説明</div></div>
-     </div>
-   </div>  */
-.icon-rows { display:flex; flex-direction:column; gap:.5em; }
-.icon-row  { display:flex; align-items:flex-start; gap:.8em; font-size:clamp(12px,1.7vw,22px); }
-.icon-row > i { font-size:1.05em; flex-shrink:0; margin-top:.1em; }
-.icon-row > div > strong { color:var(--text); }
-.icon-row > div > .t-sm { margin-top:.1em; }
-
-/* ── COLS3 / COLS4 ──────────────────────────────────────────────*/
-.cols3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2%; }
-.cols4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1.5%; }
-
-/* ── HIGHLIGHT BANNER ───────────────────────────────────────────
-   <div class="hl-banner" style="--c:var(--green)">
-     <i class="fa-solid fa-circle-check hb-icon"></i>
-     <div class="hb-text"><strong>見出し</strong><br>本文</div>
-   </div>  */
-.hl-banner { display:flex; align-items:center; gap:.8em; border-radius:10px;
-  background:var(--surf); border:1px solid var(--border);
-  border-left:5px solid var(--c,var(--accent)); padding:.7em 1.1em;
-  font-size:clamp(17px,2.6cqw,34px); font-weight:700; line-height:1.3; }
-.hb-icon { font-size:clamp(14px,1.8vw,22px); color:var(--c,var(--accent)); flex-shrink:0; }
-.hb-text { font-size:clamp(12px,1.65vw,21px); line-height:1.5; }
-.hb-text strong { color:var(--text); }
-
-/* ── VERDICT ROWS ───────────────────────────────────────────────*/
-.verdict-rows { display:flex; flex-direction:column; gap:.4em; }
-.verdict-row  { display:flex; align-items:flex-start; gap:.7em; font-size:clamp(12px,1.65vw,21px); padding:.3em 0; }
-.v-icon { width:clamp(18px,2vw,26px); flex-shrink:0; margin-top:.15em; text-align:center; }
-.verdict-row.ok .v-icon { color:var(--green); }
-.verdict-row.ng .v-icon { color:var(--red); }
-.v-body { color:var(--muted2); line-height:1.5; }
-.verdict-row.ok .v-body strong { color:var(--text); }
-.verdict-row.ng .v-body strong { color:var(--red); }
-
-/* ── SVG INLINE HELPERS ─────────────────────────────────────────*/
-.svg-il      { width:100%; height:auto; display:block; overflow:visible; }
-.svg-il text { font-family:'Inter','Noto Sans JP',sans-serif; }
-.svg-grid    { stroke:var(--border); stroke-width:.5; }
-.svg-axis    { stroke:var(--muted); stroke-width:1; fill:none; }
-.svg-curve   { fill:none; stroke:var(--accent); stroke-width:2.5; stroke-linecap:round; }
-.svg-curve2  { fill:none; stroke:var(--acc2);   stroke-width:2.5; stroke-linecap:round; }
-.svg-area    { fill:rgba(124,111,255,.15); stroke:none; }
-.svg-area2   { fill:rgba(255,107,138,.12); stroke:none; }
-.svg-area-g  { fill:rgba(74,222,128,.12);  stroke:none; }
-.svg-lbl     { fill:var(--muted2); font-size:11px; }
-.svg-lbl-a   { fill:var(--accent); font-weight:bold; font-size:11px; }
-.svg-lbl-2   { fill:var(--acc2);   font-size:11px; }
-.svg-bar-a   { fill:rgba(124,111,255,.7); }
-.svg-bar-g   { fill:rgba(74,222,128,.7); }
-.svg-bar-r   { fill:rgba(248,113,113,.7); }
-.svg-marker  { stroke:var(--acc2); stroke-width:1.5; stroke-dasharray:4 3; fill:none; }
-
-/* ── FORMULA DISPLAY ────────────────────────────────────────────
-   <div class="formula se" id="...">
-     <span class="fm-var" style="--c:var(--accent)">LTV</span>
-     <span class="fm-op">÷</span>
-     <span class="fm-var" style="--c:var(--acc2)">CPA</span>
-     <span class="fm-op">&gt;</span>
-     <span class="fm-val" style="--c:var(--green)">3</span>
-   </div>  */
-.formula    { display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:.4em; }
-.fm-var     { font-size:clamp(20px,3.5vw,46px); font-weight:900; color:var(--c,var(--accent));
-  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 10px var(--c,var(--accent))); }
-.fm-op      { font-size:clamp(16px,2.8vw,36px); font-weight:900; color:var(--muted);
-  font-family:'Inter',sans-serif; }
-.fm-val     { font-size:clamp(24px,4.5vw,60px); font-weight:900; color:var(--c,var(--green));
-  font-family:'Inter',sans-serif; filter:drop-shadow(0 0 14px var(--c,var(--green))); }
-.formula-sub { text-align:center; font-size:clamp(10px,1.3vw,17px); color:var(--muted2); margin-top:.3em; }
-
-/* ── STEP-FLOW (vertical with connector) ────────────────────────
-   <div class="step-flow">
-     <div class="sf-item se" id="...">
-       <div class="sf-dot"></div>
-       <div class="sf-body"><strong>ステップ1</strong><span class="t-sm">説明</span></div>
-     </div>
-   </div>  */
-.step-flow { position:relative; padding-left:1.6em; display:flex; flex-direction:column; gap:.55em; }
-.step-flow::before { content:''; position:absolute; left:.55em; top:.8em; bottom:.8em;
-  width:2px; background:linear-gradient(to bottom,var(--accent),var(--border)); border-radius:1px; }
-.sf-item { display:flex; align-items:flex-start; gap:.75em; position:relative; }
-.sf-dot  { width:clamp(14px,1.6vw,20px); height:clamp(14px,1.6vw,20px); border-radius:50%;
-  background:var(--accent); border:2px solid var(--slide-bg);
-  box-shadow:0 0 10px var(--glow-acc); flex-shrink:0; margin-top:.2em; z-index:1; }
-.sf-body { font-size:clamp(11px,1.55vw,20px); color:var(--muted2); line-height:1.5; }
-.sf-body strong { color:var(--text); }
-
-/* ── PILL BADGE ─────────────────────────────────────────────────*/
-.pill     { display:inline-flex; align-items:center; gap:.3em;
-  background:var(--surf2); border:1px solid var(--border); border-radius:6px;
-  padding:.15em .6em; font-size:clamp(9px,1.1vw,14px); font-weight:700; }
-.pill.acc { background:rgba(124,111,255,.15); border-color:rgba(124,111,255,.3); color:var(--accent); }
-.pill.grn { background:rgba(74,222,128,.12);  border-color:rgba(74,222,128,.3);  color:var(--green); }
-.pill.red { background:rgba(248,113,113,.12); border-color:rgba(248,113,113,.3); color:var(--red); }
-.pill.ylw { background:rgba(251,191,36,.12);  border-color:rgba(251,191,36,.3);  color:var(--yellow); }
-
-/* ── S1 RING / DOT ANIMATIONS ───────────────────────────────────*/
-.s1-ring { animation:ringRotate 24s linear infinite; transform-origin:center; }
-.s1-ring1 { animation-duration:30s; }
-.s1-ring2 { animation-duration:22s; animation-direction:reverse; }
-.s1-ring3 { animation-duration:15s; }
-@keyframes ringRotate {
-  from { transform:translate(-50%,-50%) rotate(0deg); }
-  to   { transform:translate(-50%,-50%) rotate(360deg); }
-}
-.s1-dot { animation:dotFloat 4s ease-in-out infinite alternate; }
-.s1-dot1 { animation-duration:4.2s; }
-.s1-dot2 { animation-duration:3.5s; animation-delay:.5s; }
-.s1-dot3 { animation-duration:5.1s; animation-delay:1s; }
-@keyframes dotFloat { to { transform:translateY(-8px); } }
-
-/* ================================================================
-   MINIMAL DESIGN HELPERS — v3 (YouTube / mobile-first)
-   Shared keyword + diagram vocabulary for all episodes.
-================================================================ */
-.aflow{display:flex;align-items:center;justify-content:center;gap:.55em;flex-wrap:wrap;}
-.aflow.sm{gap:.4em;}
-.achip{background:var(--surf);border:2px solid var(--border);border-radius:16px;
-  padding:.5em 1em;font-weight:800;text-align:center;line-height:1.18;color:#fff;}
-.aflow.sm .achip{padding:.45em .7em;}
-.achip small{display:block;font-weight:700;color:var(--muted2);margin-top:.3em;font-size:clamp(20px,2.1cqw,28px);}
-.achip.on{border-color:var(--accent);color:var(--accent);box-shadow:0 0 24px var(--glow-acc);}
-.aghost{opacity:.4;}
-.aarrow{color:var(--accent);font-weight:900;}
-/* taglist carries a generous default size; .tag inherits it (overriding the legacy .tag size).
-   font-size:inherit makes tags scale with their (sized) container both in and out of a taglist. */
-.taglist{display:flex;flex-wrap:wrap;justify-content:center;gap:.6em;font-size:clamp(18px,2.7cqw,32px);}
-.tag{background:var(--surf2);border:1.5px solid var(--border);border-radius:14px;
-  padding:.4em .9em;font-weight:800;color:#fff;font-size:inherit;line-height:1.2;display:inline-flex;align-items:center;gap:.3em;}
-.tag.acc{border-color:var(--accent);color:var(--accent);}
-.tag.ng{border-color:var(--red);color:var(--red);}
-.tag.ok{border-color:var(--green);color:var(--green);}
-.duo{display:grid;grid-template-columns:1fr 1fr;gap:5%;align-items:stretch;}
-.pcard{background:var(--surf);border-radius:18px;padding:1em 1.2em;border-top:5px solid var(--accent);
-  display:flex;flex-direction:column;gap:.45em;align-items:center;text-align:center;}
-.pcard .ph{font-weight:900;line-height:1.1;}
-.pcard .ph small{display:block;font-weight:700;color:var(--muted2);margin-top:.2em;}
-.note{text-align:center;color:var(--muted2);font-weight:600;font-size:clamp(16px,2.4cqw,30px);}
-.bignum{color:var(--accent);font-weight:900;line-height:1;}
-.jmini{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:3%;text-align:center;}
-.jcell{background:var(--surf);border-radius:14px;padding:.7em .4em;display:flex;flex-direction:column;gap:.3em;align-items:center;}
-.jcell .jn{font-weight:700;color:var(--muted2);font-size:clamp(20px,2.1cqw,28px);}
-.jcell .jv{font-weight:900;line-height:1;}
-.funnel{display:flex;flex-direction:column;align-items:center;gap:.3em;}
-.frow{background:var(--surf2);border-radius:10px;font-weight:800;text-align:center;padding:.32em 0;color:#fff;}
-.f1{width:100%}.f2{width:80%}.f3{width:62%}.f4{width:48%}
-.loop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4em;}
-.lrow{display:flex;align-items:center;justify-content:center;gap:.5em;flex-wrap:wrap;}
-
 </style>
-
 <style id="ep-css">
+/* ── NG Persona card ─────────────────────────────── */
+.persona-card{
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;padding:.7em 1em;max-width:520px;margin:.4em auto;
+  display:flex;gap:1em;align-items:flex-start;
+}
+.pc-img-wrap{flex-shrink:0;text-align:center;}
+.pc-avatar{
+  width:clamp(72px,9vw,110px);height:clamp(72px,9vw,110px);
+  border-radius:50%;object-fit:cover;display:block;
+  border:2px solid rgba(124,111,255,0.5);
+  background:rgba(124,111,255,0.15);
+}
+.pc-avatar-ph{
+  width:clamp(72px,9vw,110px);height:clamp(72px,9vw,110px);
+  border-radius:50%;border:2px solid rgba(124,111,255,0.4);
+  background:rgba(124,111,255,0.12);
+  display:none;align-items:center;justify-content:center;
+  font-size:clamp(28px,4vw,54px);color:rgba(180,170,255,0.6);
+}
+.pc-name-tag{font-size:clamp(9px,1.1vw,13px);color:rgba(180,170,255,0.9);font-weight:700;margin-top:.35em;}
+.pc-rows{flex:1;}
+.persona-card .pc-row{
+  display:flex;gap:.5em;align-items:baseline;
+  font-size:clamp(11px,1.4vw,17px);padding:.12em 0;
+}
+.persona-card .pc-key{color:var(--muted2);width:5em;flex-shrink:0;}
+.persona-card .pc-val{color:#fff;}
+.ng-overlay{
+  background:rgba(248,50,50,0.12);border:1.5px solid rgba(248,80,80,0.4);
+  border-radius:10px;padding:.6em 1em;margin:.5em auto;max-width:440px;
+}
+.ng-overlay .no-label{
+  font-size:clamp(12px,1.6vw,20px);font-weight:700;color:var(--red);
+  margin-bottom:.3em;display:flex;align-items:center;gap:.4em;
+}
 
-/* ── vertical centering override ── */
-.pad   { justify-content: center; }
-.pad-t { justify-content: center; }
+/* ── 5-element grid ──────────────────────────────── */
+.five-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:.4em;margin:.4em 0;
+}
+@media(max-width:640px){.five-grid{grid-template-columns:repeat(3,1fr);}}
+.five-box{
+  background:rgba(255,255,255,0.05);border-radius:8px;
+  padding:.55em .4em;text-align:center;
+  border:1px solid rgba(255,255,255,0.1);
+}
+.five-box .fb-num{
+  font-size:clamp(18px,2.5vw,32px);font-weight:900;margin-bottom:.2em;
+}
+.five-box .fb-lbl{font-size:clamp(10px,1.3vw,15px);color:var(--muted2);}
 
-/* ── EP07 accent: purple ── */
-:root { --accent:#7C6FFF; --glow-acc:rgba(124,111,255,.25); }
+/* ── JTBD flip ───────────────────────────────────── */
+.jtbd-wrap{display:flex;gap:.6em;align-items:center;justify-content:center;margin:.5em 0;}
+.jtbd-box{
+  flex:1;border-radius:10px;padding:.7em .8em;
+  font-size:clamp(11px,1.5vw,18px);text-align:center;
+}
+.jtbd-box.ng{
+  background:rgba(248,100,100,0.1);border:1px solid rgba(248,100,100,0.35);
+}
+.jtbd-box.ok{
+  background:rgba(74,222,128,0.1);border:1px solid rgba(74,222,128,0.35);
+}
+.jtbd-box .jb-icon{font-size:1.5em;margin-bottom:.2em;}
+.jtbd-box .jb-lbl{font-weight:700;margin-bottom:.25em;}
+.jtbd-box .jb-text{font-size:.9em;color:var(--muted2);line-height:1.45;}
+.jtbd-arr{font-size:2em;color:var(--accent);flex-shrink:0;}
 
-/* ── S1 ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #1a0a2e 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
-#s1-badge i{color:var(--accent);}
-#s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
-#s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
+/* ── Why×3 chain ─────────────────────────────────── */
+.why-chain{display:flex;flex-direction:column;gap:.3em;max-width:440px;margin:.4em auto;}
+.why-row{display:flex;align-items:stretch;gap:.5em;}
+.why-q{
+  background:rgba(124,111,255,0.12);border:1px solid rgba(124,111,255,0.3);
+  border-radius:8px;padding:.45em .7em;
+  font-size:clamp(11px,1.4vw,17px);color:var(--muted2);flex:1;
+}
+.why-a{
+  background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;padding:.45em .7em;
+  font-size:clamp(11px,1.4vw,17px);color:#fff;flex:1.2;
+}
+.why-down{text-align:center;color:var(--accent);font-size:1.1em;line-height:1;}
 
-/* Minimal design helpers + type scale live in the shared base CSS. */
-
+/* ── Before/After persona compare ───────────────── */
+.compare-wrap{display:flex;gap:.7em;margin:.4em 0;}
+.compare-box{flex:1;border-radius:10px;padding:.6em .8em;font-size:clamp(10px,1.3vw,16px);}
+.compare-box.before{background:rgba(248,100,100,0.08);border:1px solid rgba(248,100,100,0.25);}
+.compare-box.after {background:rgba(74,222,128,0.08);border:1px solid rgba(74,222,128,0.25);}
+.compare-box .cb-hd{font-weight:700;margin-bottom:.4em;font-size:1.05em;}
+.compare-box.before .cb-hd{color:var(--red);}
+.compare-box.after  .cb-hd{color:var(--green);}
+.compare-box .cb-text{color:var(--muted2);line-height:1.55;}
+/* ── compact overrides ───────────────────────────── */
+.sum-item{font-size:clamp(11px,1.55vw,20px);padding:.5em .9em;margin-bottom:.3em;}
+/* ── Last slide (S13) ────────────────────────────── */
+#s13{background:radial-gradient(ellipse 80% 65% at 40% 50%, #0c1f10 0%, var(--slide-bg) 65%);align-items:center;justify-content:center;}
+#s13-card{background:var(--surf);border:1px solid var(--border);border-radius:14px;padding:1.3em 1.8em;width:76%;box-shadow:0 0 30px var(--glow-grn),0 8px 32px rgba(0,0,0,0.5);}
+#s13-cta{margin-top:1em;text-align:center;font-size:clamp(12px,1.75vw,22px);font-weight:700;color:var(--acc2);display:flex;align-items:center;justify-content:center;gap:.55em;}
 </style>
 </head>
 <body>
@@ -1077,6 +793,8 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
+
+
   <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
@@ -1084,197 +802,362 @@ body {
     <div class="s1-ring s1-ring3" aria-hidden="true"></div>
     <div class="s1-dot s1-dot1" aria-hidden="true"></div>
     <div class="s1-dot s1-dot2" aria-hidden="true"></div>
-    <div class="s1-dot s1-dot3" aria-hidden="true"></div>
     <div class="slide-num">01 / 13</div><div class="step-dots" id="sd1"></div>
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
-      <div id="s1-ep" class="se">第7回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;">4P と 4C</div>
-      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">マーケティングミックス</div>
-      <div id="s1-catch" class="se">戦略を施策に落とす設計図</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;letter-spacing:-.02em;">「ペルソナ設定」の落とし穴</div>
+      <div id="s1-sub" class="se" style="color:var(--accent);font-size:clamp(15px,2.5vw,32px);font-weight:700;margin-top:.4em;">顧客の悩みを本当に見つける方法</div>
     </div>
   </section>
 
-  <!-- S2: Hook — scattered tactics 30-80s -->
+  <!-- S2: Hook – NG Persona 30-90s -->
   <section class="slide" id="s2">
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
-    <div class="pad">
-      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">なぜ施策が<span style="color:#fff;">バラバラ</span>になる？</div>
-      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin:.25em 0 .15em;">戦略と施策が<br>噛み合わない</div>
-      <div id="s2-flow" class="se aflow t-md" style="margin-top:.2em;">
-        <span class="achip">製品</span><span class="achip">価格</span><span class="achip">流通</span><span class="achip">販促</span>
+    <div class="pad" style="justify-content:center;">
+      <div id="s2-q" class="sh se">これ、どれだけ役に立ちますか？</div>
+      <div id="s2-card" class="se">
+        <div class="persona-card">
+          <div class="pc-img-wrap">
+            <img class="pc-avatar" src="./persona.png" alt="田中美咲"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="pc-avatar-ph"><i class="fa-solid fa-user"></i></div>
+            <div class="pc-name-tag">田中美咲（仮）</div>
+          </div>
+          <div class="pc-rows">
+            <div class="pc-row"><span class="pc-key">年齢</span><span class="pc-val">32歳</span></div>
+            <div class="pc-row"><span class="pc-key">職業</span><span class="pc-val">IT企業 マーケ担当</span></div>
+            <div class="pc-row"><span class="pc-key">収入</span><span class="pc-val">年収450万円</span></div>
+            <div class="pc-row"><span class="pc-key">趣味</span><span class="pc-val">ヨガ・カフェ巡り・旅行</span></div>
+            <div class="pc-row"><span class="pc-key">家族</span><span class="pc-val">独身・都内一人暮らし</span></div>
+            <div class="pc-row"><span class="pc-key">課題</span><span class="pc-val">施策の費用対効果を上司に説明できない</span></div>
+          </div>
+        </div>
       </div>
-      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">4つが噛み合えば少ない力で大きな成果</div>
+      <div id="s2-ng" class="se">
+        <div class="ng-overlay">
+          <div class="no-label"><i class="fa-solid fa-triangle-exclamation"></i> 致命的な欠落</div>
+          <div class="t-sm c-muted">
+            <i class="fa-solid fa-xmark" style="color:var(--red);width:1.2em;"></i>「<strong style="color:#fff;">なぜ買うのか</strong>」が書かれていない<br>
+            <i class="fa-solid fa-xmark" style="color:var(--red);width:1.2em;"></i>「<strong style="color:#fff;">何に悩んでいるのか</strong>」が書かれていない<br>
+            <i class="fa-solid fa-xmark" style="color:var(--red);width:1.2em;"></i>「<strong style="color:#fff;">何が購入の障壁か</strong>」が書かれていない
+          </div>
+        </div>
+      </div>
+      <div id="s2-conc" class="se" style="display:flex;align-items:center;gap:.5em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);flex-shrink:0;"></i>
+        <span class="t-md">このペルソナは <strong style="color:var(--red);">「飾り」</strong> で終わる——最重要情報が欠けている</span>
+      </div>
     </div>
   </section>
 
-  <!-- S3: Origin of 4P 80-120s -->
+  <!-- S3: What is persona 90-120s -->
   <section class="slide" id="s3">
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
-    <div class="pad-t">
-      <div id="s3-hd" class="sh se">マーケティングミックスの誕生</div>
-      <div id="s3-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip">McCarthy<small>1960 ／ 4P体系化</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip on">Borden<small>1964 ／ 概念を確立</small></span>
+    <div class="pad" style="justify-content:center;">
+      <div id="s3-hd" class="sh se">ペルソナとは何か</div>
+      <div id="s3-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
+        <i class="fa-solid fa-book" style="color:var(--muted);"></i>元々はデザイン分野の概念（Alan Cooper, 1999）→ マーケティングに転用
       </div>
-      <div id="s3-key" class="se t-md" style="text-align:center;margin-top:.5em;">企業が<span style="color:var(--accent);">コントロールできる</span>4変数</div>
-      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">戦略を実行可能な施策に落とす設計図</div>
+      <div id="s3-def" class="card card-l se mt-s">
+        <div class="sh-sm" style="color:var(--accent);margin-bottom:.3em;">定義</div>
+        <div style="font-size:clamp(13px,2vw,26px);font-weight:700;color:#fff;line-height:1.5;">
+          「実在しないが、<em style="color:var(--accent);font-style:normal;">実在しそうなリアルな</em>顧客像」
+        </div>
+      </div>
+      <div id="s3-pur" class="se">
+        <div class="fn-card"><div class="fn-num" style="background:var(--blue);box-shadow:0 0 10px rgba(96,165,250,0.3);"><i class="fa-solid fa-users"></i></div><div><div class="fn-label">目的①：チームで同じ顧客を共有する</div><div class="fn-desc">全員が「同じ人物像」を頭に描いて意思決定できるようにする</div></div></div>
+        <div class="fn-card"><div class="fn-num" style="background:var(--green);box-shadow:0 0 10px var(--glow-grn);color:#000;"><i class="fa-solid fa-compass"></i></div><div><div class="fn-label">目的②：「誰に届けるか」の判断基準にする</div><div class="fn-desc">広告・コンテンツ・商品設計のすべての起点になる</div></div></div>
+      </div>
+      <div id="s3-diff" class="se" style="display:flex;align-items:center;gap:.4em;background:rgba(250,204,21,0.08);border:1px solid rgba(250,204,21,0.2);border-radius:8px;padding:.5em .8em;">
+        <i class="fa-solid fa-circle-exclamation" style="color:var(--yellow);flex-shrink:0;"></i>
+        <span class="t-sm">ペルソナ ≠ ターゲット　「30代女性」は<strong style="color:#fff;">属性</strong>。ペルソナは<strong style="color:var(--yellow);">具体的な1人の人物像</strong></span>
+      </div>
     </div>
   </section>
 
-  <!-- S4: Product — 3 layers 120-180s -->
+  <!-- S4: Pitfall 1 120-180s -->
   <section class="slide" id="s4">
     <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
-    <div class="pad-t">
-      <div id="s4-hd" class="sh se">Product ／ 製品</div>
-      <div id="s4-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip on">コア<small>本当に求める便益</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip">実体<small>品質・機能</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip">拡張<small>保証・サポート</small></span>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s4-hd" class="sh se" style="color:var(--red);">
+        <i class="fa-solid fa-triangle-exclamation"></i>&ensp;落とし穴 ① 「想像だけ」で作られたペルソナ
       </div>
-      <div id="s4-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">欲しいのは「穴」ではなく「棚を作る体験」</div>
+      <div id="s4-fails" class="se">
+        <div class="ng-row"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>実際の顧客インタビューをしていない</span></div>
+        <div class="ng-row"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>社内の思い込みや「こんな人に来てほしい」という希望が混入</span></div>
+        <div class="ng-row"><div class="ic ic-red"><i class="fa-solid fa-xmark"></i></div><span>趣味や家族構成など「商品と無関係な情報」だけが充実</span></div>
+      </div>
+      <div id="s4-result" class="se">
+        <div class="card" style="border:1px solid rgba(248,100,100,0.3);background:rgba(248,100,100,0.07);padding:.6em 1em;text-align:center;">
+          <div class="t-md" style="color:var(--red);font-weight:700;">→ リアルな顧客とズレた「幻のお客様」が完成する</div>
+        </div>
+      </div>
+      <div id="s4-quote" class="card card-l se" style="margin-top:.5em;">
+        <div class="t-sm" style="font-style:italic;color:var(--muted2);">
+          "消費者はバカではない。あなたの妻だ。彼女を侮辱するな。"
+        </div>
+        <div class="t-xs c-muted mt-s">― David Ogilvy『Ogilvy on Advertising』（1983）</div>
+      </div>
     </div>
   </section>
 
-  <!-- S5: Price — 3 approaches 180-240s -->
+  <!-- S5: Pitfall 2 180-230s -->
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
-    <div class="pad-t">
-      <div id="s5-hd" class="sh se">Price ／ 価格の3アプローチ</div>
-      <div id="s5-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">コスト積み上げ</span>
-        <span class="tag">競合ベース</span>
-        <span class="tag acc">価値ベース</span>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s5-hd" class="sh se" style="color:var(--red);">
+        <i class="fa-solid fa-triangle-exclamation"></i>&ensp;落とし穴 ② 自社に都合の良い顧客像
       </div>
-      <div id="s5-key" class="se t-lg" style="text-align:center;margin-top:.5em;">いくらで作れるか<br>ではなく<span style="color:var(--accent);">いくらの価値か</span></div>
-      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">価格は品質のシグナル</div>
+      <div id="s5-pat" class="se">
+        <div class="card" style="border:1px solid rgba(248,100,100,0.25);padding:.6em 1em;">
+          <div class="sh-sm" style="color:var(--acc2);margin-bottom:.35em;">典型パターン</div>
+          <div class="citem"><i class="fa-solid fa-arrow-right dot" style="color:var(--acc2);font-size:.8em;"></i>「うちの強みをちゃんと評価してくれる人」を設定</div>
+          <div class="citem"><i class="fa-solid fa-arrow-right dot" style="color:var(--acc2);font-size:.8em;"></i>「すでに商品カテゴリに詳しい人」を想定</div>
+        </div>
+      </div>
+      <div id="s5-prob" class="se">
+        <div class="card" style="border:1px solid rgba(248,100,100,0.25);background:rgba(248,100,100,0.06);padding:.6em 1em;">
+          <div class="sh-sm" style="color:var(--red);margin-bottom:.35em;">問題</div>
+          <div class="t-sm c-muted">
+            <i class="fa-solid fa-xmark" style="color:var(--red);"></i> 実際の顧客の<strong style="color:#fff;">不満・迷い・離脱理由</strong>が見えない<br>
+            <i class="fa-solid fa-xmark" style="color:var(--red);"></i> 結果として「刺さらない広告」が量産される
+          </div>
+        </div>
+      </div>
+      <div id="s5-fix" class="se">
+        <div class="card card-gr" style="padding:.6em 1em;">
+          <div class="sh-sm" style="color:var(--green);margin-bottom:.35em;"><i class="fa-solid fa-circle-check"></i>&ensp;改善策</div>
+          <div class="t-sm">ペルソナには必ず <strong style="color:var(--green);">「不満・障壁・迷い」</strong> を含める</div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S6: Place — channels 240-300s -->
+  <!-- S6: Pitfall 3 230-270s -->
   <section class="slide" id="s6">
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
-    <div class="pad-t">
-      <div id="s6-hd" class="sh se">Place ／ 流通チャネル</div>
-      <div id="s6-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">直販 D2C</span>
-        <span class="tag">卸・小売</span>
-        <span class="tag">EC</span>
-        <span class="tag acc">OMO</span>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s6-hd" class="sh se" style="color:var(--red);">
+        <i class="fa-solid fa-triangle-exclamation"></i>&ensp;落とし穴 ③ 1つのペルソナで全施策を解決
       </div>
-      <div id="s6-key" class="se t-lg" style="text-align:center;margin-top:.5em;">どこで買えるかが<br><span style="color:var(--accent);">ブランド価値</span>を決める</div>
-      <div id="s6-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">高級時計はコンビニで売らない</div>
+      <div class="cols2" style="gap:.8em;">
+        <div id="s6-prob" class="se">
+          <div class="col-hd" style="color:var(--red);">問題</div>
+          <div class="card card-r col-body">
+            <div class="citem"><i class="fa-solid fa-xmark dot" style="color:var(--red);font-size:.8em;"></i>商品には複数の利用シーンがある</div>
+            <div class="citem"><i class="fa-solid fa-xmark dot" style="color:var(--red);font-size:.8em;"></i>意思決定者と利用者が違う場合も</div>
+            <div class="t-xs c-muted mt-s" style="border-top:1px solid rgba(255,255,255,0.07);padding-top:.5em;">例 B2B：担当者が調べ、役員が決める</div>
+          </div>
+        </div>
+        <div id="s6-fix" class="se">
+          <div class="col-hd" style="color:var(--green);">推奨</div>
+          <div class="card card-gr col-body">
+            <div class="citem"><i class="fa-solid fa-check dot" style="color:var(--green);font-size:.8em;"></i>主要ペルソナは<strong> 3〜5人から始める</strong>のが一般的<br><span class="t-xs c-muted">(HubSpot推奨)</span></div>
+            <div class="citem"><i class="fa-solid fa-check dot" style="color:var(--green);font-size:.8em;"></i>目的別に使い分ける</div>
+            <div class="t-xs c-muted mt-s" style="border-top:1px solid rgba(255,255,255,0.07);padding-top:.5em;">「認知獲得用」と「購入転換用」は別でよい</div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S7: Promotion — IMC 300-360s -->
+  <!-- S7: 5-element grid 270-330s -->
   <section class="slide" id="s7">
     <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
-    <div class="pad-t">
-      <div id="s7-hd" class="sh se">Promotion ／ IMC の発想</div>
-      <div id="s7-key" class="se t-xl" style="text-align:center;">全接点で<span style="color:var(--accent);">同じトーン</span></div>
-      <div id="s7-flow" class="se aflow t-md" style="margin-top:.4em;">
-        <span class="achip">広告</span><span class="achip">PR</span><span class="achip">SNS</span><span class="achip">店舗</span>
+    <div class="pad" style="justify-content:center;">
+      <div id="s7-hd" class="sh se">機能するペルソナに含めるべき 5 要素</div>
+      <div id="s7-grid" class="se">
+        <div class="five-grid">
+          <div class="five-box"><div class="fb-num" style="color:rgba(124,111,255,1);">①</div><div class="fb-lbl">ゴール<br>理想の状態</div></div>
+          <div class="five-box"><div class="fb-num" style="color:var(--acc2);">②</div><div class="fb-lbl">ペイン<br>困りごと</div></div>
+          <div class="five-box"><div class="fb-num" style="color:var(--blue);">③</div><div class="fb-lbl">情報収集<br>どこで調べる</div></div>
+          <div class="five-box"><div class="fb-num" style="color:var(--yellow);">④</div><div class="fb-lbl">障壁<br>不安・迷い</div></div>
+          <div class="five-box"><div class="fb-num" style="color:var(--green);">⑤</div><div class="fb-lbl">トリガー<br>最後の一押し</div></div>
+        </div>
       </div>
-      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">メッセージの不一致はブランドを希薄化</div>
+      <div id="s7-desc" class="se">
+        <div class="card card-l">
+          <div class="sh-sm" style="color:var(--accent);margin-bottom:.35em;">なぜこの5つが必要か</div>
+          <div class="t-sm c-muted">
+            ③があると <strong style="color:#fff;">どこで広告・コンテンツを出すか</strong> が決まる<br>
+            ④があると <strong style="color:#fff;">どんなコピーが障壁を取り除くか</strong> が見えてくる<br>
+            ⑤があると <strong style="color:#fff;">最後の転換施策</strong>（期間限定・口コミ等）が設計できる
+          </div>
+        </div>
+      </div>
+      <div id="s7-conc" class="se" style="display:flex;align-items:center;gap:.4em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
+        <span class="t-sm">この5要素が揃って初めて、<strong style="color:#fff;">メッセージと施策</strong>が決まる</span>
+      </div>
     </div>
   </section>
 
-  <!-- S8: 4C shift 360-420s -->
+  <!-- S8: JTBD – Milkshake 330-390s -->
   <section class="slide" id="s8">
     <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
-    <div class="pad-t">
-      <div id="s8-hd" class="sh se">4C へのシフト</div>
-      <div id="s8-key" class="se t-xl" style="text-align:center;">企業視点から<br><span style="color:var(--accent);">顧客視点</span>へ</div>
-      <div id="s8-banner" class="se hl-banner" style="margin-top:.5em;">売りたいものでなく、買いたいものを売れ</div>
-      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">4Pで骨格、4Cで点検</div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s8-hd" class="sh se">ペルソナを深める：ジョブ理論（JTBD）</div>
+      <div id="s8-src" class="sh-sm se" style="display:flex;align-items:center;gap:.4em;">
+        <i class="fa-solid fa-graduation-cap" style="color:var(--muted);"></i>
+        Clayton Christensen / Harvard Business Review (2016)
+      </div>
+      <div id="s8-def" class="card card-l se mt-s">
+        <div class="sh-sm" style="color:var(--accent);margin-bottom:.3em;">本質的な考え方</div>
+        <div style="font-size:clamp(13px,1.9vw,24px);font-weight:700;color:#fff;line-height:1.5;">
+          「人は商品を <em style="color:var(--accent);font-style:normal;">雇用</em> して、<br>自分の <em style="color:var(--accent);font-style:normal;">ジョブ（仕事）</em> を片づけてもらう」
+        </div>
+      </div>
+      <div id="s8-ex" class="se mt-s">
+        <div class="sh-sm c-muted" style="margin-bottom:.5em;">ミルクシェイクの研究——朝に買う理由は？</div>
+        <div style="display:flex;align-items:center;gap:1.2em;">
+          <img src="./milkshake.png" alt="ミルクシェイク" style="width:clamp(70px,10vw,120px);height:auto;flex-shrink:0;filter:drop-shadow(0 0 14px rgba(96,165,250,0.2));">
+          <div class="jtbd-wrap" style="flex:1;margin:0;">
+            <div class="jtbd-box ng">
+              <div class="jb-icon"><i class="fa-solid fa-xmark" style="color:var(--red);"></i></div>
+              <div class="jb-lbl" style="color:var(--red);">表面の答え</div>
+              <div class="jb-text">「甘いものが食べたかった」</div>
+            </div>
+            <div class="jtbd-arr"><i class="fa-solid fa-arrow-right"></i></div>
+            <div class="jtbd-box ok">
+              <div class="jb-icon"><i class="fa-solid fa-check" style="color:var(--green);"></i></div>
+              <div class="jb-lbl" style="color:var(--green);">本当のジョブ</div>
+              <div class="jb-text">「長い通勤時間を飽きずに過ごしたい。片手で楽しめて腹持ちが良いもの」</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="s8-conc" class="se" style="display:flex;align-items:center;gap:.4em;">
+        <i class="fa-solid fa-arrow-right" style="color:var(--accent);"></i>
+        <span class="t-sm"><strong style="color:#fff;">属性</strong>ではなく <strong style="color:var(--accent);">「行動の文脈」</strong> こそが本当のニーズ</span>
+      </div>
     </div>
   </section>
 
-  <!-- S9: 4P -> 4C mapping 420-480s -->
+  <!-- S9: JTBD-enhanced persona 390-440s -->
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
-    <div class="pad-t">
-      <div id="s9-hd" class="sh se" style="margin-bottom:.3em;">4P → 4C 対応表</div>
-      <div id="s9-flow" class="se" style="display:flex;flex-direction:column;align-items:center;gap:.4em;">
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--blue);color:var(--blue);">Product</span><span class="aarrow">→</span><span class="achip on">Customer Solution</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--green);color:var(--green);">Price</span><span class="aarrow">→</span><span class="achip on">Cost to Customer</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--yellow);color:var(--yellow);">Place</span><span class="aarrow">→</span><span class="achip on">Convenience</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--acc2);color:var(--acc2);">Promotion</span><span class="aarrow">→</span><span class="achip on">Communication</span></div>
+    <div class="pad" style="justify-content:center;">
+      <div id="s9-hd" class="sh se">JTBD でペルソナを強化する</div>
+      <div id="s9-cmp" class="se">
+        <div class="compare-wrap">
+          <div class="compare-box before">
+            <div class="cb-hd"><i class="fa-solid fa-xmark"></i>&ensp;従来（属性中心）</div>
+            <div class="cb-text">35歳・会社員・健康志向・ジム通い</div>
+          </div>
+          <div class="compare-box after">
+            <div class="cb-hd"><i class="fa-solid fa-check"></i>&ensp;JTBD を加えた版（文脈中心）</div>
+            <div class="cb-text">
+              毎朝の通勤30分を、何か意味のあることに使いたいと思っている。
+              ポッドキャストは眠くなる。動画はスマホを持つのが疲れる。
+              もっと手軽に学べる方法があれば使いたい。
+            </div>
+          </div>
+        </div>
       </div>
-      <div id="s9-note" class="se note" style="margin-top:.5em;">顧客視点で設計されているか？</div>
+      <div id="s9-conc" class="se">
+        <div class="card card-gr" style="padding:.6em 1em;">
+          <div class="t-md">
+            <i class="fa-solid fa-circle-check" style="color:var(--green);"></i>&ensp;
+            このペルソナを読んだ瞬間に、<strong style="color:#fff;">何を作るか・どう伝えるか</strong> が自然に決まる<br>
+            <span class="t-sm c-muted">具体性こそが、ペルソナの武器</span>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S10: Consistency 480-530s -->
+  <!-- S10: Data collection + Why×3 440-490s -->
   <section class="slide" id="s10">
     <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
-    <div class="pad-t">
-      <div id="s10-hd" class="sh se">4P の整合性</div>
-      <div id="s10-key" class="se t-xl" style="text-align:center;">4つが<span style="color:var(--accent);">同じ価値提案</span>を向く</div>
-      <div id="s10-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag">製品×価格</span>
-        <span class="tag">製品×流通</span>
-        <span class="tag">製品×販促</span>
-        <span class="tag">価格×販促</span>
+    <div class="pad" style="justify-content:center;">
+      <div id="s10-hd" class="sh se">どこからデータを集めるか</div>
+      <div class="cols2" style="gap:.8em;">
+        <div id="s10-pri" class="se">
+          <div class="col-hd" style="color:var(--accent);">一次情報（最重要）</div>
+          <div class="card card-l col-body">
+            <div class="citem"><i class="fa-solid fa-microphone dot" style="color:var(--accent);font-size:.8em;"></i>既存顧客へのインタビュー（5〜10名）</div>
+            <div class="citem"><i class="fa-solid fa-microphone dot" style="color:var(--accent);font-size:.8em;"></i>アンケート（購入理由・迷いの点・決め手）</div>
+            <div class="citem"><i class="fa-solid fa-microphone dot" style="color:var(--accent);font-size:.8em;"></i>問い合わせ・レビュー・SNSコメントの分析</div>
+          </div>
+        </div>
+        <div id="s10-sec" class="se">
+          <div class="col-hd" style="color:var(--muted2);">二次情報（補助）</div>
+          <div class="card col-body">
+            <div class="citem"><i class="fa-solid fa-file-lines dot" style="color:var(--muted2);font-size:.8em;"></i>業界レポート・政府統計</div>
+            <div class="citem"><i class="fa-solid fa-file-lines dot" style="color:var(--muted2);font-size:.8em;"></i>競合サイトのレビュー欄</div>
+            <div class="citem"><i class="fa-solid fa-file-lines dot" style="color:var(--muted2);font-size:.8em;"></i>SNS 上の UGC（ユーザー投稿）</div>
+          </div>
+        </div>
       </div>
-      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">ユニクロ「良いものを誰もが手軽に」</div>
+      <div id="s10-why" class="se mt-s">
+        <div class="sh-sm" style="color:var(--yellow);margin-bottom:.4em;"><i class="fa-solid fa-star"></i>&ensp;黄金ルール：「なぜ？」を3回繰り返す</div>
+        <div class="why-chain">
+          <div class="why-row"><div class="why-q"><i class="fa-solid fa-circle-question" style="color:rgba(124,111,255,0.7);"></i> なぜ購入した？</div><div class="why-a">「忙しいから」</div></div>
+          <div class="why-down"><i class="fa-solid fa-arrow-down"></i></div>
+          <div class="why-row"><div class="why-q"><i class="fa-solid fa-circle-question" style="color:rgba(124,111,255,0.7);"></i> なぜそれが問題？</div><div class="why-a">「時間がムダに感じるから」</div></div>
+          <div class="why-down"><i class="fa-solid fa-arrow-down"></i></div>
+          <div class="why-row"><div class="why-q"><i class="fa-solid fa-circle-question" style="color:rgba(124,111,255,0.7);"></i> なぜ時間が惜しい？</div><div class="why-a"><strong style="color:var(--accent);">「成長に使いたいから」</strong></div></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S11: D2C case 530-560s -->
+  <!-- S11: Summary 490-540s -->
   <section class="slide" id="s11">
     <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
-    <div class="pad-t">
-      <div id="s11-hd" class="sh se">実践：D2Cスキンケア</div>
-      <div id="s11-flow" class="se aflow t-lg" style="margin-top:.3em;">
-        <span class="achip">4Cで点検</span>
-        <span class="aarrow">→</span>
-        <span class="achip on">施策を改善</span>
-      </div>
-      <div id="s11-kpi" class="se" style="text-align:center;margin-top:.5em;">
-        <span class="t-md" style="color:var(--muted2);">初回購入率</span>
-        <span class="bignum t-xl" style="display:inline-block;margin:0 .4em;">+38%</span>
-        <span class="t-md" style="color:var(--muted2);">／ リピート</span>
-        <span class="bignum t-xl" style="display:inline-block;margin-left:.3em;">+52%</span>
-      </div>
-      <div id="s11-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">顧客視点が成果を変える</div>
+    <div class="pad-t" style="justify-content:center;">
+      <div id="s11-hd" class="sh se">今日のまとめ</div>
+      <div id="s11-i1" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">落とし穴 3つ</div><div class="sum-sub">① 想像だけの架空ペルソナ　② 都合が良すぎる人物像　③ 1つで全部解決しようとする</div></div></div>
+      <div id="s11-i2" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">機能するペルソナの 5 要素</div><div class="sum-sub">→ ゴール・ペイン・情報収集行動・障壁・購入トリガー</div></div></div>
+      <div id="s11-i3" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">ジョブ理論で「行動の文脈」を加える</div><div class="sum-sub">→ 属性より「なぜ買うか・何のために使うか」が本質</div></div></div>
+      <div id="s11-i4" class="sum-item se"><div class="sum-icon"><i class="fa-solid fa-circle-check"></i></div><div><div class="sum-main">一次情報が命。「なぜ？×3」でニーズの本質を掴む</div><div class="sum-sub">→ 表面の回答の奥にある本音を掘り起こす</div></div></div>
     </div>
   </section>
 
-  <!-- S12: Summary 560-590s -->
+  <!-- S12: How to use 540-580s -->
   <section class="slide" id="s12">
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
-    <div class="pad-t">
-      <div id="s12-hd" class="sh se">まとめ</div>
-      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
-        <span class="tag">4Pは一貫した設計図</span>
-        <span class="tag">価値ベース価格</span>
-        <span class="tag">IMCで統一</span>
-        <span class="tag acc">4Cで顧客視点点検</span>
+    <div class="pad" style="justify-content:center;">
+      <div id="s12-hd" class="sh se">ペルソナはどう使うのか</div>
+      <div id="s12-use" class="card card-l se mt-s">
+        <div class="sh-sm" style="color:var(--accent);margin-bottom:.4em;">施策の「判断基準」として使う</div>
+        <div style="font-size:clamp(13px,1.9vw,24px);font-weight:700;color:#fff;line-height:1.6;padding-left:1em;border-left:3px solid var(--accent);">
+          「このコンテンツは、○○さんが<br>見て、読んで、<em style="color:var(--accent);font-style:normal;">行動するか？</em>」
+        </div>
       </div>
-      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">整合しない箇所を1つ改善する</div>
+      <div id="s12-team" class="fn-card se">
+        <div class="fn-num" style="background:var(--blue);box-shadow:0 0 10px rgba(96,165,250,0.3);"><i class="fa-solid fa-people-group"></i></div>
+        <div><div class="fn-label">チームで同じ顧客を共有する</div><div class="fn-desc">「このペルソナには刺さらない」が感覚でなくデータと文脈で意思決定の根拠になる</div></div>
+      </div>
+      <div id="s12-warn" class="se">
+        <div class="card" style="border:1px solid rgba(248,100,100,0.3);background:rgba(248,100,100,0.07);padding:.6em 1em;display:flex;align-items:center;gap:.5em;">
+          <i class="fa-solid fa-triangle-exclamation" style="color:var(--red);font-size:1.3em;flex-shrink:0;"></i>
+          <div class="t-sm"><strong style="color:var(--red);">NG：ペルソナを作ったら終わり</strong><br><span class="c-muted">市場の変化・新しいデータをもとに定期的にアップデートすること</span></div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- S13: Next 590-600s -->
+  <!-- S13: Next episode 580-600s -->
   <section class="slide" id="s13">
     <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
-    <div class="pad" style="text-align:center;align-items:center;">
-      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第8回</div>
-      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">USP と差別化</div>
-      <div id="s13-sub" class="se t-md" style="color:var(--accent);">選ばれる理由を言語化</div>
-      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
+    <div id="s12-inner">
+      <div id="s13-card" class="se">
+        <div class="next-lbl"><i class="fa-solid fa-forward-step"></i> 次回</div>
+        <div class="next-title">商品の魅力を言語化する<br>「ベネフィット」と「特徴」の違い</div>
+        <div id="s13-pts" class="se">
+          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>「高性能なのに売れない」の本当の理由</div>
+          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>顧客が本当に買っているものとは？</div>
+          <div class="next-pt"><i class="fa-solid fa-chevron-right"></i>ベネフィットを3段階で言語化するフレームワーク</div>
+        </div>
+      </div>
+      <div id="s13-cta" class="se"><i class="fa-solid fa-bell"></i> チャンネル登録 &amp; 高評価をぜひお願いします！ <i class="fa-solid fa-thumbs-up"></i></div>
     </div>
   </section>
-
 </div><!-- /stage --></div><!-- /stage-wrap -->
 
 <!-- Progress Bar -->
-<div id="prog-wrap"><div id="prog-fill"></div></div>
+<div id="prog-bar"><div id="prog-fill"></div></div>
 
 <!-- Controls -->
 <div id="ctrl">
@@ -1286,7 +1169,7 @@ body {
   <button id="btn-step"    title="次のアニメーション (Enter)">→ 次のアニメーション</button>
   <div class="ctrl-sep"></div>
   <span class="ctrl-info" id="timer-disp">0:00 / 10:00</span>
-  <span class="ctrl-info" id="slide-disp">Slide 1 / 13</span>
+  <span class="ctrl-info" id="slide-disp">Slide 1 / 12</span>
   <span class="ctrl-info"><span id="step-label">Step&nbsp;—</span></span>
   <button id="btn-narr">ナレーション 表示/隠す (H)</button>
 </div>
@@ -1299,86 +1182,86 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
-  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
-  {si:0,  t:5,    ids:['s1-sub'],     anim:'rv-up'},
-  {si:0,  t:7,    ids:['s1-catch'],   anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
-  {si:1,  t:38,   ids:['s2-ans'],     anim:'rv-scale'},
-  {si:1,  t:55,   ids:['s2-flow'],    anim:'rv-up'},
-  {si:1,  t:70,   ids:['s2-note'],    anim:'rv-fade'},
-  {si:2,  t:80,   ids:['s3-hd'],      anim:'rv-fade'},
-  {si:2,  t:88,   ids:['s3-flow'],    anim:'rv-up'},
-  {si:2,  t:104,  ids:['s3-key'],     anim:'rv-scale'},
-  {si:2,  t:114,  ids:['s3-note'],    anim:'rv-fade'},
-  {si:3,  t:120,  ids:['s4-hd'],      anim:'rv-fade'},
-  {si:3,  t:132,  ids:['s4-flow'],    anim:'rv-up'},
-  {si:3,  t:165,  ids:['s4-note'],    anim:'rv-pop'},
-  {si:4,  t:180,  ids:['s5-hd'],      anim:'rv-fade'},
-  {si:4,  t:192,  ids:['s5-tags'],    anim:'rv-up'},
-  {si:4,  t:215,  ids:['s5-key'],     anim:'rv-scale'},
-  {si:4,  t:230,  ids:['s5-note'],    anim:'rv-fade'},
-  {si:5,  t:240,  ids:['s6-hd'],      anim:'rv-fade'},
-  {si:5,  t:252,  ids:['s6-tags'],    anim:'rv-up'},
-  {si:5,  t:275,  ids:['s6-key'],     anim:'rv-scale'},
-  {si:5,  t:290,  ids:['s6-note'],    anim:'rv-fade'},
-  {si:6,  t:300,  ids:['s7-hd'],      anim:'rv-fade'},
-  {si:6,  t:312,  ids:['s7-key'],     anim:'rv-scale'},
-  {si:6,  t:335,  ids:['s7-flow'],    anim:'rv-up'},
-  {si:6,  t:350,  ids:['s7-note'],    anim:'rv-fade'},
-  {si:7,  t:360,  ids:['s8-hd'],      anim:'rv-fade'},
-  {si:7,  t:372,  ids:['s8-key'],     anim:'rv-scale'},
-  {si:7,  t:395,  ids:['s8-banner'],  anim:'rv-pop'},
-  {si:7,  t:410,  ids:['s8-note'],    anim:'rv-fade'},
-  {si:8,  t:420,  ids:['s9-hd'],      anim:'rv-fade'},
-  {si:8,  t:432,  ids:['s9-flow'],    anim:'rv-up'},
-  {si:8,  t:468,  ids:['s9-note'],    anim:'rv-fade'},
-  {si:9,  t:480,  ids:['s10-hd'],     anim:'rv-fade'},
-  {si:9,  t:490,  ids:['s10-key'],    anim:'rv-scale'},
-  {si:9,  t:505,  ids:['s10-tags'],   anim:'rv-up'},
-  {si:9,  t:520,  ids:['s10-note'],   anim:'rv-fade'},
-  {si:10, t:530,  ids:['s11-hd'],     anim:'rv-fade'},
-  {si:10, t:538,  ids:['s11-flow'],   anim:'rv-up'},
-  {si:10, t:548,  ids:['s11-kpi'],    anim:'rv-scale'},
-  {si:10, t:555,  ids:['s11-note'],   anim:'rv-fade'},
-  {si:11, t:560,  ids:['s12-hd'],     anim:'rv-fade'},
-  {si:11, t:568,  ids:['s12-tags'],   anim:'rv-up'},
-  {si:11, t:580,  ids:['s12-note'],   anim:'rv-fade'},
-  {si:12, t:590,  ids:['s13-lbl'],    anim:'rv-fade'},
-  {si:12, t:592,  ids:['s13-title'],  anim:'rv-up'},
-  {si:12, t:595,  ids:['s13-sub'],    anim:'rv-fade'},
-  {si:12, t:598,  ids:['s13-cta'],    anim:'rv-pop'}
+  {si:0,  t:0,    ids:['s1-badge'],            anim:'rv-fade'},
+  {si:0,  t:0.8,  ids:['s1-title'],            anim:'rv-up'},
+  {si:0,  t:1.8,  ids:['s1-sub'],              anim:'rv-up'},
+  {si:1,  t:30,   ids:['s2-q'],                anim:'rv-fade'},
+  {si:1,  t:32,   ids:['s2-card'],             anim:'rv-scale'},
+  {si:1,  t:37,   ids:['s2-ng'],               anim:'rv-up'},
+  {si:1,  t:42,   ids:['s2-conc'],             anim:'rv-fade'},
+  {si:2,  t:90,   ids:['s3-hd','s3-src'],      anim:'rv-fade'},
+  {si:2,  t:92,   ids:['s3-def'],              anim:'rv-scale'},
+  {si:2,  t:97,   ids:['s3-pur'],              anim:'rv-up'},
+  {si:2,  t:103,  ids:['s3-diff'],             anim:'rv-fade'},
+  {si:3,  t:120,  ids:['s4-hd'],               anim:'rv-fade'},
+  {si:3,  t:122,  ids:['s4-fails'],            anim:'rv-up'},
+  {si:3,  t:130,  ids:['s4-result'],           anim:'rv-scale'},
+  {si:3,  t:135,  ids:['s4-quote'],            anim:'rv-fade'},
+  {si:4,  t:180,  ids:['s5-hd'],               anim:'rv-fade'},
+  {si:4,  t:182,  ids:['s5-pat'],              anim:'rv-up'},
+  {si:4,  t:188,  ids:['s5-prob'],             anim:'rv-up'},
+  {si:4,  t:194,  ids:['s5-fix'],              anim:'rv-scale'},
+  {si:5,  t:230,  ids:['s6-hd'],               anim:'rv-fade'},
+  {si:5,  t:232,  ids:['s6-prob'],             anim:'rv-right'},
+  {si:5,  t:238,  ids:['s6-fix'],              anim:'rv-left'},
+  {si:6,  t:270,  ids:['s7-hd'],               anim:'rv-fade'},
+  {si:6,  t:272,  ids:['s7-grid'],             anim:'rv-scale'},
+  {si:6,  t:278,  ids:['s7-desc'],             anim:'rv-up'},
+  {si:6,  t:284,  ids:['s7-conc'],             anim:'rv-fade'},
+  {si:7,  t:330,  ids:['s8-hd','s8-src'],      anim:'rv-fade'},
+  {si:7,  t:332,  ids:['s8-def'],              anim:'rv-scale'},
+  {si:7,  t:338,  ids:['s8-ex'],               anim:'rv-up'},
+  {si:7,  t:345,  ids:['s8-conc'],             anim:'rv-fade'},
+  {si:8,  t:390,  ids:['s9-hd'],               anim:'rv-fade'},
+  {si:8,  t:392,  ids:['s9-cmp'],              anim:'rv-up'},
+  {si:8,  t:400,  ids:['s9-conc'],             anim:'rv-scale'},
+  {si:9,  t:440,  ids:['s10-hd'],              anim:'rv-fade'},
+  {si:9,  t:442,  ids:['s10-pri'],             anim:'rv-right'},
+  {si:9,  t:448,  ids:['s10-sec'],             anim:'rv-left'},
+  {si:9,  t:454,  ids:['s10-why'],             anim:'rv-up'},
+  {si:10, t:490,  ids:['s11-hd'],              anim:'rv-fade'},
+  {si:10, t:492,  ids:['s11-i1'],              anim:'rv-up'},
+  {si:10, t:496,  ids:['s11-i2'],              anim:'rv-up'},
+  {si:10, t:500,  ids:['s11-i3'],              anim:'rv-up'},
+  {si:10, t:504,  ids:['s11-i4'],              anim:'rv-up'},
+  {si:11, t:540,  ids:['s12-hd'],              anim:'rv-fade'},
+  {si:11, t:542,  ids:['s12-use'],             anim:'rv-scale'},
+  {si:11, t:548,  ids:['s12-team'],            anim:'rv-up'},
+  {si:11, t:554,  ids:['s12-warn'],            anim:'rv-fade'},
+  {si:12, t:580,  ids:['s13-card'],            anim:'rv-scale'},
+  {si:12, t:583,  ids:['s13-pts'],             anim:'rv-fade'},
+  {si:12, t:586,  ids:['s13-cta'],             anim:'rv-up'},
 ];
 const SLIDES_META = [
   {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
-  {id:'s2',  start:30,  end:80,  dotContainerId:'sd2'},
-  {id:'s3',  start:80,  end:120, dotContainerId:'sd3'},
+  {id:'s2',  start:30,  end:90,  dotContainerId:'sd2'},
+  {id:'s3',  start:90,  end:120, dotContainerId:'sd3'},
   {id:'s4',  start:120, end:180, dotContainerId:'sd4'},
-  {id:'s5',  start:180, end:240, dotContainerId:'sd5'},
-  {id:'s6',  start:240, end:300, dotContainerId:'sd6'},
-  {id:'s7',  start:300, end:360, dotContainerId:'sd7'},
-  {id:'s8',  start:360, end:420, dotContainerId:'sd8'},
-  {id:'s9',  start:420, end:480, dotContainerId:'sd9'},
-  {id:'s10', start:480, end:530, dotContainerId:'sd10'},
-  {id:'s11', start:530, end:560, dotContainerId:'sd11'},
-  {id:'s12', start:560, end:590, dotContainerId:'sd12'},
-  {id:'s13', start:590, end:600, dotContainerId:'sd13'},
+  {id:'s5',  start:180, end:230, dotContainerId:'sd5'},
+  {id:'s6',  start:230, end:270, dotContainerId:'sd6'},
+  {id:'s7',  start:270, end:330, dotContainerId:'sd7'},
+  {id:'s8',  start:330, end:390, dotContainerId:'sd8'},
+  {id:'s9',  start:390, end:440, dotContainerId:'sd9'},
+  {id:'s10', start:440, end:490, dotContainerId:'sd10'},
+  {id:'s11', start:490, end:540, dotContainerId:'sd11'},
+  {id:'s12', start:540, end:580, dotContainerId:'sd12'},
+  {id:'s13', start:580, end:600, dotContainerId:'sd13'},
 ];
 const NARRATIONS = [
-  `第7回のテーマは、マーケティングミックス——4Pと4Cです。\n実は第2回のSTP分析の回で、「4Pの話は第7回でしますね」とお伝えしていました。お待たせしました、今回その約束を果たします。\n4Pという言葉は知っている。でもいざ施策に当てはめると要素がバラバラになってしまう——そんな方はとても多いです。今日は4Pを「設計図」として使いこなし施策全体を整合させる方法と、顧客視点の4Cへのアップデートをお伝えします。`,
-  `あなたの会社の施策は一貫していますか。良い製品なのに安売りしてブランドが伝わらない。高級路線なのにディスカウントチャネルで販売している。広告と製品の訴求がまったく違う——これらはすべて4つの施策がバラバラになっているサインです。\n原因は「戦略と施策が繋がっていない」ことにあります。4つの歯車がかみ合って初めてマーケティングの力が発揮されます。今日はその噛み合わせをどう作るかをお伝えします。`,
-  `4Pはどこから来たのでしょうか。1960年、マッカーシーが「Basic Marketing」でProduct・Price・Place・Promotionの4変数を体系化し、1964年にボーデンが「マーケティングミックス」という言葉を定着させました。\n4Pの本質は「企業がコントロールできる変数の組み合わせ」にあります。景気や競合はコントロールできませんが、この4つは自社で決められます。コトラーとケラーも2016年版で「4Pは施策設計の基本骨格」と述べており、60年以上経っても現役です。`,
-  `最初のPはProduct、製品です。コトラーが提唱した3層モデルで考えましょう。\n一番内側のコア製品は顧客が本当に求める便益です。ドリルを買う人が欲しいのはドリルではなく「棚を設置したい体験」——製品の機能より、顧客の目的に着目することが核心です。\nその外側が実体製品（品質・デザイン・機能）、さらに外側が拡張製品（保証・サポート・コミュニティ）です。現代では拡張製品が差別化の主な戦場になっています。コアから設計を始めるのが正しい順序です。`,
-  `2つ目のPはPrice、価格です。アプローチは3つ——コスト積み上げ・競合ベース・価値ベースです。\nコスト積み上げは計算が簡単ですが需要を無視するリスクがあります。競合ベースは差別化できません。最もおすすめは価値ベース——「顧客にとっていくらの価値があるか」から出発します。ユニクロはSPAで原価を抑え「この品質でこの価格」という価値ベースの訴求を実現しています。\n注意点として、価格は他の3Pと整合しなければなりません。高品質の製品を極端に低価格で売ると顧客は品質を疑います。価格はそれ自体が品質のシグナルです。`,
-  `3つ目のPはPlace、流通・チャネルです。D2C・卸小売・EC・OMOなど選択肢があります。\nチャネル選択で問うべきは3つ。顧客はどこで購買を決めるか。そのチャネルはブランドイメージと合っているか。利益率を最大化できるチャネルはどこか。\n高級時計ブランドがコンビニで販売しない理由は明快です。「どこで買えるか」がブランドの価値そのものを体現しているからです。Placeは物流の話ではなく、ブランドを表現する施策です。`,
-  `4つ目のPはPromotion、プロモーションです。広告・PR・SNS・販売促進など複数の手段があります。\nここで重要な概念がIMC（統合マーケティングコミュニケーション）です。シュルツ、タネンバウム、ラウターボーンが1993年に体系化しました。「すべての顧客接点からのメッセージを統一する」発想です。\nテレビでは革新的ブランドを打ち出しているのに、SNSではセール情報ばかり、店舗では製品を知らないスタッフ——これではブランドメッセージがバラバラになります。すべてのタッチポイントで同じ価値観・同じトーンを届けてこそ、ブランドとして記憶に残ります。`,
-  `4Pを理解したうえで、4Cへのシフトを学びましょう。\n1990年、ラウターボーンがアドバタイジング・エイジ誌で「4Pはもう古い。C-ワードに置き換えよ」と提唱しました。4Pは「企業視点」で設計されており、顧客の実感が後回しになりやすいという限界があります。\n4Cでは4Pを顧客視点で読み替えます。ProductはCustomer Solution、PriceはCost to the Customer、PlaceはConvenience、PromotionはCommunicationです。\n4Pで骨格を作り、4Cで顧客視点をチェックする——これが現代マーケティング設計の基本です。`,
-  `4Pの4要素は同じ価値提案を指し示す必要があります。これが整合性です。\n確認すべき組み合わせは4つ。製品と価格——品質と価格帯は釣り合っているか。製品と流通——ブランドポジションとチャネルは合っているか。製品とプロモーション——本当の強みを訴求しているか。価格とプロモーション——安さと品質訴求が矛盾していないか。\nユニクロは4Pが見事に整合しています。製品は高品質ベーシック、価格はSPAで実現した手頃さ、流通は大型店とECで利便性確保、プロモーションは「LifeWear」で一貫したブランド発信。4つすべてが「良いものを誰もが手軽に」を体現しています。`,
-  `実践例を見てみましょう。あるD2Cスキンケアブランドの事例です。\n当初の4Pは、天然成分スキンケアをコスト積み上げで4800円、自社ECのみ、Instagram広告のみでした。しかし購入率が低くリピートも続きませんでした。\n4Cで問い直すと問題が見えました。顧客が求めるのは「天然成分」ではなく「敏感肌の不安を解消したい」体験。送料込みの総コストが心理的障壁に。自社ECのみで試したい層の入口が狭い。一方向の広告で顧客の声を拾えていない——この4点を改善したところ、初回購入率が38%増、3ヶ月リピート率が52%増と大幅に改善しました。`,
-  `4Pと4Cの活用でよく起きる罠を3つお伝えします。\n1つ目は4Pを「項目埋め」と捉えること。戦略と施策が繋がらない表面的な設計になります。STPで定めた価値提案から逆算して設計してください。\n2つ目は4Cを「4Pの後付け翻訳」と考えること。4P設計と並行して4Cの4つの問いでチェックし、整合しない部分を修正するのが正しいやり方です。\n3つ目は整合性を確認しないこと。どれか1つの施策が他を引き倒します。設計後にProduct×Price・Product×Place・Product×Promotionの3組を必ずクロスチェックしてください。`,
-  `今日のポイントをまとめます。\nマーケティングミックスとは、企業がコントロールできる4Pを一貫した戦略のもとで組み合わせることです。Productは3層モデルでコアから設計、Priceは価値ベースを起点に、Placeはブランドと整合するチャネルを選び、PromotionはIMCで全接点を統一する——これが核心です。\nそして4Cの視点——Customer Solution・Cost to the Customer・Convenience・Communication——で常に顧客目線から設計を点検することが現代マーケティングの要です。\n実践ステップは3つ。自社の4Pを書き出す。4Cの問いで検証する。整合していない箇所を1つ改善する——ここから始めましょう。`,
-  `次回は第8回、USPと差別化戦略がテーマです。\n4Pと4Cで施策の骨格が整ったとして、次の問いは「なぜ顧客は競合ではなくあなたを選ぶのか」です。この問いに答えるのがUSP、独自の強みです。\n次回は自社の「これだけは負けない1点」を見つけ、コピーや施策に落とし込む実践法を解説します。\nチャンネル登録と高評価、ぜひよろしくお願いします。次回もお楽しみに！`,
+
+  `第3回のテーマはペルソナ設定です。ペルソナとは、ターゲット顧客を具体的な人物像として描くマーケティングの基本ツール。\nでも実は、ペルソナを一生懸命作ったのに、広告もコンテンツも全然刺さらない——という声をよく聞きます。\n今日はその原因となる3つの落とし穴と、本当に機能するペルソナの作り方をお伝えします。`,
+  `よく見るペルソナの例です。名前・年齢・職業・収入・趣味——こういった情報が整理されています。\n丁寧に作られていますが、これを見て「この人に何を・どう伝えれば刺さるか」がわかりますか？\n実はこのペルソナには、最も重要な情報が欠けています。\n「なぜ商品を買うのか」「どんな悩みを抱えているのか」——この視点がないペルソナは、残念ながら飾りで終わります。`,
+  `ペルソナはもともとソフトウェア設計の分野でアラン・クーパーが提唱し、のちにマーケティングに取り入れられました。\n定義は「実在しないが、実在しそうなリアルな顧客像」。\n目的は、チーム全員が同じ顧客を頭に描きながら意思決定できるようにすることです。\n注意点として、ペルソナはターゲットとは別物です。「30代女性」はターゲット属性。ペルソナはそれを具体的な1人の人物像に落とし込んだものです。`,
+  `1つ目の落とし穴は、実在しない顧客を想像だけで作り上げてしまうことです。\n実際のお客さんにインタビューもせず、社内の「こんな人が来てほしい」という希望が混入して、リアルとかけ離れた人物像が生まれます。\n広告の父オグルビーはこんな言葉を残しています。「消費者はバカではない。あなたの妻だ」。\n顧客を軽く見ず、徹底的にリアルを追うこと——これが第一の原則です。`,
+  `2つ目の落とし穴は、自社商品の価値をすでに理解してくれる、都合の良い人物を作ってしまうことです。\nこういうペルソナは、なぜ買わないのか・何が障壁なのかという視点がすっぽり抜けています。\n現実の顧客は、迷い・不安・比較・他の選択肢への誘惑——これらを全部乗り越えて初めて購入します。\nペルソナには、「どんな不満を持っているか」「何が邪魔をしているか」を必ず盛り込んでください。`,
+  `3つ目の落とし穴は、1つのペルソナで全てを解決しようとすることです。\n現実には、商品の使われ方は複数ありますし、特にBtoBでは調べる人と決裁する人が違う場合がほとんどです。\nHubSpotは主要ペルソナを3〜5人から始めることを推奨しています。\nそして認知獲得のためのペルソナと、購入を後押しするペルソナは別に設定するのが実践的です。`,
+  `では、本当に機能するペルソナには何が必要か。5つの問いで整理できます。\nまず①何を達成したいか。次に②何に困っているか。\n③どこで情報を集めるか——ここでInstagramなのかGoogle検索なのかが変わります。\n④購入の障壁は何か——価格なのか、不安なのか、競合比較なのか。\n最後に⑤最後の一押しは何か——たとえば「友人の口コミ」や「限定オファー」など。\nこのデータが揃って初めて、どんなメッセージを・どこで・どう伝えるかが決まります。`,
+  `ペルソナをさらに深めるのに役立つのが、クレイトン・クリステンセンが提唱した「ジョブ理論」です。\n中心的な考え方は「人は商品を雇用して、片づけたいジョブを実行する」というもの。\n有名なミルクシェイクの研究があります。朝の購買者は「甘いものが食べたい」ではなく、「長い通勤中に退屈せずに済み、腹持ちのいいもの」というジョブのためにミルクシェイクを雇用していたことがわかったんです。\nこれが属性では見えない、行動の文脈から見えるニーズです。`,
+  `ジョブ理論をペルソナに加えるとどう変わるか、比べてみましょう。\n従来の属性中心のペルソナは「35歳・会社員・健康志向」のような情報が中心です。\nジョブ理論を組み込んだペルソナは、その人の行動の文脈と背景の感情まで描き出します。\nこのペルソナを読んだ瞬間に、どんなコンテンツを作るべきか、どんな言葉を使えば刺さるかが、自然と見えてきます。`,
+  `ではどこからデータを集めるか。最も価値があるのは一次情報、つまり実際の顧客に直接聞くことです。\n既存顧客へのインタビューは5〜10名でも驚くほどのパターンが見えてきます。\n問い合わせやレビュー、SNSのコメントも宝の山です。そこには顧客の本音の言葉があります。\nインタビューでは「なぜ？」を3回繰り返す習慣が有効です。\n「なぜ購入しましたか？」→「忙しかったから」→「なぜそれが問題でしたか？」→「時間がムダに感じるから」→「なぜ時間が惜しいか？」→「成長に使いたいから」。`,
+  `今日のまとめです。ペルソナには3つの落とし穴がありました。データなしで作る・都合の良い人物にする・1つで全部解決しようとする。\n機能するペルソナには、ゴール・ペイン・情報収集行動・障壁・購入トリガーの5要素が必要です。\nクリステンセンのジョブ理論が示すように、属性より「なぜ買うか」という行動の文脈こそが本質です。\nそして何より、実際の顧客に直接話を聞くこと。なぜを3回繰り返して、表面の回答の奥にある本音を掴みましょう。`,
+  `完成したペルソナは、すべての施策判断の基準に使います。\nコンテンツを作る前に「このペルソナが読んで行動するか？」と問いかける。広告コピーを書く前に「このペルソナの言葉で書かれているか？」と確認する。\nこうすることで、チーム全員が同じ顧客を頭に描いて動けるようになります。\n注意点として、ペルソナは作ったら終わりではありません。市場の変化や新しいデータをもとに定期的にアップデートしていきましょう。`,
+  `次回は第4回、ベネフィットと特徴の違いです。高性能・高品質なのになぜ売れないのか——その謎が解けます。\nチャンネル登録と高評価をいただけると次のコンテンツ制作の励みになります。ぜひよろしくお願いします！`,
 ];
 const TOTAL_SECS = 600;
 
