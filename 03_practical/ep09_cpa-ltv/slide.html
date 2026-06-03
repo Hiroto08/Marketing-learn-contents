@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1069,6 +1069,13 @@ body {
 
 /* Minimal design helpers and type scale live in the shared base CSS — not redefined here. */
 
+/* ── SVG cohort-bar life (continuous) ── */
+@keyframes ep9-grow{0%{transform:scaleY(.18)}55%{transform:scaleY(1)}100%{transform:scaleY(1)}}
+@keyframes ep9-pulse{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.14)}}
+.ep9-bar{transform-box:fill-box;transform-origin:bottom;animation:ep9-grow 4.4s cubic-bezier(.5,0,.4,1) infinite;}
+.ep9-bar.b2{animation-delay:.25s}.ep9-bar.b3{animation-delay:.5s}.ep9-bar.b4{animation-delay:.75s}
+.ep9-pulse{transform-box:fill-box;transform-origin:center;animation:ep9-pulse 2.2s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
@@ -1145,11 +1152,28 @@ body {
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
       <div id="s5-hd" class="sh se">投資判断の黄金比</div>
-      <div id="s5-fm" class="se formula" style="margin-top:.2em;">
-        <span class="fm-var">LTV</span><span class="fm-op">÷</span>
-        <span class="fm-var" style="--c:var(--acc2);">CPA</span>
-        <span class="fm-op">&gt;</span>
-        <span class="fm-val">3</span>
+      <div id="s5-fm" class="se" style="margin-top:.2em;">
+        <svg viewBox="0 0 1000 280" style="width:min(86%,900px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <defs>
+            <linearGradient id="ep9ltv" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#0d8276"/>
+            </linearGradient>
+          </defs>
+          <!-- baseline -->
+          <line x1="80" y1="230" x2="920" y2="230" stroke="var(--line)" stroke-width="3"/>
+          <!-- CPA bar (1x) -->
+          <rect x="170" y="178" width="180" height="52" rx="12" fill="var(--acc2)"/>
+          <text x="260" y="160" text-anchor="middle" font-size="38" font-weight="900" font-family="Inter,'Noto Sans JP'" fill="var(--acc2)">1</text>
+          <text x="260" y="268" text-anchor="middle" font-size="30" font-weight="800" fill="var(--muted2)">CPA</text>
+          <!-- LTV bar (3x) with continuous grow life -->
+          <rect class="ep9-bar b4" x="650" y="74" width="180" height="156" rx="12" fill="url(#ep9ltv)"/>
+          <circle class="ep9-pulse" cx="740" cy="74" r="18" fill="none" stroke="var(--accent)" stroke-width="5"/>
+          <text x="740" y="56" text-anchor="middle" font-size="38" font-weight="900" font-family="Inter,'Noto Sans JP'" fill="var(--accent)">3</text>
+          <text x="740" y="268" text-anchor="middle" font-size="30" font-weight="800" fill="var(--muted2)">LTV</text>
+          <!-- ratio callout -->
+          <text x="500" y="128" text-anchor="middle" font-size="52" font-weight="900" font-family="Inter,'Noto Sans JP'" fill="#fff">3<tspan font-size="32" fill="var(--muted2)"> 倍</tspan></text>
+          <text x="500" y="172" text-anchor="middle" font-size="28" font-weight="800" fill="var(--accent)">LTV ÷ CPA &gt; 3</text>
+        </svg>
       </div>
       <div id="s5-tags" class="se taglist t-md" style="margin-top:.5em;">
         <span class="tag ok">&gt;3 健全</span><span class="tag">1〜3 要改善</span><span class="tag ng">&lt;1 危険</span>
@@ -1208,11 +1232,36 @@ body {
     <div class="pad-t">
       <div id="s9-hd" class="sh se">コホート分析</div>
       <div id="s9-key" class="se t-lg" style="text-align:center;">良い顧客層を<span style="color:var(--accent);">見抜く</span></div>
-      <div id="s9-map" class="se jmini t-lg" style="margin-top:.4em;">
-        <div class="jcell"><span class="jn">1月</span><span class="jv" style="color:var(--muted2);">28%</span></div>
-        <div class="jcell"><span class="jn">2月</span><span class="jv" style="color:var(--green);">35%</span></div>
-        <div class="jcell"><span class="jn">3月</span><span class="jv" style="color:var(--red);">20%</span></div>
-        <div class="jcell"><span class="jn">4月</span><span class="jv" style="color:var(--green);">40%</span></div>
+      <div id="s9-map" class="se" style="margin-top:.3em;">
+        <svg viewBox="0 0 1000 320" style="width:min(86%,900px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <defs>
+            <linearGradient id="ep9bar" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#0d8276"/>
+            </linearGradient>
+          </defs>
+          <!-- baseline -->
+          <line x1="70" y1="262" x2="940" y2="262" stroke="var(--line)" stroke-width="3"/>
+          <!-- bars (value*4.6 = height; baseline 262) -->
+          <g>
+            <rect class="ep9-bar b1" x="120" y="133" width="150" height="129" rx="10" fill="var(--blue)"/>
+            <rect class="ep9-bar b2" x="330" y="101" width="150" height="161" rx="10" fill="var(--green)"/>
+            <rect class="ep9-bar b3" x="540" y="170" width="150" height="92"  rx="10" fill="var(--red)"/>
+            <rect class="ep9-bar b4" x="750" y="78"  width="150" height="184" rx="10" fill="url(#ep9bar)"/>
+            <circle class="ep9-pulse" cx="825" cy="78" r="18" fill="none" stroke="var(--accent)" stroke-width="4"/>
+          </g>
+          <!-- value labels -->
+          <g text-anchor="middle" font-weight="900" font-family="Inter,'Noto Sans JP'">
+            <text x="195" y="116" font-size="38" fill="var(--blue)">28%</text>
+            <text x="405" y="84"  font-size="38" fill="var(--green)">35%</text>
+            <text x="615" y="153" font-size="38" fill="var(--red)">20%</text>
+            <text x="825" y="58"  font-size="38" fill="var(--accent)">40%</text>
+          </g>
+          <!-- month labels -->
+          <g text-anchor="middle" font-weight="800" fill="var(--muted2)" font-size="30">
+            <text x="195" y="302">1月</text><text x="405" y="302">2月</text>
+            <text x="615" y="302">3月</text><text x="825" y="302">4月</text>
+          </g>
+        </svg>
       </div>
       <div id="s9-note" class="se note" style="margin-top:.45em;">CPAだけで良い客を切り捨てない</div>
     </div>

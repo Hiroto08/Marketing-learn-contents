@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1069,6 +1069,12 @@ body {
 
 /* Minimal design helpers + type scale live in shared base CSS — not redefined here. */
 
+/* ── SVG positioning-map life (continuous) ── */
+@keyframes ep8pulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:.15;transform:scale(1.5)}}
+.ep8-pulse{transform-box:fill-box;transform-origin:center;animation:ep8pulse 2.2s ease-in-out infinite;}
+@keyframes ep8glow{0%,100%{opacity:1}50%{opacity:.82}}
+.ep8-self{transform-box:fill-box;transform-origin:center;animation:ep8glow 2.2s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
@@ -1143,14 +1149,37 @@ body {
   <section class="slide" id="s5">
     <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">ポジショニングとUSP</div>
-      <div id="s5-flow" class="se aflow t-md" style="margin-top:.3em;">
-        <span class="achip">USP<small>発信側の主張</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip on">ポジション<small>頭の中の場所</small></span>
+      <div id="s5-hd" class="sh se" style="margin-bottom:.1em;">ポジショニングマップ</div>
+      <div id="s5-flow" class="se" style="margin-top:.05em;">
+        <svg viewBox="0 0 1000 340" style="width:min(84%,880px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <!-- plot frame -->
+          <rect x="170" y="44" width="660" height="252" rx="16" fill="rgba(255,107,138,.05)" stroke="var(--border)" stroke-width="2"/>
+          <!-- axes -->
+          <line x1="500" y1="44"  x2="500" y2="296" stroke="var(--line)" stroke-width="2.5"/>
+          <line x1="170" y1="170" x2="830" y2="170" stroke="var(--line)" stroke-width="2.5"/>
+          <!-- axis labels (>=26) -->
+          <g text-anchor="middle" font-weight="800">
+            <text x="500" y="32"  font-size="28" fill="var(--muted2)">高価格</text>
+            <text x="500" y="326" font-size="28" fill="var(--muted2)">低価格</text>
+            <text x="146" y="179" text-anchor="end"   font-size="28" fill="var(--muted2)">機能</text>
+            <text x="854" y="179" text-anchor="start" font-size="28" fill="var(--muted2)">情緒</text>
+          </g>
+          <!-- competitor dots -->
+          <g font-weight="800" text-anchor="middle">
+            <circle cx="320" cy="108" r="32" fill="var(--surf2)" stroke="var(--blue)" stroke-width="3"/><text x="320" y="119" font-size="27" fill="var(--muted2)">A社</text>
+            <circle cx="375" cy="240" r="32" fill="var(--surf2)" stroke="var(--blue)" stroke-width="3"/><text x="375" y="251" font-size="27" fill="var(--muted2)">B社</text>
+            <circle cx="635" cy="238" r="32" fill="var(--surf2)" stroke="var(--blue)" stroke-width="3"/><text x="635" y="249" font-size="27" fill="var(--muted2)">C社</text>
+          </g>
+          <!-- our white space (upper-right: high price × emotional) -->
+          <g text-anchor="middle">
+            <circle cx="680" cy="108" r="62" fill="none" stroke="var(--accent)" stroke-width="2.5" class="ep8-pulse"/>
+            <circle cx="680" cy="108" r="44" fill="var(--accent)" stroke="#fff" stroke-width="3" class="ep8-self"/>
+            <text x="680" y="119" font-size="30" font-weight="900" fill="#fff">自社</text>
+          </g>
+        </svg>
       </div>
-      <div id="s5-key" class="se t-lg" style="text-align:center;color:var(--accent);margin-top:.55em;font-weight:800;">記憶の<span style="color:#fff;">第一位</span>を狙う</div>
-      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">人は1位しか覚えない</div>
+      <div id="s5-key" class="se t-lg" style="text-align:center;color:var(--accent);margin-top:.3em;font-weight:800;">空白地帯で<span style="color:#fff;">第一位</span>に</div>
+      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.25em;">競合のいない場所を取る</div>
     </div>
   </section>
 

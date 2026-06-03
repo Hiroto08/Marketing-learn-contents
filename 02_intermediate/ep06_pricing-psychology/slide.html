@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1069,6 +1069,12 @@ body {
 
 /* Minimal design helpers and type scale live in the shared base CSS — not redefined here. */
 
+/* ── SVG growth-bar life (continuous) ── */
+@keyframes ep6rise{0%,100%{transform:scaleY(.96)}50%{transform:scaleY(1.03)}}
+@keyframes ep6pulse{0%,100%{transform:translateY(0);opacity:.85}50%{transform:translateY(-8px);opacity:1}}
+.ep6-rise{transform-box:fill-box;animation:ep6rise 3.2s ease-in-out infinite;}
+.ep6-pulse{transform-box:fill-box;animation:ep6pulse 2s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
@@ -1249,15 +1255,37 @@ body {
     <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
     <div class="pad-t">
       <div id="s12-hd" class="sh se">実践例：オンライン講座</div>
-      <div id="s12-flow" class="se aflow t-md" style="margin-top:.3em;">
-        <span class="achip">単一 19,800円<small>CVR 0.8%</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip on">3プラン＋フレーム<small>CVR 2.3%</small></span>
+      <div id="s12-flow" class="se" style="margin-top:.2em;">
+        <svg viewBox="0 0 1000 360" style="width:min(94%,1000px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <defs>
+            <linearGradient id="ep6bar" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#c2410c"/>
+            </linearGradient>
+            <filter id="ep6glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <!-- baseline -->
+          <line x1="70" y1="292" x2="930" y2="292" stroke="var(--line)" stroke-width="3"/>
+          <!-- before bar (CVR 0.8% -> short) -->
+          <g class="ep6-rise" style="transform-origin:255px 292px;">
+            <rect x="150" y="222" width="210" height="70" rx="10" fill="var(--surf2)" stroke="var(--muted2)" stroke-width="2"/>
+          </g>
+          <text x="255" y="200" text-anchor="middle" font-size="46" font-weight="900" fill="var(--muted2)">0.8%</text>
+          <text x="255" y="330" text-anchor="middle" font-size="30" font-weight="700" fill="var(--muted2)">単一価格</text>
+          <!-- after bar (CVR 2.3% -> tall) -->
+          <g class="ep6-rise" style="transform-origin:745px 292px;">
+            <rect x="640" y="78" width="210" height="214" rx="10" fill="url(#ep6bar)" filter="url(#ep6glow)"/>
+          </g>
+          <text x="745" y="56" text-anchor="middle" font-size="52" font-weight="900" fill="var(--accent)">2.3%</text>
+          <text x="745" y="330" text-anchor="middle" font-size="30" font-weight="700" fill="#fff">3プラン＋フレーム</text>
+          <!-- up arrow + multiplier -->
+          <g class="ep6-pulse" style="transform-origin:500px 200px;">
+            <path d="M450 270 L500 160 L550 270" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M500 160 L500 258" stroke="var(--green)" stroke-width="8" stroke-linecap="round"/>
+          </g>
+          <text x="500" y="138" text-anchor="middle" font-size="46" font-weight="900" fill="var(--green)">×2.9</text>
+        </svg>
       </div>
-      <div id="s12-kpi" class="se" style="text-align:center;margin-top:.4em;">
-        <span class="t-md" style="color:var(--muted2);">中身も広告費も変えず</span>
-        <span class="bignum t-xl" style="display:block;">約2.9倍</span>
-      </div>
+      <div id="s12-kpi" class="se t-lg" style="text-align:center;margin-top:.25em;color:var(--accent);font-weight:900;">中身も広告費も変えず <span style="color:#fff;">約2.9倍</span></div>
       <div id="s12-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">見せ方だけで成果が変わる</div>
     </div>
   </section>

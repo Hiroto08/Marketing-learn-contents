@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1069,6 +1069,12 @@ body {
 
 /* Minimal design helpers live in the shared base CSS — no need to redefine. */
 
+/* ── S2 value-balance life (continuous) ── */
+@keyframes ep4-rock{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+@keyframes ep4-pulse{0%,100%{opacity:.3;transform:scale(1)}50%{opacity:.9;transform:scale(1.16)}}
+.ep4-beam{transform-box:view-box;transform-origin:500px 150px;animation:ep4-rock 3.2s ease-in-out infinite;}
+.ep4-pulse{transform-box:fill-box;transform-origin:center;animation:ep4-pulse 2.2s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
@@ -1100,15 +1106,35 @@ body {
     <div class="slide-num">02 / 15</div><div class="step-dots" id="sd2"></div>
     <div class="pad-t">
       <div id="s2-hd" class="se sh">どちらが「買いたい」？</div>
-      <div id="s2-duo" class="se duo" style="margin-top:.2em;">
-        <div class="pcard" style="border-top-color:var(--muted);">
-          <div class="ph t-lg" style="color:var(--muted2);">A：スペック型<small>5,000mAh / 65W / 185g</small></div>
-        </div>
-        <div class="pcard" style="border-top-color:var(--accent);">
-          <div class="ph t-lg" style="color:var(--accent);">B：ベネフィット型<small>夜まで充電ゼロの心配なし</small></div>
-        </div>
+      <div id="s2-duo" class="se" style="margin-top:.1em;">
+        <svg viewBox="0 35 1000 320" style="width:min(86%,900px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <defs>
+            <filter id="ep4glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <!-- base + fulcrum -->
+          <rect x="420" y="300" width="160" height="14" rx="7" fill="var(--line)"/>
+          <polygon points="500,150 462,300 538,300" fill="var(--surf2)" stroke="var(--border)" stroke-width="2"/>
+          <!-- tilting beam group (value side down) -->
+          <g class="ep4-beam">
+            <line x1="302" y1="122.2" x2="698" y2="177.8" stroke="#fff" stroke-width="9" stroke-linecap="round"/>
+            <circle cx="500" cy="150" r="11" fill="#fff"/>
+            <!-- LEFT pan: 特徴 / 機能 (lighter, up) -->
+            <line x1="302" y1="122.2" x2="302" y2="170" stroke="var(--muted)" stroke-width="3"/>
+            <ellipse cx="302" cy="186" rx="118" ry="34" fill="var(--surf)" stroke="var(--muted2)" stroke-width="3"/>
+            <text x="302" y="178" text-anchor="middle" font-size="34" font-weight="900" fill="var(--muted2)">特徴・機能</text>
+            <text x="302" y="208" text-anchor="middle" font-size="27" font-weight="700" fill="var(--muted)">仕様の説明</text>
+            <!-- RIGHT pan: ベネフィット / 価値 (heavier, down) -->
+            <line x1="698" y1="177.8" x2="698" y2="235" stroke="var(--accent)" stroke-width="3"/>
+            <ellipse cx="698" cy="252" rx="150" ry="54" fill="none" stroke="var(--acc2)" stroke-width="3" class="ep4-pulse"/>
+            <ellipse cx="698" cy="252" rx="128" ry="40" fill="var(--accent)" stroke="#fff" stroke-width="3" filter="url(#ep4glow)"/>
+            <text x="698" y="244" text-anchor="middle" font-size="36" font-weight="900" fill="#fff">ベネフィット</text>
+            <text x="698" y="278" text-anchor="middle" font-size="28" font-weight="700" fill="#fff">得られる価値</text>
+          </g>
+          <!-- verdict -->
+          <text x="838" y="338" text-anchor="middle" font-size="30" font-weight="900" fill="var(--acc2)">こちらが重い</text>
+        </svg>
       </div>
-      <div id="s2-msg" class="se hl-banner" style="margin-top:.6em;">ほぼ全員が B を選ぶ</div>
+      <div id="s2-msg" class="se hl-banner" style="margin-top:.4em;">ほぼ全員が「価値」を選ぶ</div>
     </div>
   </section>
 

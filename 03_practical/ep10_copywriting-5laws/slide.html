@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1069,6 +1069,13 @@ body {
 
 /* Minimal design helpers and type-scale live in the shared base CSS. */
 
+/* ── SVG CTR growth-bar life (continuous) ── */
+@keyframes ep10-grow{0%{transform:scaleY(.22)}55%{transform:scaleY(1)}100%{transform:scaleY(1)}}
+@keyframes ep10-rise{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(-10px);opacity:1}}
+.ep10-bar{transform-box:fill-box;transform-origin:bottom;animation:ep10-grow 4.4s cubic-bezier(.5,0,.4,1) infinite;}
+.ep10-bar.b2{animation-delay:.4s}
+.ep10-arrow{transform-box:fill-box;transform-origin:center;animation:ep10-rise 2.0s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
@@ -1100,10 +1107,29 @@ body {
     <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
     <div class="pad">
       <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">同じ商品・同じ価格<br>なのに<span style="color:#fff;">売れ方が違う</span></div>
-      <div id="s2-flow" class="se aflow t-md" style="margin-top:.4em;">
-        <span class="achip aghost">毎日飲めるサプリ<small>CTR 1.2%</small></span>
-        <span class="aarrow">→</span>
-        <span class="achip on">40代の倦怠感が変わった理由<small>CTR 3.9%</small></span>
+      <div id="s2-flow" class="se" style="margin-top:.25em;">
+        <svg viewBox="0 0 1000 250" style="width:min(82%,860px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <defs>
+            <linearGradient id="ep10ctr" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#b45309"/>
+            </linearGradient>
+          </defs>
+          <!-- baseline -->
+          <line x1="60" y1="196" x2="940" y2="196" stroke="var(--line)" stroke-width="3"/>
+          <!-- BEFORE bar (CTR 1.2%) -->
+          <rect class="ep10-bar b1" x="180" y="152" width="190" height="44" rx="12" fill="var(--muted2)"/>
+          <text x="275" y="134" text-anchor="middle" font-size="44" font-weight="900" font-family="Inter,'Noto Sans JP'" fill="var(--muted2)">1.2<tspan font-size="28">%</tspan></text>
+          <text x="275" y="238" text-anchor="middle" font-size="30" font-weight="800" fill="var(--muted2)">Before</text>
+          <!-- up arrow -->
+          <g class="ep10-arrow">
+            <path d="M500 170 L500 96" stroke="var(--green)" stroke-width="8" stroke-linecap="round"/>
+            <path d="M472 120 L500 90 L528 120" fill="none" stroke="var(--green)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+          </g>
+          <!-- AFTER bar (CTR 3.9%) -->
+          <rect class="ep10-bar b2" x="630" y="52" width="190" height="144" rx="12" fill="url(#ep10ctr)"/>
+          <text x="725" y="34" text-anchor="middle" font-size="44" font-weight="900" font-family="Inter,'Noto Sans JP'" fill="var(--accent)">3.9<tspan font-size="28">%</tspan></text>
+          <text x="725" y="238" text-anchor="middle" font-size="30" font-weight="800" fill="var(--accent)">After</text>
+        </svg>
       </div>
       <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin-top:.3em;">売上 <span class="bignum t-xl">3.2倍</span></div>
       <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">センスではなく法則</div>

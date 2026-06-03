@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1067,10 +1067,11 @@ body {
 #s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
 #s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── EP12 SVG line chart (early-stopping) — keep inner labels large ── */
-.s6-svg{display:block;margin:0 auto;width:min(78%,640px);height:auto;}
-.s6-svg .ab-lbl{font-size:30px;font-weight:900;}
-.s6-svg .ax-lbl{font-size:26px;font-weight:700;fill:var(--muted2);}
+/* ── EP12 SVG A/B trend lines ── */
+@keyframes ep12-pulse{0%,100%{opacity:.4;transform:scale(1)}50%{opacity:1;transform:scale(1.18)}}
+/* lines stay fully drawn (a looping draw-on can't sync to the slide reveal, so a
+   half-drawn line must never show); the pulsing 逆転点 marker carries the motion */
+.ep12-pulse{transform-box:fill-box;transform-origin:center;animation:ep12-pulse 2.2s ease-in-out infinite;}
 
 /* Minimal design helpers + type scale live in the shared base CSS. */
 
@@ -1163,15 +1164,32 @@ body {
     <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
     <div class="pad-t">
       <div id="s6-hd" class="sh se">失敗① 早期終了</div>
-      <svg id="s6-svg" class="se s6-svg" viewBox="0 0 640 260" role="img" aria-label="A/Bの逆転">
-        <line x1="60" y1="220" x2="620" y2="220" stroke="#3a3a4a" stroke-width="2"/>
-        <line x1="60" y1="20"  x2="60"  y2="220" stroke="#3a3a4a" stroke-width="2"/>
-        <path d="M60 150 C160 60, 220 70, 300 120 S480 175, 620 170" fill="none" stroke="var(--accent)" stroke-width="6"/>
-        <path d="M60 165 C160 175, 240 160, 320 130 S500 95, 620 100" fill="none" stroke="var(--blue)" stroke-width="6"/>
-        <line x1="180" y1="20" x2="180" y2="232" stroke="var(--red)" stroke-width="3" stroke-dasharray="8 6"/>
-        <text class="ab-lbl" x="150" y="58" fill="var(--accent)">B</text>
-        <text class="ab-lbl" x="150" y="192" fill="var(--blue)">A</text>
-        <text class="ax-lbl" x="196" y="250">早期終了で逆転</text>
+      <svg id="s6-svg" class="se" viewBox="0 0 1000 360" role="img" aria-label="A/Bの逆転"
+           style="width:min(86%,900px);height:auto;display:block;margin:0 auto;overflow:visible;">
+        <!-- grid -->
+        <g stroke="var(--surf2)" stroke-width="2">
+          <line x1="80" y1="70"  x2="940" y2="70"/>
+          <line x1="80" y1="170" x2="940" y2="170"/>
+          <line x1="80" y1="270" x2="940" y2="270"/>
+        </g>
+        <!-- axes -->
+        <line x1="80" y1="300" x2="940" y2="300" stroke="var(--line)" stroke-width="3"/>
+        <line x1="80" y1="40"  x2="80"  y2="300" stroke="var(--line)" stroke-width="3"/>
+        <!-- A: under-performer (blue) -->
+        <path class="ep12-line" style="--len:920" d="M90 250 C220 235 320 250 470 220 S780 200 930 205"
+              fill="none" stroke="var(--blue)" stroke-width="7" stroke-linecap="round"/>
+        <!-- B: winner crosses above (green) -->
+        <path class="ep12-line b2" style="--len:980" d="M90 270 C220 280 330 250 470 200 S780 90 930 80"
+              fill="none" stroke="var(--accent)" stroke-width="7" stroke-linecap="round"/>
+        <!-- crossover marker -->
+        <circle class="ep12-pulse" cx="470" cy="210" r="26" fill="none" stroke="var(--red)" stroke-width="4"/>
+        <circle cx="470" cy="210" r="11" fill="#fff"/>
+        <text x="470" y="160" text-anchor="middle" font-size="30" font-weight="900" fill="var(--red)">逆転点</text>
+        <!-- series labels -->
+        <text x="952" y="78"  font-size="34" font-weight="900" fill="var(--accent)">B 勝</text>
+        <text x="952" y="212" font-size="34" font-weight="900" fill="var(--blue)">A</text>
+        <!-- axis caption -->
+        <text x="510" y="345" text-anchor="middle" font-size="28" font-weight="700" fill="var(--muted2)">サンプル数 →</text>
       </svg>
       <div id="s6-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.35em;">決めた数に達するまで判断しない</div>
     </div>

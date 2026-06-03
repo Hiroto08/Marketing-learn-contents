@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1069,6 +1069,10 @@ body {
 
 /* Minimal design helpers + type scale live in the shared base CSS. */
 
+/* ── SVG 4P→4C mapping life (continuous flowing dashes) ── */
+@keyframes ep7flow{to{stroke-dashoffset:-190;}}
+.ep7-flow{animation:ep7flow 1.4s linear infinite;}
+
 </style>
 </head>
 <body>
@@ -1198,12 +1202,37 @@ body {
   <section class="slide" id="s9">
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se" style="margin-bottom:.3em;">4P → 4C 対応表</div>
-      <div id="s9-flow" class="se" style="display:flex;flex-direction:column;align-items:center;gap:.4em;">
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--blue);color:var(--blue);">Product</span><span class="aarrow">→</span><span class="achip on">Customer Solution</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--green);color:var(--green);">Price</span><span class="aarrow">→</span><span class="achip on">Cost to Customer</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--yellow);color:var(--yellow);">Place</span><span class="aarrow">→</span><span class="achip on">Convenience</span></div>
-        <div class="aflow t-sm"><span class="achip" style="border-color:var(--acc2);color:var(--acc2);">Promotion</span><span class="aarrow">→</span><span class="achip on">Communication</span></div>
+      <div id="s9-hd" class="sh se" style="margin-bottom:.15em;">4P → 4C 対応表</div>
+      <div id="s9-flow" class="se" style="margin-top:.1em;">
+        <svg viewBox="0 0 1000 350" style="width:min(88%,940px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <defs>
+            <marker id="ep7ar" markerWidth="9" markerHeight="9" refX="6" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9 Z" fill="var(--accent)"/></marker>
+          </defs>
+          <!-- column headers -->
+          <text x="170" y="30" text-anchor="middle" font-size="28" font-weight="900" fill="var(--muted2)">4P（企業視点）</text>
+          <text x="830" y="30" text-anchor="middle" font-size="28" font-weight="900" fill="var(--accent)">4C（顧客視点）</text>
+          <!-- flowing connectors (drawn first, behind nodes) -->
+          <g fill="none" stroke="var(--accent)" stroke-width="4" stroke-dasharray="10 9" marker-end="url(#ep7ar)" class="ep7-flow">
+            <line x1="320" y1="83"  x2="600" y2="83"/>
+            <line x1="320" y1="156" x2="600" y2="156"/>
+            <line x1="320" y1="229" x2="600" y2="229"/>
+            <line x1="320" y1="302" x2="600" y2="302"/>
+          </g>
+          <!-- left nodes (4P) -->
+          <g font-weight="800" text-anchor="middle">
+            <rect x="40" y="59"  width="280" height="48" rx="13" fill="var(--surf)" stroke="var(--blue)"   stroke-width="3"/><text x="180" y="91"  font-size="29" fill="var(--blue)">Product</text>
+            <rect x="40" y="132" width="280" height="48" rx="13" fill="var(--surf)" stroke="var(--green)"  stroke-width="3"/><text x="180" y="164" font-size="29" fill="var(--green)">Price</text>
+            <rect x="40" y="205" width="280" height="48" rx="13" fill="var(--surf)" stroke="var(--yellow)" stroke-width="3"/><text x="180" y="237" font-size="29" fill="var(--yellow)">Place</text>
+            <rect x="40" y="278" width="280" height="48" rx="13" fill="var(--surf)" stroke="var(--acc2)"  stroke-width="3"/><text x="180" y="310" font-size="29" fill="var(--acc2)">Promotion</text>
+          </g>
+          <!-- right nodes (4C) -->
+          <g font-weight="900" text-anchor="middle">
+            <rect x="620" y="59"  width="340" height="48" rx="13" fill="var(--accent)" stroke="#fff" stroke-width="2"/><text x="790" y="91"  font-size="27" fill="#fff">Customer Solution</text>
+            <rect x="620" y="132" width="340" height="48" rx="13" fill="var(--accent)" stroke="#fff" stroke-width="2"/><text x="790" y="164" font-size="27" fill="#fff">Cost to Customer</text>
+            <rect x="620" y="205" width="340" height="48" rx="13" fill="var(--accent)" stroke="#fff" stroke-width="2"/><text x="790" y="237" font-size="27" fill="#fff">Convenience</text>
+            <rect x="620" y="278" width="340" height="48" rx="13" fill="var(--accent)" stroke="#fff" stroke-width="2"/><text x="790" y="310" font-size="27" fill="#fff">Communication</text>
+          </g>
+        </svg>
       </div>
       <div id="s9-note" class="se note" style="margin-top:.5em;">顧客視点で設計されているか？</div>
     </div>

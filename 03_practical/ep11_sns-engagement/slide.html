@@ -138,9 +138,9 @@ body {
    SHARED LAYOUT HELPERS
 ================================================================ */
 /* generous whitespace + bottom safe-zone (keep important info out of lower ~22% =
-   YouTube seekbar / mobile UI). justify-content centers content in the upper region. */
-.pad   { padding:7% 8% 22%;   position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.6em; }
-.pad-t { padding:6.5% 8% 22%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.55em; }
+   YouTube seekbar / mobile UI). justify-content centers content in the available region. */
+.pad   { padding:8.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.7em; }
+.pad-t { padding:7.5% 8% 14%; position:relative; z-index:1; display:flex; flex-direction:column; height:100%; gap:.65em; }
 
 /* section header */
 .sh {
@@ -1070,6 +1070,12 @@ body {
 /* Minimal design helpers (.aflow/.tag/.duo/.pcard/.jmini/.funnel/.loop/.note/.bignum)
    live in the shared base CSS — no need to redefine here. */
 
+/* ── SVG engagement gauge life (continuous needle sway) ── */
+@keyframes ep11-needle{0%,100%{transform:rotate(48deg)}50%{transform:rotate(72deg)}}
+@keyframes ep11-pulse{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.15)}}
+.ep11-needle{transform-box:view-box;transform-origin:500px 250px;animation:ep11-needle 3.2s ease-in-out infinite;}
+.ep11-pulse{transform-box:fill-box;transform-origin:center;animation:ep11-pulse 2.2s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
@@ -1123,9 +1129,25 @@ body {
       <div id="s3-key" class="se t-md" style="text-align:center;">
         <span style="color:var(--accent);">いいね＋コメント＋シェア＋保存</span><br>÷ リーチ数 × 100
       </div>
-      <div id="s3-kpi" class="se" style="text-align:center;margin-top:.5em;">
-        <span class="t-sm">全業種の目安</span>
-        <span class="bignum t-xl" style="display:block;">1%↑良好 / 3%↑優秀</span>
+      <div id="s3-kpi" class="se" style="margin-top:.3em;">
+        <svg viewBox="0 0 1000 300" style="width:min(76%,780px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <!-- gauge track segments (semicircle r=200, center 500,250) -->
+          <g fill="none" stroke-width="40" stroke-linecap="round">
+            <path d="M300 250 A200 200 0 0 1 367 101" stroke="var(--red)"/>
+            <path d="M367 101 A200 200 0 0 1 633 101" stroke="var(--yellow)"/>
+            <path d="M633 101 A200 200 0 0 1 700 250" stroke="var(--green)"/>
+          </g>
+          <!-- needle pointing into 優秀 zone (continuous sway) -->
+          <g class="ep11-needle">
+            <line x1="500" y1="250" x2="500" y2="80" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+          </g>
+          <circle class="ep11-pulse" cx="500" cy="250" r="26" fill="none" stroke="var(--accent)" stroke-width="5"/>
+          <circle cx="500" cy="250" r="16" fill="#fff"/>
+          <!-- zone labels -->
+          <text x="300" y="295" text-anchor="middle" font-size="28" font-weight="800" fill="var(--red)">低</text>
+          <text x="500" y="60"  text-anchor="middle" font-size="30" font-weight="800" fill="var(--yellow)">1%↑良好</text>
+          <text x="700" y="295" text-anchor="middle" font-size="30" font-weight="900" fill="var(--green)">3%↑優秀</text>
+        </svg>
       </div>
       <div id="s3-note" class="se note" style="margin-top:.4em;">まず直近10投稿で計算</div>
     </div>
