@@ -1070,6 +1070,12 @@ body {
 /* Minimal design helpers (.aflow/.tag/.duo/.pcard/.jmini/.funnel/.loop/.note/.bignum)
    live in the shared base CSS — no need to redefine here. */
 
+/* ── SVG journey-map life (continuous) ── */
+@keyframes jr-travel{0%{offset-distance:0%}100%{offset-distance:100%}}
+@keyframes jr-pulse{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.16)}}
+.jr-dot{animation:jr-travel 3.6s cubic-bezier(.5,0,.5,1) infinite;}
+.jr-pulse{transform-box:fill-box;transform-origin:center;animation:jr-pulse 2.2s ease-in-out infinite;}
+
 </style>
 </head>
 <body>
@@ -1213,12 +1219,37 @@ body {
     <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
     <div class="pad-t">
       <div id="s9-hd" class="sh se">ジャーニーマップで自己採点</div>
-      <div id="s9-map" class="se jmini t-lg" style="margin-top:.3em;">
-        <div class="jcell"><span class="jn">Aware</span><span class="jv" style="color:var(--blue);">○</span></div>
-        <div class="jcell"><span class="jn">Appeal</span><span class="jv" style="color:var(--yellow);">○</span></div>
-        <div class="jcell"><span class="jn">Ask</span><span class="jv" style="color:var(--green);">◎</span></div>
-        <div class="jcell"><span class="jn">Act</span><span class="jv" style="color:var(--acc2);">△</span></div>
-        <div class="jcell"><span class="jn">Advocate</span><span class="jv" style="color:var(--red);">×</span></div>
+      <div id="s9-map" class="se" style="margin-top:.2em;">
+        <svg viewBox="0 0 1000 340" style="width:min(94%,1000px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <defs>
+            <linearGradient id="ep5jr" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="var(--blue)"/><stop offset=".5" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--red)"/>
+            </linearGradient>
+            <filter id="ep5glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+          </defs>
+          <path d="M90 215 C175 215 205 110 290 110 S425 205 500 205 S645 120 720 120 S840 215 910 215"
+                fill="none" stroke="url(#ep5jr)" stroke-width="7" stroke-linecap="round"/>
+          <g text-anchor="middle" font-weight="900">
+            <circle cx="90" cy="215" r="28" fill="var(--bg2)" stroke="var(--blue)" stroke-width="5"/>
+            <text x="90" y="229" font-size="40" fill="var(--blue)">○</text>
+            <text x="90" y="288" font-size="30" fill="var(--muted2)">Aware</text>
+            <circle cx="290" cy="110" r="28" fill="var(--bg2)" stroke="var(--yellow)" stroke-width="5"/>
+            <text x="290" y="124" font-size="40" fill="var(--yellow)">○</text>
+            <text x="290" y="66" font-size="30" fill="var(--muted2)">Appeal</text>
+            <circle cx="500" cy="205" r="28" fill="var(--bg2)" stroke="var(--green)" stroke-width="5"/>
+            <text x="500" y="219" font-size="40" fill="var(--green)">◎</text>
+            <text x="500" y="278" font-size="30" fill="var(--muted2)">Ask</text>
+            <circle cx="720" cy="120" r="28" fill="var(--bg2)" stroke="var(--acc2)" stroke-width="5"/>
+            <text x="720" y="134" font-size="40" fill="var(--acc2)">△</text>
+            <text x="720" y="76" font-size="30" fill="var(--muted2)">Act</text>
+            <circle cx="910" cy="215" r="40" fill="none" stroke="var(--red)" stroke-width="3" class="jr-pulse"/>
+            <circle cx="910" cy="215" r="28" fill="var(--red)" stroke="#fff" stroke-width="3" filter="url(#ep5glow)"/>
+            <text x="910" y="229" font-size="40" fill="#fff">×</text>
+            <text x="910" y="288" font-size="30" fill="#fff">Advocate</text>
+          </g>
+          <circle r="11" fill="#fff" filter="url(#ep5glow)" class="jr-dot"
+                  style="offset-path:path('M90 215 C175 215 205 110 290 110 S425 205 500 205 S645 120 720 120 S840 215 910 215');"/>
+        </svg>
       </div>
       <div id="s9-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">薄いステージを直す</div>
     </div>
