@@ -1135,10 +1135,26 @@ body {
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
       <div id="s3-hd" class="sh se">3C分析とは<span style="color:var(--muted2);font-weight:600;">（大前研一・1982）</span></div>
-      <div id="s3-venn" class="se venn3 t-md" style="margin-top:.2em;">
-        <div class="vc vc1">Customer<small>顧客・市場</small></div>
-        <div class="vc vc2">Company<small>自社</small></div>
-        <div class="vc vc3">Competitor<small>競合</small></div>
+      <div id="s3-venn" class="se" style="margin-top:.2em;text-align:center;">
+        <svg viewBox="0 0 1000 400" style="width:min(88%,780px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <!-- Company (bottom-left, blue) -->
+          <circle cx="408" cy="285" r="135" fill="rgba(96,165,250,.13)" stroke="rgba(96,165,250,.6)" stroke-width="2.5"/>
+          <!-- Competitor (bottom-right, green) -->
+          <circle cx="592" cy="285" r="135" fill="rgba(74,222,128,.13)" stroke="rgba(74,222,128,.6)" stroke-width="2.5"/>
+          <!-- Customer (top-center, accent) -->
+          <circle cx="500" cy="138" r="135" fill="rgba(124,111,255,.15)" stroke="rgba(124,111,255,.65)" stroke-width="2.5"/>
+          <!-- Center intersection -->
+          <text x="500" y="230" text-anchor="middle" font-size="22" font-weight="700" fill="rgba(255,255,255,.45)">戦略の条件</text>
+          <!-- Customer label — top (outside overlap) -->
+          <text x="500" y="24" text-anchor="middle" font-size="34" font-weight="900" fill="rgb(124,111,255)">Customer</text>
+          <text x="500" y="56" text-anchor="middle" font-size="26" font-weight="600" fill="#8b9ab0">顧客・市場</text>
+          <!-- Company label — bottom-left (outside overlap) -->
+          <text x="235" y="352" text-anchor="middle" font-size="34" font-weight="900" fill="rgb(96,165,250)">Company</text>
+          <text x="235" y="384" text-anchor="middle" font-size="26" font-weight="600" fill="#8b9ab0">自社</text>
+          <!-- Competitor label — bottom-right (outside overlap) -->
+          <text x="765" y="352" text-anchor="middle" font-size="34" font-weight="900" fill="rgb(74,222,128)">Competitor</text>
+          <text x="765" y="384" text-anchor="middle" font-size="26" font-weight="600" fill="#8b9ab0">競合</text>
+        </svg>
       </div>
       <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">3つの視点で戦略の条件を見極める</div>
     </div>
