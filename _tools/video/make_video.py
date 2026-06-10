@@ -12,7 +12,7 @@ Usage:
 Options:
   --out DIR           Output directory  (default: ./video_out)
   --speaker INT       VOICEVOX speaker ID (default: 11 = 玄野武宏 ノーマル)
-  --speed FLOAT       TTS speed scale  (default: 1.0)
+  --speed FLOAT       TTS speed scale  (default: 1.1)
   --lead FLOAT        Animation fires this many seconds before narration (default: 0.7)
   --step-gap FLOAT    Extra gap between consecutive steps in a group (default: 0.35)
   --intro FLOAT       Hold before first animation per slide (default: 0.6)
@@ -56,7 +56,7 @@ def parse_args():
     p.add_argument("--out",          default="video_out")
     p.add_argument("--speaker",      type=int,   default=11,
                    help="VOICEVOX speaker ID (11=玄野武宏 ノーマル)")
-    p.add_argument("--speed",        type=float, default=1.0)
+    p.add_argument("--speed",        type=float, default=1.1)
     p.add_argument("--lead",         type=float, default=0.7,
                    help="Seconds animations fire before narration")
     p.add_argument("--step-gap",     type=float, default=0.35, dest="step_gap",
