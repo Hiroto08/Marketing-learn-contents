@@ -1067,14 +1067,7 @@ body {
 #s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
 #s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* ── EP02 specific: 3C venn + positioning map ── */
-.venn3{position:relative;width:min(58cqw,560px);height:min(34cqw,330px);margin:0 auto;}
-.venn3 .vc{position:absolute;width:50%;aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border:2px solid;font-weight:800;}
-.venn3 .vc small{display:block;font-weight:600;color:var(--muted2);margin-top:.15em;}
-.venn3 .vc1{top:0;left:25%;background:rgba(124,111,255,.16);border-color:rgba(124,111,255,.6);color:var(--accent);}
-.venn3 .vc2{bottom:0;left:2%;background:rgba(96,165,250,.14);border-color:rgba(96,165,250,.55);color:var(--blue);}
-.venn3 .vc3{bottom:0;right:2%;background:rgba(74,222,128,.14);border-color:rgba(74,222,128,.55);color:var(--green);}
-.venn3 .vksf{position:absolute;top:46%;left:50%;transform:translate(-50%,-50%);background:var(--accent);color:#fff;font-weight:900;border-radius:10px;padding:.25em .7em;box-shadow:0 0 22px var(--glow-acc);z-index:3;}
+/* ── EP02 specific: positioning map ── */
 
 .pmap{position:relative;width:min(56cqw,540px);height:min(34cqw,330px);margin:0 auto;border:1px solid var(--line);border-radius:12px;background:var(--surf);}
 .pmap .ax{position:absolute;color:var(--muted2);font-weight:700;}
@@ -1135,10 +1128,22 @@ body {
     <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
       <div id="s3-hd" class="sh se">3C分析とは<span style="color:var(--muted2);font-weight:600;">（大前研一・1982）</span></div>
-      <div id="s3-venn" class="se venn3 t-md" style="margin-top:.2em;">
-        <div class="vc vc1">Customer<small>顧客・市場</small></div>
-        <div class="vc vc2">Company<small>自社</small></div>
-        <div class="vc vc3">Competitor<small>競合</small></div>
+      <div id="s3-venn" class="se" style="margin-top:.2em;">
+        <svg viewBox="0 0 560 340" style="display:block;width:min(58cqw,560px);max-width:560px;margin:0 auto;" role="img" aria-label="3C分析のベン図">
+          <g stroke-width="2">
+            <circle cx="280" cy="118" r="105" fill="rgba(124,111,255,.16)" stroke="rgba(124,111,255,.65)"/>
+            <circle cx="216" cy="220" r="105" fill="rgba(96,165,250,.14)"  stroke="rgba(96,165,250,.6)"/>
+            <circle cx="344" cy="220" r="105" fill="rgba(74,222,128,.14)"  stroke="rgba(74,222,128,.6)"/>
+          </g>
+          <text x="280" y="76"  text-anchor="middle" font-size="22" font-weight="800" fill="#9d92ff">Customer</text>
+          <text x="280" y="98"  text-anchor="middle" font-size="14" font-weight="600" fill="#8b87a8">顧客・市場</text>
+          <text x="168" y="256" text-anchor="middle" font-size="22" font-weight="800" fill="#60a5fa">Company</text>
+          <text x="168" y="278" text-anchor="middle" font-size="14" font-weight="600" fill="#8b87a8">自社</text>
+          <text x="392" y="256" text-anchor="middle" font-size="22" font-weight="800" fill="#4ade80">Competitor</text>
+          <text x="392" y="278" text-anchor="middle" font-size="14" font-weight="600" fill="#8b87a8">競合</text>
+          <rect x="234" y="172" width="92" height="32" rx="9" fill="#7c6fff"/>
+          <text x="280" y="194" text-anchor="middle" font-size="15" font-weight="900" fill="#fff">チャンス</text>
+        </svg>
       </div>
       <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">3つの視点で戦略の条件を見極める</div>
     </div>
