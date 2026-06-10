@@ -365,21 +365,19 @@ def build_schedule(sd, audio_durs, para_durs_list, lead, step_gap,
             # Title slide: shown fully from the first frame (no step animations)
             pass
         elif S > 0:
-            para_groups = [[] for _ in range(P)]
-            for j, gi in enumerate(gsteps):
-                para_groups[min(P - 1, math.floor(j * P / S))].append(gi)
+            # Main content (all but the last step) appears right at slide
+            # start so paragraph 1 narrates over a fully visible slide;
+            # the final element (summary/note) appears just before
+            # paragraph 2 begins.
+            for m, gi in enumerate(gsteps[:-1]):
+                anim_events.append(AnimEvent(rel_t=step_gap * m, step_idx=gi))
 
-            for k, group in enumerate(para_groups):
-                if not group:
-                    continue
-                # All anims of this group finish firing `lead` seconds
-                # before the paragraph's narration starts
-                n = len(group)
-                base = narration_start + para_start[k] - lead
-                for m, gi in enumerate(group):
-                    anim_events.append(AnimEvent(
-                        rel_t=max(0.0, base - step_gap * (n - 1 - m)),
-                        step_idx=gi))
+            if S == 1:
+                last_t = 0.0
+            else:
+                p2 = para_start[1] if P >= 2 else audio_dur * 0.3
+                last_t = max(narration_start + p2 - lead, step_gap * (S - 1))
+            anim_events.append(AnimEvent(rel_t=last_t, step_idx=gsteps[-1]))
 
         tail = final_outro if si == meta_count - 1 else outro
         schedules.append(SlideSchedule(
