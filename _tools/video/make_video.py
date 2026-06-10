@@ -13,7 +13,8 @@ Options:
   --out DIR           Output directory  (default: ./video_out)
   --speaker INT       VOICEVOX speaker ID (default: 11 = 玄野武宏 ノーマル)
   --speed FLOAT       TTS speed scale  (default: 1.1)
-  --lead FLOAT        Animation fires this many seconds before narration (default: 0.7)
+  --lead FLOAT        Animations finish this many seconds before the paragraph
+                      narration starts (default: 1.0)
   --step-gap FLOAT    Extra gap between consecutive steps in a group (default: 0.35)
   --intro FLOAT       Hold before first animation per slide (default: 0.6)
   --outro FLOAT       Tail silence after narration ends per slide (default: 1.0)
@@ -57,8 +58,8 @@ def parse_args():
     p.add_argument("--speaker",      type=int,   default=11,
                    help="VOICEVOX speaker ID (11=玄野武宏 ノーマル)")
     p.add_argument("--speed",        type=float, default=1.1)
-    p.add_argument("--lead",         type=float, default=0.7,
-                   help="Seconds animations fire before narration")
+    p.add_argument("--lead",         type=float, default=1.0,
+                   help="Seconds animations finish firing before narration")
     p.add_argument("--step-gap",     type=float, default=0.35, dest="step_gap",
                    help="Gap between consecutive steps (s)")
     p.add_argument("--intro",        type=float, default=0.6,
@@ -259,15 +260,21 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
     Splits at \\n → paragraphs, then at 。！？ → sentences.
     Each sentence is synthesized individually (sentence-level cache).
     Sentences are joined with sent_gap silence; paragraphs with para_gap.
+
+    Returns per-paragraph audio durations (gaps within a paragraph included,
+    para_gap between paragraphs excluded) and writes them to <out_wav>.json
+    so the animation schedule can align to real paragraph starts.
     """
     os.makedirs(cache_dir, exist_ok=True)
     tmp = tempfile.mkdtemp(prefix="narr_")
     try:
         paragraphs = split_paragraphs(narration_text)
         parts = []
+        para_durs = []
 
         for pi, para in enumerate(paragraphs):
             sentences = split_sentences(para) or [para]
+            p_dur = 0.0
             for si, sent in enumerate(sentences):
                 clean = clean_for_tts(sent)
                 if not clean:
@@ -278,6 +285,7 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
                 if not os.path.exists(cached):
                     _tts_sentence(sent, cached, speaker, speed, voicevox_url)
                 parts.append(cached)
+                p_dur += get_duration(cached)
 
                 is_last_sent = (si == len(sentences) - 1)
                 is_last_para = (pi == len(paragraphs) - 1)
@@ -291,11 +299,17 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
                     g = os.path.join(tmp, f'sent{pi}_{si}.wav')
                     _make_silence(g, sent_gap)
                     parts.append(g)
+                    p_dur += sent_gap
+            para_durs.append(p_dur)
 
         if parts:
             _concat_wavs(parts, out_wav)
         else:
             _make_silence(out_wav, 1.0)
+
+        with open(out_wav + '.json', 'w') as f:
+            json.dump({'para_durs': para_durs}, f)
+        return para_durs
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
 
@@ -319,7 +333,8 @@ class SlideSchedule:
     total_dur: float
 
 
-def build_schedule(sd, audio_durs, lead, step_gap, intro, outro, final_outro):
+def build_schedule(sd, audio_durs, para_durs_list, lead, step_gap,
+                   intro, outro, final_outro, para_gap):
     meta_count = len(sd.meta)
     narr_count = len(sd.narrations)
 
@@ -333,9 +348,15 @@ def build_schedule(sd, audio_durs, lead, step_gap, intro, outro, final_outro):
         ni = min(si, narr_count - 1)
         audio_dur = audio_durs[ni] if ni < len(audio_durs) else 0.0
         narr_text = sd.narrations[ni] if ni < narr_count else ""
+        durs = para_durs_list[ni] if ni < len(para_durs_list) else []
         gsteps = slide_steps[si]
         S = len(gsteps)
-        P = max(1, len(split_paragraphs(narr_text)))
+        P = max(1, len(durs) or len(split_paragraphs(narr_text)))
+
+        # Real start time of each paragraph within the narration audio
+        para_start = [sum(durs[:k]) + k * para_gap if k < len(durs)
+                      else audio_dur * k / P
+                      for k in range(P)]
 
         narration_start = intro
         anim_events = []
@@ -351,10 +372,13 @@ def build_schedule(sd, audio_durs, lead, step_gap, intro, outro, final_outro):
             for k, group in enumerate(para_groups):
                 if not group:
                     continue
-                fire_base = narration_start + audio_dur * k / P - lead
+                # All anims of this group finish firing `lead` seconds
+                # before the paragraph's narration starts
+                n = len(group)
+                base = narration_start + para_start[k] - lead
                 for m, gi in enumerate(group):
                     anim_events.append(AnimEvent(
-                        rel_t=max(0.0, fire_base + step_gap * m),
+                        rel_t=max(0.0, base - step_gap * (n - 1 - m)),
                         step_idx=gi))
 
         tail = final_outro if si == meta_count - 1 else outro
@@ -523,16 +547,20 @@ class VideoBuilder:
                      "  Start: ./run --host 127.0.0.1 --port 50021")
 
         self.audio_durs = []
+        self.para_durs = []
         for ni, narr in enumerate(self.sd.narrations):
             wav = os.path.join(self.audio_dir, f'narr_{ni:02d}.wav')
+            sidecar = wav + '.json'
             tag = f"[{ni+1:02d}/{len(self.sd.narrations)}]"
-            if os.path.exists(wav):
+            if os.path.exists(wav) and os.path.exists(sidecar):
                 dur = get_duration(wav)
+                with open(sidecar) as f:
+                    durs = json.load(f)['para_durs']
                 print(f"  {tag} cached  {dur:.1f}s")
             else:
                 print(f"  {tag} ...", end='', flush=True)
                 t0 = time.time()
-                gen_narration_audio(
+                durs = gen_narration_audio(
                     narration_text=narr, out_wav=wav,
                     cache_dir=self.tts_cache,
                     speaker=a.speaker, speed=a.speed,
@@ -541,16 +569,17 @@ class VideoBuilder:
                 dur = get_duration(wav)
                 print(f" {dur:.1f}s  ({time.time()-t0:.0f}s)")
             self.audio_durs.append(dur)
+            self.para_durs.append(durs)
 
         print(f"\n  Total: {sum(self.audio_durs)/60:.1f} min")
 
     def build_schedule(self):
         a = self.a
         self.schedules = build_schedule(
-            self.sd, self.audio_durs,
+            self.sd, self.audio_durs, self.para_durs,
             lead=a.lead, step_gap=a.step_gap,
             intro=a.intro, outro=a.outro,
-            final_outro=a.final_outro)
+            final_outro=a.final_outro, para_gap=a.para_gap)
         print("\nSchedule:")
         for sc in self.schedules:
             print(f"  S{sc.si+1:02d} ({self.sd.meta[sc.si].id}):  "
