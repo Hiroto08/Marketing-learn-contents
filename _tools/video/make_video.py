@@ -16,7 +16,8 @@ Options:
   --lead FLOAT        Animation fires this many seconds before narration (default: 0.7)
   --step-gap FLOAT    Extra gap between consecutive steps in a group (default: 0.35)
   --intro FLOAT       Hold before first animation per slide (default: 0.6)
-  --outro FLOAT       Tail silence after last narration ends (default: 1.0)
+  --outro FLOAT       Tail silence after narration ends per slide (default: 1.0)
+  --final-outro FLOAT Tail hold after the very last narration ends (default: 3.0)
   --sent-gap FLOAT    Silence inserted between sentences (。！？) (default: 0.28)
   --para-gap FLOAT    Silence inserted between paragraphs (\\n) (default: 0.45)
   --slide INT         Process only this slide index (0-based); repeat to specify multiple
@@ -64,6 +65,8 @@ def parse_args():
                    help="Hold before first step (s)")
     p.add_argument("--outro",        type=float, default=1.0,
                    help="Tail silence after narration (s)")
+    p.add_argument("--final-outro",  type=float, default=3.0, dest="final_outro",
+                   help="Tail hold after the last slide's narration (s)")
     p.add_argument("--sent-gap",     type=float, default=0.28, dest="sent_gap",
                    help="Breath pause between sentences (。！？) (s)")
     p.add_argument("--para-gap",     type=float, default=0.45, dest="para_gap",
@@ -316,7 +319,7 @@ class SlideSchedule:
     total_dur: float
 
 
-def build_schedule(sd, audio_durs, lead, step_gap, intro, outro):
+def build_schedule(sd, audio_durs, lead, step_gap, intro, outro, final_outro):
     meta_count = len(sd.meta)
     narr_count = len(sd.narrations)
 
@@ -351,12 +354,13 @@ def build_schedule(sd, audio_durs, lead, step_gap, intro, outro):
                         rel_t=max(0.0, fire_base + step_gap * m),
                         step_idx=gi))
 
+        tail = final_outro if si == meta_count - 1 else outro
         schedules.append(SlideSchedule(
             si=si,
             narration_start=narration_start,
             anim_events=sorted(anim_events, key=lambda e: e.rel_t),
             audio_dur=audio_dur,
-            total_dur=narration_start + audio_dur + outro,
+            total_dur=narration_start + audio_dur + tail,
         ))
     return schedules
 
@@ -532,7 +536,8 @@ class VideoBuilder:
         self.schedules = build_schedule(
             self.sd, self.audio_durs,
             lead=a.lead, step_gap=a.step_gap,
-            intro=a.intro, outro=a.outro)
+            intro=a.intro, outro=a.outro,
+            final_outro=a.final_outro)
         print("\nSchedule:")
         for sc in self.schedules:
             print(f"  S{sc.si+1:02d} ({self.sd.meta[sc.si].id}):  "
@@ -555,8 +560,9 @@ class VideoBuilder:
             intro_w = os.path.join(self.work, f'intro_{sc.si:02d}.wav')
             outro_w = os.path.join(self.work, f'outro_{sc.si:02d}.wav')
             full_w  = os.path.join(self.work, f'full_{sc.si:02d}.wav')
+            tail = a.final_outro if sc.si == len(self.schedules) - 1 else a.outro
             _make_silence(intro_w, a.intro)
-            _make_silence(outro_w, a.outro)
+            _make_silence(outro_w, tail)
             _concat_wavs([intro_w, narr_wav, outro_w], full_w)
 
             out_mp4 = os.path.join(self.video_dir, f'slide_{sc.si:02d}.mp4')
