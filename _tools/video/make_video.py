@@ -340,7 +340,10 @@ def build_schedule(sd, audio_durs, lead, step_gap, intro, outro, final_outro):
         narration_start = intro
         anim_events = []
 
-        if S > 0:
+        if si == 0:
+            # Title slide: shown fully from the first frame (no step animations)
+            pass
+        elif S > 0:
             para_groups = [[] for _ in range(P)]
             for j, gi in enumerate(gsteps):
                 para_groups[min(P - 1, math.floor(j * P / S))].append(gi)
@@ -418,6 +421,13 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
             const sm = SLIDES_META[si];
             if (sm) {{ const el = document.getElementById(sm.id); if (el) el.style.display = 'flex'; }}
             document.querySelectorAll('[class*="rv-"]').forEach(el => {{ el.style.opacity = '0'; }});
+            if (si === 0) {{
+                // Title slide: reveal every element instantly in its final state
+                STEPS.filter(s => s.si === 0).forEach(s => (s.ids || []).forEach(id => {{
+                    const el = document.getElementById(id);
+                    if (el) {{ el.style.opacity = '1'; el.style.transform = 'none'; }}
+                }}));
+            }}
         }}""")
 
         time.sleep(0.3)
@@ -571,8 +581,8 @@ class VideoBuilder:
             print(f"  {sc.total_dur:.1f}s ✓")
 
     def concat(self):
-        only = set(self.a.only_slides) if self.a.only_slides else None
-        slides = [sc.si for sc in self.schedules if only is None or sc.si in only]
+        # Always assemble every recorded slide — --slide limits re-recording only
+        slides = [sc.si for sc in self.schedules]
 
         list_file = os.path.join(self.work, 'concat.txt')
         with open(list_file, 'w') as f:
