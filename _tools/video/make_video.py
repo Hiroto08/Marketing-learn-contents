@@ -308,10 +308,18 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
             _make_silence(out_wav, 1.0)
 
         with open(out_wav + '.json', 'w') as f:
-            json.dump({'para_durs': para_durs}, f)
+            json.dump({'para_durs': para_durs,
+                       'hash': _narr_hash(narration_text, speaker, speed,
+                                          sent_gap, para_gap)}, f)
         return para_durs
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
+
+
+def _narr_hash(text, speaker, speed, sent_gap, para_gap) -> str:
+    return hashlib.md5(
+        f'{text}|{speaker}|{speed:.3f}|{sent_gap:.3f}|{para_gap:.3f}'.encode()
+    ).hexdigest()
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -550,10 +558,14 @@ class VideoBuilder:
             wav = os.path.join(self.audio_dir, f'narr_{ni:02d}.wav')
             sidecar = wav + '.json'
             tag = f"[{ni+1:02d}/{len(self.sd.narrations)}]"
+            want = _narr_hash(narr, a.speaker, a.speed, a.sent_gap, a.para_gap)
+            meta = None
             if os.path.exists(wav) and os.path.exists(sidecar):
-                dur = get_duration(wav)
                 with open(sidecar) as f:
-                    durs = json.load(f)['para_durs']
+                    meta = json.load(f)
+            if meta is not None and meta.get('hash') == want:
+                dur = get_duration(wav)
+                durs = meta['para_durs']
                 print(f"  {tag} cached  {dur:.1f}s")
             else:
                 print(f"  {tag} ...", end='', flush=True)
