@@ -1,352 +1,600 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
-make_video.py — スライドHTML → 合成音声付き動画ジェネレーター
+make_video.py — Generalized slide-to-video builder for Marketing-learn-contents.
 
-このリポジトリの slide.html（共通エンジン: NARRATIONS / STEPS / SLIDES_META /
-advanceStep / resetSlideElements）を読み込み、VOICEVOX でナレーションを合成し、
-1スライドずつ Playwright で実時間録画して ffmpeg で結合する。
+Reads a slide.html that exports NARRATIONS / STEPS / SLIDES_META / TOTAL_SECS,
+generates VOICEVOX narration audio (with natural breath pauses), records each slide
+via Playwright, then assembles a final MP4.
 
-設計のポイント:
-  - スライド単位で「録画 → 音声結合」するため、ズレが蓄積しない
-  - 各アニメーションステップは対応するナレーション段落の lead 秒前に発火
-    （話題に入る直前に図が動く）
-  - TTS はテキストの md5 でキャッシュされ、再実行時は変更段落のみ再合成
+Usage:
+  python3 make_video.py <slide.html> [options]
 
-前提:
-  - VOICEVOX ENGINE が起動していること（--voicevox-url、既定 127.0.0.1:50021）
-  - ffmpeg / ffprobe が PATH にあること
-  - playwright (python) と Chromium バイナリ（--chromium で指定可）
-
-使い方:
-  python3 make_video.py --slide path/to/slide.html --out episode.mp4
-  python3 make_video.py --slide ... --out ... --slides 2 5   # 一部だけ再録画
-  python3 make_video.py --slide ... --out ... --speaker 8 --speed 1.0
+Options:
+  --out DIR           Output directory  (default: ./video_out)
+  --speaker INT       VOICEVOX speaker ID (default: 11 = 玄野武宏 ノーマル)
+  --speed FLOAT       TTS speed scale  (default: 1.0)
+  --lead FLOAT        Animation fires this many seconds before narration (default: 0.7)
+  --step-gap FLOAT    Extra gap between consecutive steps in a group (default: 0.35)
+  --intro FLOAT       Hold before first animation per slide (default: 0.6)
+  --outro FLOAT       Tail silence after last narration ends (default: 1.0)
+  --sent-gap FLOAT    Silence inserted between sentences (。！？) (default: 0.28)
+  --para-gap FLOAT    Silence inserted between paragraphs (\\n) (default: 0.45)
+  --slide INT         Process only this slide index (0-based); repeat to specify multiple
+  --no-record         TTS only — skip Playwright recording
+  --voicevox-url URL  VOICEVOX endpoint (default: http://127.0.0.1:50021)
+  --width INT         Viewport width  (default: 1280)
+  --height INT        Viewport height (default: 720)
+  --crf INT           ffmpeg x264 CRF (default: 18)
 """
 
 import argparse
-import asyncio
-import glob
 import hashlib
 import json
+import math
 import os
 import re
 import shutil
 import subprocess
 import sys
+import tempfile
 import time
 import urllib.parse
 import urllib.request
-from collections import defaultdict
+from pathlib import Path
+from dataclasses import dataclass
+from typing import Optional
 
 
-# ---------------------------------------------------------------- utilities
+# ──────────────────────────────────────────────────────────────────────────────
+# CLI
+# ──────────────────────────────────────────────────────────────────────────────
 
-def die(msg):
-    print(f'ERROR: {msg}', file=sys.stderr)
-    sys.exit(1)
+def parse_args():
+    p = argparse.ArgumentParser(description="Slide → video builder")
+    p.add_argument("slide_html", help="Path to slide.html")
+    p.add_argument("--out",          default="video_out")
+    p.add_argument("--speaker",      type=int,   default=11,
+                   help="VOICEVOX speaker ID (11=玄野武宏 ノーマル)")
+    p.add_argument("--speed",        type=float, default=1.0)
+    p.add_argument("--lead",         type=float, default=0.7,
+                   help="Seconds animations fire before narration")
+    p.add_argument("--step-gap",     type=float, default=0.35, dest="step_gap",
+                   help="Gap between consecutive steps (s)")
+    p.add_argument("--intro",        type=float, default=0.6,
+                   help="Hold before first step (s)")
+    p.add_argument("--outro",        type=float, default=1.0,
+                   help="Tail silence after narration (s)")
+    p.add_argument("--sent-gap",     type=float, default=0.28, dest="sent_gap",
+                   help="Breath pause between sentences (。！？) (s)")
+    p.add_argument("--para-gap",     type=float, default=0.45, dest="para_gap",
+                   help="Pause between paragraphs (\\n) (s)")
+    p.add_argument("--slide",        type=int,   action="append", dest="only_slides",
+                   help="Only process this slide index (may repeat)")
+    p.add_argument("--no-record",    action="store_true")
+    p.add_argument("--voicevox-url", default="http://127.0.0.1:50021", dest="voicevox_url")
+    p.add_argument("--width",        type=int,   default=1280)
+    p.add_argument("--height",       type=int,   default=720)
+    p.add_argument("--crf",          type=int,   default=18)
+    return p.parse_args()
 
 
-def ffprobe_duration(path):
-    out = subprocess.check_output(
-        ['ffprobe', '-v', 'error', '-show_entries', 'format=duration',
-         '-of', 'csv=p=0', path])
-    return float(out.strip())
+# ──────────────────────────────────────────────────────────────────────────────
+# Text utilities
+# ──────────────────────────────────────────────────────────────────────────────
+
+ABBR_MAP = {
+    "AMA":  "エーエムエー",  "SNS":  "エスエヌエス",  "AI":   "エーアイ",
+    "PR":   "ピーアール",    "HBR":  "エイチビーアール", "HBS": "エイチビーエス",
+    "JTBD": "ジェイティービーディー", "STP": "エスティーピー",
+    "KPI":  "ケーピーアイ",  "CPA":  "シーピーエー",   "LTV":  "エルティーブイ",
+    "CTR":  "シーティーアール", "CVR": "シーブイアール", "ROI":  "アールオーアイ",
+    "ROAS": "アールオーエーエス", "SEO": "エスイーオー", "CRM":  "シーアールエム",
+    "UGC":  "ユージーシー",
+}
+
+MARU_MAP = {
+    "①": "いちつめ、", "②": "ふたつめ、", "③": "みっつめ、",
+    "④": "よっつめ、", "⑤": "いつつめ、", "⑥": "むっつめ、",
+}
 
 
-def run_ffmpeg(args):
-    subprocess.run(['ffmpeg', '-y', '-v', 'error'] + args, check=True)
+def clean_for_tts(text: str) -> str:
+    t = text
+    t = t.replace("——", "、").replace("―", "、").replace("─", "、")
+    t = t.replace("→", "から")
+    for abbr, kana in ABBR_MAP.items():
+        t = re.sub(r'(?<![A-Za-z])' + abbr + r'(?![A-Za-z])', kana, t)
+    t = re.sub(r'(\d)\s*[〜～]\s*(\d)', r'\1から\2', t)
+    for k, v in MARU_MAP.items():
+        t = t.replace(k, v)
+    t = t.replace("「", "").replace("」", "").replace("『", "").replace("』", "")
+    t = re.sub(r'\b(19|20)(\d{2})(年(?:代)?)', r'\2\3', t)
+    t = re.sub(r'[（）\(\)]', '', t)
+    t = re.sub(r'\s{2,}', ' ', t)
+    return t.strip()
 
 
-def find_chromium(explicit):
-    if explicit:
-        if not os.path.exists(explicit):
-            die(f'chromium not found: {explicit}')
-        return explicit
-    candidates = sorted(glob.glob('/opt/pw-browsers/chromium-*/chrome-linux/chrome'))
-    if candidates:
-        return candidates[-1]
-    return None  # let playwright use its default
+def split_sentences(text: str) -> list:
+    """Split at 。！？ keeping punctuation with each sentence."""
+    parts = re.split(r'(?<=[。！？])\s*', text)
+    return [p.strip() for p in parts if p.strip()]
 
 
-# ---------------------------------------------------------------- pipeline
+def split_paragraphs(text: str) -> list:
+    """Split on \\n (as stored in JS template literals)."""
+    return [p.strip() for p in text.split('\n') if p.strip()]
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Slide data extraction
+# ──────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class SlideMeta:
+    id: str
+    start: float
+    end: float
+
+
+@dataclass
+class Step:
+    si: int
+    t: float
+
+
+@dataclass
+class SlideData:
+    meta: list
+    steps: list
+    narrations: list
+    total_secs: float
+
+
+def extract_slide_data(html_path: str) -> SlideData:
+    with open(html_path, encoding="utf-8") as f:
+        src = f.read()
+
+    m = re.search(r'const NARRATIONS\s*=\s*\[(.*?)\];', src, re.DOTALL)
+    if not m:
+        raise ValueError("NARRATIONS not found in slide.html")
+    narrations = [t.replace('\\n', '\n').strip()
+                  for t in re.findall(r'`(.*?)`', m.group(1), re.DOTALL)]
+
+    m = re.search(r'const STEPS\s*=\s*\[(.*?)\];', src, re.DOTALL)
+    if not m:
+        raise ValueError("STEPS not found")
+    steps = []
+    for e in re.finditer(r'\{[^}]+\}', m.group(1)):
+        si_m = re.search(r'si\s*:\s*(\d+)', e.group(0))
+        t_m  = re.search(r'\bt\s*:\s*([\d.]+)', e.group(0))
+        if si_m and t_m:
+            steps.append(Step(si=int(si_m.group(1)), t=float(t_m.group(1))))
+
+    m = re.search(r'const SLIDES_META\s*=\s*\[(.*?)\];', src, re.DOTALL)
+    if not m:
+        raise ValueError("SLIDES_META not found")
+    meta = []
+    for e in re.finditer(r'\{[^}]+\}', m.group(1)):
+        id_m    = re.search(r"id\s*:\s*'([^']+)'", e.group(0))
+        start_m = re.search(r'start\s*:\s*([\d.]+)', e.group(0))
+        end_m   = re.search(r'end\s*:\s*([\d.]+)', e.group(0))
+        if id_m and start_m and end_m:
+            meta.append(SlideMeta(id=id_m.group(1),
+                                  start=float(start_m.group(1)),
+                                  end=float(end_m.group(1))))
+
+    m = re.search(r'const TOTAL_SECS\s*=\s*([\d.]+)', src)
+    total = float(m.group(1)) if m else (meta[-1].end if meta else 0)
+
+    return SlideData(meta=meta, steps=steps, narrations=narrations, total_secs=total)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# VOICEVOX TTS with natural breath pauses
+# ──────────────────────────────────────────────────────────────────────────────
+
+def _tts_cache_key(text: str, speaker: int, speed: float) -> str:
+    return hashlib.md5(f"{text}|{speaker}|{speed:.3f}".encode()).hexdigest()
+
+
+def _tts_sentence(text: str, out_path: str, speaker: int, speed: float, url: str):
+    clean = clean_for_tts(text)
+    if not clean:
+        return
+    q = urllib.parse.urlencode({'text': clean, 'speaker': speaker})
+    req = urllib.request.Request(f'{url}/audio_query?{q}', method='POST')
+    with urllib.request.urlopen(req, timeout=60) as r:
+        query = json.load(r)
+    query['speedScale'] = speed
+    query['outputSamplingRate'] = 24000
+    req = urllib.request.Request(
+        f'{url}/synthesis?speaker={speaker}',
+        data=json.dumps(query).encode(),
+        headers={'Content-Type': 'application/json'}, method='POST')
+    with urllib.request.urlopen(req, timeout=120) as r:
+        with open(out_path, 'wb') as f:
+            f.write(r.read())
+
+
+def _make_silence(path: str, duration: float, sr: int = 24000):
+    subprocess.run(
+        ['ffmpeg', '-y', '-f', 'lavfi',
+         '-i', f'anullsrc=channel_layout=mono:sample_rate={sr}',
+         '-t', str(duration), path],
+        capture_output=True, check=True)
+
+
+def get_duration(path: str) -> float:
+    r = subprocess.run(
+        ['ffprobe', '-v', 'quiet', '-show_entries', 'format=duration',
+         '-of', 'default=noprint_wrappers=1:nokey=1', path],
+        capture_output=True, text=True)
+    return float(r.stdout.strip())
+
+
+def _concat_wavs(parts: list, out_path: str):
+    n = len(parts)
+    if n == 0:
+        return
+    if n == 1:
+        shutil.copy(parts[0], out_path)
+        return
+    inputs = []
+    for p in parts:
+        inputs += ['-i', p]
+    filt = ''.join(f'[{i}:a]' for i in range(n)) + f'concat=n={n}:v=0:a=1[out]'
+    subprocess.run(
+        ['ffmpeg', '-y'] + inputs + ['-filter_complex', filt, '-map', '[out]', out_path],
+        capture_output=True, check=True)
+
+
+def gen_narration_audio(narration_text, out_wav, cache_dir,
+                        speaker, speed, voicevox_url, sent_gap, para_gap):
+    """
+    Synthesize one slide's narration with natural breath pauses.
+
+    Splits at \\n → paragraphs, then at 。！？ → sentences.
+    Each sentence is synthesized individually (sentence-level cache).
+    Sentences are joined with sent_gap silence; paragraphs with para_gap.
+    """
+    os.makedirs(cache_dir, exist_ok=True)
+    tmp = tempfile.mkdtemp(prefix="narr_")
+    try:
+        paragraphs = split_paragraphs(narration_text)
+        parts = []
+
+        for pi, para in enumerate(paragraphs):
+            sentences = split_sentences(para) or [para]
+            for si, sent in enumerate(sentences):
+                clean = clean_for_tts(sent)
+                if not clean:
+                    continue
+
+                key = _tts_cache_key(clean, speaker, speed)
+                cached = os.path.join(cache_dir, f'{key}.wav')
+                if not os.path.exists(cached):
+                    _tts_sentence(sent, cached, speaker, speed, voicevox_url)
+                parts.append(cached)
+
+                is_last_sent = (si == len(sentences) - 1)
+                is_last_para = (pi == len(paragraphs) - 1)
+                if is_last_sent and is_last_para:
+                    pass  # caller adds outro
+                elif is_last_sent:
+                    g = os.path.join(tmp, f'para{pi}.wav')
+                    _make_silence(g, para_gap)
+                    parts.append(g)
+                else:
+                    g = os.path.join(tmp, f'sent{pi}_{si}.wav')
+                    _make_silence(g, sent_gap)
+                    parts.append(g)
+
+        if parts:
+            _concat_wavs(parts, out_wav)
+        else:
+            _make_silence(out_wav, 1.0)
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Schedule builder
+# ──────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class AnimEvent:
+    rel_t: float    # seconds from slide start
+    step_idx: int   # index into STEPS
+
+
+@dataclass
+class SlideSchedule:
+    si: int
+    narration_start: float
+    anim_events: list
+    audio_dur: float
+    total_dur: float
+
+
+def build_schedule(sd, audio_durs, lead, step_gap, intro, outro):
+    meta_count = len(sd.meta)
+    narr_count = len(sd.narrations)
+
+    slide_steps = [[] for _ in range(meta_count)]
+    for gi, step in enumerate(sd.steps):
+        if step.si < meta_count:
+            slide_steps[step.si].append(gi)
+
+    schedules = []
+    for si in range(meta_count):
+        ni = min(si, narr_count - 1)
+        audio_dur = audio_durs[ni] if ni < len(audio_durs) else 0.0
+        narr_text = sd.narrations[ni] if ni < narr_count else ""
+        gsteps = slide_steps[si]
+        S = len(gsteps)
+        P = max(1, len(split_paragraphs(narr_text)))
+
+        narration_start = intro
+        anim_events = []
+
+        if S > 0:
+            para_groups = [[] for _ in range(P)]
+            for j, gi in enumerate(gsteps):
+                para_groups[min(P - 1, math.floor(j * P / S))].append(gi)
+
+            for k, group in enumerate(para_groups):
+                if not group:
+                    continue
+                fire_base = narration_start + audio_dur * k / P - lead
+                for m, gi in enumerate(group):
+                    anim_events.append(AnimEvent(
+                        rel_t=max(0.0, fire_base + step_gap * m),
+                        step_idx=gi))
+
+        schedules.append(SlideSchedule(
+            si=si,
+            narration_start=narration_start,
+            anim_events=sorted(anim_events, key=lambda e: e.rel_t),
+            audio_dur=audio_dur,
+            total_dur=narration_start + audio_dur + outro,
+        ))
+    return schedules
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# Recording
+# ──────────────────────────────────────────────────────────────────────────────
+
+_RECORD_CSS = """<style id="record-mode">
+html,body{{margin:0!important;padding:0!important;overflow:hidden!important;
+  background:#0b0b1a!important;width:{W}px!important;height:{H}px!important;}}
+#stage-wrap{{max-width:{W}px!important;width:{W}px!important;margin:0!important;padding:0!important;}}
+#stage{{padding-top:0!important;height:{H}px!important;width:{W}px!important;}}
+.slide{{position:absolute!important;inset:0!important;width:{W}px!important;height:{H}px!important;}}
+#ctrl,#narr-panel,#btn-narr,#flash{{display:none!important;}}
+</style>"""
+
+
+def _make_record_html(src, dst, W, H):
+    with open(src, encoding='utf-8') as f:
+        html = f.read()
+    html = html.replace('</head>', _RECORD_CSS.format(W=W, H=H) + '\n</head>', 1)
+    with open(dst, 'w', encoding='utf-8') as f:
+        f.write(html)
+
+
+def _record_slide(record_html, audio_path, schedule, out_video, W, H):
+    try:
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        sys.exit("Run: pip install playwright && playwright install chromium")
+
+    si = schedule.si
+    tmp_dir = out_video + '.recdir'
+    os.makedirs(tmp_dir, exist_ok=True)
+
+    anim_js = json.dumps([{'rel_t': e.rel_t, 'step_idx': e.step_idx}
+                          for e in schedule.anim_events])
+    total_ms = int(schedule.total_dur * 1000)
+
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch(args=['--no-sandbox', '--disable-gpu'])
+        ctx = browser.new_context(
+            viewport={'width': W, 'height': H},
+            record_video_dir=tmp_dir,
+            record_video_size={'width': W, 'height': H},
+        )
+        page = ctx.new_page()
+        page.goto(f'file://{os.path.abspath(record_html)}')
+        page.wait_for_load_state('networkidle')
+
+        page.evaluate(f"""() => {{
+            const si = {si};
+            document.querySelectorAll('.slide').forEach(el => el.style.display = 'none');
+            const sm = SLIDES_META[si];
+            if (sm) {{ const el = document.getElementById(sm.id); if (el) el.style.display = 'flex'; }}
+            document.querySelectorAll('[class*="rv-"]').forEach(el => {{ el.style.opacity = '0'; }});
+        }}""")
+
+        time.sleep(0.3)
+
+        page.evaluate(f"""() => {{
+            const events = {anim_js};
+            const t0 = performance.now();
+            let cur = 0;
+            (function tick() {{
+                const now = performance.now() - t0;
+                while (cur < events.length && events[cur].rel_t * 1000 <= now) {{
+                    const ev = events[cur++];
+                    const step = STEPS[ev.step_idx];
+                    if (step && step.ids) step.ids.forEach(id => {{
+                        const el = document.getElementById(id);
+                        if (el) {{
+                            el.style.opacity = '1';
+                            ['rv-fade','rv-up','rv-scale','rv-pop','rv-left','rv-right']
+                              .forEach(c => el.classList.remove(c));
+                            el.classList.add(step.anim || 'rv-fade');
+                        }}
+                    }});
+                }}
+                if (now < {total_ms} - 50) requestAnimationFrame(tick);
+            }})();
+        }}""")
+
+        time.sleep(schedule.total_dur + 0.5)
+        page.close()
+        ctx.close()
+        browser.close()
+
+    webms = sorted(
+        [f for f in os.listdir(tmp_dir) if f.endswith('.webm')],
+        key=lambda f: os.path.getmtime(os.path.join(tmp_dir, f)),
+        reverse=True,
+    )
+    if not webms:
+        raise RuntimeError(f"No webm for slide {si}")
+
+    raw_webm = os.path.join(tmp_dir, webms[0])
+    subprocess.run(
+        ['ffmpeg', '-y',
+         '-i', raw_webm, '-i', audio_path,
+         '-map', '0:v:0', '-map', '1:a:0',
+         '-c:v', 'libx264', '-crf', '18', '-preset', 'fast',
+         '-c:a', 'aac', '-b:a', '192k',
+         '-t', str(schedule.total_dur),
+         out_video],
+        check=True, capture_output=True)
+    shutil.rmtree(tmp_dir, ignore_errors=True)
+
+
+# ──────────────────────────────────────────────────────────────────────────────
+# VideoBuilder
+# ──────────────────────────────────────────────────────────────────────────────
 
 class VideoBuilder:
-    HIDE_CSS = (
-        '#ctrl,#prog-wrap,#narr-panel{display:none !important;}'
-        'body{margin:0;padding:0;overflow:hidden;}'
-        '#stage-wrap{max-width:none;width:WIDTHpx;}'
-    )
+    def __init__(self, args):
+        self.a = args
+        self.slide_html = os.path.abspath(args.slide_html)
+        self.out_dir    = os.path.abspath(args.out)
+        self.work       = os.path.join(self.out_dir, '.work')
+        self.tts_cache  = os.path.join(self.work, 'tts')
+        self.audio_dir  = os.path.join(self.work, 'audio')
+        self.video_dir  = os.path.join(self.work, 'slides')
+        for d in (self.tts_cache, self.audio_dir, self.video_dir):
+            os.makedirs(d, exist_ok=True)
+        self.sd        = None
+        self.audio_durs = []
+        self.schedules  = []
 
-    PREP_JS = """(si) => {
-      document.querySelectorAll('.slide').forEach(s => s.classList.remove('active'));
-      document.getElementById(SLIDES_META[si].id).classList.add('active');
-      state.slide = si;
-      resetSlideElements(si);
-      state.cursor = SLIDE_FIRST_STEP[si];
-      if (typeof updateDots === 'function') updateDots();
-    }"""
-
-    def __init__(self, opt):
-        self.opt = opt
-        self.url = 'file://' + os.path.abspath(opt.slide)
-        self.work = opt.workdir
-        for sub in ('tts', 'audio', 'rec', 'mp4'):
-            os.makedirs(os.path.join(self.work, sub), exist_ok=True)
-        self.chromium = find_chromium(opt.chromium)
-        self.data = None        # {narrations, steps}
-        self.durations = {}     # si -> [para durations]
-        self.schedule = {}      # si -> {events:[t...], total:s}
-
-    # -------- 1. extract deck data --------
-    async def extract(self):
-        from playwright.async_api import async_playwright
-        async with async_playwright() as p:
-            kw = {'executable_path': self.chromium} if self.chromium else {}
-            b = await p.chromium.launch(**kw)
-            page = await b.new_page(
-                viewport={'width': self.opt.width, 'height': self.opt.height})
-            await page.goto(self.url)
-            await page.wait_for_timeout(800)
-            ok = await page.evaluate(
-                "typeof NARRATIONS!=='undefined' && typeof STEPS!=='undefined'"
-                " && typeof SLIDES_META!=='undefined'")
-            if not ok:
-                die('slide.html に NARRATIONS / STEPS / SLIDES_META が見つかりません。'
-                    'このツールはリポジトリ共通のスライドエンジンを前提としています。')
-            self.data = await page.evaluate(
-                "() => ({narrations: NARRATIONS,"
-                " steps: STEPS.map(s => ({si:s.si})),"
-                " count: SLIDES_META.length})")
-            await b.close()
-        n_slides = self.data['count']
-        n_narr = len(self.data['narrations'])
-        if n_slides != n_narr:
-            die(f'SLIDES_META({n_slides}) と NARRATIONS({n_narr}) の数が一致しません')
-        print(f'deck: {n_slides} slides, '
-              f'{len(self.data["steps"])} animation steps')
-
-    # -------- 2. TTS --------
-    @staticmethod
-    def clean_text(text):
-        t = text.replace('——', '、').replace('──', '、').replace('→', '、')
-        t = re.sub(r'[『』「」]', '', t)
-        return re.sub(r'\s+', ' ', t).strip()
-
-    def tts_one(self, text, path):
-        base = self.opt.voicevox_url
-        q = urllib.parse.urlencode({'text': text, 'speaker': self.opt.speaker})
-        req = urllib.request.Request(f'{base}/audio_query?{q}', method='POST')
-        with urllib.request.urlopen(req) as r:
-            query = json.load(r)
-        query['speedScale'] = self.opt.speed
-        query['outputSamplingRate'] = 24000
-        req = urllib.request.Request(
-            f'{base}/synthesis?speaker={self.opt.speaker}',
-            data=json.dumps(query).encode(),
-            headers={'Content-Type': 'application/json'}, method='POST')
-        with urllib.request.urlopen(req) as r:
-            with open(path, 'wb') as f:
-                f.write(r.read())
+    def extract(self):
+        print(f"Extracting: {self.slide_html}")
+        self.sd = extract_slide_data(self.slide_html)
+        print(f"  {len(self.sd.meta)} slides  "
+              f"{len(self.sd.steps)} steps  "
+              f"{len(self.sd.narrations)} narrations")
 
     def gen_tts(self):
+        a = self.a
+        print(f"\nTTS  speaker={a.speaker} (玄野武宏)  speed={a.speed}  "
+              f"sent-gap={a.sent_gap}s  para-gap={a.para_gap}s")
         try:
-            with urllib.request.urlopen(
-                    f'{self.opt.voicevox_url}/version', timeout=5) as r:
-                ver = r.read().decode().strip('"')
-            print(f'voicevox engine: {ver}')
-        except Exception:
-            die(f'VOICEVOX ENGINE に接続できません: {self.opt.voicevox_url}\n'
-                '  起動例: /opt/voicevox_engine/engine/linux-cpu-x64/run '
-                '--host 127.0.0.1 --port 50021 &')
-        total = 0.0
-        for si, narr in enumerate(self.data['narrations']):
-            paras = [p for p in narr.split('\n') if p.strip()]
-            self.durations[si] = []
-            for pi, para in enumerate(paras):
-                text = self.clean_text(para)
-                key = hashlib.md5(
-                    f'{text}|{self.opt.speaker}|{self.opt.speed}'.encode()
-                ).hexdigest()[:16]
-                path = os.path.join(self.work, 'tts', f'{key}.wav')
-                if not os.path.exists(path):
-                    self.tts_one(text, path)
-                d = ffprobe_duration(path)
-                self.durations[si].append((d, path))
-                total += d
-        print(f'narration total: {total/60:.1f} min '
-              f'({sum(len(v) for v in self.durations.values())} paragraphs)')
+            req = urllib.request.Request(f'{a.voicevox_url}/version')
+            with urllib.request.urlopen(req, timeout=5) as r:
+                print(f"  VOICEVOX {r.read().decode().strip()}")
+        except Exception as e:
+            sys.exit(f"VOICEVOX unreachable ({e})\n"
+                     "  Start: ./run --host 127.0.0.1 --port 50021")
 
-    # -------- 3. schedule + per-slide audio track --------
+        self.audio_durs = []
+        for ni, narr in enumerate(self.sd.narrations):
+            wav = os.path.join(self.audio_dir, f'narr_{ni:02d}.wav')
+            tag = f"[{ni+1:02d}/{len(self.sd.narrations)}]"
+            if os.path.exists(wav):
+                dur = get_duration(wav)
+                print(f"  {tag} cached  {dur:.1f}s")
+            else:
+                print(f"  {tag} ...", end='', flush=True)
+                t0 = time.time()
+                gen_narration_audio(
+                    narration_text=narr, out_wav=wav,
+                    cache_dir=self.tts_cache,
+                    speaker=a.speaker, speed=a.speed,
+                    voicevox_url=a.voicevox_url,
+                    sent_gap=a.sent_gap, para_gap=a.para_gap)
+                dur = get_duration(wav)
+                print(f" {dur:.1f}s  ({time.time()-t0:.0f}s)")
+            self.audio_durs.append(dur)
+
+        print(f"\n  Total: {sum(self.audio_durs)/60:.1f} min")
+
     def build_schedule(self):
-        steps_per_slide = defaultdict(int)
-        for s in self.data['steps']:
-            steps_per_slide[s['si']] += 1
-        o = self.opt
-        n = self.data['count']
-        for si in range(n):
-            durs = self.durations[si]
-            P, S = len(durs), steps_per_slide[si]
-            para_steps = defaultdict(list)
-            for j in range(S):
-                para_steps[min(P - 1, j * P // S)].append(j)
-            t, events, marks = o.intro, [], []
-            for k in range(P):
-                m = len(para_steps.get(k, []))
-                for i in range(m):
-                    events.append(round(t + o.step_spacing * i, 3))
-                start = (t + o.step_spacing * (m - 1) + o.lead) if m else t + 0.2
-                marks.append((round(start, 3), durs[k][1], durs[k][0]))
-                t = start + durs[k][0] + o.gap
-            total = round(t + (o.tail_last if si == n - 1 else o.tail), 3)
-            self.schedule[si] = {'events': events, 'total': total}
-            self._assemble_audio(si, marks, total)
-        grand = sum(v['total'] for v in self.schedule.values())
-        print(f'video total: {grand/60:.1f} min')
+        a = self.a
+        self.schedules = build_schedule(
+            self.sd, self.audio_durs,
+            lead=a.lead, step_gap=a.step_gap,
+            intro=a.intro, outro=a.outro)
+        print("\nSchedule:")
+        for sc in self.schedules:
+            print(f"  S{sc.si+1:02d} ({self.sd.meta[sc.si].id}):  "
+                  f"dur={sc.audio_dur:.1f}s  total={sc.total_dur:.1f}s  "
+                  f"anims={len(sc.anim_events)}")
 
-    def _assemble_audio(self, si, marks, total):
-        adir = os.path.join(self.work, 'audio')
-        parts, cur = [], 0.0
-        for idx, (start, wav, dur) in enumerate(marks):
-            gap = start - cur
-            if gap > 0.005:
-                sil = os.path.join(adir, f'sil_{si:02d}_{idx}.wav')
-                run_ffmpeg(['-f', 'lavfi', '-i', 'anullsrc=r=24000:cl=mono',
-                            '-t', f'{gap:.3f}', '-c:a', 'pcm_s16le', sil])
-                parts.append(sil)
-            parts.append(wav)
-            cur = start + dur
-        tail = total - cur
-        if tail > 0.005:
-            sil = os.path.join(adir, f'sil_{si:02d}_tail.wav')
-            run_ffmpeg(['-f', 'lavfi', '-i', 'anullsrc=r=24000:cl=mono',
-                        '-t', f'{tail:.3f}', '-c:a', 'pcm_s16le', sil])
-            parts.append(sil)
-        lst = os.path.join(adir, f'list_{si:02d}.txt')
-        with open(lst, 'w') as f:
-            for p in parts:
-                f.write(f"file '{p}'\n")
-        run_ffmpeg(['-f', 'concat', '-safe', '0', '-i', lst,
-                    '-c:a', 'pcm_s16le',
-                    os.path.join(adir, f'slide_{si:02d}.wav')])
+    def record(self):
+        a = self.a
+        record_html = os.path.join(self.work, 'slide_record.html')
+        _make_record_html(self.slide_html, record_html, a.width, a.height)
 
-    # -------- 4. record (real-time, one slide per video) --------
-    async def record(self, targets):
-        from playwright.async_api import async_playwright
-        o = self.opt
-        hide_css = self.HIDE_CSS.replace('WIDTH', str(o.width))
-        async with async_playwright() as p:
-            for si in targets:
-                sched = self.schedule[si]
-                kw = {'executable_path': self.chromium} if self.chromium else {}
-                browser = await p.chromium.launch(**kw)
-                ctx = await browser.new_context(
-                    viewport={'width': o.width, 'height': o.height},
-                    record_video_dir=os.path.join(self.work, 'rec'),
-                    record_video_size={'width': o.width, 'height': o.height})
-                page = await ctx.new_page()
-                await page.goto(self.url)
-                await page.add_style_tag(content=hide_css)
-                await page.evaluate(self.PREP_JS, si)
-                await page.wait_for_timeout(700)
-                t0 = time.monotonic()
-                for ev in sched['events']:
-                    delay = ev - (time.monotonic() - t0)
-                    if delay > 0:
-                        await asyncio.sleep(delay)
-                    await page.evaluate('advanceStep()')
-                remain = sched['total'] - (time.monotonic() - t0)
-                if remain > 0:
-                    await asyncio.sleep(remain)
-                video = page.video
-                await page.close()
-                path = await video.path()
-                await ctx.close()
-                await browser.close()
-                final = os.path.join(self.work, 'rec', f'slide_{si:02d}.webm')
-                os.replace(path, final)
-                print(f'recorded slide {si+1}/{self.data["count"]} '
-                      f'({sched["total"]:.1f}s)', flush=True)
+        only = set(a.only_slides) if a.only_slides else None
+        print("\nRecording ...")
+        for sc in self.schedules:
+            if only and sc.si not in only:
+                continue
+            ni = min(sc.si, len(self.audio_durs) - 1)
+            narr_wav = os.path.join(self.audio_dir, f'narr_{ni:02d}.wav')
 
-    # -------- 5. mux + concat --------
-    def mux_concat(self):
-        files = []
-        for si in sorted(self.schedule):
-            webm = os.path.join(self.work, 'rec', f'slide_{si:02d}.webm')
-            wav = os.path.join(self.work, 'audio', f'slide_{si:02d}.wav')
-            mp4 = os.path.join(self.work, 'mp4', f'slide_{si:02d}.mp4')
-            total = self.schedule[si]['total']
-            trim = max(0.0, ffprobe_duration(webm) - total)
-            run_ffmpeg(['-ss', f'{trim:.3f}', '-i', webm, '-i', wav,
-                        '-map', '0:v', '-map', '1:a', '-t', f'{total:.3f}',
-                        '-c:v', 'libx264', '-preset', 'medium',
-                        '-crf', str(self.opt.crf), '-r', str(self.opt.fps),
-                        '-pix_fmt', 'yuv420p',
-                        '-c:a', 'aac', '-b:a', '160k', '-ar', '24000', mp4])
-            files.append(mp4)
-        lst = os.path.join(self.work, 'concat.txt')
-        with open(lst, 'w') as f:
-            for p in files:
-                f.write(f"file '{p}'\n")
-        run_ffmpeg(['-f', 'concat', '-safe', '0', '-i', lst, '-c', 'copy',
-                    self.opt.out])
-        print(f'FINAL: {self.opt.out} ({ffprobe_duration(self.opt.out):.1f}s)')
+            intro_w = os.path.join(self.work, f'intro_{sc.si:02d}.wav')
+            outro_w = os.path.join(self.work, f'outro_{sc.si:02d}.wav')
+            full_w  = os.path.join(self.work, f'full_{sc.si:02d}.wav')
+            _make_silence(intro_w, a.intro)
+            _make_silence(outro_w, a.outro)
+            _concat_wavs([intro_w, narr_wav, outro_w], full_w)
 
+            out_mp4 = os.path.join(self.video_dir, f'slide_{sc.si:02d}.mp4')
+            print(f"  slide {sc.si+1} ({self.sd.meta[sc.si].id})", end='', flush=True)
+            _record_slide(record_html, full_w, sc, out_mp4, a.width, a.height)
+            print(f"  {sc.total_dur:.1f}s ✓")
 
-async def amain(opt):
-    vb = VideoBuilder(opt)
-    await vb.extract()
-    vb.gen_tts()
-    vb.build_schedule()
-    targets = opt.slides if opt.slides else sorted(vb.schedule)
-    missing = [si for si in sorted(vb.schedule)
-               if si not in targets and not os.path.exists(
-                   os.path.join(vb.work, 'rec', f'slide_{si:02d}.webm'))]
-    if missing:
-        die(f'--slides 指定外のスライド {[m+1 for m in missing]} の録画が '
-            f'workdir にありません。全スライドを録画するか workdir を確認してください。')
-    await vb.record(targets)
-    vb.mux_concat()
+    def concat(self):
+        only = set(self.a.only_slides) if self.a.only_slides else None
+        slides = [sc.si for sc in self.schedules if only is None or sc.si in only]
 
+        list_file = os.path.join(self.work, 'concat.txt')
+        with open(list_file, 'w') as f:
+            for si in slides:
+                mp4 = os.path.join(self.video_dir, f'slide_{si:02d}.mp4')
+                if os.path.exists(mp4):
+                    f.write(f"file '{os.path.abspath(mp4)}'\n")
 
-def main():
-    ap = argparse.ArgumentParser(
-        description='slide.html から合成音声付き動画を生成する')
-    ap.add_argument('--slide', required=True, help='slide.html のパス')
-    ap.add_argument('--out', required=True, help='出力 mp4 のパス')
-    ap.add_argument('--workdir', default=None,
-                    help='中間ファイル置き場（既定: 出力先と同名の .work ディレクトリ）')
-    ap.add_argument('--slides', type=int, nargs='*', default=None,
-                    help='再録画するスライド番号（1始まり）。省略時は全スライド')
-    ap.add_argument('--speaker', type=int, default=2,
-                    help='VOICEVOX 話者ID（既定: 2 = 四国めたんノーマル）')
-    ap.add_argument('--speed', type=float, default=1.1, help='読み上げ速度')
-    ap.add_argument('--voicevox-url', default='http://127.0.0.1:50021')
-    ap.add_argument('--chromium', default=None, help='Chromium 実行ファイルのパス')
-    ap.add_argument('--width', type=int, default=1280)
-    ap.add_argument('--height', type=int, default=720)
-    ap.add_argument('--fps', type=int, default=30)
-    ap.add_argument('--crf', type=int, default=18, help='x264 品質（小さいほど高品質）')
-    ap.add_argument('--lead', type=float, default=0.7,
-                    help='アニメーション発火からナレーション開始までの秒数')
-    ap.add_argument('--gap', type=float, default=0.35, help='段落間の無音秒数')
-    ap.add_argument('--intro', type=float, default=0.6, help='スライド冒頭の間')
-    ap.add_argument('--tail', type=float, default=0.5, help='スライド末尾の間')
-    ap.add_argument('--tail-last', type=float, default=1.2, help='最終スライド末尾の間')
-    ap.add_argument('--step-spacing', type=float, default=0.55,
-                    help='同一段落内の連続ステップの間隔')
-    opt = ap.parse_args()
+        ep = Path(self.slide_html).parent.name
+        out_mp4 = os.path.join(self.out_dir, f'{ep}_final.mp4')
+        subprocess.run(
+            ['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', list_file,
+             '-c:v', 'libx264', '-crf', str(self.a.crf), '-preset', 'fast',
+             '-c:a', 'aac', '-b:a', '192k', out_mp4],
+            check=True)
+        dur = get_duration(out_mp4)
+        print(f"\nFinal: {out_mp4}  ({dur/60:.1f} min)")
 
-    if not os.path.exists(opt.slide):
-        die(f'slide not found: {opt.slide}')
-    if opt.workdir is None:
-        opt.workdir = os.path.splitext(os.path.abspath(opt.out))[0] + '.work'
-    if opt.slides:
-        opt.slides = [s - 1 for s in opt.slides]
-    os.makedirs(os.path.dirname(os.path.abspath(opt.out)) or '.', exist_ok=True)
-
-    asyncio.run(amain(opt))
+    def run(self):
+        self.extract()
+        self.gen_tts()
+        self.build_schedule()
+        if not self.a.no_record:
+            self.record()
+            self.concat()
+        else:
+            print("\n--no-record: TTS done, skipping recording.")
 
 
 if __name__ == '__main__':
-    main()
+    VideoBuilder(parse_args()).run()
