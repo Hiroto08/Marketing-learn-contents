@@ -411,6 +411,7 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
             record_video_dir=tmp_dir,
             record_video_size={'width': W, 'height': H},
         )
+        rec_start = time.time()   # video capture begins with page creation
         page = ctx.new_page()
         page.goto(f'file://{os.path.abspath(record_html)}')
         page.wait_for_load_state('networkidle')
@@ -431,6 +432,8 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
         }}""")
 
         time.sleep(0.3)
+        # Page load + setup got captured too — trim this much off the head
+        head_offset = time.time() - rec_start
 
         page.evaluate(f"""() => {{
             const events = {anim_js};
@@ -471,7 +474,7 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
     raw_webm = os.path.join(tmp_dir, webms[0])
     subprocess.run(
         ['ffmpeg', '-y',
-         '-i', raw_webm, '-i', audio_path,
+         '-ss', f'{head_offset:.3f}', '-i', raw_webm, '-i', audio_path,
          '-map', '0:v:0', '-map', '1:a:0',
          '-c:v', 'libx264', '-crf', '18', '-preset', 'fast',
          '-c:a', 'aac', '-b:a', '192k',
