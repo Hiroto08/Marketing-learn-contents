@@ -94,6 +94,21 @@ ABBR_MAP = {
     "CTR":  "シーティーアール", "CVR": "シーブイアール", "ROI":  "アールオーアイ",
     "ROAS": "アールオーエーエス", "SEO": "エスイーオー", "CRM":  "シーアールエム",
     "UGC":  "ユージーシー",
+    "3C":   "サンシー",        "4P":   "ヨンピー",      "4C":   "ヨンシー",
+    "AIDMA": "アイドマ",       "AISAS": "アイサス",
+}
+
+# Compound terms read as ONE accent phrase (prevents double/triple-hump
+# intonation like "エスティー↗ピー↗ブンセキ↗"). Keyed by the POST-clean_for_tts
+# surface (i.e. after ABBR_MAP katakana substitution). Each value is
+# (katakana_pronunciation, accent_type) where accent_type = mora index of the
+# pitch drop (0 = 平板/heiban). Seeded into the VOICEVOX user dictionary at
+# startup. Accent values are ear-tuned; adjust if a term sounds off.
+COMPOUND_DICT = {
+    "サンシー分析":        ("サンシーブンセキ", 5),       # 3C分析
+    "エスティーピー分析":  ("エスティーピーブンセキ", 6),  # STP分析
+    "ヨンピー分析":        ("ヨンピーブンセキ", 4),        # 4P分析
+    "ヨンシー分析":        ("ヨンシーブンセキ", 4),        # 4C分析
 }
 
 MARU_MAP = {
@@ -197,8 +212,50 @@ def extract_slide_data(html_path: str) -> SlideData:
 # VOICEVOX TTS with natural breath pauses
 # ──────────────────────────────────────────────────────────────────────────────
 
-def _tts_cache_key(text: str, speaker: int, speed: float) -> str:
-    return hashlib.md5(f"{text}|{speaker}|{speed:.3f}".encode()).hexdigest()
+def _compound_salt(text: str) -> str:
+    """Cache-busting salt for sentences containing a compound term.
+
+    Empty when no compound is present, so non-compound audio keeps its existing
+    cache key (backward compatible). Changes whenever a matched term's reading
+    or accent changes in COMPOUND_DICT, forcing only the affected items to
+    re-synthesize. `text` should be the post-clean_for_tts surface.
+    """
+    hits = [f"{s}={p}:{a}" for s, (p, a) in COMPOUND_DICT.items() if s in text]
+    return ";".join(sorted(hits))
+
+
+def _tts_cache_key(text: str, speaker: int, speed: float, salt: str = "") -> str:
+    extra = f"|{salt}" if salt else ""
+    return hashlib.md5(f"{text}|{speaker}|{speed:.3f}{extra}".encode()).hexdigest()
+
+
+def seed_user_dict(url: str) -> None:
+    """Register COMPOUND_DICT terms into the VOICEVOX user dictionary so each
+    is tokenized as a single morpheme = a single accent phrase. Idempotent:
+    removes any prior entries for the same surfaces, then re-registers."""
+    managed = set(COMPOUND_DICT)
+    try:
+        with urllib.request.urlopen(f'{url}/user_dict', timeout=10) as r:
+            current = json.load(r)
+        for uid, word in current.items():
+            if word.get('surface') in managed:
+                urllib.request.urlopen(urllib.request.Request(
+                    f'{url}/user_dict_word/{uid}', method='DELETE'), timeout=10)
+    except Exception as e:
+        print(f"  (user_dict pre-clean skipped: {e})")
+    n = 0
+    for surface, (pron, accent) in COMPOUND_DICT.items():
+        qs = urllib.parse.urlencode({
+            'surface': surface, 'pronunciation': pron,
+            'accent_type': accent, 'word_type': 'PROPER_NOUN', 'priority': 9})
+        try:
+            urllib.request.urlopen(urllib.request.Request(
+                f'{url}/user_dict_word?{qs}', method='POST'), timeout=10)
+            n += 1
+        except Exception as e:
+            print(f"  (user_dict register failed for {surface}: {e})")
+    if n:
+        print(f"  user_dict: {n} compound term(s) registered")
 
 
 def _tts_sentence(text: str, out_path: str, speaker: int, speed: float, url: str):
@@ -280,7 +337,8 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
                 if not clean:
                     continue
 
-                key = _tts_cache_key(clean, speaker, speed)
+                key = _tts_cache_key(clean, speaker, speed,
+                                     _compound_salt(clean))
                 cached = os.path.join(cache_dir, f'{key}.wav')
                 if not os.path.exists(cached):
                     _tts_sentence(sent, cached, speaker, speed, voicevox_url)
@@ -317,8 +375,9 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
 
 
 def _narr_hash(text, speaker, speed, sent_gap, para_gap) -> str:
+    salt = _compound_salt(clean_for_tts(text))
     return hashlib.md5(
-        f'{text}|{speaker}|{speed:.3f}|{sent_gap:.3f}|{para_gap:.3f}'.encode()
+        f'{text}|{speaker}|{speed:.3f}|{sent_gap:.3f}|{para_gap:.3f}|{salt}'.encode()
     ).hexdigest()
 
 
@@ -551,6 +610,8 @@ class VideoBuilder:
         except Exception as e:
             sys.exit(f"VOICEVOX unreachable ({e})\n"
                      "  Start: ./run --host 127.0.0.1 --port 50021")
+
+        seed_user_dict(a.voicevox_url)
 
         self.audio_durs = []
         self.para_durs = []
