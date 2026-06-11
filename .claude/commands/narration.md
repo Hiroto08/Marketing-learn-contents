@@ -88,6 +88,60 @@ checks = [
 
 ---
 
+## VOICEVOX 複合語イントネーション
+
+「3C分析」「STP分析」のような **略語＋名詞** の複合語は、OpenJTalk が
+単語境界で分割して不自然な上昇イントネーションになる。
+
+**対策：`make_video.py` の `COMPOUND_DICT` に登録する**
+
+```python
+# _tools/video/make_video.py 内
+ABBR_MAP = {
+    "3C":    "サンシー",    # ← 必ずサンシー（サンスィー不可）
+    "STP":   "エスティーピー",
+    "4P":    "ヨンピー",
+    "4C":    "ヨンシー",
+    "AIDMA": "アイドマ",
+    "AISAS": "アイサス",
+    ...
+}
+
+COMPOUND_DICT = {
+    # surface（ナレーション中の表記）: (pronunciation, accent_type)
+    "サンシー分析":       ("サンシーブンセキ",       5),
+    "エスティーピー分析": ("エスティーピーブンセキ", 6),
+    "ヨンピー分析":       ("ヨンピーブンセキ",       4),
+    "ヨンシー分析":       ("ヨンシーブンセキ",       4),
+}
+```
+
+- `surface` = ABBR_MAP 変換後のカタカナ表記（ナレーション中で実際に使われる形）
+- `pronunciation` = 全体を1アクセント句として読む際の読み仮名
+- `accent_type` = 平板型に近い値（実際の読みに合わせて調整）
+
+**新しい複合語を追加するとき：**
+
+1. VOICEVOX API で発音を確認する：
+   ```bash
+   curl -s -X POST "http://127.0.0.1:50021/accent_phrases?text=新語＋分析&speaker=11" | python3 -m json.tool
+   ```
+2. 現状の分割が不自然なら `COMPOUND_DICT` に追加
+3. `seed_user_dict()` が make_video.py 起動時に自動登録するので追記だけで有効になる
+
+**略語の読みについて：**
+
+| 略語 | 読み | 備考 |
+|------|------|------|
+| 3C | サンシー | 3=サン、C=シー（スリーシーは NG） |
+| STP | エスティーピー | アルファベット読み |
+| 4P | ヨンピー | 4=ヨン |
+| 4C | ヨンシー | |
+| AIDMA | アイドマ | |
+| AISAS | アイサス | |
+
+---
+
 ## スライド設計原則（Big Style）
 
 モバイルで読める「大きいスタイル」を維持すること。Reference スタイル（小さい表）は使わない。
@@ -193,27 +247,28 @@ checks = [
 
 ## 実行環境の前提（コンテナ再起動後に必須）
 
-コンテナが再起動すると VOICEVOX と Playwright が使えなくなることがある。動画生成前に確認：
+`.claude/hooks/session-start.sh` が SessionStart フックとして登録されており、
+コンテナ再起動時に自動的に環境を復旧する（ffmpeg・Noto CJK フォント・Playwright・VOICEVOX）。
+
+手動で再実行したい場合：
 
 ```bash
-# 1) VOICEVOX 起動確認（落ちていたら起動）
+bash _tools/setup_env.sh
+```
+
+それでも問題が起きる場合の個別確認：
+
+```bash
+# VOICEVOX 起動確認（落ちていたら起動）
 curl -s http://127.0.0.1:50021/version || \
-  /opt/voicevox_engine/engine/linux-cpu-x64/run --host 127.0.0.1 --port 50021 &
-# 起動待ち
+  /opt/voicevox_engine/linux-cpu-x64/run --host 127.0.0.1 --port 50021 &
 until curl -s http://127.0.0.1:50021/version >/dev/null 2>&1; do sleep 2; done
 
-# 2) Playwright ブラウザは PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers を指定して実行
+# Playwright ブラウザは PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers を指定して実行
 PLAYWRIGHT_BROWSERS_PATH=/opt/pw-browsers python3 _tools/video/make_video.py ...
 ```
 
-- Playwright が「browser version mismatch（例 1194 vs 1223）」を出す場合は、
-  既存の `/opt/pw-browsers/chromium-<旧>` を要求バージョン名で symlink して回避：
-  ```bash
-  ln -sf /opt/pw-browsers/chromium-1194 /opt/pw-browsers/chromium-1223
-  mkdir -p /opt/pw-browsers/chromium_headless_shell-1223/chrome-headless-shell-linux64
-  ln -sf /opt/pw-browsers/chromium_headless_shell-1194/chrome-linux/headless_shell \
-    /opt/pw-browsers/chromium_headless_shell-1223/chrome-headless-shell-linux64/chrome-headless-shell
-  ```
+- Playwright が「browser version mismatch」を出す場合は `bash _tools/setup_env.sh` で自動解消
 - ローカルリポジトリが古い（`_tools/` が消えている等）場合は
   `git pull origin claude/setup-marketing-course-dirs-GH2OH` で同期してから実行
 
