@@ -1,12 +1,13 @@
 #!/bin/bash
-# SessionStart hook — re-provision the video-generation toolchain.
-# Runs automatically on every Claude Code web session start.
-# Delegates to _tools/setup_env.sh which is idempotent.
+# Re-provision the video-generation toolchain on every container start.
+# The web container wipes /opt and pip state between restarts; this hook
+# restores everything (ffmpeg, Noto CJK font, playwright, VOICEVOX engine).
 set -uo pipefail
 
 if [ "${CLAUDE_CODE_REMOTE:-}" != "true" ]; then
   exit 0
 fi
 
-REPO_DIR="${CLAUDE_PROJECT_DIR:-$(cd "$(dirname "$0")/../.." && pwd)}"
-bash "$REPO_DIR/_tools/setup_env.sh"
+echo '{"async": true, "asyncTimeout": 300000}'
+
+exec bash "$CLAUDE_PROJECT_DIR/_tools/setup_env.sh"
