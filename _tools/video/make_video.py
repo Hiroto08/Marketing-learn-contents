@@ -42,6 +42,7 @@ import tempfile
 import time
 import urllib.parse
 import urllib.request
+from multiprocessing import Process
 from pathlib import Path
 from dataclasses import dataclass
 from typing import Optional
@@ -690,7 +691,13 @@ class VideoBuilder:
             if os.path.exists(out_mp4):
                 print(f"  {sc.total_dur:.1f}s (cached)")
                 continue
-            _record_slide(record_html, full_w, sc, out_mp4, a.width, a.height)
+            # Run in isolated subprocess so Playwright/Chromium memory is fully
+            # released between slides (prevents crash after ~5 consecutive sessions)
+            p = Process(target=_record_slide,
+                        args=(record_html, full_w, sc, out_mp4, a.width, a.height))
+            p.start(); p.join()
+            if p.exitcode != 0:
+                raise RuntimeError(f"Recording failed for slide {sc.si} (exit {p.exitcode})")
             print(f"  {sc.total_dur:.1f}s ✓")
 
     def concat(self):
