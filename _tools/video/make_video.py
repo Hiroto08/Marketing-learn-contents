@@ -376,9 +376,12 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
 
 
 def _narr_hash(text, speaker, speed, sent_gap, para_gap) -> str:
-    salt = _compound_salt(clean_for_tts(text))
+    clean = clean_for_tts(text)
+    salt = _compound_salt(clean)
+    # "nk" suffix invalidates cache for narrations that contain ・ (removed in clean step)
+    nakaten_salt = "nk" if "・" in text else ""
     return hashlib.md5(
-        f'{text}|{speaker}|{speed:.3f}|{sent_gap:.3f}|{para_gap:.3f}|{salt}'.encode()
+        f'{text}|{speaker}|{speed:.3f}|{sent_gap:.3f}|{para_gap:.3f}|{salt}|{nakaten_salt}'.encode()
     ).hexdigest()
 
 
@@ -681,6 +684,9 @@ class VideoBuilder:
 
             out_mp4 = os.path.join(self.video_dir, f'slide_{sc.si:02d}.mp4')
             print(f"  slide {sc.si+1} ({self.sd.meta[sc.si].id})", end='', flush=True)
+            if os.path.exists(out_mp4):
+                print(f"  {sc.total_dur:.1f}s (cached)")
+                continue
             _record_slide(record_html, full_w, sc, out_mp4, a.width, a.height)
             print(f"  {sc.total_dur:.1f}s ✓")
 
