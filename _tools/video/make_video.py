@@ -126,7 +126,10 @@ def clean_for_tts(text: str) -> str:
     t = re.sub(r'(\d)\s*[〜～]\s*(\d)', r'\1から\2', t)
     for k, v in MARU_MAP.items():
         t = t.replace(k, v)
-    t = t.replace("・", "")  # middle dot in names (ピーター・ドラッカー) is silent
+    # ・ between katakana = foreign name separator → silent (ピーター・ドラッカー)
+    # ・ elsewhere = list separator → 、 (名前・年齢・職業 → 名前、年齢、職業)
+    t = re.sub(r'(?<=[ァ-ヶー])・(?=[ァ-ヶー])', '', t)
+    t = t.replace("・", "、")
     t = t.replace("「", "").replace("」", "").replace("『", "").replace("』", "")
     t = re.sub(r'\b(19|20)(\d{2})(年(?:代)?)', r'\2\3', t)
     t = re.sub(r'[（）\(\)]', '', t)
@@ -378,8 +381,8 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
 def _narr_hash(text, speaker, speed, sent_gap, para_gap) -> str:
     clean = clean_for_tts(text)
     salt = _compound_salt(clean)
-    # "nk" suffix invalidates cache for narrations that contain ・ (removed in clean step)
-    nakaten_salt = "nk" if "・" in text else ""
+    # "nk2" suffix invalidates cache for narrations with ・ (v2: katakana→silent, others→、)
+    nakaten_salt = "nk2" if "・" in text else ""
     return hashlib.md5(
         f'{text}|{speaker}|{speed:.3f}|{sent_gap:.3f}|{para_gap:.3f}|{salt}|{nakaten_salt}'.encode()
     ).hexdigest()
