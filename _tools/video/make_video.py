@@ -126,6 +126,7 @@ def clean_for_tts(text: str) -> str:
     t = re.sub(r'(\d)\s*[〜～]\s*(\d)', r'\1から\2', t)
     for k, v in MARU_MAP.items():
         t = t.replace(k, v)
+    t = t.replace("・", "")  # middle dot in names (ピーター・ドラッカー) is silent
     t = t.replace("「", "").replace("」", "").replace("『", "").replace("』", "")
     t = re.sub(r'\b(19|20)(\d{2})(年(?:代)?)', r'\2\3', t)
     t = re.sub(r'[（）\(\)]', '', t)
