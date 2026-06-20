@@ -97,6 +97,7 @@ ABBR_MAP = {
     "UGC":  "ユージーシー",
     "3C":   "サンシー",        "4P":   "ヨンピー",      "4C":   "ヨンシー",
     "AIDMA": "アイドマ",       "AISAS": "アイサス",
+    "USP":  "ユーエスピー",
 }
 
 # Compound terms read as ONE accent phrase (prevents double/triple-hump
