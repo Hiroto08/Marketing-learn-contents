@@ -100,6 +100,7 @@ ABBR_MAP = {
     "USP":  "ユーエスピー",   "CAC":  "シーエーシー",
     "AB":   "エービー",       "CTA":  "シーティーエー", "EC":   "イーシー",
     "GA4":  "ジーエーフォー", "URL":  "ユーアールエル", "VWO":  "ブイダブリューオー",
+    "NPS":  "エヌピーエス",  "CSV":  "シーエスブイ",
 }
 
 # Compound terms read as ONE accent phrase (prevents double/triple-hump
