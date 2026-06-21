@@ -1057,12 +1057,12 @@ body {
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── EP10 accent: amber ── */
-:root { --accent:#F59E0B; --glow-acc:rgba(245,158,11,.25); }
+/* ── EP10 accent: blue ── */
+:root { --accent:#3B82F6; --glow-acc:rgba(59,130,246,.25); }
 
 /* ── S1 ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2e1f06 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(245,158,11,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #0d2347 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(59,130,246,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
 #s1-badge i{color:var(--accent);}
 #s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
 #s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
@@ -1084,7 +1084,7 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-  <!-- S1: Title 0-30s -->
+  <!-- S1: Title -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
     <div class="s1-ring s1-ring2" aria-hidden="true"></div>
@@ -1092,7 +1092,7 @@ body {
     <div class="s1-dot s1-dot1" aria-hidden="true"></div>
     <div class="s1-dot s1-dot2" aria-hidden="true"></div>
     <div class="s1-dot s1-dot3" aria-hidden="true"></div>
-    <div class="slide-num">01 / 13</div><div class="step-dots" id="sd1"></div>
+    <div class="slide-num">01 / 18</div><div class="step-dots" id="sd1"></div>
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
       <div id="s1-ep" class="se">第10回</div>
@@ -1102,16 +1102,16 @@ body {
     </div>
   </section>
 
-  <!-- S2: Hook 30-80s -->
+  <!-- S2: Hook A - the experiment -->
   <section class="slide" id="s2">
-    <div class="slide-num">02 / 13</div><div class="step-dots" id="sd2"></div>
+    <div class="slide-num">02 / 18</div><div class="step-dots" id="sd2"></div>
     <div class="pad">
       <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">同じ商品・同じ価格<br>なのに<span style="color:#fff;">売れ方が違う</span></div>
       <div id="s2-flow" class="se" style="margin-top:.25em;">
         <svg viewBox="0 0 1000 250" style="width:min(82%,860px);height:auto;display:block;margin:0 auto;overflow:visible;">
           <defs>
             <linearGradient id="ep10ctr" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#b45309"/>
+              <stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="#1e40af"/>
             </linearGradient>
           </defs>
           <!-- baseline -->
@@ -1132,99 +1132,148 @@ body {
         </svg>
       </div>
       <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin-top:.3em;">売上 <span class="bignum t-xl">3.2倍</span></div>
-      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">センスではなく法則</div>
+      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">変えたのは見出し1行だけ</div>
     </div>
   </section>
 
-  <!-- S3: Ogilvy / what is copywriting 80-130s -->
+  <!-- S3: Hook B - why the difference -->
   <section class="slide" id="s3">
-    <div class="slide-num">03 / 13</div><div class="step-dots" id="sd3"></div>
+    <div class="slide-num">03 / 18</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
-      <div id="s3-hd" class="sh se">コピーとは</div>
-      <div id="s3-key" class="se t-xl" style="text-align:center;">紙の上の<span style="color:var(--accent);">セールスマン</span></div>
-      <div id="s3-flow" class="se aflow t-md" style="margin-top:.4em;">
+      <div id="s3-hd" class="sh se">何が差を生んだのか</div>
+      <div id="s3-flow" class="se aflow t-lg" style="margin-top:.4em;">
+        <span class="achip aghost">売り手の視点</span><span class="aarrow">→</span><span class="achip on">買い手の視点</span>
+      </div>
+      <div id="s3-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">センスではなく、再現可能な法則</div>
+    </div>
+  </section>
+
+  <!-- S4: Ogilvy definition -->
+  <section class="slide" id="s4">
+    <div class="slide-num">04 / 18</div><div class="step-dots" id="sd4"></div>
+    <div class="pad-t">
+      <div id="s4-hd" class="sh se">コピーとは</div>
+      <div id="s4-key" class="se t-xl" style="text-align:center;">紙の上の<span style="color:var(--accent);">セールスマン</span></div>
+      <div id="s4-flow" class="se aflow t-md" style="margin-top:.4em;">
         <span class="achip">読まれる</span><span class="aarrow">or</span><span class="achip aghost">無視</span>
       </div>
-      <div id="s3-note" class="se t-lg" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">勝負はヘッドラインで8割</div>
+      <div id="s4-note" class="se t-lg" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">勝負はヘッドラインで8割</div>
     </div>
   </section>
 
-  <!-- S4: Law1 Benefit-first 130-180s -->
-  <section class="slide" id="s4">
-    <div class="slide-num">04 / 13</div><div class="step-dots" id="sd4"></div>
+  <!-- S5【新規】: Where copy works -->
+  <section class="slide" id="s5">
+    <div class="slide-num">05 / 18</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s4-hd" class="sh se">法則① ベネフィットファースト</div>
-      <div id="s4-key" class="se t-xl" style="text-align:center;">読み手は<span style="color:var(--accent);">So what?</span></div>
-      <div id="s4-duo" class="se duo" style="margin-top:.3em;">
+      <div id="s5-hd" class="sh se">コピーが機能する場所</div>
+      <div id="s5-tags" class="se taglist t-md" style="margin-top:.4em;">
+        <span class="tag">広告文</span><span class="tag">LP</span><span class="tag">メルマガ件名</span><span class="tag">SNS投稿</span><span class="tag acc">商品名</span>
+      </div>
+      <div id="s5-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">すべてに同じ法則が使える</div>
+    </div>
+  </section>
+
+  <!-- S6: Law1 Benefit-first -->
+  <section class="slide" id="s6">
+    <div class="slide-num">06 / 18</div><div class="step-dots" id="sd6"></div>
+    <div class="pad-t">
+      <div id="s6-hd" class="sh se">法則① ベネフィットファースト</div>
+      <div id="s6-key" class="se t-xl" style="text-align:center;">読み手は<span style="color:var(--accent);">So what?</span></div>
+      <div id="s6-duo" class="se duo" style="margin-top:.3em;">
         <div class="pcard"><div class="ph t-lg" style="color:var(--red);">特徴<small>売り手目線</small></div><div class="taglist t-sm"><span class="tag ng">AI搭載</span></div></div>
         <div class="pcard"><div class="ph t-lg" style="color:var(--green);">ベネフィット<small>買い手目線</small></div><div class="taglist t-sm"><span class="tag ok">作業が自動で終わる</span></div></div>
       </div>
-      <div id="s4-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">最初の1文で「得」を約束</div>
+      <div id="s6-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">最初の1文で「得」を約束</div>
     </div>
   </section>
 
-  <!-- S5: Law2 Awareness levels 180-230s -->
-  <section class="slide" id="s5">
-    <div class="slide-num">05 / 13</div><div class="step-dots" id="sd5"></div>
+  <!-- S7: Law2A Awareness levels intro -->
+  <section class="slide" id="s7">
+    <div class="slide-num">07 / 18</div><div class="step-dots" id="sd7"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">法則② 意識レベルに合わせる</div>
-      <div id="s5-flow" class="se aflow sm t-md" style="margin-top:.2em;">
+      <div id="s7-hd" class="sh se">法則② 意識レベルに合わせる</div>
+      <div id="s7-flow" class="se aflow sm t-md" style="margin-top:.2em;">
         <span class="achip">未認知</span><span class="aarrow">→</span>
         <span class="achip">問題認知</span><span class="aarrow">→</span>
         <span class="achip">解決策</span><span class="aarrow">→</span>
         <span class="achip">商品認知</span><span class="aarrow">→</span>
         <span class="achip on">最も意識高</span>
       </div>
-      <div id="s5-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">ミスマッチが失敗の最大原因</div>
+      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">Eugene Schwartz（1966）</div>
     </div>
   </section>
 
-  <!-- S6: Law3 Slippery slope 230-280s -->
-  <section class="slide" id="s6">
-    <div class="slide-num">06 / 13</div><div class="step-dots" id="sd6"></div>
+  <!-- S8: Law2B Mismatch -->
+  <section class="slide" id="s8">
+    <div class="slide-num">08 / 18</div><div class="step-dots" id="sd8"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">法則③ スリッパリースロープ</div>
-      <div id="s6-key" class="se t-xl" style="text-align:center;">1行目の目的は<br><span style="color:var(--accent);">2行目を読ませる</span></div>
-      <div id="s6-tags" class="se taglist t-md" style="margin-top:.4em;">
+      <div id="s8-hd" class="sh se">意識レベルのミスマッチ</div>
+      <div id="s8-duo" class="se duo" style="margin-top:.3em;">
+        <div class="pcard"><div class="ph t-md" style="color:var(--red);">未認知に<small>「今すぐ購入」</small></div><div class="taglist t-sm"><span class="tag ng">反応ゼロ</span></div></div>
+        <div class="pcard"><div class="ph t-md" style="color:var(--red);">最も意識高に<small>長い問題提起</small></div><div class="taglist t-sm"><span class="tag ng">読み飛ばし</span></div></div>
+      </div>
+      <div id="s8-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">ミスマッチが失敗の最大原因</div>
+    </div>
+  </section>
+
+  <!-- S9: Law3 Slippery slope -->
+  <section class="slide" id="s9">
+    <div class="slide-num">09 / 18</div><div class="step-dots" id="sd9"></div>
+    <div class="pad-t">
+      <div id="s9-hd" class="sh se">法則③ スリッパリースロープ</div>
+      <div id="s9-key" class="se t-xl" style="text-align:center;">1行目の目的は<br><span style="color:var(--accent);">2行目を読ませる</span></div>
+      <div id="s9-tags" class="se taglist t-md" style="margin-top:.4em;">
         <span class="tag">短文・リズム</span><span class="tag">小さなYES</span><span class="tag acc">好奇心で引く</span>
       </div>
-      <div id="s6-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「弊社は〜」始まりは即NG</div>
+      <div id="s9-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「弊社は〜」始まりは即NG</div>
     </div>
   </section>
 
-  <!-- S7: Law4 Cialdini 280-330s -->
-  <section class="slide" id="s7">
-    <div class="slide-num">07 / 13</div><div class="step-dots" id="sd7"></div>
+  <!-- S10: Law4A Social proof + authority -->
+  <section class="slide" id="s10">
+    <div class="slide-num">10 / 18</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s7-hd" class="sh se">法則④ 社会的証明・権威・希少性</div>
-      <div id="s7-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
+      <div id="s10-hd" class="sh se">法則④ 社会的証明・権威</div>
+      <div id="s10-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
         <span class="tag">社会的証明<br><small style="font-weight:600;">12,000人が選んだ</small></span>
-        <span class="tag">権威<br><small style="font-weight:600;">医師監修</small></span>
-        <span class="tag acc">希少性<br><small style="font-weight:600;">残り3席</small></span>
+        <span class="tag acc">権威<br><small style="font-weight:600;">医師監修</small></span>
       </div>
-      <div id="s7-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">3つ重ねると最強・希少性は本物のみ</div>
+      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">Robert Cialdini（1984）</div>
     </div>
   </section>
 
-  <!-- S8: Law5 Numbers 330-380s -->
-  <section class="slide" id="s8">
-    <div class="slide-num">08 / 13</div><div class="step-dots" id="sd8"></div>
+  <!-- S11: Law4B Scarcity + combo -->
+  <section class="slide" id="s11">
+    <div class="slide-num">11 / 18</div><div class="step-dots" id="sd11"></div>
     <div class="pad-t">
-      <div id="s8-hd" class="sh se">法則⑤ 具体的な数字を使う</div>
-      <div id="s8-duo" class="se duo" style="margin-top:.3em;">
+      <div id="s11-hd" class="sh se">希少性は本物に限る</div>
+      <div id="s11-tags" class="se taglist t-md" style="margin-top:.35em;">
+        <span class="tag acc">残り3席<small style="display:block;font-weight:600;">本物の制約</small></span>
+        <span class="tag ng">嘘の希少性<small style="display:block;font-weight:600;">信頼を崩す</small></span>
+      </div>
+      <div id="s11-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">3つ重ねると最強</div>
+    </div>
+  </section>
+
+  <!-- S12: Law5 Numbers -->
+  <section class="slide" id="s12">
+    <div class="slide-num">12 / 18</div><div class="step-dots" id="sd12"></div>
+    <div class="pad-t">
+      <div id="s12-hd" class="sh se">法則⑤ 具体的な数字を使う</div>
+      <div id="s12-duo" class="se duo" style="margin-top:.3em;">
         <div class="pcard"><div class="ph t-lg" style="color:var(--red);">曖昧<small>素通り</small></div><div class="taglist t-sm"><span class="tag ng">大幅に改善</span></div></div>
         <div class="pcard"><div class="ph t-lg" style="color:var(--green);">数字<small>目に止まる</small></div><div class="taglist t-sm"><span class="tag ok">CVRが2.3倍</span></div></div>
       </div>
-      <div id="s8-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「3倍」より「2.8倍」が信頼される</div>
+      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「3倍」より「2.8倍」が信頼される</div>
     </div>
   </section>
 
-  <!-- S9: NG vs OK 380-430s -->
-  <section class="slide" id="s9">
-    <div class="slide-num">09 / 13</div><div class="step-dots" id="sd9"></div>
+  <!-- S13: NG vs OK A - headline -->
+  <section class="slide" id="s13">
+    <div class="slide-num">13 / 18</div><div class="step-dots" id="sd13"></div>
     <div class="pad-t">
-      <div id="s9-hd" class="sh se">NG例 vs OK例</div>
-      <div id="s9-duo" class="se duo" style="margin-top:.2em;">
+      <div id="s13-hd" class="sh se">NG例 vs OK例</div>
+      <div id="s13-duo" class="se duo" style="margin-top:.2em;">
         <div class="pcard" style="border-top-color:var(--red);">
           <div class="ph t-lg" style="color:var(--red);">法則なし</div>
           <div class="taglist t-sm"><span class="tag ng">サービスのご案内</span></div>
@@ -1234,44 +1283,56 @@ body {
           <div class="taglist t-sm"><span class="tag ok">3ヶ月で1.8倍の理由とは？</span></div>
         </div>
       </div>
-      <div id="s9-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">1つ欠けると反応は下がる</div>
+      <div id="s13-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">数字・ベネフィット・好奇心の3つ</div>
     </div>
   </section>
 
-  <!-- S10: A/B test priority 430-480s -->
-  <section class="slide" id="s10">
-    <div class="slide-num">10 / 13</div><div class="step-dots" id="sd10"></div>
+  <!-- S14: NG vs OK B - body breakdown -->
+  <section class="slide" id="s14">
+    <div class="slide-num">14 / 18</div><div class="step-dots" id="sd14"></div>
     <div class="pad-t">
-      <div id="s10-hd" class="sh se">A/Bテストの優先順位</div>
-      <div id="s10-flow" class="se aflow t-md" style="margin-top:.3em;">
+      <div id="s14-hd" class="sh se">本文に全法則が組み込まれている</div>
+      <div id="s14-tags" class="se taglist t-md" style="margin-top:.35em;">
+        <span class="tag">共感・小さなYES</span><span class="tag">社会的証明×権威</span><span class="tag acc">希少性</span>
+      </div>
+      <div id="s14-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">1つ欠けると反応は下がる</div>
+    </div>
+  </section>
+
+  <!-- S15: A/B test priority -->
+  <section class="slide" id="s15">
+    <div class="slide-num">15 / 18</div><div class="step-dots" id="sd15"></div>
+    <div class="pad-t">
+      <div id="s15-hd" class="sh se">A/Bテストの優先順位</div>
+      <div id="s15-flow" class="se aflow t-md" style="margin-top:.3em;">
         <span class="achip on">① 見出し</span><span class="aarrow">→</span>
         <span class="achip">② CTA</span><span class="aarrow">→</span>
         <span class="achip">③ 社会的証明</span>
       </div>
-      <div id="s10-key" class="se t-lg" style="text-align:center;margin-top:.4em;">見出しだけで<span style="color:var(--accent);">CTR 2〜5倍</span></div>
-      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">変える要素は必ず1つだけ</div>
+      <div id="s15-key" class="se t-lg" style="text-align:center;margin-top:.4em;">見出しだけで<span style="color:var(--accent);">CTR 2〜5倍</span></div>
+      <div id="s15-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">変える要素は必ず1つだけ</div>
     </div>
   </section>
 
-  <!-- S11: Halbert target 480-530s -->
-  <section class="slide" id="s11">
-    <div class="slide-num">11 / 13</div><div class="step-dots" id="sd11"></div>
+  <!-- S16: Halbert target -->
+  <section class="slide" id="s16">
+    <div class="slide-num">16 / 18</div><div class="step-dots" id="sd16"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">コピーより先に決める</div>
-      <div id="s11-key" class="se t-xl" style="text-align:center;">ハングリーな<span style="color:var(--accent);">群衆</span>に売れ</div>
-      <div id="s11-tags" class="se taglist t-md" style="margin-top:.4em;">
+      <div id="s16-hd" class="sh se">コピーより先に決める</div>
+      <div id="s16-key" class="se t-xl" style="text-align:center;">ハングリーな<span style="color:var(--accent);">群衆</span>に売れ</div>
+      <div id="s16-tags" class="se taglist t-md" style="margin-top:.4em;">
         <span class="tag">悩みの言葉</span><span class="tag">意識レベル</span><span class="tag">媒体</span>
       </div>
-      <div id="s11-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「全員向け」は誰にも刺さらない</div>
+      <div id="s16-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.4em;">「全員向け」は誰にも刺さらない</div>
     </div>
   </section>
 
-  <!-- S12: Summary 530-585s -->
-  <section class="slide" id="s12">
-    <div class="slide-num">12 / 13</div><div class="step-dots" id="sd12"></div>
+  <!-- S17: Summary -->
+  <section class="slide" id="s17">
+    <div class="slide-num">17 / 18</div><div class="step-dots" id="sd17"></div>
     <div class="pad-t">
-      <div id="s12-hd" class="sh se">まとめ</div>
-      <div id="s12-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.6em;">
+      <div id="s17-hd" class="sh se">まとめ</div>
+      <div id="s17-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.6em;">
         <span class="tag">①ベネフィット</span>
         <span class="tag">②意識レベル</span>
         <span class="tag">③滑り台</span>
@@ -1279,18 +1340,18 @@ body {
         <span class="tag">⑤数字</span>
         <span class="tag acc">先にターゲット</span>
       </div>
-      <div id="s12-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">まず見出しを1本、書き直す</div>
+      <div id="s17-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">まず見出しを1本、書き直す</div>
     </div>
   </section>
 
-  <!-- S13: Next 585-600s -->
-  <section class="slide" id="s13">
-    <div class="slide-num">13 / 13</div><div class="step-dots" id="sd13"></div>
+  <!-- S18: Next -->
+  <section class="slide" id="s18">
+    <div class="slide-num">18 / 18</div><div class="step-dots" id="sd18"></div>
     <div class="pad" style="text-align:center;align-items:center;">
-      <div id="s13-lbl" class="se t-md" style="color:var(--muted2);">次回・第11回</div>
-      <div id="s13-title" class="se t-xl" style="color:#fff;margin:.2em 0;">SNSエンゲージメント</div>
-      <div id="s13-sub" class="se t-md" style="color:var(--accent);">「いいね」から「行動」へ</div>
-      <div id="s13-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
+      <div id="s18-lbl" class="se t-md" style="color:var(--muted2);">次回・第11回</div>
+      <div id="s18-title" class="se t-xl" style="color:#fff;margin:.2em 0;">SNSエンゲージメント</div>
+      <div id="s18-sub" class="se t-md" style="color:var(--accent);">「いいね」から「行動」へ</div>
+      <div id="s18-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
     </div>
   </section>
 
@@ -1372,52 +1433,59 @@ const STEPS = [
   {si:12, t:589.5,  ids:['s13-cta'],    anim:'rv-pop'}
 ];
 const SLIDES_META = [
-  {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
-  {id:'s2',  start:30,  end:80,  dotContainerId:'sd2'},
-  {id:'s3',  start:80,  end:130, dotContainerId:'sd3'},
-  {id:'s4',  start:130, end:180, dotContainerId:'sd4'},
-  {id:'s5',  start:180, end:230, dotContainerId:'sd5'},
-  {id:'s6',  start:230, end:280, dotContainerId:'sd6'},
-  {id:'s7',  start:280, end:330, dotContainerId:'sd7'},
-  {id:'s8',  start:330, end:380, dotContainerId:'sd8'},
-  {id:'s9',  start:380, end:430, dotContainerId:'sd9'},
-  {id:'s10', start:430, end:480, dotContainerId:'sd10'},
-  {id:'s11', start:480, end:530, dotContainerId:'sd11'},
-  {id:'s12', start:530, end:585, dotContainerId:'sd12'},
-  {id:'s13', start:585, end:600, dotContainerId:'sd13'},
+  {id:'s1',  start:0.0,   end:12.9,  dotContainerId:'sd1'},
+  {id:'s2',  start:12.9,  end:40.7,  dotContainerId:'sd2'},
+  {id:'s3',  start:40.7,  end:54.7,  dotContainerId:'sd3'},
+  {id:'s4',  start:54.7,  end:93.5,  dotContainerId:'sd4'},
+  {id:'s5',  start:93.5,  end:111.7, dotContainerId:'sd5'},
+  {id:'s6',  start:111.7, end:158.3, dotContainerId:'sd6'},
+  {id:'s7',  start:158.3, end:174.2, dotContainerId:'sd7'},
+  {id:'s8',  start:174.2, end:205.9, dotContainerId:'sd8'},
+  {id:'s9',  start:205.9, end:259.0, dotContainerId:'sd9'},
+  {id:'s10', start:259.0, end:286.6, dotContainerId:'sd10'},
+  {id:'s11', start:286.6, end:310.4, dotContainerId:'sd11'},
+  {id:'s12', start:310.4, end:359.4, dotContainerId:'sd12'},
+  {id:'s13', start:359.4, end:389.4, dotContainerId:'sd13'},
+  {id:'s14', start:389.4, end:410.3, dotContainerId:'sd14'},
+  {id:'s15', start:410.3, end:464.1, dotContainerId:'sd15'},
+  {id:'s16', start:464.1, end:519.7, dotContainerId:'sd16'},
+  {id:'s17', start:519.7, end:566.8, dotContainerId:'sd17'},
+  {id:'s18', start:566.8, end:598.1, dotContainerId:'sd18'},
 ];
 const NARRATIONS = [
   `第10回のテーマは、コピーライティングの5つの法則です。
 読まれる言葉と無視される言葉の違いを、具体例で解説します。
 それでは、さっそく始めましょう。`,
   `「書くのが苦手なので」とよく言う人がいます。でも実は、コピーの反応率は「センス」ではなく「法則」で決まります。
-ある健康食品ECの実験です。商品も価格も広告費もまったく同じ。変えたのは見出し1行だけ。「毎日飲める栄養サプリ」から「40代の倦怠感が、3週間で変わった理由」に変えた途端、クリック率が3倍、CVRが3倍、売上は3.2倍になりました。
-この差は、売り手の視点から買い手の視点へ変わったことだけです。
-今日学ぶ5つの法則は、再現可能なルールです。センスは必要ありません。`,
+ある健康食品ECの実験です。商品も価格も広告費もまったく同じ。変えたのは見出し1行だけ。「毎日飲める栄養サプリ」から「40代の倦怠感が、3週間で変わった理由」に変えた途端、クリック率が3倍、CVRが3倍、売上は3.2倍になりました。`,
+  `この差は、売り手の視点から買い手の視点へ変わったことだけです。
+今日学ぶ5つの法則は、再現可能なルールです。センスは必要ありません。1つずつ、順番に見ていきましょう。`,
   `コピーライティングの大家、デイビッド・オグルヴィは「コピーライティングとは、紙の上のセールスマンである」と言いました。24時間休まず働き、何千人もの顧客に同時に語りかける存在です。
 オグルヴィが残した重要な言葉があります。「広告は読まれるか、無視されるかの2択だ」。中間はありません。流し見された広告は、存在しないのと同じです。
-さらにオグルヴィは調査から「ヘッドラインを読む人はボディコピーを読む人の5倍いる」と示しました。
-つまり、コピーの勝負はヘッドライン1行でほぼ決まります。これが今日のすべての出発点です。`,
+さらにオグルヴィは調査から「ヘッドラインを読む人はボディコピーを読む人の5倍いる」と示しました。つまり、コピーの勝負はヘッドライン1行でほぼ決まります。`,
+  `この法則は、特定の媒体だけのものではありません。広告文、LPのファーストビュー、メルマガの件名、SNS投稿の1行目、商品名やキャッチコピー——文字で人を動かす場所すべてに、同じ法則が使えます。
+これが今日のすべての出発点です。`,
   `法則1つ目は、ベネフィットファーストです。読み手はあなたの商品や会社に興味を持って広告を見ているわけではありません。自分の問題が解決するかどうか、自分に何の得があるかだけを見ています。
 「AI搭載」と書いても「だから何？」で終わります。「毎回考えていた作業が自動で終わる」と書いて初めて、読み手は自分ごとになります。
 オグルヴィは「ヘッドラインで商品のベネフィットを約束せよ」と言いました。最初の1文で「あなたにはこんな良いことが起きます」と宣言するのが法則1の核心です。
 自社のコピーを見て「So what?」と問いかけてみてください。それがベネフィットへの変換の第一歩です。`,
-  `法則2つ目は、意識レベルに合わせることです。コピーの天才、ユージン・シュワルツが1966年の著書で提唱した考え方です。同じ商品でも、読み手の「今いる段階」によって使うべきコピーはまったく変わります。
-問題にすら気づいていないレベル1の人に「今すぐ購入」と送っても反応はゼロです。一方でレベル5の「もう買う気満々」の人に長々と問題提起をしても読み飛ばされます。SNS広告はレベル1〜2に届きやすく、リスティング広告はレベル3〜4の人が集まる場です。
+  `法則2つ目は、意識レベルに合わせることです。コピーの天才、ユージン・シュワルツが1966年の著書で提唱した考え方です。同じ商品でも、読み手の「今いる段階」によって使うべきコピーはまったく変わります。`,
+  `問題にすら気づいていないレベル1の人に「今すぐ購入」と送っても反応はゼロです。一方でレベル5の「もう買う気満々」の人に長々と問題提起をしても読み飛ばされます。SNS広告はレベル1〜2に届きやすく、リスティング広告はレベル3〜4の人が集まる場です。
 この「意識レベルのミスマッチ」が、コピーの反応が悪い最大の原因のひとつです。まず読み手が今どのレベルにいるかを設定してからコピーを書く習慣をつけましょう。`,
   `法則3つ目は、スリッパリースロープです。コピーライターのジョセフ・シュガーマンが提唱した「滑り台理論」です。1行目の目的は商品を売ることでも会社を説明することでもありません。2行目を読ませることだけです。
 コピーは読まれ続けることで初めて機能します。そのために有効なのが3つの技術です。
 ひとつめは短い文とリズム。長文は読み手の脳の負担になります。ふたつめは小さなYESの積み重ね。読み手が「そうそう」と頷ける共感の文を冒頭に置くことで、心理的に前のめりにさせます。みっつめは好奇心を刺激して次へ引くこと。答えを少しだけ後にずらすと、続きを読みたくなります。
 LPやメルマガの冒頭を「弊社は〜です」から始めている場合、これは今日変えるべき箇所の筆頭です。`,
   `法則4つ目は、社会的証明・権威・希少性です。社会心理学者ロバート・チャルディーニが1984年に体系化した「影響力の原則」から、コピーに最も効く3つを解説します。
-社会的証明は「他の人も選んでいる」という安心感で、累計人数・レビュー数・満足率の数字がその代表です。権威は「専門家が認めている」という信頼感で、医師監修・研究機関の採用実績などが使えます。希少性は「手に入りにくい」という状況が欲求を高める心理で、「残り3席」「今月末まで」という言葉は購買の先延ばしを防ぎます。
+社会的証明は「他の人も選んでいる」という安心感で、累計人数・レビュー数・満足率の数字がその代表です。権威は「専門家が認めている」という信頼感で、医師監修・研究機関の採用実績などが使えます。`,
+  `希少性は「手に入りにくい」という状況が欲求を高める心理で、「残り3席」「今月末まで」という言葉は購買の先延ばしを防ぎます。
 ただし希少性は注意が必要で、嘘の「残り3席」を使い続けると信頼が崩れます。実際の制約のみに使ってください。この3つを1つのコピーに組み合わせると、反応率は飛躍的に変わります。`,
   `法則5つ目は、具体的な数字を使うことです。オグルヴィは「数字は読まれる。なぜなら具体的だからだ」と言いました。「短時間で完了」という言葉は脳内を素通りします。しかし「30分の作業が7分になった」は目に止まります。
 数字には「証明された感」があり、読み手に信頼感を与えます。重要なポイントが1つあります。「3倍」よりも「2.8倍」のほうが信頼される、という事実です。キリがよすぎる数字は盛った印象を与えますが、端数や奇数は実測値のように見えます。
 数字を使う際は必ず根拠を添え、「利用者調査」「〇〇人のデータより」と記載してください。Before/Afterを数字で示すだけで、コピーの説得力は大きく変わります。`,
   `ここで法則1〜5を全部使った実例と使わない例を比較してみましょう。同じビジネスコーチングの商品です。
-法則なしの見出しは「ビジネスコーチングサービスのご案内」。これは売り手の説明であり、読み手への得の約束がゼロです。一方、法則ありの見出しは「売上が3ヶ月で1.8倍になった起業家が、共通して変えたたった1つの習慣とは？」。数字・ベネフィット・好奇心の3つが詰まっています。
-本文では「不安を抱えていませんか？」で共感と小さなYESを作り、236名・98パーセント・MBAで社会的証明と権威を重ね、「残り4名」で希少性を加えています。5つの法則すべてが一つのコピーに組み込まれた構造です。`,
+法則なしの見出しは「ビジネスコーチングサービスのご案内」。これは売り手の説明であり、読み手への得の約束がゼロです。一方、法則ありの見出しは「売上が3ヶ月で1.8倍になった起業家が、共通して変えたたった1つの習慣とは？」。数字・ベネフィット・好奇心の3つが詰まっています。`,
+  `本文では「不安を抱えていませんか？」で共感と小さなYESを作り、236名・98パーセント・MBAで社会的証明と権威を重ね、「残り4名」で希少性を加えています。5つの法則すべてが一つのコピーに組み込まれた構造です。どこか1つでも欠けると、反応率は確実に下がります。`,
   `法則を学んだ次のステップは、実際にABテストで検証することです。どこから変えるべきか。答えはシンプルで、まずヘッドラインです。ヘッドラインの変更だけでCTRが2〜5倍変わることは珍しくありません。
 次にCTA、つまりボタンや行動喚起の文言です。「申し込む」より「今すぐ3分で始める」のほうが具体的で動きを感じさせます。3番目に社会的証明の有無、4番目に数字の出し方や位置です。
 ABテストで絶対に守るルールが1つあります。変える要素は必ず1つだけ、ということです。複数の要素を同時に変えると、どれが勝因かわからなくなります。
@@ -1434,7 +1502,7 @@ ABテストで絶対に守るルールが1つあります。変える要素は�
 SNSには「いいね」を集めても売上に繋がらないという独特の落とし穴があります。次回はエンゲージメントを「反応」から「行動」へ変える設計法を、プラットフォーム別に具体的に解説します。
 チャンネル登録と高評価をぜひよろしくお願いします。次回もお楽しみに。`
 ];
-const TOTAL_SECS = 600;
+const TOTAL_SECS = 598.1;
 
 
 /* ================================================================
