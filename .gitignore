@@ -3,4 +3,4 @@ __pycache__/
 video_out/
 .work/
 .claude/worktrees/
-video_build/*.mp4
+**/video_build/*.mp4
