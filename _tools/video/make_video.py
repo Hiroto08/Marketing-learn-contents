@@ -102,6 +102,7 @@ ABBR_MAP = {
     "GA4":  "ジーエーフォー", "URL":  "ユーアールエル", "VWO":  "ブイダブリューオー",
     "RAG":  "ラグ",
     "NPS":  "エヌピーエス",  "CSV":  "シーエスブイ",
+    "5A":   "ファイブエー",  "SaaS": "サース",
 }
 
 # Compound terms read as ONE accent phrase (prevents double/triple-hump
@@ -115,6 +116,7 @@ COMPOUND_DICT = {
     "エスティーピー分析":  ("エスティーピーブンセキ", 6),  # STP分析
     "ヨンピー分析":        ("ヨンピーブンセキ", 4),        # 4P分析
     "ヨンシー分析":        ("ヨンシーブンセキ", 4),        # 4C分析
+    "一方向":              ("イチホウコウ", 0),            # いちほうこう（×いっぽうこう）
 }
 
 MARU_MAP = {
@@ -257,7 +259,7 @@ def seed_user_dict(url: str) -> None:
     for surface, (pron, accent) in COMPOUND_DICT.items():
         qs = urllib.parse.urlencode({
             'surface': surface, 'pronunciation': pron,
-            'accent_type': accent, 'word_type': 'PROPER_NOUN', 'priority': 9})
+            'accent_type': accent, 'word_type': 'PROPER_NOUN', 'priority': 10})
         try:
             urllib.request.urlopen(urllib.request.Request(
                 f'{url}/user_dict_word?{qs}', method='POST'), timeout=10)
