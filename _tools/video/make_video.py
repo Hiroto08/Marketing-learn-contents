@@ -578,10 +578,16 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
         raise RuntimeError(f"No webm for slide {si}")
 
     raw_webm = os.path.join(tmp_dir, webms[0])
+    # Chromium's screencast is damage-based: once a slide is visually static
+    # (after its last animation) it stops emitting frames, so the WebM can end
+    # well before the narration audio does. tpad clones the last frame to fill
+    # any gap; -t then caps the output at total_dur so the video track always
+    # matches the audio track (else editors like Clipchamp trim the tail).
     subprocess.run(
         ['ffmpeg', '-y',
          '-ss', f'{head_offset:.3f}', '-i', raw_webm, '-i', audio_path,
          '-map', '0:v:0', '-map', '1:a:0',
+         '-vf', 'tpad=stop_mode=clone:stop_duration=600',
          '-c:v', 'libx264', '-crf', '18', '-preset', 'fast',
          '-c:a', 'aac', '-b:a', '192k',
          '-t', str(schedule.total_dur),
