@@ -70,7 +70,7 @@ https://www.youtube.com/playlist?list=XXXXXXXX
 ・Cathy Pearl 『Designing Voice User Interfaces: Principles of Conversational Experiences』（O'Reilly, 2016）——会話設計（VUI/対話設計）の基本原則
 ・Salesforce「State of the Connected Customer」/「State of the AI Connected Customer」レポート——AIは人間と組み合わせたほうが効果的という調査結果
 ・Zendesk「CX Trends」レポート——24時間対応への期待と「繰り返し説明」へのフラストレーションの統計
-・HubSpot 顧客サービス調査——人間が関わることへの安心感とボット即答への好みの統計
+・HubSpot 顧客サービス調査——単純な質問にはボットの即答を好むという顧客傾向の統計
 ```
 
 ---

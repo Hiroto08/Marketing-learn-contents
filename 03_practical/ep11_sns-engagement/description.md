@@ -64,7 +64,6 @@ https://www.youtube.com/playlist?list=XXXXXXXX
 ## 参考・補足リソース
 
 ```
-・Meta（旧Facebook）「The Value of Social Media for Businesses」（公式レポート）——SNSが売上に与える影響
 ・Sprout Social「Social Media Benchmarks」業種別エンゲージメント率レポート——業種別ベンチマーク数値
 ・Gary Vaynerchuk『Jab, Jab, Jab, Right Hook』（2013）——価値提供と売り込みのバランス理論
 ・Adam Mosseri（Instagram CEO）アルゴリズム公式説明（2023）——Instagramの投稿拡散の仕組み
