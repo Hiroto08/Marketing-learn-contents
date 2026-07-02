@@ -104,6 +104,7 @@ ABBR_MAP = {
     "NPS":  "エヌピーエス",  "CSV":  "シーエスブイ",
     "5A":   "ファイブエー",  "SaaS": "サース",
     "D2C":  "ディーツーシー",
+    "Airbnb": "エアビー",    # ×エアブンブ
 }
 
 # Compound terms read as ONE accent phrase (prevents double/triple-hump
