@@ -26,6 +26,7 @@ L3はフローAと同じ工程＋パッケージング先行＋機械検査（�
 
 参照ファイル（必要な時だけ読む。常時読み込み不要）：
 - [retention-packaging.md](retention-packaging.md) — **維持率・パッケージング仕様v2**（タイトル/サムネ/検索KW先行、コールドオープン、ナレーション機械検査、STEPS密度基準、Shorts）。根拠は `docs/youtube-reform-plan.md`
+- [story-writing.md](story-writing.md) — **ストーリー設計ガイド**（事例リサーチ→ワークシート→文体ルール→10点ルーブリック採点。台本前の必須工程）
 - [design-system.md](design-system.md) — CSS/HTML/JSの構造（big styleコンポーネント、ページ番号markup、SLIDES_META/NARRATIONS形状）
 - [narration-rules.md](narration-rules.md) — VOICEVOX訓読み対策・ABBR_MAP・尺の計算式
 - [templates.md](templates.md) — `script.md`/`description.md` の正確なテンプレートと記入例
@@ -73,7 +74,8 @@ L3はフローAと同じ工程＋パッケージング先行＋機械検査（�
 
 1. **題材を理解する**：ディレクトリ名・README記載タイトルから扱うトピックを把握する（上表参照）。同シリーズの既存回のトーン・難易度感を踏襲する。
 2. **パッケージングを先に決める**：[retention-packaging.md](retention-packaging.md) §1に従い、検索KW・タイトル3案・サムネ文字・「サムネの約束」を**台本より先に**決めて script.md に記録する。タイトル合格条件を全て満たすこと。
-3. **18スライド構成を設計する**：[retention-packaging.md](retention-packaging.md) §2の**動画構造v2**（S1コールドオープン → S2約束＋オープンループ → S3-6ケーススタディ → S7リフック① → S8-11原則 → S12リフック② → S13-15適用 → S16-17回収 → S18次への開ループ）で18枚の見出しリストを作る。HTML構造の参考はEP08。
+3. **ストーリーを設計する**：[story-writing.md](story-writing.md) の手順で、①事例リサーチ（WebSearch・出典必須）→②ストーリー設計ワークシート記入→③[retention-packaging.md](retention-packaging.md) §2の**動画構造v2**（S1コールドオープン → S2約束＋オープンループ → S3-6ケーススタディ → S7リフック① → S8-11原則 → S12リフック② → S13-15適用 → S16-17回収 → S18次への開ループ）への流し込みで18枚の見出しリストを作る。HTML構造の参考はEP08。
+   - ナレーション執筆後は story-writing.md §5の**10点ルーブリックで自己採点し、8点未満なら書き直す**（採点表を制作メモに残す）。
 4. **`script.md` を執筆する**：[templates.md](templates.md) の構成に従い、`## 動画基本情報` → `### パッケージング` → `### 主な引用・参考文献`（実在する理論・統計の出典を最低3〜5件入れる。架空の出典は禁止）→ `## 構成（全18スライド／約X分Y秒）` → 18×`### スライド N：タイトル（start〜end）`ブロック → `## 制作メモ`（主オープンループの張り・回収スライドを明記）。
    - 各ブロックの **`**ナレーション：**`** は完成原稿。後で `slide.html` の `NARRATIONS[N-1]` に **そのまま** コピーする（食い違いを作らない）。
    - 時間（start〜end）は [narration-rules.md](narration-rules.md) の文字数換算式で算出した暫定値でよい（動画ビルド後に実測値で再修正するため）。
