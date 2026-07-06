@@ -1,7 +1,7 @@
 ---
 name: episode-production
-description: Create or upgrade an episode of the "AI時代のマーケティング・ラボ" YouTube course (script.md / description.md / slide.html) to the 18-slide "big style" format. Use when writing a brand-new episode from its blank template (EP13+), when upgrading an old 13/15-slide episode to 18 slides, or when fixing narration/timestamp/pronunciation issues in an existing episode.
-when_to_use: "Triggers: 新しいエピソードを作って, EP13/14/.../24を作成, スライド化して, 18枚構成にアップデート, ナレーション直して, big styleにして"
+description: Create, upgrade, or renew an episode of the "AI時代のマーケティング・ラボ" YouTube course (script.md / description.md / slide.html / shorts.md) in the 18-slide "big style" format, following the retention/packaging spec v2 (docs/youtube-reform-plan.md). Use when writing a brand-new episode (EP17+), when renewing an existing episode to the v2 format (L1 packaging / L2 opening / L3 full rewrite), or when fixing narration/timestamp/pronunciation issues.
+when_to_use: "Triggers: 新しいエピソードを作って, EPNNを作成, EPNNをL1/L2/L3で更新, リニューアル, 計画書に従って更新, タイトル・サムネ見直し, スライド化して, ナレーション直して, Shorts台本"
 ---
 
 # エピソード制作スキル（18枚 big style）
@@ -15,15 +15,21 @@ EP02〜EP08 はこの形式が完成済み。EP09〜EP12 はこの形式へア�
 
 | 状態 | 該当エピソード | フロー |
 |------|----------------|--------|
-| `slide.html` が無い／`script.md`が空テンプレート | EP13〜24 | **A. 新規エピソード作成フロー** |
+| `slide.html` が無い／`script.md`が空テンプレート | EP17〜24 | **A. 新規エピソード作成フロー**（v2仕様で作る） |
 | `slide.html` はあるが 13〜15枚（旧フォーマット） | （現状は無し、将来の参考用） | **B. 既存スライド刷新フロー** |
-| 全部すでに18枚 | EP02〜EP12 | 触らない。タイムスタンプ修正だけなら 4.の手順を使う |
+| 18枚あるが**旧v1構成**（シラバス型タイトル・定型オープニング） | EP01〜EP16 | **C. リニューアルフロー（L1/L2/L3）** |
+
+**フローC（リニューアル）**：`docs/youtube-reform-plan.md` のロードマップに従い、
+[retention-packaging.md](retention-packaging.md) の作業レベル定義（L1=パッケージのみ／L2=冒頭改修／L3=全面リライト）で実施する。
+「EP◯◯をL3で更新して」のような指示が来たら retention-packaging.md を開いて該当レベルの範囲だけ作業する。
+L3はフローAと同じ工程＋パッケージング先行＋機械検査（ナレーション検査・STEPS密度検査）＋Shorts台本3本。
 
 参照ファイル（必要な時だけ読む。常時読み込み不要）：
+- [retention-packaging.md](retention-packaging.md) — **維持率・パッケージング仕様v2**（タイトル/サムネ/検索KW先行、コールドオープン、ナレーション機械検査、STEPS密度基準、Shorts）。根拠は `docs/youtube-reform-plan.md`
 - [design-system.md](design-system.md) — CSS/HTML/JSの構造（big styleコンポーネント、ページ番号markup、SLIDES_META/NARRATIONS形状）
 - [narration-rules.md](narration-rules.md) — VOICEVOX訓読み対策・ABBR_MAP・尺の計算式
 - [templates.md](templates.md) — `script.md`/`description.md` の正確なテンプレートと記入例
-- 完成済みの実例として **`02_intermediate/ep08_usp-differentiation/`** を常にお手本にする（最新で一番整理されている）
+- 完成済みの実例として **`02_intermediate/ep08_usp-differentiation/`** をHTML構造のお手本にする（※台本構成のお手本としては旧式。**台本の構成・ナレーションの書き方は retention-packaging.md の v2 仕様が最優先**）
 
 ---
 
@@ -65,20 +71,23 @@ EP02〜EP08 はこの形式が完成済み。EP09〜EP12 はこの形式へア�
 対象エピソードの `script.md`/`description.md` は空のプレースホルダー（`XX分`・`ポイント①`等）。
 **実際のマーケティング知見を自分で執筆する**必要がある（既存ファイルからの転記ではない）。
 
-1. **題材を理解する**：ディレクトリ名・README記載タイトルから扱うトピックを把握する（上表参照）。同シリーズの既存回（特にEP08）のトーン・難易度感を踏襲する。
-2. **18スライド構成を設計する**：EP08を開いて「フック → 定義 → 核心理論1〜3 → 実例 → まとめ → 次回予告」のような18枚の流れを参考にし、対象トピックに合わせた18枚の見出しリストを作る（オープニング1枚＋次回予告1枚を含む18枚が基本形）。
-3. **`script.md` を執筆する**：[templates.md](templates.md) の構成に従い、`## 動画基本情報` → `### 主な引用・参考文献`（実在する理論・統計の出典を最低3〜5件入れる。架空の出典は禁止）→ `## 構成（全18スライド／約X分Y秒）` → 18×`### スライド N：タイトル（start〜end）`ブロック → `## 制作メモ`。
+1. **題材を理解する**：ディレクトリ名・README記載タイトルから扱うトピックを把握する（上表参照）。同シリーズの既存回のトーン・難易度感を踏襲する。
+2. **パッケージングを先に決める**：[retention-packaging.md](retention-packaging.md) §1に従い、検索KW・タイトル3案・サムネ文字・「サムネの約束」を**台本より先に**決めて script.md に記録する。タイトル合格条件を全て満たすこと。
+3. **18スライド構成を設計する**：[retention-packaging.md](retention-packaging.md) §2の**動画構造v2**（S1コールドオープン → S2約束＋オープンループ → S3-6ケーススタディ → S7リフック① → S8-11原則 → S12リフック② → S13-15適用 → S16-17回収 → S18次への開ループ）で18枚の見出しリストを作る。HTML構造の参考はEP08。
+4. **`script.md` を執筆する**：[templates.md](templates.md) の構成に従い、`## 動画基本情報` → `### パッケージング` → `### 主な引用・参考文献`（実在する理論・統計の出典を最低3〜5件入れる。架空の出典は禁止）→ `## 構成（全18スライド／約X分Y秒）` → 18×`### スライド N：タイトル（start〜end）`ブロック → `## 制作メモ`（主オープンループの張り・回収スライドを明記）。
    - 各ブロックの **`**ナレーション：**`** は完成原稿。後で `slide.html` の `NARRATIONS[N-1]` に **そのまま** コピーする（食い違いを作らない）。
    - 時間（start〜end）は [narration-rules.md](narration-rules.md) の文字数換算式で算出した暫定値でよい（動画ビルド後に実測値で再修正するため）。
-4. **`description.md` を執筆する**：[templates.md](templates.md) のYouTube概要欄テンプレートに従い、メイン説明文・タイムスタンプ・シリーズ再生リスト・関連動画（上のロードマップ表から前後回を引用）・参考資料・ハッシュタグ・チャプター生成用を全て埋める。
-5. **`slide.html` を新規作成する**：EP08の `slide.html` を丸ごとコピーしてベースにし、[design-system.md](design-system.md) を見ながら以下を差し替える：
+5. **ナレーション機械検査を通す**：[retention-packaging.md](retention-packaging.md) §3のスクリプトを実行し、PASSになるまで書き直す（冒頭禁止句・接続詞監査・問いかけ密度・開ループ）。
+6. **`description.md` を執筆する**：[templates.md](templates.md) のYouTube概要欄テンプレートに従い全セクションを埋める。冒頭2行に検索KWを含める（[retention-packaging.md](retention-packaging.md) §5）。
+7. **`slide.html` を新規作成する**：EP08の `slide.html` を丸ごとコピーしてベースにし、[design-system.md](design-system.md) を見ながら以下を差し替える：
    - `<title>`、アクセントカラー（既存回と被らない色を選ぶ。ヘッダコメント `/* EPNN accent: ... */` に明記）
    - ステージ本体（`<section class="slide" id="s1">`〜`id="s18"`）の中身を18枚分書き換え
-   - `SLIDES_META` / `NARRATIONS` / `TOTAL_SECS` を3.で書いた内容に合わせて差し替え
+   - `SLIDES_META` / `NARRATIONS` / `TOTAL_SECS` を4.で書いた内容に合わせて差し替え
    - フラッグシップSVG（天秤・レーダー図など）やCSSの巨大ブロック・`@keyframes`は基本流用し、内容に応じて要素だけ調整する
-6. **検証する**：[design-system.md](design-system.md) のPlaywright検証手順で、JSエラー0件・`SLIDES_META`/`NARRATIONS`/`id="sN"`の数が18件で一致することを確認する。
-7. **略語の発音チェック**：NARRATIONSに新しい英字略語（例：新トピック特有の専門語）が出たら [narration-rules.md](narration-rules.md) のABBR_MAP/COMPOUND_DICTに追加する。
-8. **動画ビルドはユーザーから明確に指示された時だけ実行する**（「スライド・ナレーションの更新」だけを頼まれた場合はビルドしない）。ビルドする場合は4.の動画生成フローを使う。
+8. **検証する**：[design-system.md](design-system.md) のPlaywright検証手順（JSエラー0件・18件一致）に加え、[retention-packaging.md](retention-packaging.md) §4の**STEPS密度検査**（5〜7秒毎の視覚変化・15秒超の静止禁止）をPASSさせる。
+9. **略語の発音チェック**：NARRATIONSに新しい英字略語が出たら [narration-rules.md](narration-rules.md) のABBR_MAP/COMPOUND_DICTに追加する。
+10. **Shorts台本を書く**（L3・新規作成時）：[retention-packaging.md](retention-packaging.md) §6に従い `shorts.md` に3本。
+11. **動画ビルドはユーザーから明確に指示された時だけ実行する**（「スライド・ナレーションの更新」だけを頼まれた場合はビルドしない）。ビルドする場合は動画生成フローを使う。
 
 ---
 

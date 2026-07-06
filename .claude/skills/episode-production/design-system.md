@@ -75,6 +75,13 @@ const TOTAL_SECS = 553; // SLIDES_META最後のend
 - 視覚要素（テキスト・図）だけでも概要が伝わる構成にする
 - ナレーションだけ聞いても理解できる構成にする
 
+### STEPS密度（テンポ）基準 — 必須検査
+
+**各スライドのSTEP数 ≥ 音声秒数÷7（切り上げ）、15秒超の無変化区間禁止。**
+検証スクリプトと増やし方は [retention-packaging.md](retention-packaging.md) §4。
+STEPを増やすときは既存アニメクラス（rv-fade/rv-up/rv-scale/rv-pop）で要素を順次出現させる。
+新しいCSS/JSエンジンは作らない。
+
 ### アクセントカラー
 
 各エピソードごとに `:root { --accent: ...; --glow-acc: ...; }` をCSS内でオーバーライドしている
@@ -108,5 +115,6 @@ missing = pg.evaluate("""()=>{
 | 問題 | 原因 | 対処 |
 |------|------|------|
 | スマホで文字が小さい | Referenceスタイル（vwベース）を使用 | Big style（cqwベース）に差し替え |
+| 独立SVG図が小さく表示される | `.se`コンテナがshrink-wrapし`%`幅が潰れる（EP07 S12で実例） | SVGの`style`を`width:min(78cqw,800px)`のように**cqw基準**で指定し、親divに`width:100%`。描画後にPlaywrightで`getBoundingClientRect()`の実寸を確認 |
 | アニメーション（`epN-pulse`等）が消える | slide.html再構築時にCSSを削除 | 元ファイルから`@keyframes`ブロックをコピー（ステージとJSのみ置換すれば起きない） |
 | `Read`でファイルを開けない（1MB超） | base64フォントで巨大 | `sed`/`grep`で必要箇所だけ部分読み |
