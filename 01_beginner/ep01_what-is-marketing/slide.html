@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>第1回 そもそもマーケティングとは？ | AI時代のマーケティング・ラボ</title>
+<title>第1回 良い商品が売れない理由の9割【マーケティングとは】 | AI時代のマーケティング・ラボ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
 <style id="fa-all-inline">
@@ -1057,23 +1057,23 @@ body {
 .pad   { justify-content: center; }
 .pad-t { justify-content: center; }
 
-/* ── EP01 accent: purple (default) ── */
-:root { --accent:#7c6fff; --glow-acc:rgba(124,111,255,.25); }
+/* EP01 accent: fuchsia */
+:root { --accent:#D946EF; --glow-acc:rgba(217,70,239,.25); }
 
-/* ── S1 ── */
-#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #1a0a2e 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
-#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(124,111,255,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
+/* ── S1 (copied from ep05, colors only) ── */
+#s1{background:radial-gradient(ellipse 90% 75% at 65% 45%, #2e0a18 0%, var(--slide-bg) 68%);align-items:center;justify-content:center;text-align:center;}
+#s1-badge{display:inline-flex;align-items:center;gap:.5em;background:var(--surf2);border:1px solid rgba(255,107,138,0.4);color:var(--muted2);border-radius:20px;padding:.4em 1.3em;margin-bottom:1em;font-size:clamp(11px,1.7cqw,20px);}
 #s1-badge i{color:var(--accent);}
 #s1-ep{font-size:clamp(13px,2.0cqw,26px);color:var(--accent);font-weight:800;margin-bottom:.5em;}
 #s1-catch{font-size:clamp(13px,2.0cqw,26px);color:var(--muted2);margin-top:1em;font-weight:600;}
 
-/* Minimal design helpers + type scale live in the shared base CSS. */
+/* Minimal design helpers + type scale live in shared base CSS — not redefined here. */
 
-/* ── S6 process-flow life (continuous) ── */
-@keyframes ep1-flow{to{stroke-dashoffset:-28}}
-@keyframes ep1-pulse{0%,100%{opacity:.35;transform:scale(1)}50%{opacity:.85;transform:scale(1.14)}}
-.ep1-flow{animation:ep1-flow 1.1s linear infinite;}
-.ep1-pulse{transform-box:fill-box;transform-origin:center;animation:ep1-pulse 2.2s ease-in-out infinite;}
+/* ── SVG positioning-map life (continuous) ── */
+@keyframes ep8pulse{0%,100%{opacity:.7;transform:scale(1)}50%{opacity:.15;transform:scale(1.5)}}
+.ep8-pulse{transform-box:fill-box;transform-origin:center;animation:ep8pulse 2.2s ease-in-out infinite;}
+@keyframes ep8glow{0%,100%{opacity:1}50%{opacity:.82}}
+.ep8-self{transform-box:fill-box;transform-origin:center;animation:ep8glow 2.2s ease-in-out infinite;}
 
 </style>
 </head>
@@ -1083,7 +1083,6 @@ body {
 <div id="stage-wrap">
 <div id="stage">
   <div id="flash"></div>
-  <!-- S1: Title 0-30s -->
   <section class="slide active" id="s1">
     <div class="s1-ring s1-ring1" aria-hidden="true"></div>
     <div class="s1-ring s1-ring2" aria-hidden="true"></div>
@@ -1091,203 +1090,277 @@ body {
     <div class="s1-dot s1-dot1" aria-hidden="true"></div>
     <div class="s1-dot s1-dot2" aria-hidden="true"></div>
     <div class="s1-dot s1-dot3" aria-hidden="true"></div>
-    <div class="slide-num">01 / 12</div><div class="step-dots" id="sd1"></div>
+    <div class="slide-num">01 / 18</div><div class="step-dots" id="sd1"></div>
     <div class="s1-content">
       <div id="s1-badge" class="se"><i class="fa-solid fa-circle-play"></i>&ensp;AI時代のマーケティング・ラボ</div>
-      <div id="s1-ep" class="se">第1回</div>
-      <div id="s1-title" class="se t-xl" style="color:#fff;">マーケティングとは？</div>
-      <div id="s1-sub" class="se t-lg" style="color:var(--accent);margin-top:.3em;">売れる仕組みの正体</div>
-      <div id="s1-catch" class="se">広告 ＝ ほんの一部</div>
+      <div id="s1-ep" class="se">上下6800円の作業用防水スーツ</div>
+      <div id="s1-title" class="se t-xl" style="color:#fff;">商品は、同じ。</div>
+      <div id="s1-sub" class="se t-xl" style="color:var(--accent);margin-top:.15em;">売上は、<span style="font-size:1.3em;">2.2倍</span>。</div>
+      <div id="s1-catch" class="se">変えたのは、商品でも価格でもない——</div>
     </div>
   </section>
-
-  <!-- S2: Hook — common misconception 30-90s -->
   <section class="slide" id="s2">
-    <div class="slide-num">02 / 12</div><div class="step-dots" id="sd2"></div>
+    <div class="slide-num">02 / 18</div><div class="step-dots" id="sd2"></div>
     <div class="pad">
-      <div id="s2-q" class="se t-lg" style="text-align:center;color:var(--muted2);">マーケティングって<br><span style="color:#fff;">何だと思う？</span></div>
-      <div id="s2-tags" class="se taglist t-md" style="margin-top:.4em;">
-        <span class="tag ng">✕ SNS投稿</span><span class="tag ng">✕ チラシ配り</span><span class="tag ng">✕ 広告を出す</span>
+      <div id="s2-hd" class="sh se">この動画の約束</div>
+      <div id="s2-promise" class="se t-md" style="text-align:center;">良い商品が<span class="c-accent">売れない本当の理由</span>と、マーケティングの正体が分かる</div>
+      <div id="s2-plan" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip">① 実話</span><span class="aarrow">→</span><span class="achip">② 原則</span><span class="aarrow">→</span><span class="achip on">③ あなたへ</span>
       </div>
-      <div id="s2-ans" class="se t-xl" style="text-align:center;color:var(--accent);margin-top:.3em;">どれも<span style="color:#fff;">手段</span>の一部</div>
-      <div id="s2-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">広告は最後の一手にすぎない</div>
+      <div id="s2-proof" class="se t-md" style="text-align:center;margin-top:.4em;">根拠：チェーン全店売上 <b style="color:#fff;">797億円</b> → <b class="c-accent">1752億円</b>（6年）</div>
+      <div id="s2-loop" class="se hl-banner" style="margin-top:.45em;">商品も価格も変えずに、何を変えた？</div>
+      <div id="s2-note" class="se note t-sm" style="margin-top:.35em;">答えは後半で</div>
     </div>
   </section>
-
-  <!-- S3: Official definition (AMA) 90-150s -->
   <section class="slide" id="s3">
-    <div class="slide-num">03 / 12</div><div class="step-dots" id="sd3"></div>
+    <div class="slide-num">03 / 18</div><div class="step-dots" id="sd3"></div>
     <div class="pad-t">
-      <div id="s3-hd" class="sh se">マーケティングとは（AMA定義）</div>
-      <div id="s3-key" class="se t-xl" style="text-align:center;">価値を<span style="color:var(--accent);">届ける活動</span></div>
-      <div id="s3-flow" class="se aflow t-md" style="margin-top:.4em;">
-        <span class="achip">創る</span><span class="aarrow">→</span>
-        <span class="achip">伝える</span><span class="aarrow">→</span>
-        <span class="achip">届ける</span><span class="aarrow">→</span>
-        <span class="achip on">交換</span>
+      <div id="s3-hd" class="sh se">舞台：作業服のワークマン</div>
+      <div id="s3-key" class="se t-lg" style="text-align:center;">プロ向け市場では、すでに<span class="c-accent">トップ</span><small style="display:block;color:var(--muted2);margin-top:.2em;font-size:.62em;">約40年、現場のプロ専門で成長</small></div>
+      <div id="s3-tags" class="se taglist t-md" style="margin-top:.45em;">
+        <span class="tag ng">職人はこれ以上増えない</span><span class="tag ng">成長に天井</span>
       </div>
-      <div id="s3-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">広告は「伝える」の一部</div>
+      <div id="s3-key2" class="se t-md" style="text-align:center;margin-top:.45em;">品質と価格には、誰よりも自信がある</div>
+      <div id="s3-note" class="se note" style="margin-top:.35em;">それなのに、職人以外には知られていない</div>
     </div>
   </section>
-
-  <!-- S4: Drucker quote 150-210s -->
   <section class="slide" id="s4">
-    <div class="slide-num">04 / 12</div><div class="step-dots" id="sd4"></div>
-    <div class="pad">
-      <div id="s4-quote" class="se t-xl" style="text-align:center;">「販売を<span style="color:var(--accent);">不要</span>にする」</div>
-      <div id="s4-by" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">― ドラッカー『マネジメント』1973</div>
-      <div id="s4-note" class="se hl-banner" style="margin-top:.6em;">自然に「選ばれる」状態をつくる</div>
-    </div>
-  </section>
-
-  <!-- S5: "sell" vs "build a system" 210-270s -->
-  <section class="slide" id="s5">
-    <div class="slide-num">05 / 12</div><div class="step-dots" id="sd5"></div>
+    <div class="slide-num">04 / 18</div><div class="step-dots" id="sd4"></div>
     <div class="pad-t">
-      <div id="s5-hd" class="sh se">発想がそもそも違う</div>
-      <div id="s5-duo" class="se duo" style="margin-top:.2em;">
-        <div class="pcard" style="border-top-color:var(--red);">
-          <div class="ph t-lg" style="color:var(--red);">旧来<small>どう売るか</small></div>
-          <div class="taglist t-sm"><span class="tag ng">商品ありき</span><span class="tag ng">押し込む</span><span class="tag ng">短期売上</span></div>
-        </div>
-        <div class="pcard" style="border-top-color:var(--accent);">
-          <div class="ph t-lg" style="color:var(--accent);">思考<small>なぜ選ばれるか</small></div>
-          <div class="taglist t-sm"><span class="tag ok">顧客ありき</span><span class="tag ok">引き寄せる</span><span class="tag ok">長期の関係</span></div>
-        </div>
+      <div id="s4-hd" class="sh se">想定外のヒット</div>
+      <div id="s4-key" class="se t-lg" style="text-align:center;">イージス <span class="c-accent">上下6800円</span><small style="display:block;color:var(--muted2);margin-top:.2em;font-size:.62em;">透湿防水防寒スーツ（2016年発売）</small></div>
+      <div id="s4-flow" class="se aflow t-md" style="margin-top:.4em;">
+        <span class="achip aghost">プロの雨天作業着</span><span class="aarrow">→</span><span class="achip on">バイク乗りが発見</span>
       </div>
-      <div id="s5-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.5em;">Push から Pull へ</div>
+      <div id="s4-quote" class="se t-md" style="text-align:center;margin-top:.4em;color:#fff;">「バイク用品より圧倒的に安いのに、性能は十分」</div>
+      <div id="s4-tags" class="se taglist t-sm" style="margin-top:.35em;">
+        <span class="tag">SNS・ブログで拡散</span><span class="tag acc">冬に売り切れ続出</span>
+      </div>
+      <div id="s4-note" class="se note" style="margin-top:.3em;">お客さんが、勝手に新しい価値を見つけた</div>
     </div>
   </section>
-
-  <!-- S6: 4 functions 270-330s -->
-  <section class="slide" id="s6">
-    <div class="slide-num">06 / 12</div><div class="step-dots" id="sd6"></div>
+  <section class="slide" id="s5">
+    <div class="slide-num">05 / 18</div><div class="step-dots" id="sd5"></div>
     <div class="pad-t">
-      <div id="s6-hd" class="sh se">マーケティングの4機能</div>
-      <div id="s6-flow" class="se" style="margin-top:.3em;">
-        <svg viewBox="0 0 1000 300" style="width:min(94%,1000px);height:auto;display:block;margin:0 auto;overflow:visible;">
-          <defs>
-            <marker id="ep1ar" markerWidth="10" markerHeight="10" refX="6.5" refY="4" orient="auto">
-              <path d="M0 0 L9 4 L0 8 Z" fill="var(--accent)"/>
-            </marker>
-            <filter id="ep1glow"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-          </defs>
-          <!-- flowing connectors between the 4 stages -->
-          <g fill="none" stroke="var(--accent)" stroke-width="5" stroke-dasharray="13 11" marker-end="url(#ep1ar)" stroke-linecap="round">
-            <line x1="235" y1="120" x2="295" y2="120" class="ep1-flow"/>
-            <line x1="475" y1="120" x2="535" y2="120" class="ep1-flow"/>
-            <line x1="715" y1="120" x2="775" y2="120" class="ep1-flow"/>
+      <div id="s5-hd" class="sh se">偶然で終わらせなかった人</div>
+      <div id="s5-key" class="se t-lg" style="text-align:center;">土屋 哲雄<small style="display:block;color:var(--muted2);margin-top:.2em;font-size:.62em;">2012年、三井物産からワークマンへ</small></div>
+      <div id="s5-flow" class="se aflow t-md" style="margin-top:.45em;">
+        <span class="achip">販売データ</span><span class="aarrow">＋</span><span class="achip">現場の声</span><span class="aarrow">→</span><span class="achip on">一般客がすでに来ていた</span>
+      </div>
+      <div id="s5-quote" class="se t-md" style="text-align:center;margin-top:.5em;color:#fff;">「足りないのは<span class="c-accent">商品力ではない</span>」</div>
+      <div id="s5-note" class="se note" style="margin-top:.35em;">原因は商品ではなく、別の場所にある</div>
+    </div>
+  </section>
+  <section class="slide" id="s6">
+    <div class="slide-num">06 / 18</div><div class="step-dots" id="sd6"></div>
+    <div class="pad-t">
+      <div id="s6-hd" class="sh se">常識の逆の決断</div>
+      <div id="s6-warn" class="se hl-banner" style="margin-top:.4em;">新しい商品は作らない。売り方を変える。</div>
+      <div id="s6-flow" class="se aflow t-md" style="margin-top:.5em;">
+        <span class="achip">2018年9月</span><span class="aarrow">→</span><span class="achip on">ワークマンプラス 1号店</span>
+      </div>
+      <div id="s6-tags" class="se taglist t-md" style="margin-top:.45em;">
+        <span class="tag">作業服の店</span><span class="tag acc">高機能×低価格のアウトドアウェアの店へ</span>
+      </div>
+      <div id="s6-note" class="se note" style="margin-top:.35em;">ららぽーと立川立飛（東京・立川）</div>
+    </div>
+  </section>
+  <section class="slide" id="s7">
+    <div class="slide-num">07 / 18</div><div class="step-dots" id="sd7"></div>
+    <div class="pad-t">
+      <div id="s7-hd" class="sh se">一番大事な事実</div>
+      <div class="jmini t-lg" style="margin-top:.4em;">
+        <div class="jcell se" id="s7-c1"><span class="jn">商品</span><span class="jv" style="color:#fff;">同じ</span></div>
+        <div class="jcell se" id="s7-c2"><span class="jn">価格</span><span class="jv" style="color:#fff;">同じ</span></div>
+        <div class="jcell se" id="s7-c3"><span class="jn">客と売上</span><span class="jv c-accent">激変</span></div>
+      </div>
+      <div id="s7-tags" class="se taglist t-sm" style="margin-top:.5em;">
+        <span class="tag">照明</span><span class="tag">マネキン</span><span class="tag">陳列</span><span class="tag acc">場所</span>
+      </div>
+      <div id="s7-note" class="se note" style="margin-top:.35em;">変えたのは見せ方だけ——ここにマーケティングの正体</div>
+    </div>
+  </section>
+  <section class="slide" id="s8">
+    <div class="slide-num">08 / 18</div><div class="step-dots" id="sd8"></div>
+    <div class="pad-t">
+      <div id="s8-hd" class="sh se">マーケティングの定義</div>
+      <div id="s8-bad" class="se taglist t-md" style="margin-top:.3em;">
+        <span class="tag ng">広告のこと？</span><span class="tag ng">SNS運用のこと？</span>
+      </div>
+      <div id="s8-flow" class="se aflow t-md" style="margin-top:.45em;">
+        <span class="achip">創る</span><span class="aarrow">→</span><span class="achip">伝える</span><span class="aarrow">→</span><span class="achip">届ける</span><span class="aarrow">→</span><span class="achip on">交換する</span>
+      </div>
+      <div id="s8-key" class="se hl-banner" style="margin-top:.5em;">広告は「伝える」の一部でしかない</div>
+      <div id="s8-note" class="se note" style="margin-top:.35em;">AMA（アメリカ・マーケティング協会）2007制定／2017再承認</div>
+    </div>
+  </section>
+  <section class="slide" id="s9">
+    <div class="slide-num">09 / 18</div><div class="step-dots" id="sd9"></div>
+    <div class="pad-t">
+      <div id="s9-hd" class="sh se">売れる仕組み＝1枚の設計図</div>
+      <div id="s9-def" class="se t-md" style="text-align:center;">マーケティング＝<span class="c-accent">売れる仕組み</span>を設計すること</div>
+      <div id="s9-fig" class="se" style="margin-top:.15em;">
+        <svg viewBox="0 0 1000 330" style="width:min(84cqw,860px);height:auto;display:block;margin:0 auto;overflow:visible;">
+          <!-- three parts of the blueprint -->
+          <g font-weight="800" text-anchor="middle">
+            <rect x="45"  y="34" width="270" height="96" rx="14" fill="var(--surf)" stroke="var(--accent)" stroke-width="2.5"/>
+            <text x="180" y="76" font-size="34" fill="#fff">誰に</text>
+            <text x="180" y="112" font-size="26" fill="var(--muted2)">売るのか</text>
+            <rect x="365" y="34" width="270" height="96" rx="14" fill="var(--surf)" stroke="var(--accent)" stroke-width="2.5"/>
+            <text x="500" y="76" font-size="34" fill="#fff">どんな価値</text>
+            <text x="500" y="112" font-size="26" fill="var(--muted2)">その人にとって</text>
+            <rect x="685" y="34" width="270" height="96" rx="14" fill="var(--surf)" stroke="var(--accent)" stroke-width="2.5"/>
+            <text x="820" y="76" font-size="34" fill="#fff">どう届けるか</text>
+            <text x="820" y="112" font-size="26" fill="var(--muted2)">売り場・伝え方</text>
+            <text x="340" y="92" font-size="38" fill="var(--accent)">×</text>
+            <text x="660" y="92" font-size="38" fill="var(--accent)">×</text>
           </g>
-          <g text-anchor="middle" font-weight="900">
-            <!-- 1 理解 -->
-            <rect x="55" y="62" width="180" height="116" rx="22" fill="var(--bg2)" stroke="var(--blue)" stroke-width="4"/>
-            <text x="145" y="124" font-size="40" fill="#fff">理解</text>
-            <text x="145" y="160" font-size="28" fill="var(--muted2)" font-weight="700">市場</text>
-            <text x="145" y="232" font-size="28" fill="var(--blue)">①</text>
-            <!-- 2 戦略 -->
-            <rect x="295" y="62" width="180" height="116" rx="22" fill="var(--bg2)" stroke="var(--accent)" stroke-width="4"/>
-            <text x="385" y="124" font-size="40" fill="#fff">戦略</text>
-            <text x="385" y="160" font-size="28" fill="var(--muted2)" font-weight="700">狙い</text>
-            <text x="385" y="232" font-size="28" fill="var(--accent)">②</text>
-            <!-- 3 創造 -->
-            <rect x="535" y="62" width="180" height="116" rx="22" fill="var(--bg2)" stroke="var(--accent)" stroke-width="4"/>
-            <text x="625" y="124" font-size="40" fill="#fff">創造</text>
-            <text x="625" y="160" font-size="28" fill="var(--muted2)" font-weight="700">価値</text>
-            <text x="625" y="232" font-size="28" fill="var(--accent)">③</text>
-            <!-- 4 伝達 (highlighted = 広告) -->
-            <circle cx="865" cy="120" r="78" fill="none" stroke="var(--acc2)" stroke-width="3" class="ep1-pulse"/>
-            <rect x="775" y="62" width="180" height="116" rx="22" fill="var(--accent)" stroke="#fff" stroke-width="3" filter="url(#ep1glow)"/>
-            <text x="865" y="124" font-size="40" fill="#fff">伝達</text>
-            <text x="865" y="160" font-size="28" fill="#fff" font-weight="700">広告</text>
-            <text x="865" y="232" font-size="28" fill="var(--acc2)">④</text>
+          <!-- product quality = just one part -->
+          <g font-weight="700" text-anchor="middle">
+            <rect x="60" y="205" width="250" height="70" rx="12" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="8 6"/>
+            <text x="185" y="248" font-size="27" fill="var(--muted2)">商品の質＝部品の1つ</text>
+            <path d="M 310 240 C 380 240 420 180 460 140" fill="none" stroke="var(--muted)" stroke-width="2.5" stroke-dasharray="8 6"/>
+          </g>
+          <!-- result -->
+          <path d="M 500 140 L 500 190" fill="none" stroke="var(--accent)" stroke-width="4" marker-end="url(#ep1arrow)"/>
+          <defs><marker id="ep1arrow" markerWidth="10" markerHeight="10" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="var(--accent)"/></marker></defs>
+          <g text-anchor="middle">
+            <rect x="360" y="205" width="280" height="86" rx="16" fill="var(--accent)"/>
+            <text x="500" y="260" font-size="42" font-weight="900" fill="#fff">売れる</text>
           </g>
         </svg>
       </div>
-      <div id="s6-note" class="se t-md" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">広告は最後の1ステップ</div>
+      <div id="s9-key" class="se t-md" style="text-align:center;margin-top:.25em;">3つがかみ合えば、商品は同じでも<span class="c-accent">売れ方が変わる</span></div>
+      <div id="s9-note" class="se note" style="margin-top:.25em;">設計図がずれていると、良い商品でも売れない</div>
     </div>
   </section>
-
-  <!-- S7: Starbucks example 330-405s -->
-  <section class="slide" id="s7">
-    <div class="slide-num">07 / 12</div><div class="step-dots" id="sd7"></div>
-    <div class="pad-t">
-      <div id="s7-hd" class="sh se">例：スターバックス</div>
-      <div id="s7-key" class="se t-xl" style="text-align:center;">売るのは<span style="color:var(--accent);">第3の居場所</span></div>
-      <div id="s7-kpi" class="se" style="text-align:center;margin-top:.3em;">
-        <span class="t-md" style="color:var(--muted2);">コンビニの</span>
-        <span class="bignum t-xl" style="display:block;">5〜7倍</span>
-      </div>
-      <div id="s7-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.3em;">高くても「選ばれる理由」を設計</div>
-    </div>
-  </section>
-
-  <!-- S8: Iceberg model 405-450s -->
-  <section class="slide" id="s8">
-    <div class="slide-num">08 / 12</div><div class="step-dots" id="sd8"></div>
-    <div class="pad-t">
-      <div id="s8-hd" class="sh se">氷山モデル</div>
-      <div id="s8-top" class="se taglist t-md" style="margin-top:.2em;">
-        <span class="tag acc">広告・宣伝＝見える部分</span>
-      </div>
-      <div id="s8-line" class="se t-md" style="text-align:center;color:var(--muted2);margin:.3em 0;">〜〜〜 水面 〜〜〜</div>
-      <div id="s8-tags" class="se taglist t-md">
-        <span class="tag">顧客理解</span><span class="tag">戦略設計</span><span class="tag">商品・価格</span><span class="tag">体験設計</span>
-      </div>
-      <div id="s8-note" class="se t-sm" style="text-align:center;color:var(--accent);font-weight:800;margin-top:.5em;">水面下こそ本体</div>
-    </div>
-  </section>
-
-  <!-- S9: Timeline 450-510s -->
-  <section class="slide" id="s9">
-    <div class="slide-num">09 / 12</div><div class="step-dots" id="sd9"></div>
-    <div class="pad-t">
-      <div id="s9-hd" class="sh se">手段は変わり続ける</div>
-      <div id="s9-flow" class="se aflow sm t-md" style="margin-top:.3em;">
-        <span class="achip">〜80s<small>マス広告</small></span><span class="aarrow">→</span>
-        <span class="achip">90s<small>ネット</small></span><span class="aarrow">→</span>
-        <span class="achip">10s<small>SNS</small></span><span class="aarrow">→</span>
-        <span class="achip on">現在<small>AI・データ</small></span>
-      </div>
-      <div id="s9-note" class="se hl-banner" style="margin-top:.6em;">本質は不変 ＝ 顧客理解と価値提供</div>
-    </div>
-  </section>
-
-  <!-- S10: Levitt quote 510-545s -->
   <section class="slide" id="s10">
-    <div class="slide-num">10 / 12</div><div class="step-dots" id="sd10"></div>
-    <div class="pad">
-      <div id="s10-quote" class="se t-xl" style="text-align:center;">欲しいのは<br><span style="color:var(--accent);">ドリルより穴</span></div>
-      <div id="s10-by" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.5em;">― レビット『近視眼』1960</div>
-      <div id="s10-note" class="se t-sm" style="text-align:center;color:var(--muted2);margin-top:.4em;">売るのはスペックでなく結果・体験</div>
-    </div>
-  </section>
-
-  <!-- S11: Summary 545-580s -->
-  <section class="slide" id="s11">
-    <div class="slide-num">11 / 12</div><div class="step-dots" id="sd11"></div>
+    <div class="slide-num">10 / 18</div><div class="step-dots" id="sd10"></div>
     <div class="pad-t">
-      <div id="s11-hd" class="sh se">まとめ</div>
-      <div id="s11-tags" class="se taglist t-lg" style="margin-top:.3em;gap:.7em;">
-        <span class="tag">広告 ≠ 全体</span>
-        <span class="tag">売れる状態をつくる</span>
-        <span class="tag">理解→戦略→創造→伝達</span>
-        <span class="tag acc">本質は不変</span>
+      <div id="s10-hd" class="sh se">ドラッカーの答え</div>
+      <div id="s10-quote" class="se t-lg" style="text-align:center;color:#fff;margin-top:.25em;">「マーケティングの目的は、<br><span class="c-accent">販売を不要にする</span>ことである」</div>
+      <div id="s10-src" class="se note t-sm" style="margin-top:.3em;">ピーター・ドラッカー『マネジメント』（1973）</div>
+      <div id="s10-flow" class="se aflow t-md" style="margin-top:.45em;">
+        <span class="achip aghost">売り込む</span><span class="aarrow">→</span><span class="achip on">向こうから探しに来る</span>
       </div>
-      <div id="s11-note" class="se t-md" style="text-align:center;color:var(--muted2);margin-top:.6em;">「どんな仕組みで売れてる？」と問う</div>
+      <div id="s10-q" class="se hl-banner" style="margin-top:.45em;">あなたの商品を、探しに来てくれる人は？</div>
     </div>
   </section>
-
-  <!-- S12: Next 580-600s -->
+  <section class="slide" id="s11">
+    <div class="slide-num">11 / 18</div><div class="step-dots" id="sd11"></div>
+    <div class="pad-t">
+      <div id="s11-hd" class="sh se">ドリルと穴</div>
+      <div id="s11-quote" class="se t-lg" style="text-align:center;color:#fff;margin-top:.2em;">「顧客はドリルではなく、<span class="c-accent">穴</span>が欲しい」</div>
+      <div id="s11-src" class="se note t-sm" style="margin-top:.25em;">セオドア・レビット（ハーバード・ビジネス・レビュー、1960）</div>
+      <div id="s11-duo" class="se duo" style="margin-top:.4em;">
+        <div class="pcard">
+          <div class="ph t-md" style="color:var(--accent);">職人<small>仕事を守る道具</small></div>
+        </div>
+        <div class="pcard" style="border-top-color:var(--blue);">
+          <div class="ph t-md" style="color:var(--blue);">バイク乗り<small>冬の通勤を変える防寒着</small></div>
+        </div>
+      </div>
+      <div id="s11-key" class="se hl-banner" style="margin-top:.45em;">同じ商品でも、穴は相手の数だけある</div>
+      <div id="s11-note" class="se note" style="margin-top:.3em;">あなたの商品は、誰の、どんな穴？</div>
+    </div>
+  </section>
   <section class="slide" id="s12">
-    <div class="slide-num">12 / 12</div><div class="step-dots" id="sd12"></div>
-    <div class="pad" style="text-align:center;align-items:center;">
-      <div id="s12-lbl" class="se t-md" style="color:var(--muted2);">次回・第2回</div>
-      <div id="s12-title" class="se t-xl" style="color:#fff;margin:.2em 0;">誰に何を売る？</div>
-      <div id="s12-sub" class="se t-md" style="color:var(--accent);">3C分析 と STP分析</div>
-      <div id="s12-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 & 高評価</div>
+    <div class="slide-num">12 / 18</div><div class="step-dots" id="sd12"></div>
+    <div class="pad-t">
+      <div id="s12-hd" class="sh se">センスではなく、設計</div>
+      <div id="s12-key" class="se t-lg" style="text-align:center;margin-top:.2em;">変えたのは<span class="c-accent">仕組み</span>。ただし、ひらめきではない</div>
+      <div id="s12-tags" class="se taglist t-md" style="margin-top:.45em;">
+        <span class="tag acc">エクセル経営</span><span class="tag">全社員が販売データを分析</span>
+      </div>
+      <div id="s12-flow" class="se aflow t-md" style="margin-top:.45em;">
+        <span class="achip">観察＝数字で確認</span><span class="aarrow">→</span><span class="achip">設計</span><span class="aarrow">→</span><span class="achip on">再現性</span>
+      </div>
+      <div id="s12-note" class="se note" style="margin-top:.35em;">だから、私たちにも再現できる</div>
     </div>
   </section>
-
+  <section class="slide" id="s13">
+    <div class="slide-num">13 / 18</div><div class="step-dots" id="sd13"></div>
+    <div class="pad-t">
+      <div id="s13-hd" class="sh se">売れないとき、やりがちな一手</div>
+      <div id="s13-bad" class="se taglist t-md" style="margin-top:.3em;">
+        <span class="tag ng">商品をさらに磨く</span><span class="tag ng">広告を増やす</span>
+      </div>
+      <div id="s13-key" class="se hl-banner" style="margin-top:.45em;">先にやるのは「観察」</div>
+      <div id="s13-q1" class="se t-md" style="border-left:6px solid var(--accent);padding:.28em .8em;margin-top:.5em;">いま買っているのは、本当は誰？</div>
+      <div id="s13-q2" class="se t-md" style="border-left:6px solid var(--accent);padding:.28em .8em;margin-top:.3em;">何のために買っている？</div>
+      <div id="s13-q3" class="se t-md" style="border-left:6px solid var(--accent);padding:.28em .8em;margin-top:.3em;">想定外のお客さんが、混ざっていないか？</div>
+    </div>
+  </section>
+  <section class="slide" id="s14">
+    <div class="slide-num">14 / 18</div><div class="step-dots" id="sd14"></div>
+    <div class="pad-t">
+      <div id="s14-hd" class="sh se">設計図を3か所、書き換える</div>
+      <div id="s14-r1" class="se aflow t-md" style="margin-top:.35em;">
+        <span class="achip" style="min-width:4.2em;">誰に</span><span class="achip aghost">職人</span><span class="aarrow">→</span><span class="achip on">一般のお客さん</span>
+      </div>
+      <div id="s14-r2" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip" style="min-width:4.2em;">価値</span><span class="achip aghost">仕事の道具</span><span class="aarrow">→</span><span class="achip on">高機能×低価格の普段着</span>
+      </div>
+      <div id="s14-r3" class="se aflow t-md" style="margin-top:.3em;">
+        <span class="achip" style="min-width:4.2em;">届け方</span><span class="achip aghost">ロードサイド</span><span class="aarrow">→</span><span class="achip on">ショッピングモール</span>
+      </div>
+      <div id="s14-tags" class="se taglist t-sm" style="margin-top:.45em;">
+        <span class="tag">新商品 ほぼゼロ</span><span class="tag">値下げ ゼロ</span>
+      </div>
+      <div id="s14-note" class="se note" style="margin-top:.3em;">あなたなら、どこから書き換える？</div>
+    </div>
+  </section>
+  <section class="slide" id="s15">
+    <div class="slide-num">15 / 18</div><div class="step-dots" id="sd15"></div>
+    <div class="pad-t">
+      <div id="s15-hd" class="sh se">結果は数字に出た</div>
+      <div id="s15-ba" class="se aflow t-lg" style="margin-top:.4em;">
+        <span class="achip aghost">797億円<small>2018年3月期</small></span>
+        <span class="aarrow">→</span>
+        <span class="achip on">1752億円<small>2024年3月期</small></span>
+      </div>
+      <div id="s15-key" class="se t-xl" style="text-align:center;margin-top:.3em;">6年で <span class="bignum" style="font-size:1.25em;">約2.2倍</span></div>
+      <div id="s15-sub" class="se note" style="margin-top:.25em;">同じ規模の会社が、もう1社増えた計算</div>
+      <div id="s15-tags" class="se taglist t-sm" style="margin-top:.4em;">
+        <span class="tag acc">2019年度 ポーター賞</span><span class="tag acc">マーケター・オブ・ザ・イヤー2019 大賞</span>
+      </div>
+    </div>
+  </section>
+  <section class="slide" id="s16">
+    <div class="slide-num">16 / 18</div><div class="step-dots" id="sd16"></div>
+    <div class="pad-t">
+      <div id="s16-hd" class="sh se">答え合わせ</div>
+      <div id="s16-key" class="se hl-banner" style="margin-top:.35em;">変えたのは、売れる仕組み（＝設計図）</div>
+      <div id="s16-flow" class="se aflow t-md" style="margin-top:.5em;">
+        <span class="achip">誰に</span><span class="aarrow">×</span><span class="achip">どんな価値</span><span class="aarrow">×</span><span class="achip on">どう届けるか</span>
+      </div>
+      <div id="s16-def" class="se t-md" style="text-align:center;margin-top:.5em;">マーケティング＝この設計図を<span class="c-accent">描いて、直し続ける</span>こと</div>
+      <div id="s16-note" class="se note" style="margin-top:.35em;">売れない原因のほとんどは、商品ではなく設計図のずれ</div>
+    </div>
+  </section>
+  <section class="slide" id="s17">
+    <div class="slide-num">17 / 18</div><div class="step-dots" id="sd17"></div>
+    <div class="pad-t">
+      <div id="s17-hd" class="sh se">まとめ</div>
+      <div id="s17-t1" class="se taglist t-md" style="margin-top:.3em;">
+        <span class="tag acc">マーケティング＝売れる仕組みの設計</span>
+      </div>
+      <div id="s17-t2" class="se taglist t-md" style="margin-top:.35em;">
+        <span class="tag">広告は最後の一部</span><span class="tag">商品より先に設計図を疑う</span>
+      </div>
+      <div id="s17-act" class="se hl-banner" style="margin-top:.5em;">明日やること：お客さん1人に「何のために買ったか」を聞く</div>
+      <div id="s17-note" class="se note" style="margin-top:.35em;">2.2倍も、想定外の使われ方1つの発見から始まった</div>
+    </div>
+  </section>
+  <section class="slide" id="s18">
+    <div class="slide-num">18 / 18</div><div class="step-dots" id="sd18"></div>
+    <div class="pad" style="text-align:center;align-items:center;">
+      <div id="s18-lbl" class="se t-md" style="color:var(--muted2);">未解決の問い</div>
+      <div id="s18-title" class="se t-xl" style="color:#fff;margin:.2em 0;">売る相手は、どう選ぶ？</div>
+      <div id="s18-sub" class="se t-md" style="color:var(--accent);">答え：3C分析・STP分析（次の動画）</div>
+      <div id="s18-cta" class="se t-md" style="margin-top:.6em;color:var(--muted2);">👍 チャンネル登録 &amp; 高評価</div>
+    </div>
+  </section>
 </div><!-- /stage --></div><!-- /stage-wrap -->
 
 <!-- Progress Bar -->
@@ -1303,7 +1376,7 @@ body {
   <button id="btn-step"    title="次のアニメーション (Enter)">→ 次のアニメーション</button>
   <div class="ctrl-sep"></div>
   <span class="ctrl-info" id="timer-disp">0:00 / 10:00</span>
-  <span class="ctrl-info" id="slide-disp">Slide 1 / 13</span>
+  <span class="ctrl-info" id="slide-disp">Slide 1 / 18</span>
   <span class="ctrl-info"><span id="step-label">Step&nbsp;—</span></span>
   <button id="btn-narr">ナレーション 表示/隠す (H)</button>
 </div>
@@ -1316,110 +1389,160 @@ body {
 
 <script>
 const STEPS = [
-  {si:0,  t:0,    ids:['s1-badge'],   anim:'rv-fade'},
-  {si:0,  t:1.5,  ids:['s1-ep'],      anim:'rv-fade'},
-  {si:0,  t:3,    ids:['s1-title'],   anim:'rv-up'},
-  {si:0,  t:4.5,    ids:['s1-sub'],     anim:'rv-up'},
-  {si:0,  t:6,    ids:['s1-catch'],   anim:'rv-fade'},
-  {si:1,  t:30,   ids:['s2-q'],       anim:'rv-fade'},
-  {si:1,  t:30.5,   ids:['s2-tags'],    anim:'rv-up'},
-  {si:1,  t:31,   ids:['s2-ans'],     anim:'rv-scale'},
-  {si:1,  t:48,   ids:['s2-note'],    anim:'rv-fade'},
-  {si:2,  t:90,   ids:['s3-hd'],      anim:'rv-fade'},
-  {si:2,  t:90.5,   ids:['s3-key'],     anim:'rv-scale'},
-  {si:2,  t:91,  ids:['s3-flow'],    anim:'rv-up'},
-  {si:2,  t:108,  ids:['s3-note'],    anim:'rv-fade'},
-  {si:3,  t:150,  ids:['s4-quote'],   anim:'rv-scale'},
-  {si:3,  t:150.5,  ids:['s4-by'],      anim:'rv-fade'},
-  {si:3,  t:168,  ids:['s4-note'],    anim:'rv-pop'},
-  {si:4,  t:210,  ids:['s5-hd'],      anim:'rv-fade'},
-  {si:4,  t:210.5,  ids:['s5-duo'],     anim:'rv-up'},
-  {si:4,  t:228,  ids:['s5-note'],    anim:'rv-fade'},
-  {si:5,  t:270,  ids:['s6-hd'],      anim:'rv-fade'},
-  {si:5,  t:270.5,  ids:['s6-flow'],    anim:'rv-up'},
-  {si:5,  t:288,  ids:['s6-note'],    anim:'rv-pop'},
-  {si:6,  t:330,  ids:['s7-hd'],      anim:'rv-fade'},
-  {si:6,  t:330.5,  ids:['s7-key'],     anim:'rv-scale'},
-  {si:6,  t:331,  ids:['s7-kpi'],     anim:'rv-up'},
-  {si:6,  t:352.5,  ids:['s7-note'],    anim:'rv-fade'},
-  {si:7,  t:405,  ids:['s8-hd'],      anim:'rv-fade'},
-  {si:7,  t:405.5,  ids:['s8-top'],     anim:'rv-up'},
-  {si:7,  t:406,  ids:['s8-line'],    anim:'rv-fade'},
-  {si:7,  t:406.5,  ids:['s8-tags'],    anim:'rv-up'},
-  {si:7,  t:418.5,  ids:['s8-note'],    anim:'rv-pop'},
-  {si:8,  t:450,  ids:['s9-hd'],      anim:'rv-fade'},
-  {si:8,  t:450.5,  ids:['s9-flow'],    anim:'rv-up'},
-  {si:8,  t:468,  ids:['s9-note'],    anim:'rv-pop'},
-  {si:9,  t:510,  ids:['s10-quote'],  anim:'rv-scale'},
-  {si:9,  t:510.5,  ids:['s10-by'],     anim:'rv-fade'},
-  {si:9,  t:520.5,  ids:['s10-note'],   anim:'rv-fade'},
-  {si:10, t:545,  ids:['s11-hd'],     anim:'rv-fade'},
-  {si:10, t:545.5,  ids:['s11-tags'],   anim:'rv-up'},
-  {si:10, t:555.5,  ids:['s11-note'],   anim:'rv-fade'},
-  {si:11, t:580,  ids:['s12-lbl'],    anim:'rv-fade'},
-  {si:11, t:580.5,  ids:['s12-title'],  anim:'rv-up'},
-  {si:11, t:581,  ids:['s12-sub'],    anim:'rv-fade'},
-  {si:11, t:586,  ids:['s12-cta'],    anim:'rv-pop'}
+  {si:0, t:0.0, ids:['s1-badge'], anim:'rv-fade'},
+  {si:0, t:2.8, ids:['s1-ep'], anim:'rv-up'},
+  {si:0, t:5.6, ids:['s1-title'], anim:'rv-scale'},
+  {si:0, t:8.5, ids:['s1-sub'], anim:'rv-pop'},
+  {si:0, t:11.3, ids:['s1-catch'], anim:'rv-fade'},
+  {si:1, t:14.1, ids:['s2-hd'], anim:'rv-fade'},
+  {si:1, t:20.9, ids:['s2-promise'], anim:'rv-up'},
+  {si:1, t:27.7, ids:['s2-plan'], anim:'rv-scale'},
+  {si:1, t:34.5, ids:['s2-proof'], anim:'rv-pop'},
+  {si:1, t:41.4, ids:['s2-loop'], anim:'rv-fade'},
+  {si:1, t:48.2, ids:['s2-note'], anim:'rv-up'},
+  {si:2, t:55.0, ids:['s3-hd'], anim:'rv-fade'},
+  {si:2, t:61.6, ids:['s3-key'], anim:'rv-up'},
+  {si:2, t:68.2, ids:['s3-tags'], anim:'rv-scale'},
+  {si:2, t:74.8, ids:['s3-key2'], anim:'rv-pop'},
+  {si:2, t:81.4, ids:['s3-note'], anim:'rv-fade'},
+  {si:3, t:88.0, ids:['s4-hd'], anim:'rv-fade'},
+  {si:3, t:93.9, ids:['s4-key'], anim:'rv-up'},
+  {si:3, t:99.9, ids:['s4-flow'], anim:'rv-scale'},
+  {si:3, t:105.8, ids:['s4-quote'], anim:'rv-pop'},
+  {si:3, t:111.7, ids:['s4-tags'], anim:'rv-fade'},
+  {si:3, t:117.7, ids:['s4-note'], anim:'rv-up'},
+  {si:4, t:123.6, ids:['s5-hd'], anim:'rv-fade'},
+  {si:4, t:130.6, ids:['s5-key'], anim:'rv-up'},
+  {si:4, t:137.5, ids:['s5-flow'], anim:'rv-scale'},
+  {si:4, t:144.5, ids:['s5-quote'], anim:'rv-pop'},
+  {si:4, t:151.4, ids:['s5-note'], anim:'rv-fade'},
+  {si:5, t:158.4, ids:['s6-hd'], anim:'rv-fade'},
+  {si:5, t:164.4, ids:['s6-warn'], anim:'rv-up'},
+  {si:5, t:170.5, ids:['s6-flow'], anim:'rv-scale'},
+  {si:5, t:176.5, ids:['s6-tags'], anim:'rv-pop'},
+  {si:5, t:182.6, ids:['s6-note'], anim:'rv-fade'},
+  {si:6, t:188.6, ids:['s7-hd'], anim:'rv-fade'},
+  {si:6, t:194.5, ids:['s7-c1'], anim:'rv-up'},
+  {si:6, t:200.4, ids:['s7-c2'], anim:'rv-scale'},
+  {si:6, t:206.3, ids:['s7-c3'], anim:'rv-pop'},
+  {si:6, t:212.3, ids:['s7-tags'], anim:'rv-fade'},
+  {si:6, t:218.2, ids:['s7-note'], anim:'rv-up'},
+  {si:7, t:224.1, ids:['s8-hd'], anim:'rv-fade'},
+  {si:7, t:230.4, ids:['s8-bad'], anim:'rv-up'},
+  {si:7, t:236.7, ids:['s8-flow'], anim:'rv-scale'},
+  {si:7, t:242.9, ids:['s8-key'], anim:'rv-pop'},
+  {si:7, t:249.2, ids:['s8-note'], anim:'rv-fade'},
+  {si:8, t:255.5, ids:['s9-hd'], anim:'rv-fade'},
+  {si:8, t:262.0, ids:['s9-def'], anim:'rv-up'},
+  {si:8, t:268.5, ids:['s9-fig'], anim:'rv-scale'},
+  {si:8, t:275.1, ids:['s9-key'], anim:'rv-pop'},
+  {si:8, t:281.6, ids:['s9-note'], anim:'rv-fade'},
+  {si:9, t:288.1, ids:['s10-hd'], anim:'rv-fade'},
+  {si:9, t:294.6, ids:['s10-quote'], anim:'rv-up'},
+  {si:9, t:301.1, ids:['s10-src'], anim:'rv-scale'},
+  {si:9, t:307.7, ids:['s10-flow'], anim:'rv-pop'},
+  {si:9, t:314.2, ids:['s10-q'], anim:'rv-fade'},
+  {si:10, t:320.7, ids:['s11-hd'], anim:'rv-fade'},
+  {si:10, t:326.8, ids:['s11-quote'], anim:'rv-up'},
+  {si:10, t:332.9, ids:['s11-src'], anim:'rv-scale'},
+  {si:10, t:339.1, ids:['s11-duo'], anim:'rv-pop'},
+  {si:10, t:345.2, ids:['s11-key'], anim:'rv-fade'},
+  {si:10, t:351.3, ids:['s11-note'], anim:'rv-up'},
+  {si:11, t:357.4, ids:['s12-hd'], anim:'rv-fade'},
+  {si:11, t:364.3, ids:['s12-key'], anim:'rv-up'},
+  {si:11, t:371.1, ids:['s12-tags'], anim:'rv-scale'},
+  {si:11, t:378.0, ids:['s12-flow'], anim:'rv-pop'},
+  {si:11, t:384.8, ids:['s12-note'], anim:'rv-fade'},
+  {si:12, t:391.7, ids:['s13-hd'], anim:'rv-fade'},
+  {si:12, t:397.4, ids:['s13-bad'], anim:'rv-up'},
+  {si:12, t:403.0, ids:['s13-key'], anim:'rv-scale'},
+  {si:12, t:408.7, ids:['s13-q1'], anim:'rv-pop'},
+  {si:12, t:414.4, ids:['s13-q2'], anim:'rv-fade'},
+  {si:12, t:420.0, ids:['s13-q3'], anim:'rv-up'},
+  {si:13, t:425.7, ids:['s14-hd'], anim:'rv-fade'},
+  {si:13, t:430.9, ids:['s14-r1'], anim:'rv-up'},
+  {si:13, t:436.2, ids:['s14-r2'], anim:'rv-scale'},
+  {si:13, t:441.4, ids:['s14-r3'], anim:'rv-pop'},
+  {si:13, t:446.7, ids:['s14-tags'], anim:'rv-fade'},
+  {si:13, t:451.9, ids:['s14-note'], anim:'rv-up'},
+  {si:14, t:457.2, ids:['s15-hd'], anim:'rv-fade'},
+  {si:14, t:462.8, ids:['s15-ba'], anim:'rv-up'},
+  {si:14, t:468.5, ids:['s15-key'], anim:'rv-scale'},
+  {si:14, t:474.1, ids:['s15-sub'], anim:'rv-pop'},
+  {si:14, t:479.8, ids:['s15-tags'], anim:'rv-fade'},
+  {si:15, t:485.4, ids:['s16-hd'], anim:'rv-fade'},
+  {si:15, t:491.2, ids:['s16-key'], anim:'rv-up'},
+  {si:15, t:496.9, ids:['s16-flow'], anim:'rv-scale'},
+  {si:15, t:502.7, ids:['s16-def'], anim:'rv-pop'},
+  {si:15, t:508.4, ids:['s16-note'], anim:'rv-fade'},
+  {si:16, t:514.2, ids:['s17-hd'], anim:'rv-fade'},
+  {si:16, t:521.0, ids:['s17-t1'], anim:'rv-up'},
+  {si:16, t:527.9, ids:['s17-t2'], anim:'rv-scale'},
+  {si:16, t:534.7, ids:['s17-act'], anim:'rv-pop'},
+  {si:16, t:541.6, ids:['s17-note'], anim:'rv-fade'},
+  {si:17, t:548.4, ids:['s18-lbl'], anim:'rv-fade'},
+  {si:17, t:552.9, ids:['s18-title'], anim:'rv-up'},
+  {si:17, t:557.4, ids:['s18-sub'], anim:'rv-scale'},
+  {si:17, t:561.4, ids:['s18-cta'], anim:'rv-pop'},
 ];
 const SLIDES_META = [
-  {id:'s1',  start:0,   end:30,  dotContainerId:'sd1'},
-  {id:'s2',  start:30,  end:90,  dotContainerId:'sd2'},
-  {id:'s3',  start:90,  end:150, dotContainerId:'sd3'},
-  {id:'s4',  start:150, end:210, dotContainerId:'sd4'},
-  {id:'s5',  start:210, end:270, dotContainerId:'sd5'},
-  {id:'s6',  start:270, end:330, dotContainerId:'sd6'},
-  {id:'s7',  start:330, end:405, dotContainerId:'sd7'},
-  {id:'s8',  start:405, end:450, dotContainerId:'sd8'},
-  {id:'s9',  start:450, end:510, dotContainerId:'sd9'},
-  {id:'s10', start:510, end:545, dotContainerId:'sd10'},
-  {id:'s11', start:545, end:580, dotContainerId:'sd11'},
-  {id:'s12', start:580, end:600, dotContainerId:'sd12'}
+  {id:'s1', start:0.0, end:14.1, dotContainerId:'sd1'},
+  {id:'s2', start:14.1, end:55.0, dotContainerId:'sd2'},
+  {id:'s3', start:55.0, end:88.0, dotContainerId:'sd3'},
+  {id:'s4', start:88.0, end:123.6, dotContainerId:'sd4'},
+  {id:'s5', start:123.6, end:158.4, dotContainerId:'sd5'},
+  {id:'s6', start:158.4, end:188.6, dotContainerId:'sd6'},
+  {id:'s7', start:188.6, end:224.1, dotContainerId:'sd7'},
+  {id:'s8', start:224.1, end:255.5, dotContainerId:'sd8'},
+  {id:'s9', start:255.5, end:288.1, dotContainerId:'sd9'},
+  {id:'s10', start:288.1, end:320.7, dotContainerId:'sd10'},
+  {id:'s11', start:320.7, end:357.4, dotContainerId:'sd11'},
+  {id:'s12', start:357.4, end:391.7, dotContainerId:'sd12'},
+  {id:'s13', start:391.7, end:425.7, dotContainerId:'sd13'},
+  {id:'s14', start:425.7, end:457.2, dotContainerId:'sd14'},
+  {id:'s15', start:457.2, end:485.4, dotContainerId:'sd15'},
+  {id:'s16', start:485.4, end:514.2, dotContainerId:'sd16'},
+  {id:'s17', start:514.2, end:548.4, dotContainerId:'sd17'},
+  {id:'s18', start:548.4, end:576.3, dotContainerId:'sd18'},
 ];
 const NARRATIONS = [
-  `こんにちは。このチャンネルでは、マーケティングを基礎から実践まで体系的に学んでいきます。
-第1回のテーマは「マーケティングとは何か」。広告だけではない、売れる仕組みの正体を解き明かします。
-それでは、さっそく始めましょう。`,
-  `マーケティングと聞いて、何を思い浮かべますか。SNS運用、チラシ配り、広告を打つこと。よく挙がるのはこのあたりですよね。
-でも実は、これらはどれも「マーケティングの手段」であって、マーケティングそのものではありません。つまりマーケティングの一部に過ぎないんです。広告を打てばマーケティングをやっていると思いがちですが、それは最後の一手でしかありません。
-手段だけを先に学んでも、なぜか成果につながらない。その根本的な理由が、今日でわかります。いくら優れた広告技術を持っていても、土台となる戦略がなければ空振りに終わってしまいます。
-では、本当のマーケティングとは何なのか。まずは世界標準の定義から確認していきましょう。`,
-  `マーケティングの世界標準の定義を見てみましょう。アメリカ・マーケティング協会、AMAが制定した公式定義です。2007年に制定され、2017年に再承認されています。
-要点はシンプルです。「顧客にとって価値があるものを作り、伝え、届け、交換する。その一連の活動すべて」これがマーケティングです。
-注目してほしいのは、創る・伝える・届ける・交換するという4つのプロセスです。広告は最後の「伝える」というステップのひとつに過ぎません。マーケティングは広告よりはるかに広い概念なんです。
-この定義を頭に入れておくと、これからの話がずっと理解しやすくなります。4つのプロセスを意識しながら聞いてみてください。この定義を頭に入れておくと、これからの話がずっと理解しやすくなります。`,
-  `経営学の父と呼ばれる、ピーター・ドラッカー。1973年の著書「マネジメント」の中でこんな言葉を残しています。「マーケティングの目的は、販売を不要にすることである」。一見、逆説的に聞こえますよね。
-これが本質を突いた言葉で、本当に優れたマーケティングができれば、セールスや説得をしなくても、商品が自然に選ばれる状態を作り出せるんです。お客さんが自分から選びにきてくれる。
-「売る」という行為と、「売れる仕組みを作る」という発想の根本的な違い。これがマーケティング思考の核心です。ドラッカーのこの言葉は、今でも経営の現場で繰り返し引用されています。`,
-  `わかりやすく左右で比べてみましょう。旧来の「売る」発想は、商品ありきで「どうやって顧客を説得するか」が出発点です。一方的に押し込む、いわゆるプッシュ型ですね。目的も短期的な売上が中心になりがちです。
-一方、マーケティング思考は「なぜ選ばれるか」が出発点です。顧客が何を求めているかをまず理解して、その答えとして商品を設計します。引き寄せるプルの発想で、目的は長期的な関係構築です。
-この出発点の違いが、やがて大きな差を生み出します。同じ予算・同じ商品でも、思考の出発点が違うだけで成果はまったく変わってくるんです。この「なぜ選ばれるか」から考える発想は、これからの全12回を貫く軸になります。自分のビジネスがどちらの発想で動いているか、ぜひ振り返ってみてください。`,
-  `コトラーの整理によると、マーケティングには大きく4つの機能があります。ひとつめは市場を理解する段階、誰が何に困っていて何を求めているかをリサーチします。ふたつめは戦略を設計する段階、どの顧客層を狙いどんな立ち位置で価値を届けるかを決めます。
-みっつめは価値を創造する段階で、商品・価格・流通の仕方を設計します。そして最後のよっつめが価値を伝える段階、これが広告やSNSにあたる部分です。
-重要なのは、広告は最後のステップだということです。ひとつめから順番に土台を作ってからこそ、広告が初めて効果を発揮できます。逆に土台がなければ、広告費をいくら使っても成果につながりません。4つの機能を意識して、戦略を組み立てていきましょう。`,
-  `具体例で理解しましょう。スターバックスのコーヒーは1杯600円から700円ほど。コンビニコーヒーの5倍から7倍の価格です。それでも世界中で売れ続けています。なぜでしょうか。
-実はスターバックスは、コーヒーを売っているわけではないんです。「第3の居場所」、つまり家でも職場でもない、自分だけの落ち着ける時間と空間を売っています。
-カフェで過ごす時間に価値を感じる人を発見し、居場所として差別化し、空間・接客・体験全体を価値として創造してきた。そして「サードプレイス」というブランドストーリーで伝えてきた。
-価格ではなく体験に価値がある。高くても選ばれる理由を先に設計して、広告はその後。これが「売れる仕組み」の設計です。`,
-  `これを氷山に例えると、広告・宣伝は水面の上に出ている、誰もが見える部分です。でもそれは氷山の一角に過ぎません。
-水面下には、顧客理解・戦略設計・商品開発・価格設計・流通設計、これだけ大きな土台があります。この土台があって初めて、広告が機能するんです。
-氷山の大半が水面下にあるのと同じように、マーケティングの本体も表から見えない部分にあります。多くの人が「マーケティングは広告」と思ってしまうのは、水面上しか見えていないからです。
-この講座では、水面下の本質から順番に積み上げていきます。土台から理解することで、表面の手段が初めて意味を持ちます。
-水面下の設計を整えないまま広告だけを増やしても、成果は長続きしません。見えない部分こそ、じっくり整えていきましょう。`,
-  `マーケティングの手段は時代とともに大きく変わってきました。1950年代から80年代はテレビCMや新聞広告の時代で、企業が一方的に情報を届ける形でした。インターネットの登場で双方向になり、SNSの普及で顧客自身が情報発信者になりました。
-そして今はAIとデータを使った個別最適化の時代に入っています。あなたが見ているネット広告の多くは、あなたの行動データをもとにカスタマイズされています。
-手段は変わり続けますが、本質は変わりません。「顧客を深く理解して価値を届ける」、この一点だけです。新しいSNSが登場するたびに飛びつく前に、まず土台となる顧客理解と戦略があるかを確認する。手段に振り回されず、本質を押さえている人が、結局一番強いんです。`,
-  `もうひとつ、マーケティングの古典的な名言をご紹介します。HBRに掲載されたレビットの論文の一節です。「顧客はドリルが欲しいのではない。穴が欲しいのだ」。60年以上経った今でも語り継がれる言葉です。
-売るべきは商品のスペックではなく、顧客がその商品を使って得る「結果」や「体験」なんです。ドリルを売るなら、どんな穴を開けたいのか、何のために穴を開けるのかを理解することが出発点です。
-この考え方は第4回でベネフィットと特徴の違いとして、さらに深く掘り下げます。今は「顧客は目的のための手段として商品を買う」という考え方として覚えておいてください。`,
-  `今日のポイントを整理しましょう。ひとつめ、マーケティングは広告・宣伝ではなく、顧客に価値を届ける仕組み全体のことです。ふたつめ、本質は「売ること」ではなく「売れる状態を作ること」です。
-みっつめ、マーケティングには理解・戦略・創造・伝達という4つの機能があり、広告は最後のステップです。よっつめ、手段は時代で変わりますが、顧客理解と価値提供という本質は変わりません。
-日常の中で「これはどんな仕組みで売れているのか」と考える習慣をつけると、街で見かける商品やCMが、すべて学びの教材に変わります。今日から少し違う目線で眺めてみてください。`,
-  `次回は「3C分析」と「STP分析」をテーマに、市場を正しく見るための2大フレームワークを解説します。
-「全員に売ろうとする」がなぜ失敗するのか、具体例を交えながら解説します。どんなに優れた商品でも、ターゲットを絞らずに売ろうとすると誰にも刺さらないメッセージになってしまいます。
-この2つのフレームワークを理解すると、「どんな顧客に・何を・どう届けるか」という戦略の全体像がつかめるようになります。ぜひ続けてご覧ください。
-チャンネル登録と高評価をぜひよろしくお願いします。次回もお楽しみに。`
+`上下6800円の、作業用の防水スーツ。商品はほぼそのまま、売上は6年でおよそ2.2倍。この会社が変えたのは、商品でも価格でもありません。では、一体何を変えたのでしょうか。`,
+`この動画を見ると、良い商品なのに売れない本当の理由と、マーケティングとは何なのかが、実例で分かります。進めかたは3つ。作業服の会社ワークマンに起きた実話、そこから取り出せる原則、あなたの商品への当てはめかた、の順番です。実話と言える根拠も数字で示します。チェーン全店の売上が、6年で797億円から1752億円になった話です。
+見終わる頃には、売れない原因を商品のせいにしない見かたが手に入っているはずです。ではあらためて。商品も価格もほぼ変えずに、この会社は何を変えたのか。答えは、後半までとっておいてください。`,
+`舞台は、群馬県で生まれた作業服チェーン、ワークマンです。約40年間、建設現場や工場で働くプロのための店として成長し、プロ向けの市場ではすでにトップでした。ところが、その市場自体が頭打ちだったんです。職人の数はこれ以上増えない。つまり、今のお客さんだけを相手にしている限り、成長に天井が見えている状態でした。
+品質と価格には、誰よりも自信がある。それなのに、その良さは職人以外には、ほとんど知られていませんでした。`,
+`転機は、1つの商品から始まりました。2016年に発売された、上下6800円の透湿防水防寒スーツ、イージスです。もともとは、雨の中で働くプロのための作業着でした。ところが、この商品が想定外の場所で話題になります。バイク乗りです。『バイク用品より圧倒的に安いのに、性能は十分』。そんな口コミがSNSやブログで広がり、冬になると売り切れる店が続出しました。
+狙って起こしたブームではありません。お客さんのほうが、勝手に新しい価値を見つけたんです。`,
+`この現象を、偶然で終わらせなかった人がいます。2012年に三井物産からワークマンへ移ってきた、土屋哲雄さんです。土屋さんは、感覚ではなくデータで考える人でした。販売データと現場の声を調べ直すと、仕事とは関係なく作業服を買っていく一般のお客さんが、すでに店に来はじめていると分かってきます。
+『商品はもう、プロ以外にも刺さっている。足りないのは商品力ではない』。売れ広がらない原因は、商品ではなく別の場所にある。そう確信したわけです。`,
+`そこで下した決断が、常識の逆でした。新しい商品は作らない。その代わり、売りかたを変える。2018年9月、東京の立川にある大型ショッピングモールに、新業態ワークマンプラスの1号店を開きました。作業服の店ではなく、高機能なのに低価格なアウトドアウェアの店、という見せかたです。
+開店直後から、仕事とはまったく関係のないお客さんが次々と訪れ、この業態は全国へ一気に広がっていきました。`,
+`ここで、この話の一番大事な事実をお伝えします。ワークマンプラスの売り場に並んだのは、ほぼすべて、それまでの店と同じ商品でした。フィールドコア、ファインドアウト、イージス。職人向けの棚で売られていた自社ブランドを、照明と、マネキンと、陳列を変えて、アウトドアウェアとして並べ直しただけです。
+商品は同じ。価格も同じ。それなのに、お客さんと売上だけが変わった。不思議だと思いませんか。実は、ここにマーケティングの正体が、そのまま表れています。`,
+`マーケティングと聞くと、多くの人は広告や、SNSの運用を思い浮かべます。しかし、世界標準の定義はもっと広いんです。アメリカ・マーケティング協会は、マーケティングを『顧客にとって価値あるものを、創り、伝え、届け、交換する一連の活動』と定義しています。
+広告は、このうち『伝える』の一部でしかありません。ワークマンが動かしたのは、誰にどんな価値を届けるのかという、広告よりずっと手前の部分だったんです。`,
+`つまり、マーケティングとは、売れる仕組みを設計することです。この仕組みは、3つの部品でできています。誰に売るのか。その人にとって、どんな価値なのか。どうやって届けるのか。この3つが1枚の設計図としてかみ合ったとき、商品は同じままでも、売れかたが変わります。
+注目してほしいのは、商品の質が、設計図の中の1つの部品でしかないことです。だから、設計図のどこかがずれていると、どんなに良い商品でも売れません。`,
+`ここで、経営学者ピーター・ドラッカーの言葉を紹介します。『マーケティングの目的は、販売を不要にすることである』。1973年の著書、マネジメントに出てくる一文です。
+売り込まなくても、お客さんのほうから選びに来る状態を作る。誰にも売り込まれていないのに、バイク乗りが自分からイージスを探しに来た、まさにあの状態です。あなたの商品を、向こうから探しに来てくれる人はいるでしょうか。1秒だけ、考えてみてください。`,
+`もう1つだけ、原則を足します。1960年にハーバード・ビジネス・レビューへ掲載された、セオドア・レビットの有名な考えかたです。『顧客はドリルが欲しいのではない。穴が欲しいのだ』。人は商品そのものではなく、商品がもたらす結果にお金を払う、という意味です。
+同じ6800円のスーツでも、職人にとっては仕事を守る道具、バイク乗りにとっては冬の通勤を変える防寒着でした。商品は1つでも、穴は相手の数だけあります。あなたの商品は、誰の、どんな穴になっているでしょうか。`,
+`さて、冒頭の問いを半分だけ回収します。ワークマンが変えたのは商品ではなく、いま見てきた、売れる仕組みのほうでした。しかし、誤解しないでください。これは、ひらめきや才能の物語ではありません。
+ワークマンは、全社員が販売データを分析する、エクセル経営という取り組みを徹底しています。どの店で、どんな商品が、誰に買われているか。数字で確認してから動く。センスではなく、観察と設計です。だからこそ、私たちにも再現できる話なんです。`,
+`では、あなたの商品に当てはめましょう。良い商品なのに売れないとき、多くの人は、商品をさらに磨くか、広告を増やそうとします。実は、それは設計図の3つの部品を全部飛ばして、最後の一手だけを打ち続けている状態です。
+先にやるべきことは、観察です。いま買ってくれているのは、本当は誰なのか。何のために買っているのか。想定外のお客さんが混ざっていないか。ワークマンの快進撃も、バイク乗りという想定外のお客さんの発見から始まりました。`,
+`観察ができたら、設計図を書き換えます。ワークマンの書き換えは3か所でした。誰に、は職人から一般のお客さんへ広げる。価値は、仕事の道具から、高機能で低価格な普段着へ読み替える。届けかたは、ロードサイドの作業服店から、家族で行くショッピングモールへ変える。
+新しい商品はほぼ作らず、値下げもしていません。設計図を3か所書き換えただけです。あなたの商品なら、どこから書き換えられそうでしょうか。`,
+`結果は、数字にはっきり出ました。チェーン全店の売上は、2018年3月期の797億円から、2024年3月期には1752億円へ。6年で、およそ2.2倍です。同じ規模の会社が、まるごともう1社増えた計算になります。
+この客層拡大の戦略は専門家からも高く評価され、ワークマンは2019年度のポーター賞と、マーケター・オブ・ザ・イヤー2019の大賞を受賞しました。`,
+`これで、冒頭の問いに完全に答えられます。ワークマンが変えたのは、売れる仕組み。誰に、どんな価値を、どう届けるか、という設計図でした。
+マーケティングとは、広告のことでも、売り込みのテクニックでもありません。商品が自然に選ばれるように、この設計図を描いて、直し続けることです。良い商品が売れないとき、その原因のほとんどは、商品ではなく、設計図のずれにあります。`,
+`今日のまとめです。マーケティングとは、売れる仕組み、つまり、誰に、どんな価値を、どう届けるかの設計でした。広告は、その仕組みの最後の一部にすぎません。だから、売れないときは、商品より先に設計図を疑ってください。
+明日やることは1つだけです。最近あなたの商品を買ってくれたお客さん1人に、『何のために買ったんですか』と聞いてみてください。ワークマンを2.2倍にした客層拡大も、たった1つの想定外の使われかたの発見から始まりました。`,
+`ただ、ここで1つ、問題が残ります。売る相手を変えろと言われても、その相手は、どうやって選べばいいのでしょうか。思いつきで選んだ相手では、ワークマンのようにはなれません。
+その答えが、売る相手の選びかたを設計する、3C分析とSTP分析です。次の動画で手順どおりに解説しているので、続けてご覧ください。チャンネル登録と高評価も、よろしくお願いします。`,
 ];
-const TOTAL_SECS = 600;
+const TOTAL_SECS = 577;
 
 
 /* ================================================================
