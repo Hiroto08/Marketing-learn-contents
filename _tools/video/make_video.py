@@ -80,6 +80,14 @@ def parse_args():
     p.add_argument("--width",        type=int,   default=1280)
     p.add_argument("--height",       type=int,   default=720)
     p.add_argument("--crf",          type=int,   default=18)
+    p.add_argument("--bgm",          default="",
+                   help="BGM wav/mp3 to loop under the narration (e.g. _assets/audio/bgm_calm_loop.wav)")
+    p.add_argument("--bgm-db",       type=float, default=-21.0, dest="bgm_db",
+                   help="BGM gain in dB relative to source (default -21)")
+    p.add_argument("--sfx-dir",      default="", dest="sfx_dir",
+                   help="Dir containing sfx_whoosh/sfx_pop/sfx_ding.wav; enables SFX on slide transitions and pop/scale reveals")
+    p.add_argument("--sfx-db",       type=float, default=-17.0, dest="sfx_db",
+                   help="SFX gain in dB (default -17)")
     return p.parse_args()
 
 
@@ -179,6 +187,7 @@ class SlideMeta:
 class Step:
     si: int
     t: float
+    anim: str = ""
 
 
 @dataclass
@@ -206,8 +215,10 @@ def extract_slide_data(html_path: str) -> SlideData:
     for e in re.finditer(r'\{[^}]+\}', m.group(1)):
         si_m = re.search(r'si\s*:\s*(\d+)', e.group(0))
         t_m  = re.search(r'\bt\s*:\s*([\d.]+)', e.group(0))
+        an_m = re.search(r"anim\s*:\s*'([a-z-]+)'", e.group(0))
         if si_m and t_m:
-            steps.append(Step(si=int(si_m.group(1)), t=float(t_m.group(1))))
+            steps.append(Step(si=int(si_m.group(1)), t=float(t_m.group(1)),
+                              anim=an_m.group(1) if an_m else ""))
 
     m = re.search(r'const SLIDES_META\s*=\s*\[(.*?)\];', src, re.DOTALL)
     if not m:
@@ -734,13 +745,86 @@ class VideoBuilder:
 
         ep = Path(self.slide_html).parent.name
         out_mp4 = os.path.join(self.out_dir, f'{ep}_final.mp4')
+        mixing = bool(self.a.bgm or self.a.sfx_dir)
+        concat_out = out_mp4 + '.premix.mp4' if mixing else out_mp4
         subprocess.run(
             ['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', list_file,
              '-c:v', 'libx264', '-crf', str(self.a.crf), '-preset', 'fast',
-             '-c:a', 'aac', '-b:a', '192k', out_mp4],
+             '-c:a', 'aac', '-b:a', '192k', concat_out],
             check=True)
+        if mixing:
+            self.mix_audio(concat_out, out_mp4, slides)
+            os.remove(concat_out)
         dur = get_duration(out_mp4)
         print(f"\nFinal: {out_mp4}  ({dur/60:.1f} min)")
+
+    def mix_audio(self, src, dst, slide_order):
+        """Post-mix BGM (looped, faded) and SFX (slide whooshes + reveal pops)
+        under the narration. Video stream is copied untouched."""
+        a = self.a
+        total = get_duration(src)
+
+        # absolute start offset of each slide from the actual muxed files
+        offsets, cum = {}, 0.0
+        for si in slide_order:
+            offsets[si] = cum
+            cum += get_duration(os.path.join(self.video_dir, f'slide_{si:02d}.mp4'))
+
+        # SFX event plan: whoosh on every slide boundary (not video start),
+        # pop on rv-pop / rv-scale reveals, one soft ding on the opening anchor.
+        events = []   # (time_sec, kind)
+        if a.sfx_dir:
+            events.append((0.5, 'ding'))
+            for sc in self.schedules:
+                off = offsets.get(sc.si, 0.0)
+                if sc.si != slide_order[0]:
+                    events.append((off + 0.03, 'whoosh'))
+                for ev in sc.anim_events:
+                    anim = self.sd.steps[ev.step_idx].anim if ev.step_idx < len(self.sd.steps) else ""
+                    if anim in ('rv-pop', 'rv-scale'):
+                        events.append((off + ev.rel_t + 0.05, 'pop'))
+            # rate-limit: global min gap 0.6s, cap 60 events
+            events.sort()
+            kept, last_t = [], -10.0
+            for t, kind in events:
+                if t - last_t >= 0.6 and t < total - 0.5:
+                    kept.append((t, kind)); last_t = t
+            events = kept[:60]
+
+        sfx_files = {'whoosh': 'sfx_whoosh.wav', 'pop': 'sfx_pop.wav', 'ding': 'sfx_ding.wav'}
+        kinds = [k for k in ('whoosh', 'pop', 'ding') if any(e[1] == k for e in events)]
+
+        inputs = ['-i', src]
+        if a.bgm:
+            inputs += ['-stream_loop', '-1', '-i', a.bgm]
+        for k in kinds:
+            inputs += ['-i', os.path.join(a.sfx_dir, sfx_files[k])]
+
+        flt, mix_ins = [], ['[0:a]']
+        idx = 1
+        if a.bgm:
+            flt.append(f"[{idx}:a]atrim=0:{total:.3f},afade=t=in:d=1.5,"
+                       f"afade=t=out:st={max(0.0, total-4):.3f}:d=4,"
+                       f"volume={a.bgm_db}dB[bgm]")
+            mix_ins.append('[bgm]'); idx += 1
+        for k in kinds:
+            evs = [e for e in events if e[1] == k]
+            names = ''.join(f'[{k}{j}]' for j in range(len(evs)))
+            flt.append(f"[{idx}:a]volume={a.sfx_db}dB,asplit={len(evs)}{names}")
+            for j, (t, _) in enumerate(evs):
+                ms = int(t * 1000)
+                flt.append(f"[{k}{j}]adelay={ms}:all=1[{k}d{j}]")
+                mix_ins.append(f'[{k}d{j}]')
+            idx += 1
+        flt.append(f"{''.join(mix_ins)}amix=inputs={len(mix_ins)}:duration=first:normalize=0[aout]")
+
+        subprocess.run(
+            ['ffmpeg', '-y', *inputs,
+             '-filter_complex', ';'.join(flt),
+             '-map', '0:v', '-map', '[aout]',
+             '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', dst],
+            check=True, capture_output=True)
+        print(f"  audio mix: bgm={'on' if a.bgm else 'off'} sfx={len(events)} events")
 
     def run(self):
         self.extract()

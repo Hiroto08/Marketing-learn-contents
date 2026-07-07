@@ -164,11 +164,15 @@ for i, d in enumerate(durs):
 
 ## 動画生成コマンド（ビルドを明示的に頼まれた時のみ）
 
+標準ビルドは**BGM・SFXミックス込み**（[audio-production.md](audio-production.md) が正）：
+
 ```bash
 python3 _tools/video/make_video.py \
   <episode_dir>/slide.html \
   --out <episode_dir>/video_build/out \
-  --speaker 11 --speed 1.1 --final-outro 3.0
+  --speaker 11 --speed 1.1 --final-outro 3.0 \
+  --bgm _assets/audio/bgm_calm_loop.wav \
+  --sfx-dir _assets/audio
 ```
 
 実行環境のセットアップ・トラブルシュートは [narration-rules.md](narration-rules.md) の末尾を参照。

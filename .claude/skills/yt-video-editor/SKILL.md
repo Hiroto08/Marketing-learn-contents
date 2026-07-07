@@ -13,11 +13,13 @@ description: YouTube動画制作の映像編集役。make_video.pyでのビル�
 
 ## 手順
 1. VOICEVOX起動確認（yt-voice-director §2と同じ）。ビルドは重いので**バックグラウンド実行**し、Monitorで完了を待つ
-2. ビルド（シリーズ標準パラメータ）：
+2. ビルド（シリーズ標準＝**BGM・SFXミックス込み**。仕様と検証基準は `.claude/skills/episode-production/audio-production.md`）：
    ```bash
    python3 _tools/video/make_video.py <episode_dir>/slide.html \
-     --out <episode_dir>/video_build/out --speaker 11 --speed 1.1 --final-outro 3.0
+     --out <episode_dir>/video_build/out --speaker 11 --speed 1.1 --final-outro 3.0 \
+     --bgm _assets/audio/bgm_calm_loop.wav --sfx-dir _assets/audio
    ```
+   ミックス後は ebur128 で Integrated Loudness が -16〜-13 LUFS帯にあることも確認する
 3. **A/V検証**：final.mp4 の video/audio トラック長を ffprobe で取得し **差±0.1秒以内** を確認（過去にChromiumの静止画面でフレーム記録が止まり音声より映像が短くなる不具合があった。tpad対策済みだが検証は必須）。1秒超のずれがあるスライドは `.work/slides/slide_NN.mp4` 単位で特定し `--slide N` で再録画
 4. **タイムスタンプ実測修正**：`.claude/skills/episode-production/SKILL.md` の「動画ビルド後のタイムスタンプ修正」手順で実測値を出し、script.md の全スライド見出しと description.md のタイムスタンプ/チャプター生成用を更新
 5. mp4はコミットしない（`**/video_build/*.mp4` はgitignore済み）。タイムスタンプ修正だけコミット対象
