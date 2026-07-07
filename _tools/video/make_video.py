@@ -215,7 +215,7 @@ def _element_text(src: str, elem_id: str) -> str:
     if gt < 0:
         return ""
     seg = src[gt + 1:gt + 601]
-    nxt = re.search(r'\sid="', seg)
+    nxt = re.search(r'\sid="|<section\b', seg)
     if nxt:
         seg = seg[:nxt.start()]
     seg = re.sub(r"<[^>]+>", " ", seg)
@@ -459,20 +459,28 @@ def compute_sent_starts(narration_text, cache_dir, speaker, speed,
     return out
 
 
-_TOKEN_RE = re.compile(r'[0-9]+|[一-龥]{2,}|[ァ-ヶー]{2,}|[A-Za-z]{2,}')
+_TOKEN_RE = re.compile(r'[0-9]+(?:\.[0-9]+)?|[一-龥]{2,}|[ァ-ヶー]{2,}|[A-Za-z]{2,}')
+_SYNC_STOP = {"class", "slide", "section", "style", "span", "div",
+              "する", "こと", "ため", "よう"}
 
 
 def _sync_tokens(text: str):
     """Keywords used to match a step's on-screen text to a narration sentence."""
     t = text.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
     t = t.replace(",", "").replace("，", "")
-    return [tok for tok in _TOKEN_RE.findall(t) if tok not in ("する", "こと")]
+    return [tok for tok in _TOKEN_RE.findall(t) if tok.lower() not in _SYNC_STOP]
 
 
 def _match_score(tokens, sentence: str) -> int:
+    """Weighted overlap: numbers count at least 2 (a matching figure is a
+    strong signal even when short, e.g. '6年' or '2.2倍')."""
     s = sentence.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
     s = s.replace(",", "").replace("，", "")
-    return sum(len(tok) for tok in set(tokens) if tok in s)
+    total = 0
+    for tok in set(tokens):
+        if tok in s:
+            total += max(len(tok), 2) if tok[0].isdigit() else len(tok)
+    return total
 
 
 def _narr_hash(text, speaker, speed, sent_gap, para_gap) -> str:
@@ -558,7 +566,7 @@ def build_schedule(sd, audio_durs, para_durs_list, lead, step_gap,
                 text = (sd.step_texts[gsteps[m]]
                         if sd.step_texts and gsteps[m] < len(sd.step_texts) else "")
                 toks = _sync_tokens(text)
-                best, best_score = None, 2   # require score >= 3
+                best, best_score = None, 1   # require score >= 2
                 for sj in range(ptr, len(sents)):
                     sc = _match_score(toks, sents[sj][1]) if toks else 0
                     if sc > best_score:
