@@ -123,11 +123,12 @@ def check_steps(html):
 
 def check_accent(html):
     section("5) アクセントカラー衝突")
-    m = re.search(r"--accent:\s*(#[0-9A-Fa-f]{6})", html)
-    if not m:
+    # エピソード固有色はベースCSSの後の :root 上書きにあるため「最後の」--accent を採用
+    mm = re.findall(r"--accent:\s*(#[0-9A-Fa-f]{6})", html)
+    if not mm:
         fail("--accent が見つからない")
         return
-    mine = m.group(1).upper()
+    mine = mm[-1].upper()
     dup = []
     for root, _, files in os.walk("."):
         if "slide.html" in files and not root.startswith("./.claude"):
@@ -135,11 +136,11 @@ def check_accent(html):
             if os.path.abspath(p) == os.path.abspath(f"{EP}/slide.html"):
                 continue
             try:
-                head = open(p, encoding="utf-8").read(200000)
+                body = open(p, encoding="utf-8").read()
             except OSError:
                 continue
-            m2 = re.search(r"--accent:\s*(#[0-9A-Fa-f]{6})", head)
-            if m2 and m2.group(1).upper() == mine:
+            m2 = re.findall(r"--accent:\s*(#[0-9A-Fa-f]{6})", body)
+            if m2 and m2[-1].upper() == mine:
                 dup.append(p)
     if dup:
         fail(f"accent {mine} が重複: {dup}")
@@ -176,6 +177,9 @@ def check_typography(html):
         cls, inner = m.group(1), m.group(2)
         # コンテナ（子ブロック要素あり）は静的判定の対象外 — 実寸は 7) のPlaywright検査が担保
         if re.search(r"<(div|svg|table|ul|ol)\b", inner):
+            continue
+        # チップ列（achip/tag/aarrow）はflexで折り返す設計なので行長判定の対象外
+        if re.search(r'class="(achip|tag|aarrow)', inner):
             continue
         # 行長・禁則: <br> と <small>（CSSでblock表示）の両方を行区切りとして評価
         text_lines = re.split(r"<br\s*/?>|<small[^>]*>|</small>", inner)
