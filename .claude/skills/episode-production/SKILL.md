@@ -31,6 +31,14 @@ when_to_use: "Triggers: 新しいエピソードを作って, EPNNを作成, EPN
 - **バックグラウンドエージェントに委任する場合**も、プロンプトで該当ロールのスキルファイルを必読に指定する
 - 各ロールの「完了条件」を満たさないまま次工程へ進むことは禁止（QAが差し戻す）
 
+## 実行原則（どのモデルでも守ること・最重要5か条）
+
+1. **検査は1コマンド**：`python3 _tools/checks/verify_episode.py <episode_dir>` が唯一の合否判定。RESULT: PASS が出るまで完成と言わない。検査スクリプトを自作・改変しない
+2. **1MB超の slide.html を Read で全読みしない**：`grep -n` で行番号を特定し `sed -n 'A,Bp'` で部分読み（base64フォントで巨大）
+3. **絶対に触らない場所**：slide.html の CSS本体・base64フォント・JSエンジン・`@keyframes`／`slide_reference.html`／他エピソードのファイル。NARRATIONS は script.md からのコピーであり独自に文言を変えない
+4. **数字と出典**：出典のない数字を書かない。架空例は「架空」と明示。事実確認は Web 検索で一次ソースに当たる
+5. **迷ったら実例を見る**：完成形の正解は `01_beginner/ep01_what-is-marketing/`（v2初号機）。書式・トーン・図解の密度はこれを模倣する
+
 このリポジトリの全エピソードは `script.md` + `description.md` + `slide.html` の3ファイル組で、
 `slide.html` は **18枚・big style**（cqwベースの大きい文字、モバイル前提）で統一されている。
 EP02〜EP08 はこの形式が完成済み。EP09〜EP12 はこの形式へアップグレード済み。
@@ -104,14 +112,14 @@ L3はフローAと同じ工程＋パッケージング先行＋機械検査（�
 4. **`script.md` を執筆する**：[templates.md](templates.md) の構成に従い、`## 動画基本情報` → `### パッケージング` → `### 主な引用・参考文献`（実在する理論・統計の出典を最低3〜5件入れる。架空の出典は禁止）→ `## 構成（全18スライド／約X分Y秒）` → 18×`### スライド N：タイトル（start〜end）`ブロック → `## 制作メモ`（主オープンループの張り・回収スライドを明記）。
    - 各ブロックの **`**ナレーション：**`** は完成原稿。後で `slide.html` の `NARRATIONS[N-1]` に **そのまま** コピーする（食い違いを作らない）。
    - 時間（start〜end）は [narration-rules.md](narration-rules.md) の文字数換算式で算出した暫定値でよい（動画ビルド後に実測値で再修正するため）。
-5. **ナレーション機械検査を通す**：[retention-packaging.md](retention-packaging.md) §3のスクリプトを実行し、PASSになるまで書き直す（冒頭禁止句・接続詞監査・問いかけ密度・開ループ）。
+5. **ナレーション機械検査を通す**：`python3 _tools/checks/verify_episode.py <episode_dir> --no-browser` を実行し、「3) ナレーション品質」がPASSになるまで書き直す（基準の説明は [retention-packaging.md](retention-packaging.md) §3）。
 6. **`description.md` を執筆する**：[templates.md](templates.md) のYouTube概要欄テンプレートに従い全セクションを埋める。冒頭2行に検索KWを含める（[retention-packaging.md](retention-packaging.md) §5）。
 7. **`slide.html` を新規作成する**：EP08の `slide.html` を丸ごとコピーしてベースにし、[design-system.md](design-system.md) を見ながら以下を差し替える：
    - `<title>`、アクセントカラー（既存回と被らない色を選ぶ。ヘッダコメント `/* EPNN accent: ... */` に明記）
    - ステージ本体（`<section class="slide" id="s1">`〜`id="s18"`）の中身を18枚分書き換え
    - `SLIDES_META` / `NARRATIONS` / `TOTAL_SECS` を4.で書いた内容に合わせて差し替え
    - フラッグシップSVG（天秤・レーダー図など）やCSSの巨大ブロック・`@keyframes`は基本流用し、内容に応じて要素だけ調整する
-8. **検証する**：[design-system.md](design-system.md) のPlaywright検証手順（JSエラー0件・18件一致）に加え、[retention-packaging.md](retention-packaging.md) §4の**STEPS密度検査**（5〜7秒毎の視覚変化・15秒超の静止禁止）をPASSさせる。
+8. **統合検証を全PASSさせる**：`python3 _tools/checks/verify_episode.py <episode_dir>` — 枚数・ナレーション一致・品質・STEPS密度・アクセント衝突・タイポグラフィ（改行/空白）・ブラウザ描画の7検査が1コマンドで走る。FAILの指示に従って修正し、RESULT: PASSになるまで繰り返す。
 9. **略語の発音チェック**：NARRATIONSに新しい英字略語が出たら [narration-rules.md](narration-rules.md) のABBR_MAP/COMPOUND_DICTに追加する。
 10. **Shorts台本を書く**（L3・新規作成時）：[retention-packaging.md](retention-packaging.md) §6に従い `shorts.md` に3本。
 11. **動画ビルドはユーザーから明確に指示された時だけ実行する**（「スライド・ナレーションの更新」だけを頼まれた場合はビルドしない）。ビルドする場合は動画生成フローを使う。

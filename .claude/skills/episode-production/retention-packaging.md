@@ -69,41 +69,18 @@ script.md の `## 動画基本情報` の直後に以下のブロックを**必�
 
 ## 3. ナレーション検査（機械チェック）
 
-台本完成後、以下のスクリプトを**必ず実行**する。FAILが出たら書き直してから次の工程へ。
+台本完成後、**統合検証コマンドを必ず実行**する。FAILが出たら書き直してから次の工程へ：
 
 ```bash
-python3 - <<'PYEOF'
-import re, sys
-ep = "EPISODE_DIR"  # 例: 01_beginner/ep01_what-is-marketing
-md = open(f"{ep}/script.md", encoding="utf-8").read()
-narrs = [m.group(1) for m in re.finditer(r'\*\*ナレーション：\*\*\s*\n「(.*?)」\s*\n\s*---', md, re.S)]
-all_text = "\n".join(narrs)
-fails = []
-
-# 1) 冒頭禁止句（S1の最初の2文）
-head = "。".join(narrs[0].split("。")[:2]) if narrs else ""
-for ban in ["のテーマは", "さっそく始めましょう", "始めていきましょう"]:
-    if ban in head: fails.append(f"S1冒頭に禁止句「{ban}」")
-
-# 2) 接続詞監査：「そして」「また、」合計2回まで
-n_sosh = len(re.findall(r"そして", all_text)) + len(re.findall(r"また、", all_text))
-if n_sosh > 2: fails.append(f"「そして/また、」が{n_sosh}回（上限2）→ しかし/ところが/実は/だから に置換")
-
-# 3) 問いかけ密度：3回以上
-n_q = len(re.findall(r"(と思いますか|でしょうか|考えてみてください|ませんか)", all_text))
-if n_q < 3: fails.append(f"問いかけが{n_q}回（最低3）")
-
-# 4) But/Therefore密度：逆接・因果の接続詞が6回以上
-n_but = len(re.findall(r"(しかし|ところが|実は|だから|つまり|それなのに)", all_text))
-if n_but < 6: fails.append(f"逆接・因果接続詞が{n_but}回（最低6）")
-
-# 5) S18に問い残し（オープンループ）があるか
-if narrs and not re.search(r"(でしょうか|と思いますか|？)", narrs[-1]):
-    fails.append("S18に未解決の問い（次への開ループ）が無い")
-
-print("PASS" if not fails else "FAIL:\n- " + "\n- ".join(fails))
-PYEOF
+python3 _tools/checks/verify_episode.py <episode_dir> --no-browser
 ```
+
+このコマンドの「3) ナレーション品質」が検査する基準（執筆時に意識する数値）：
+- S1の最初の2文に禁止句（「のテーマは」「さっそく始めましょう」等）が無い
+- 「そして」「また、」合計2回以下（接続は しかし/ところが/実は/だから/つまり）
+- 問いかけ（〜と思いますか/でしょうか/考えてみてください/ませんか）3回以上
+- 逆接・因果接続詞 6回以上
+- S18に未解決の問い（開ループ）がある
 
 このチェックはあくまで下限。**数値を満たしても、S2で張った問いがS13以前に完全回収されていたら書き直し**（オープンループの目視確認だけは人力/モデルで行い、script.md制作メモに「主ループ：S2『◯◯』→S16回収」と明記する）。
 
@@ -115,34 +92,15 @@ VOICEVOX読み・略語は従来どおり [narration-rules.md](narration-rules.m
 
 **基準：各スライドのSTEP数 ≥ そのスライドの音声秒数 ÷ 7（切り上げ）、かつ15秒超の無変化区間なし。**
 
-slide.html完成後に実行：
+slide.html完成後、**統合検証コマンドで検査**する（「4) STEPS密度」「6) タイポグラフィ」「7) ブラウザ描画」が該当）：
 
 ```bash
-python3 - <<'PYEOF'
-import re, math
-ep = "EPISODE_DIR"
-src = open(f"{ep}/slide.html", encoding="utf-8").read()
-meta = re.findall(r"\{id:'s(\d+)',\s*start:([\d.]+),\s*end:([\d.]+)", src)
-steps = re.findall(r"\{si:(\d+),\s*t:([\d.]+)", src)
-from collections import defaultdict
-per = defaultdict(list)
-for si, t in steps: per[int(si)].append(float(t))
-fails = []
-for sid, start, end in meta:
-    i, dur = int(sid)-1, float(end)-float(start)
-    need = math.ceil(dur/7)
-    ts = sorted(per.get(i, []))
-    if len(ts) < need:
-        fails.append(f"S{sid}: STEP {len(ts)}個 < 必要{need}個（{dur:.0f}秒）")
-    seq = [float(start)] + ts + [float(end)]
-    for a, b in zip(seq, seq[1:]):
-        if b-a > 15: fails.append(f"S{sid}: {a:.0f}s→{b:.0f}s が{b-a:.0f}秒無変化")
-print("PASS" if not fails else "FAIL:\n- " + "\n- ".join(fails))
-PYEOF
+python3 _tools/checks/verify_episode.py <episode_dir>
 ```
 
 - STEPを増やす手段：要素の順次出現（1行ずつ）、ハイライト移動、タグの段階表示、グラフの段階伸長。**新しいCSS/JSエンジンを作らない**（既存の rv-fade/rv-up/rv-scale/rv-pop の組み合わせで実現する）
 - サムネに使える「絵になる1枚」（大きな数字・対比・Before/After）をS1またはS7に必ず置く
+- 改行・空白の品質基準は [design-system.md](design-system.md) の「タイポグラフィ基準」（t-xl≤14字/行・明示的`<br>`・行頭禁則など）
 
 ---
 

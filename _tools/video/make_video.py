@@ -816,15 +816,60 @@ class VideoBuilder:
                 flt.append(f"[{k}{j}]adelay={ms}:all=1[{k}d{j}]")
                 mix_ins.append(f'[{k}d{j}]')
             idx += 1
-        flt.append(f"{''.join(mix_ins)}amix=inputs={len(mix_ins)}:duration=first:normalize=0[aout]")
+        flt.append(f"{''.join(mix_ins)}amix=inputs={len(mix_ins)}:duration=first:normalize=0[amixed]")
 
+        # pass 1: render the mixed audio and measure loudness
+        tmp_wav = dst + '.mix.wav'
         subprocess.run(
-            ['ffmpeg', '-y', *inputs,
-             '-filter_complex', ';'.join(flt),
-             '-map', '0:v', '-map', '[aout]',
+            ['ffmpeg', '-y', *inputs, '-filter_complex', ';'.join(flt),
+             '-map', '[amixed]', '-ar', '48000', tmp_wav],
+            check=True, capture_output=True)
+        meas = subprocess.run(
+            ['ffmpeg', '-hide_banner', '-i', tmp_wav,
+             '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json', '-f', 'null', '-'],
+            capture_output=True, text=True).stderr
+        mj = json.loads(meas[meas.rindex('{'):meas.rindex('}') + 1])
+
+        # pass 2: gain to -14 LUFS + lookahead limiter at -1.5 dBTP.
+        # (VOICEVOX voice has ~24dB peak-to-loudness ratio, so loudnorm's
+        # TP ceiling blocks a pure gain; explicit limiting is required.)
+        gain = -14.0 - float(mj['input_i'])
+        ln = (f"volume={gain:.2f}dB,"
+              f"alimiter=level_in=1:level_out=1:limit=0.8414:attack=4:release=60:level=false,"
+              f"aresample=48000")
+        subprocess.run(
+            ['ffmpeg', '-y', '-i', src, '-i', tmp_wav,
+             '-map', '0:v', '-map', '1:a', '-af', ln,
              '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', dst],
             check=True, capture_output=True)
-        print(f"  audio mix: bgm={'on' if a.bgm else 'off'} sfx={len(events)} events")
+        os.remove(tmp_wav)
+
+        # convergence passes: the limiter eats some integrated loudness on
+        # high-PLR speech, so measure the result and trim the residual
+        # (audio-only re-encode; at most 2 extra passes).
+        def measure_i(path):
+            out = subprocess.run(
+                ['ffmpeg', '-hide_banner', '-i', path,
+                 '-af', 'loudnorm=I=-14:TP=-1.5:LRA=11:print_format=json',
+                 '-f', 'null', '-'], capture_output=True, text=True).stderr
+            return float(json.loads(out[out.rindex('{'):out.rindex('}') + 1])['input_i'])
+
+        cur = measure_i(dst)
+        for _ in range(2):
+            resid = -14.0 - cur
+            if abs(resid) <= 0.6:
+                break
+            tmp2 = dst + '.trim.mp4'
+            subprocess.run(
+                ['ffmpeg', '-y', '-i', dst,
+                 '-af', (f"volume={resid:.2f}dB,"
+                         f"alimiter=level_in=1:level_out=1:limit=0.8414:attack=4:release=60:level=false"),
+                 '-c:v', 'copy', '-c:a', 'aac', '-b:a', '192k', tmp2],
+                check=True, capture_output=True)
+            os.replace(tmp2, dst)
+            cur = measure_i(dst)
+        print(f"  audio mix: bgm={'on' if a.bgm else 'off'} sfx={len(events)} events, "
+              f"loudness {mj['input_i']}→{cur:.1f} LUFS (target -14, gain+limiter)")
 
     def run(self):
         self.extract()

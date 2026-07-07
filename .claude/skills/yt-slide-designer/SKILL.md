@@ -17,13 +17,12 @@ description: YouTube動画制作のスライドデザイナー／アートディ
 3. 差し替えるのは4か所だけ：`<title>`／アクセントカラー（`grep -hoE "\-\-accent:#[0-9A-Fa-f]{6}" 0*/*/slide.html | sort -u` で重複回避、`/* EPNN accent: 色名 */` コメント）／ステージ本体 s1〜s18／`SLIDES_META`・`NARRATIONS`・`TOTAL_SECS`・`STEPS`
 4. **NARRATIONS は script.md と文字単位で一致**させる（コピーして改変しない）
 5. 必須ビジュアル：S1またはS7に**サムネに使える絵**（大きな数字・対比・Before/After）／**エピソード固有の図解を1つ以上**（独立SVGは幅を`min(78cqw,800px)`のようにcqw基準で指定）
-6. **STEPS密度検査**：`retention-packaging.md` §4 のスクリプトでPASSさせる（STEP数≥音声秒数÷7、無変化15秒以内）。STEPを増やす手段は既存アニメクラスでの順次出現のみ
-7. **Playwright検証**：pageerrors 0件／`SLIDES_META`・`NARRATIONS`・`section.slide` すべて18で一致／全idがDOMに存在。主要スライドのスクリーンショットで実寸確認（図が縮んでいないか）
+6. **タイポグラフィ**：design-system.md の「タイポグラフィ基準」に従う（t-xl≤14字/行・最大2行・意味の切れ目に明示的`<br>`・行頭禁則・全角スペース調整禁止）
+7. **統合検証**：`python3 _tools/checks/verify_episode.py <episode_dir>` を実行し **RESULT: PASS** にする（NARRATIONS一致・STEPS密度・タイポグラフィ・ブラウザ描画を含む全7検査）。主要スライドのスクリーンショットで実寸も目視確認（図が縮んでいないか）
 
-## 完了条件（全て）
-- [ ] NARRATIONS一致（検証スクリプトの出力）
-- [ ] §4 STEPS密度PASS（出力を報告）
-- [ ] Playwright 0エラー・18整合（出力を報告）
+## 完了条件
+- [ ] `verify_episode.py` が RESULT: PASS（実出力を報告に含める）
+- [ ] S1/固有図解/S18のスクリーンショット確認済み
 
 ## 引き継ぎ
 → **yt-qa**（最終検品）。動画化の指示があれば → **yt-video-editor**
