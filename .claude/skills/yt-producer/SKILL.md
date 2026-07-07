@@ -9,8 +9,8 @@ description: YouTube動画制作のプロデューサー役。企画の選定と
 原則：**クリックされるタイトル＋サムネが作れない企画は作らない**（計画書 `docs/youtube-reform-plan.md` §3-A）。
 
 ## 入力
-- 対象エピソード（`docs/youtube-reform-plan.md` §5のロードマップ表・タイトル叩き台）
-- 全24回ロードマップ（`.claude/skills/episode-production/SKILL.md`）
+- **`docs/episode-briefs.md` の該当EP節**（検索KW・タイトル叩き台・サムネ文字案が事前定義済み。これを起点に3案へ展開する）
+- `docs/youtube-reform-plan.md` §5のロードマップ表／全24回ロードマップ（`.claude/skills/episode-production/SKILL.md`）
 
 ## 手順
 1. `.claude/skills/episode-production/retention-packaging.md` §1 を開く（パッケージングの合格条件）
