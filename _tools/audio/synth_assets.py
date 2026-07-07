@@ -38,7 +38,7 @@ def env_ad(n, a, d):
     return e
 
 
-def note(freq, dur, vol=1.0, detune=0.15):
+def note(freq, dur, vol=1.0, detune=0.15, attack=0.02, tau=0.9):
     """Soft EP-like tone: fundamental + weak octave, slight stereo detune."""
     n = int(dur * SR)
     t = np.arange(n) / SR
@@ -46,45 +46,77 @@ def note(freq, dur, vol=1.0, detune=0.15):
         return np.sin(2 * np.pi * f * t) + 0.25 * np.sin(2 * np.pi * 2 * f * t)
     l = voice(freq * (1 - detune / 1000))
     r = voice(freq * (1 + detune / 1000))
-    e = env_ad(n, int(0.02 * SR), int(0.9 * SR)) * vol
+    e = env_ad(n, int(attack * SR), int(tau * SR)) * vol
     return np.stack([l * e, r * e], axis=1)
 
 
+def pluck(freq, dur=0.5, vol=1.0, pan=0.0):
+    """Bright kalimba/music-box pluck: harmonics with fast decay."""
+    n = int(dur * SR)
+    t = np.arange(n) / SR
+    s = (np.sin(2 * np.pi * freq * t)
+         + 0.40 * np.sin(2 * np.pi * 2 * freq * t)
+         + 0.12 * np.sin(2 * np.pi * 3 * freq * t))
+    s *= env_ad(n, int(0.002 * SR), int(0.16 * SR)) * vol
+    l = s * (1 - max(pan, 0) * 0.6)
+    r = s * (1 + min(pan, 0) * 0.6)
+    return np.stack([l, r], axis=1)
+
+
 def bgm_loop():
-    """~33.7s calm chord-pad loop @ 76bpm: | Fmaj7 | Am7 | Dm7 | Cmaj7 | x2."""
-    bpm = 76
-    bar = 4 * 60 / bpm                       # 3.158s
-    chords = [
-        [174.61, 220.0, 261.63, 329.63],     # Fmaj7  (F3 A3 C4 E4)
-        [220.0, 261.63, 329.63, 392.0],      # Am7    (A3 C4 E4 G4)
-        [146.83, 220.0, 261.63, 349.23],     # Dm7    (D3 A3 C4 F4)
-        [130.81, 196.0, 246.94, 329.63],     # Cmaj7  (C3 G3 B3 E4)
+    """~22.7s bright, cozy loop @ 84bpm: | C | G | Am | F | x2 (I–V–vi–IV).
+
+    Higher register, add9 pads with slow attack + light kalimba arpeggio
+    for a pleasant/upbeat (not somber) mood."""
+    bpm = 84
+    bar = 4 * 60 / bpm                              # 2.857s
+    C4, D4, E4, F4, G4, A4, B4 = 261.63, 293.66, 329.63, 349.23, 392.0, 440.0, 493.88
+    C5, D5, E5, G5, A5 = 523.25, 587.33, 659.25, 783.99, 880.0
+    chords = [                                       # bright add9 voicings
+        ([C4, E4, G4, D5], 130.81),                  # C add9   / C3
+        ([D4, G4, B4, D5], 196.00),                  # G add4   / G3
+        ([E4, A4, C5, E5], 220.00),                  # Am add   / A3
+        ([F4, A4, C5, G5], 174.61),                  # F add9   / F3
     ]
-    basses = [87.31, 110.0, 73.42, 65.41]    # F2 A2 D2 C2
+    arps = [                                         # 8x 8th-note pluck pattern per bar
+        [C5, G4, E5, G4, D5, G4, E5, G5],
+        [D5, B4, G5, B4, D5, B4, G5, A5],
+        [E5, C5, A5, C5, E5, C5, A5, G5],
+        [C5, A4, G5, A4, C5, A4, E5, G5],
+    ]
     total_n = int(8 * bar * SR)
     mix = np.zeros((total_n, 2))
+    eighth = bar / 8
     for rep in range(2):
-        for ci, (ch, bass) in enumerate(zip(chords, basses)):
+        for ci, ((ch, bass), arp) in enumerate(zip(chords, arps)):
             start = int(((rep * 4 + ci) * bar) * SR)
-            for f in ch:
-                seg = note(f, bar * 1.05, vol=0.22)
+            for f in ch:                             # warm pad, slow attack
+                seg = note(f, bar * 1.1, vol=0.16, attack=0.35, tau=1.6)
                 end = min(start + len(seg), total_n)
                 mix[start:end] += seg[: end - start]
-            bt = np.arange(int(bar * SR)) / SR
-            bseg = np.sin(2 * np.pi * bass * bt) * env_ad(len(bt), int(0.03 * SR), int(1.4 * SR)) * 0.30
+            bt = np.arange(int(bar * SR)) / SR       # light bass, not heavy
+            bseg = np.sin(2 * np.pi * bass * bt) * env_ad(len(bt), int(0.02 * SR), int(1.2 * SR)) * 0.17
             end = min(start + len(bseg), total_n)
             mix[start:end] += np.stack([bseg, bseg], axis=1)[: end - start]
-    # vinyl-ish air: very low filtered noise bed
+            for j, f in enumerate(arp):              # sparkle arpeggio
+                if f is None:
+                    continue
+                p = pluck(f, vol=0.30 if j % 2 == 0 else 0.20,
+                          pan=0.5 if j % 4 in (1, 3) else -0.3)
+                ps = start + int(j * eighth * SR)
+                pe = min(ps + len(p), total_n)
+                mix[ps:pe] += p[: pe - ps]
+    # soft air bed (much lower than before)
     rng = np.random.default_rng(7)
-    noise = rng.standard_normal((total_n, 2)) * 0.012
+    noise = rng.standard_normal((total_n, 2)) * 0.005
     kernel = np.ones(96) / 96
     for c in range(2):
         noise[:, c] = np.convolve(noise[:, c], kernel, mode="same")
     mix += noise
-    # gentle 2-bar volume swell (breathing)
-    lfo = 0.92 + 0.08 * np.sin(2 * np.pi * np.arange(total_n) / (2 * bar * SR))
+    # very gentle 2-bar swell
+    lfo = 0.95 + 0.05 * np.sin(2 * np.pi * np.arange(total_n) / (2 * bar * SR))
     mix *= lfo[:, None]
-    # make loop-safe: crossfade tail into head
+    # loop-safe crossfade
     xf = int(0.4 * SR)
     ramp = np.linspace(0, 1, xf)[:, None]
     mix[:xf] = mix[:xf] * ramp + mix[-xf:] * (1 - ramp)

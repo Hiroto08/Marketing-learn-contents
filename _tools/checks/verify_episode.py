@@ -163,28 +163,46 @@ def check_typography(html):
         fail("ステージ領域を抽出できない")
         return
     n0 = len(FAILS)
-    LIMITS = {"t-xl": 14, "t-lg": 20}
-    # per element with class t-xl / t-lg: check explicit <br> line lengths & kinsoku
-    for m in re.finditer(r'<div[^>]*class="[^"]*\b(t-xl|t-lg)\b[^"]*"[^>]*>(.*?)</div>', stage, re.S):
+    LIMITS = {"t-xl": 14, "t-lg": 20, "t-md": 26, "hl-banner": 26}
+
+    import unicodedata
+
+    def dw(s):  # 表示幅: 全角=1, 半角=0.5
+        return sum(1.0 if unicodedata.east_asian_width(c) in "WFA" else 0.5 for c in s)
+    # 表示テキスト要素の行長・改行位置・ぶら下がりを検査
+    for m in re.finditer(
+            r'<div[^>]*class="[^"]*\b(t-xl|t-lg|t-md|hl-banner)\b[^"]*"[^>]*>(.*?)</div>',
+            stage, re.S):
         cls, inner = m.group(1), m.group(2)
         # コンテナ（子ブロック要素あり）は静的判定の対象外 — 実寸は 7) のPlaywright検査が担保
         if re.search(r"<(div|svg|table|ul|ol)\b", inner):
             continue
+        # 行長・禁則: <br> と <small>（CSSでblock表示）の両方を行区切りとして評価
         text_lines = re.split(r"<br\s*/?>|<small[^>]*>|</small>", inner)
         plain_lines = [re.sub(r"<[^>]+>", "", x).strip() for x in text_lines]
         plain_lines = [x for x in plain_lines if x]
         joined = "".join(plain_lines)
-        sid = "s?"
-        sm = re.search(r'id="(s\d+)', stage[: m.start()][::-1][:400][::-1])
         ctx = (joined[:14] + "…") if len(joined) > 14 else joined
+        limit = LIMITS[cls]
         for ln in plain_lines:
-            if len(ln) > LIMITS[cls]:
-                fail(f"{cls}「{ctx}」: 1行{len(ln)}字 > {LIMITS[cls]}字 → 意味の切れ目に<br>を入れる")
+            if dw(ln) > limit:
+                fail(f"{cls}「{ctx}」: 1行 幅{dw(ln):.1f} > {limit}（全角換算）→ 自動折返しで端数行が出る。"
+                     f"読点・助詞の後に<br>を入れて行を割る")
         if cls == "t-xl" and len(plain_lines) > 2:
             fail(f"t-xl「{ctx}」: {len(plain_lines)}行（最大2行）")
         for ln in plain_lines[1:]:
             if ln and ln[0] in KINSOKU_HEAD:
-                fail(f"{cls}「{ctx}」: <br>直後が行頭禁則文字「{ln[0]}」")
+                fail(f"{cls}「{ctx}」: 行頭が禁則文字「{ln[0]}」")
+        # ぶら下がり禁止：<br>で作った行に幅3以下の行を残さない
+        # （<small>サブラベルはデザイン上の別行なので対象外＝除去して評価）
+        no_small = re.sub(r"<small[^>]*>.*?</small>", "", inner, flags=re.S)
+        br_lines = [re.sub(r"<[^>]+>", "", x).strip()
+                    for x in re.split(r"<br\s*/?>", no_small)]
+        br_lines = [x for x in br_lines if x]
+        if len(br_lines) >= 2:
+            for ln in br_lines:
+                if dw(ln) <= 3:
+                    fail(f"{cls}「{ctx}」: 幅{dw(ln):.1f}の行「{ln}」（ぶら下がり）→ 各行を全角4字以上に")
     # 全角スペースでの位置調整禁止（2連続以上）
     for m in re.finditer(r"　{2,}", re.sub(r"<[^>]+>", "", stage)):
         fail("全角スペース連続による位置調整がある（flex/gap/marginで組む）")
