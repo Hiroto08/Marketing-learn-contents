@@ -59,8 +59,8 @@ def parse_args():
     p.add_argument("--speaker",      type=int,   default=11,
                    help="VOICEVOX speaker ID (11=玄野武宏 ノーマル)")
     p.add_argument("--speed",        type=float, default=1.1)
-    p.add_argument("--lead",         type=float, default=1.0,
-                   help="Seconds animations finish firing before narration")
+    p.add_argument("--lead",         type=float, default=1.2,
+                   help="Seconds each step fires before its narration moment (slightly early feels natural)")
     p.add_argument("--step-gap",     type=float, default=0.35, dest="step_gap",
                    help="Gap between consecutive steps (s)")
     p.add_argument("--intro",        type=float, default=0.6,
@@ -202,6 +202,25 @@ class SlideData:
     steps: list
     narrations: list
     total_secs: float
+    step_texts: list = None   # per-step visible text (for narration sync)
+
+
+def _element_text(src: str, elem_id: str) -> str:
+    """Rough visible text of the element with the given id (for keyword
+    matching only — nested tags are stripped, capture window is bounded)."""
+    m = re.search(r'id="' + re.escape(elem_id) + r'"', src)
+    if not m:
+        return ""
+    gt = src.find(">", m.end())          # skip the rest of the opening tag
+    if gt < 0:
+        return ""
+    seg = src[gt + 1:gt + 601]
+    nxt = re.search(r'\sid="', seg)
+    if nxt:
+        seg = seg[:nxt.start()]
+    seg = re.sub(r"<[^>]+>", " ", seg)
+    seg = re.sub(r"&[a-z]+;", " ", seg)
+    return re.sub(r"\s+", " ", seg).strip()
 
 
 def extract_slide_data(html_path: str) -> SlideData:
@@ -218,13 +237,17 @@ def extract_slide_data(html_path: str) -> SlideData:
     if not m:
         raise ValueError("STEPS not found")
     steps = []
+    step_texts = []
     for e in re.finditer(r'\{[^}]+\}', m.group(1)):
         si_m = re.search(r'si\s*:\s*(\d+)', e.group(0))
         t_m  = re.search(r'\bt\s*:\s*([\d.]+)', e.group(0))
         an_m = re.search(r"anim\s*:\s*'([a-z-]+)'", e.group(0))
+        ids_m = re.search(r"ids\s*:\s*\[([^\]]*)\]", e.group(0))
         if si_m and t_m:
             steps.append(Step(si=int(si_m.group(1)), t=float(t_m.group(1)),
                               anim=an_m.group(1) if an_m else ""))
+            ids = re.findall(r"'([^']+)'", ids_m.group(1)) if ids_m else []
+            step_texts.append(" ".join(_element_text(src, i) for i in ids))
 
     m = re.search(r'const SLIDES_META\s*=\s*\[(.*?)\];', src, re.DOTALL)
     if not m:
@@ -242,7 +265,8 @@ def extract_slide_data(html_path: str) -> SlideData:
     m = re.search(r'const TOTAL_SECS\s*=\s*([\d.]+)', src)
     total = float(m.group(1)) if m else (meta[-1].end if meta else 0)
 
-    return SlideData(meta=meta, steps=steps, narrations=narrations, total_secs=total)
+    return SlideData(meta=meta, steps=steps, narrations=narrations,
+                     total_secs=total, step_texts=step_texts)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -411,6 +435,46 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def compute_sent_starts(narration_text, cache_dir, speaker, speed,
+                        sent_gap, para_gap):
+    """Start time and raw text of every sentence in one narration, mirroring
+    gen_narration_audio's exact gap layout. Requires the sentence WAVs to be
+    cached already (call after gen_tts). Returns [(start_sec, sentence), ...]."""
+    out, t = [], 0.0
+    paragraphs = split_paragraphs(narration_text)
+    for pi, para in enumerate(paragraphs):
+        sentences = split_sentences(para) or [para]
+        real = [s for s in sentences if clean_for_tts(s)]
+        for si, sent in enumerate(real):
+            clean = clean_for_tts(sent)
+            key = _tts_cache_key(clean, speaker, speed, _compound_salt(clean))
+            cached = os.path.join(cache_dir, f'{key}.wav')
+            dur = get_duration(cached) if os.path.exists(cached) else len(clean) / 6.8
+            out.append((t, sent))
+            t += dur
+            if si < len(real) - 1:
+                t += sent_gap
+            elif pi < len(paragraphs) - 1:
+                t += para_gap
+    return out
+
+
+_TOKEN_RE = re.compile(r'[0-9]+|[一-龥]{2,}|[ァ-ヶー]{2,}|[A-Za-z]{2,}')
+
+
+def _sync_tokens(text: str):
+    """Keywords used to match a step's on-screen text to a narration sentence."""
+    t = text.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
+    t = t.replace(",", "").replace("，", "")
+    return [tok for tok in _TOKEN_RE.findall(t) if tok not in ("する", "こと")]
+
+
+def _match_score(tokens, sentence: str) -> int:
+    s = sentence.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
+    s = s.replace(",", "").replace("，", "")
+    return sum(len(tok) for tok in set(tokens) if tok in s)
+
+
 def _narr_hash(text, speaker, speed, sent_gap, para_gap) -> str:
     clean = clean_for_tts(text)
     salt = _compound_salt(clean)
@@ -440,8 +504,13 @@ class SlideSchedule:
     total_dur: float
 
 
+_SYNC_STATS = [0, 0]   # [text-anchored steps, total non-first steps]
+
+
 def build_schedule(sd, audio_durs, para_durs_list, lead, step_gap,
-                   intro, outro, final_outro, para_gap):
+                   intro, outro, final_outro, para_gap,
+                   sent_starts_list=None):
+    _SYNC_STATS[0] = _SYNC_STATS[1] = 0
     meta_count = len(sd.meta)
     narr_count = len(sd.narrations)
 
@@ -472,22 +541,46 @@ def build_schedule(sd, audio_durs, para_durs_list, lead, step_gap,
             # Title slide: shown fully from the first frame (no step animations)
             pass
         elif S > 0:
-            # Narration-synced reveal: elements appear progressively as the
-            # narration advances (STEPS order = speaking order).
-            #   step 0            → slide start (heading visible immediately)
-            #   S == P            → each step anchors to its paragraph start
-            #   otherwise         → even spread across the narration duration
-            # Every step fires `lead` seconds before its narration moment and
-            # never later than 1s before the narration ends.
+            # Narration-synced reveal (content-matched):
+            #   1. step 0 → slide start (heading visible immediately)
+            #   2. each later step anchors to the START of the narration
+            #      sentence whose text best matches the step's on-screen text
+            #      (monotonic search — STEPS order = speaking order)
+            #   3. unmatched steps interpolate between neighboring anchors
+            # Every step fires `lead` seconds before its sentence and never
+            # later than 1s before the narration ends.
+            sents = (sent_starts_list[ni] if sent_starts_list
+                     and ni < len(sent_starts_list) else [])
+            anchors = [None] * S           # narration-relative anchor seconds
+            anchors[0] = -narration_start  # fires at rel_t 0 after offset below
+            ptr = 0
+            for m in range(1, S):
+                text = (sd.step_texts[gsteps[m]]
+                        if sd.step_texts and gsteps[m] < len(sd.step_texts) else "")
+                toks = _sync_tokens(text)
+                best, best_score = None, 2   # require score >= 3
+                for sj in range(ptr, len(sents)):
+                    sc = _match_score(toks, sents[sj][1]) if toks else 0
+                    if sc > best_score:
+                        best, best_score = sj, sc
+                if best is not None:
+                    anchors[m] = sents[best][0]
+                    ptr = best               # later steps may share this sentence
+            # interpolate the unmatched between known anchors / audio end
+            known = [(m, a) for m, a in enumerate(anchors) if a is not None]
+            known.append((S, max(audio_dur - 1.0, 0.0)))
+            for (m0, a0), (m1, a1) in zip(known, known[1:]):
+                for m in range(m0 + 1, m1):
+                    anchors[m] = a0 + (a1 - a0) * (m - m0) / (m1 - m0)
+            matched = sum(1 for m in range(1, S)
+                          if anchors[m] is not None and any(
+                              anchors[m] == s for s, _ in sents))
+            _SYNC_STATS[0] += matched
+            _SYNC_STATS[1] += max(S - 1, 0)
             for m, gi in enumerate(gsteps):
-                if m == 0:
-                    t = 0.0
-                elif S == P and m < len(para_start):
-                    t = narration_start + para_start[m] - lead
-                else:
-                    t = narration_start + audio_dur * (m / S) - lead
+                t = narration_start + anchors[m] - (lead if m else 0.0)
                 t = min(t, narration_start + max(audio_dur - 1.0, 0.0))
-                t = max(t, step_gap * m)          # keep order + minimum spacing
+                t = max(t, 0.0 if m == 0 else step_gap * m)
                 if anim_events and t < anim_events[-1].rel_t + 0.3:
                     t = anim_events[-1].rel_t + 0.3
                 anim_events.append(AnimEvent(rel_t=t, step_idx=gi))
@@ -698,11 +791,20 @@ class VideoBuilder:
 
     def build_schedule(self):
         a = self.a
+        # sentence start times (cached WAVs exist after gen_tts) for
+        # content-matched narration sync
+        sent_starts = [compute_sent_starts(n, self.tts_cache, a.speaker,
+                                           a.speed, a.sent_gap, a.para_gap)
+                       for n in self.sd.narrations]
         self.schedules = build_schedule(
             self.sd, self.audio_durs, self.para_durs,
             lead=a.lead, step_gap=a.step_gap,
             intro=a.intro, outro=a.outro,
-            final_outro=a.final_outro, para_gap=a.para_gap)
+            final_outro=a.final_outro, para_gap=a.para_gap,
+            sent_starts_list=sent_starts)
+        if _SYNC_STATS[1]:
+            print(f"\n  narration sync: {_SYNC_STATS[0]}/{_SYNC_STATS[1]} "
+                  f"steps text-anchored (rest interpolated)")
         print("\nSchedule:")
         for sc in self.schedules:
             print(f"  S{sc.si+1:02d} ({self.sd.meta[sc.si].id}):  "
