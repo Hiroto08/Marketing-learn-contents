@@ -472,19 +472,25 @@ def build_schedule(sd, audio_durs, para_durs_list, lead, step_gap,
             # Title slide: shown fully from the first frame (no step animations)
             pass
         elif S > 0:
-            # Main content (all but the last step) appears right at slide
-            # start so paragraph 1 narrates over a fully visible slide;
-            # the final element (summary/note) appears just before
-            # paragraph 2 begins.
-            for m, gi in enumerate(gsteps[:-1]):
-                anim_events.append(AnimEvent(rel_t=step_gap * m, step_idx=gi))
-
-            if S == 1:
-                last_t = 0.0
-            else:
-                p2 = para_start[1] if P >= 2 else audio_dur * 0.3
-                last_t = max(narration_start + p2 - lead, step_gap * (S - 1))
-            anim_events.append(AnimEvent(rel_t=last_t, step_idx=gsteps[-1]))
+            # Narration-synced reveal: elements appear progressively as the
+            # narration advances (STEPS order = speaking order).
+            #   step 0            → slide start (heading visible immediately)
+            #   S == P            → each step anchors to its paragraph start
+            #   otherwise         → even spread across the narration duration
+            # Every step fires `lead` seconds before its narration moment and
+            # never later than 1s before the narration ends.
+            for m, gi in enumerate(gsteps):
+                if m == 0:
+                    t = 0.0
+                elif S == P and m < len(para_start):
+                    t = narration_start + para_start[m] - lead
+                else:
+                    t = narration_start + audio_dur * (m / S) - lead
+                t = min(t, narration_start + max(audio_dur - 1.0, 0.0))
+                t = max(t, step_gap * m)          # keep order + minimum spacing
+                if anim_events and t < anim_events[-1].rel_t + 0.3:
+                    t = anim_events[-1].rel_t + 0.3
+                anim_events.append(AnimEvent(rel_t=t, step_idx=gi))
 
         tail = final_outro if si == meta_count - 1 else outro
         schedules.append(SlideSchedule(
