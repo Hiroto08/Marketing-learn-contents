@@ -26,6 +26,8 @@ command -v ffmpeg  >/dev/null 2>&1 || need+=(ffmpeg)
 command -v ffprobe >/dev/null 2>&1 || need+=(ffmpeg)
 command -v 7z      >/dev/null 2>&1 || need+=(p7zip-full)
 fc-list 2>/dev/null | grep -qi "Noto Sans CJK JP" || need+=(fonts-noto-cjk)
+# design v2.1: 見出し・キーワードのBlack(900)ウェイトに必須
+fc-list 2>/dev/null | grep -qi "Noto Sans CJK JP:style=Black" || need+=(fonts-noto-cjk-extra)
 if [ ${#need[@]} -gt 0 ]; then
   uniq_need=$(printf '%s\n' "${need[@]}" | sort -u | tr '\n' ' ')
   log "apt install: $uniq_need"
