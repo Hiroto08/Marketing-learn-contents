@@ -24,6 +24,22 @@ when_to_use: "Triggers: 新しいエピソードを作って, EPNNを作成, EPN
 | 8 | 映像編集 | `yt-video-editor` | ビルド・A/V検証・実測タイムスタンプ | final.mp4 |
 | 9 | アナリスト | `yt-analyst` | 公開後KPI分析・スキルへの学び書き戻し | 改善提案＋§7追記 |
 
+## Shorts専用ロール（5つ・本編完成後に実行）
+
+Shorts制作は本編と目的・規格が異なる（縦型9:16・30〜45秒・発見装置）ため専用ロールに分離。
+根拠と数値基準は [shorts-production.md](shorts-production.md)。
+
+| # | ロール | スキル | 担当 | 主な成果物 |
+|---|--------|--------|------|-----------|
+| S1 | 切り出し企画 | `yt-shorts-clipper` | 長編から3〜5論点を選定 | shorts_plan.md |
+| S2 | フック・ループ脚本 | `yt-shorts-hookwriter` | 冒頭3秒フック・ループ構造・台本 | shorts.md |
+| S3 | 縦型デザイン | `yt-shorts-designer` | セーフエリア・テロップ・STEPS実装 | stage.html |
+| S4 | 映像編集 | `yt-shorts-video-editor` | 縦型ビルド・A/V検証・ループ確認 | shortN_final.mp4 |
+| S5 | QA | `yt-shorts-qa` | verify_shorts.py独立再実行 | PASS/FAILレポート |
+
+**実行順序**：S1→S2→S3→S4（動画化指示があれば）→S5（QA PASS後にコミット）。
+「Shortsも作って」の指示は本編動画化フローの末尾（yt-publisherの後）に接続する。
+
 **実行順序**：
 - **L3／新規作成** = 1→2→3→4→5→6→7（QA PASS後にコミット）→（動画化指示があれば）8→（公開後）9
 - **L2（冒頭改修）** = 1→3（S1-S2のみ）→4→5（該当スライドのみ）→7→8
