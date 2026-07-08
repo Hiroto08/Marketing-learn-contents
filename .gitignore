@@ -4,3 +4,4 @@ video_out/
 .work/
 .claude/worktrees/
 **/video_build/*.mp4
+**/shorts_build/**/*.mp4
