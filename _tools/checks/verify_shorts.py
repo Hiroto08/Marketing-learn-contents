@@ -43,7 +43,24 @@ def ok(msg):
 
 
 def load():
-    md = open(f"{DIR}/shorts.md", encoding="utf-8").read()
+    """<shorts_dir> is typically <episode_dir>/shorts_build/shortN/.
+    The script lives one level up in shorts.md as a "## Short N" section
+    (one file holds all Shorts for the episode), OR a local shorts.md may
+    exist directly in <shorts_dir> (standalone use). Try local first."""
+    local_md = f"{DIR}/shorts.md"
+    if os.path.exists(local_md):
+        md = open(local_md, encoding="utf-8").read()
+    else:
+        m = re.search(r"short(\d+)$", os.path.basename(DIR.rstrip("/")), re.I)
+        if not m:
+            sys.exit(f"shorts.md が見つからず、ディレクトリ名からShort番号も特定できない: {DIR}")
+        n = m.group(1)
+        ep_dir = os.path.dirname(os.path.dirname(DIR.rstrip("/")))
+        ep_md = open(f"{ep_dir}/shorts.md", encoding="utf-8").read()
+        sm = re.search(rf"## Short {n}[：:].*?(?=\n## Short \d|\Z)", ep_md, re.S)
+        if not sm:
+            sys.exit(f"{ep_dir}/shorts.md 内に「## Short {n}」セクションが見つからない")
+        md = sm.group(0)
     html = open(f"{DIR}/stage.html", encoding="utf-8").read()
     return md, html
 

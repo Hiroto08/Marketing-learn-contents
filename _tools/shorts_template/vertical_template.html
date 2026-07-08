@@ -54,10 +54,11 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 .k-sub{font-weight:500;font-size:44px;line-height:1.4;color:var(--muted);margin-top:24px;}
 .k-tag{display:inline-block;font-weight:900;font-size:40px;padding:.4em 1em;
   border-radius:999px;border:3px solid var(--accent);color:var(--accent);margin:.2em;}
-/* テロップ帯：下部セーフエリアの上端付近に固定表示 */
+/* テロップ帯：下部セーフエリアの直上に固定表示（--safe-bottom自体がボーダーなので
+   ここから加算し、外側にはみ出させない。verify_shorts.py §8 のセーフエリア検査対象） */
 .caption-zone{position:absolute;left:var(--safe-x);right:var(--safe-x);
-  bottom:calc(var(--safe-bottom) - 60px);
-  display:flex;align-items:flex-end;justify-content:center;min-height:200px;}
+  bottom:calc(var(--safe-bottom) + 40px);
+  display:flex;align-items:flex-end;justify-content:center;min-height:160px;}
 .caption{font-weight:900;font-size:52px;line-height:1.35;text-align:center;color:#fff;
   text-shadow:0 0 14px rgba(0,0,0,.85),0 0 4px rgba(0,0,0,.95);max-width:100%;}
 .caption .hi{color:var(--key);}
