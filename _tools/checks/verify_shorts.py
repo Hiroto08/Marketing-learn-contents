@@ -210,7 +210,7 @@ def check_browser(html_path):
         pg.wait_for_load_state("networkidle")
         r = pg.evaluate("""()=>{
           const SAFE={top:192,bottom:1920-400,left:48,right:1080-48};
-          const over=[];
+          const over=[], hang=[];
           document.querySelectorAll('section.slide').forEach(sec=>{
             sec.style.display='flex';
             sec.querySelectorAll('*').forEach(e=>{e.style.opacity='1';e.style.transform='none';});
@@ -218,18 +218,36 @@ def check_browser(html_path):
               const r=e.getBoundingClientRect();
               if(r.width && (r.top<SAFE.top-2||r.bottom>SAFE.bottom+2||r.left<SAFE.left-2||r.right>SAFE.right+2))
                 over.push(sec.id+':'+(e.className||e.id));
+              // hanging-line check: group text-run rects into visual LINES by their
+              // top position (inline <span> splits a single line into multiple rects,
+              // so we must group — not count raw rects). If the element wraps to >=2
+              // lines and the LAST line is narrower than ~140px, it's a lone 1-2 char
+              // fragment (the "る"だけ改行 defect).
+              const rng=document.createRange(); rng.selectNodeContents(e);
+              const rects=[...rng.getClientRects()].filter(x=>x.width>1);
+              const lines={};
+              rects.forEach(x=>{const k=Math.round(x.top/6)*6;
+                const g=lines[k]||(lines[k]={l:1e9,r:-1e9}); g.l=Math.min(g.l,x.left); g.r=Math.max(g.r,x.right);});
+              const keys=Object.keys(lines).map(Number).sort((a,b)=>a-b);
+              if(keys.length>=2){
+                const lastw=lines[keys[keys.length-1]].r-lines[keys[keys.length-1]].l;
+                if(lastw<140) hang.push(sec.id+':'+(e.className||e.id)+'('+Math.round(lastw)+'px)');
+              }
             });
             sec.style.display='';
           });
-          return {over:over.slice(0,10), n:document.querySelectorAll('section.slide').length};
+          return {over:over.slice(0,10), hang:hang.slice(0,10),
+                  n:document.querySelectorAll('section.slide').length};
         }""")
         b.close()
     if errs:
         fail(f"JSエラー: {errs[:3]}")
     if r["over"]:
         fail(f"セーフエリア外にはみ出し: {r['over']}")
-    if not errs and not r["over"]:
-        ok(f"JSエラー0・{r['n']}枚・セーフエリア内")
+    if r["hang"]:
+        fail(f"1〜2文字だけの行末ぶら下がり（<br>で意味の切れ目に改行を）: {r['hang']}")
+    if not errs and not r["over"] and not r["hang"]:
+        ok(f"JSエラー0・{r['n']}枚・セーフエリア内・ぶら下がり無し")
 
 
 if __name__ == "__main__":
