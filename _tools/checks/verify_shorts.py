@@ -10,12 +10,13 @@ slide.html built from _tools/shorts_template/vertical_template.html).
 Checks:
   [1] engine integrity   (heartbeat + rv-* + keyframes not stripped)
   [2] narration match    (shorts.md ⇔ stage.html NARRATIONS, char-for-char)
-  [3] duration           (30-45s from SLIDES_META)
-  [4] slide count        (5-8)
-  [5] hook signal        (S1's first STEP text has a number/claim/question)
-  [6] CTA present        (last slide mentions 固定コメント/概要欄 etc.)
-  [7] loop echo          (first and last slide share a >=3-char token)
-  [8] safe-area render   (Playwright: 0 js errors, no element outside the
+  [3] duration           (15-30s from SLIDES_META — long Shorts get skipped)
+  [4] slide count        (4-6)
+  [5] narration length   (total <=150 chars, longest slide <=45 — brevity)
+  [6] hook signal        (S1's first STEP text has a number/claim/question)
+  [7] CTA present        (last slide mentions 固定コメント/概要欄 etc.)
+  [8] loop echo          (first and last slide share a >=3-char token)
+  [9] safe-area render   (Playwright: 0 js errors, no element outside the
                           192/400/48px safe area; skipped with --no-browser)
 
 Spec: .claude/skills/episode-production/shorts-production.md
@@ -106,32 +107,50 @@ def _meta(html):
 
 
 def check_duration(html):
-    section("3) 尺（30〜45秒）")
+    section("3) 尺（15〜30秒）")
     meta = _meta(html)
     if not meta:
         fail("SLIDES_META が見つからない")
         return
     total = max(float(e) for _, _, e in meta)
-    if not (30 <= total <= 45):
-        fail(f"尺 {total:.1f}秒（30〜45秒の範囲外）")
+    if not (15 <= total <= 30):
+        fail(f"尺 {total:.1f}秒（15〜30秒の範囲外。長いShortsはスキップされる）")
     else:
         ok(f"尺 {total:.1f}秒")
 
 
 def check_slide_count(html):
-    section("4) スライド枚数（5〜8）")
+    section("4) スライド枚数（4〜6）")
     n = len(_meta(html))
-    if not (5 <= n <= 8):
-        fail(f"{n}枚（5〜8枚の範囲外）")
+    if not (4 <= n <= 6):
+        fail(f"{n}枚（4〜6枚の範囲外）")
     else:
         ok(f"{n}枚")
+
+
+def check_length(html):
+    section("5) ナレーション文字数（合計≤150字・各≤35字目安）")
+    narr = _narrations(html)
+    if not narr:
+        fail("ナレーションが空")
+        return
+    total = sum(len(n) for n in narr)
+    longest = max((len(n), i + 1) for i, n in enumerate(narr))
+    if total > 150:
+        fail(f"合計{total}字（上限150字。冗長表現を削って短くする）")
+    else:
+        ok(f"合計{total}字")
+    if longest[0] > 45:
+        fail(f"S{longest[1]}が{longest[0]}字（1スライド35字目安・45字上限。1文に削る）")
+    else:
+        ok(f"最長スライド{longest[0]}字")
 
 
 HOOK_PAT = re.compile(r"[0-9０-９]|倍|割|円|万|億|人|なぜ|ですか|でしょうか|ませんか|しない|ではない|知らない")
 
 
 def check_hook(html):
-    section("5) 冒頭フック信号")
+    section("6) 冒頭フック信号")
     narr = _narrations(html)
     if not narr:
         fail("ナレーションが空")
@@ -147,7 +166,7 @@ CTA_PAT = re.compile(r"固定コメント|概要欄|続きは|長編で|チャ�
 
 
 def check_cta(html):
-    section("6) 送客CTA")
+    section("7) 送客CTA")
     narr = _narrations(html)
     if not narr:
         fail("ナレーションが空")
@@ -160,7 +179,7 @@ def check_cta(html):
 
 
 def check_loop(html):
-    section("7) ループ（冒頭⇔末尾の共通語）")
+    section("8) ループ（冒頭⇔末尾の共通語）")
     narr = _narrations(html)
     if len(narr) < 2:
         fail("スライドが2枚未満でループ判定不可")
@@ -176,7 +195,7 @@ def check_loop(html):
 
 
 def check_browser(html_path):
-    section("8) セーフエリア描画（Playwright）")
+    section("9) セーフエリア描画（Playwright）")
     try:
         from playwright.sync_api import sync_playwright
     except ImportError:
@@ -223,6 +242,7 @@ if __name__ == "__main__":
     check_match(md, html)
     check_duration(html)
     check_slide_count(html)
+    check_length(html)
     check_hook(html)
     check_cta(html)
     check_loop(html)

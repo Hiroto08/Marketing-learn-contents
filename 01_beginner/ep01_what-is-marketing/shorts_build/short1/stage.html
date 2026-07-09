@@ -86,9 +86,8 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div id="s2-a" class="se k-line">売り場に並んだのは<br><span class="hi">ほぼ同じ商品</span>でした</div>
+    <div id="s2-a" class="se k-line">売り場に並んだのは<br><span class="hi">ほぼ同じ商品</span></div>
   </div>
-  <div class="caption-zone"><div id="s2-cap" class="se caption">実は、商品はほとんど変えていません</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
@@ -102,7 +101,7 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <section class="slide" id="s4">
   <div class="card">
     <div id="s4-a" class="se k-line">797億円<br>→<br><span class="hi">1752億円</span></div>
-    <div id="s4-b" class="se k-sub">チェーン全店の売上（6年）</div>
+    <div id="s4-b" class="se k-sub">チェーン全店の売上</div>
   </div>
 </section>
 <section class="slide" id="s5">
@@ -117,36 +116,35 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
    yt-shorts-designer が SLIDES_META / STEPS / NARRATIONS / TOTAL_SECS を実データに差し替える。
    再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
 const SLIDES_META = [
-  {id:'s1', start:0.0, end:3.5},
-  {id:'s2', start:3.5, end:10.0},
-  {id:'s3', start:10.0, end:20.0},
-  {id:'s4', start:20.0, end:27.0},
-  {id:'s5', start:27.0, end:32.0},
+  {id:'s1', start:0.0, end:2.8},
+  {id:'s2', start:2.8, end:7.5},
+  {id:'s3', start:7.5, end:13.5},
+  {id:'s4', start:13.5, end:18.0},
+  {id:'s5', start:18.0, end:22.5},
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-a'], anim:'rv-fade'},
-  {si:0, t:0.8, ids:['s1-b'], anim:'rv-pop'},
-  {si:0, t:1.8, ids:['s1-c'], anim:'rv-fade'},
+  {si:0, t:0.5, ids:['s1-b'], anim:'rv-pop'},
+  {si:0, t:1.2, ids:['s1-c'], anim:'rv-fade'},
   {si:1, t:0.0, ids:['s2-a'], anim:'rv-up'},
-  {si:1, t:1.0, ids:['s2-cap'], anim:'rv-fade'},
   {si:2, t:0.0, ids:['s3-a'], anim:'rv-pop'},
-  {si:2, t:0.6, ids:['s3-b'], anim:'rv-pop'},
-  {si:2, t:1.2, ids:['s3-c'], anim:'rv-pop'},
-  {si:2, t:1.8, ids:['s3-d'], anim:'rv-pop'},
-  {si:2, t:2.6, ids:['s3-cap'], anim:'rv-fade'},
+  {si:2, t:0.5, ids:['s3-b'], anim:'rv-pop'},
+  {si:2, t:1.0, ids:['s3-c'], anim:'rv-pop'},
+  {si:2, t:1.5, ids:['s3-d'], anim:'rv-pop'},
+  {si:2, t:2.2, ids:['s3-cap'], anim:'rv-fade'},
   {si:3, t:0.0, ids:['s4-a'], anim:'rv-scale'},
-  {si:3, t:1.2, ids:['s4-b'], anim:'rv-fade'},
+  {si:3, t:1.0, ids:['s4-b'], anim:'rv-fade'},
   {si:4, t:0.0, ids:['s5-a'], anim:'rv-fade'},
-  {si:4, t:1.0, ids:['s5-b'], anim:'rv-pop'},
+  {si:4, t:0.9, ids:['s5-b'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
-  `商品はほぼ同じまま、売上を6年でおよそ2.2倍にした会社があります。作業服のワークマンです。`,
-  `実は、その売り場に並んだのは、ほぼすべて、それまでの店と同じ商品だったんです。`,
-  `変えたのは、照明と、マネキンと、陳列と、場所。つまり、誰に、どんな価値として見せるか、だけを変えました。`,
-  `チェーン全店の売上は、797億円から1752億円になりました。`,
-  `商品を磨いても売れないときは、商品ではなく、売れる仕組みのほうを疑ってください。この仕組みの全体像は、固定コメントの長編で解説しています。`,
+  `商品を変えず、売上2.2倍。ワークマンです。`,
+  `並べたのは、ほぼ前と同じ商品でした。`,
+  `変えたのは、照明、マネキン、陳列、場所だけ。`,
+  `全店の売上は797億から1752億円へ。`,
+  `商品じゃなく、売れる仕組みを疑う。続きは固定コメントへ。`,
 ];
-const TOTAL_SECS = 32;
+const TOTAL_SECS = 22.5;
 </script>
 </body>
 </html>
