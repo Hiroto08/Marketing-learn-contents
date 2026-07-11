@@ -16,9 +16,11 @@ description: Shorts制作の映像編集役。縦型1080x1920でのビルド実�
    ```bash
    python3 _tools/video/make_video.py <stage.html> \
      --out <episode_dir>/shorts_build/shortN \
-     --speaker 11 --speed 1.15 --final-outro 1.0 \
+     --speaker 11 --speed 1.15 \
+     --lead 1.2 --intro 0.3 --outro 0.5 --final-outro 1.2 \
      --width 1080 --height 1920 \
      --bgm _assets/audio/bgm_calm_loop.wav --sfx-dir _assets/audio
+   # --out はディレクトリ。事前に VOICEVOX 起動確認: curl -s http://127.0.0.1:50021/version
    ```
 2. **A/V検証**：final.mp4のvideo/audioトラック長を確認（差±0.1秒以内）。**全スライド（特にS1相当）にvideoストリームが存在することを個別に確認**する（`ffprobe -show_entries stream=codec_type`。videoストリームが1本でも欠落していたら、該当slide_NN.mp4を削除して該当スライドのみ`--slide N`で再録画——テンプレートの`#__heartbeat`が正しく効いているか併せて確認）
 3. ラウドネス確認（-14 LUFS前後、本編と同じ基準）
@@ -28,7 +30,7 @@ description: Shorts制作の映像編集役。縦型1080x1920でのビルド実�
 ## 完了条件
 - [ ] A/V差±0.1秒以内
 - [ ] 全スライドにvideo+audioストリームが存在（欠落なし）
-- [ ] 尺30〜45秒
+- [ ] 尺15〜30秒（一撃型。長いShortsはスキップされる）
 - [ ] ループ接続を目視確認済み
 
 ## 引き継ぎ

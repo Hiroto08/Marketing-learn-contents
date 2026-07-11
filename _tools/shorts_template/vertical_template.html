@@ -46,7 +46,9 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
   align-items:center;justify-content:center;
   padding:var(--safe-top) var(--safe-x) var(--safe-bottom) var(--safe-x);}
 .slide.active{display:flex;}
-.card{width:100%;text-align:center;}
+.card{width:100%;max-width:880px;margin:0 auto;text-align:center;}
+/* max-width 880px＝右レール（いいね/共有ボタン、実質右120px）と一覧面クロップを
+   両方かわす中央カラム（shorts-production.md §3） */
 .k-num{font-weight:900;font-size:220px;line-height:1;color:var(--accent);
   text-shadow:0 0 40px var(--glow-acc);}
 .k-line{font-weight:900;font-size:88px;line-height:1.25;color:#fff;}

@@ -14,7 +14,8 @@ Checks:
   [4] slide count        (4-6)
   [5] narration length   (total <=150 chars, longest slide <=45 — brevity)
   [6] hook signal        (S1's first STEP text has a number/claim/question)
-  [7] CTA present        (last slide mentions 固定コメント/概要欄 etc.)
+  [7] CTA present        (last slide points to the related-video link /
+                          長編リンク etc. — see shorts-production.md §4.5)
   [8] loop echo          (first and last slide share a >=3-char token)
   [9] safe-area render   (Playwright: 0 js errors, no element outside the
                           192/400/48px safe area; skipped with --no-browser)
@@ -162,7 +163,7 @@ def check_hook(html):
         fail(f"S1に数字/断言/否定形/問いかけの信号が見当たらない: 「{first[:30]}…」")
 
 
-CTA_PAT = re.compile(r"固定コメント|概要欄|続きは|長編で|チャンネル登録")
+CTA_PAT = re.compile(r"リンクから|関連動画|下のリンク|長編リンク|固定コメント|概要欄|続きは|長編で|チャンネル登録")
 
 
 def check_cta(html):
