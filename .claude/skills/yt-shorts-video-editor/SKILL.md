@@ -22,7 +22,7 @@ description: Shorts制作の映像編集役。縦型1080x1920でのビルド実�
      --bgm _assets/audio/bgm_calm_loop.wav --sfx-dir _assets/audio
    # --out はディレクトリ。事前に VOICEVOX 起動確認: curl -s http://127.0.0.1:50021/version
    ```
-2. **A/V検証**：final.mp4のvideo/audioトラック長を確認（差±0.1秒以内）。**全スライド（特にS1相当）にvideoストリームが存在することを個別に確認**する（`ffprobe -show_entries stream=codec_type`。videoストリームが1本でも欠落していたら、該当slide_NN.mp4を削除して該当スライドのみ`--slide N`で再録画——テンプレートの`#__heartbeat`が正しく効いているか併せて確認）
+2. **A/V検証**：final.mp4のvideo/audioトラック長を確認（差±0.1秒以内）。**全スライドにvideoストリームが存在することを個別に確認**する（`ffprobe -show_entries stream=codec_type`）。※エンジン（make_video.py）は録画直後に映像トラックを検査し、0フレーム録画（負荷時にChromiumのscreencastが間欠的に起こす実測不良）を最大3回まで自動再録画する。それでも欠落が残る場合のみ、該当slide_NN.mp4を削除して`--slide N`で手動再録画し、`#__heartbeat`の存在も確認する
 3. ラウドネス確認（-14 LUFS前後、本編と同じ基準）
 4. ループ接続の目視確認：最初と最後の数秒を切り出して連続再生し、違和感なくループするか確認
 5. mp4は`shorts_build/`配下に保存（gitignore対象。コミットしない）

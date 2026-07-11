@@ -347,6 +347,16 @@ def _make_silence(path: str, duration: float, sr: int = 24000):
         capture_output=True, check=True)
 
 
+def _has_video_stream(path: str) -> bool:
+    if not os.path.exists(path) or os.path.getsize(path) == 0:
+        return False
+    out = subprocess.run(
+        ['ffprobe', '-v', 'quiet', '-select_streams', 'v', '-show_entries',
+         'stream=codec_type', '-of', 'csv=p=0', path],
+        capture_output=True, text=True).stdout
+    return 'video' in out
+
+
 def get_duration(path: str) -> float:
     r = subprocess.run(
         ['ffprobe', '-v', 'quiet', '-show_entries', 'format=duration',
@@ -844,15 +854,29 @@ class VideoBuilder:
             out_mp4 = os.path.join(self.video_dir, f'slide_{sc.si:02d}.mp4')
             print(f"  slide {sc.si+1} ({self.sd.meta[sc.si].id})", end='', flush=True)
             if os.path.exists(out_mp4):
-                print(f"  {sc.total_dur:.1f}s (cached)")
-                continue
+                if _has_video_stream(out_mp4):
+                    print(f"  {sc.total_dur:.1f}s (cached)")
+                    continue
+                # stale audio-only artifact from an interrupted/failed run
+                os.remove(out_mp4)
             # Run in isolated subprocess so Playwright/Chromium memory is fully
             # released between slides (prevents crash after ~5 consecutive sessions)
-            p = Process(target=_record_slide,
-                        args=(record_html, full_w, sc, out_mp4, a.width, a.height))
-            p.start(); p.join()
-            if p.exitcode != 0:
-                raise RuntimeError(f"Recording failed for slide {sc.si} (exit {p.exitcode})")
+            # Chromium's screencast sporadically emits ZERO video frames under
+            # system load, yielding an audio-only mp4 that later breaks the
+            # concat/mix (-map 0:v matches nothing). Validate and retry.
+            for attempt in range(1, 4):
+                p = Process(target=_record_slide,
+                            args=(record_html, full_w, sc, out_mp4, a.width, a.height))
+                p.start(); p.join()
+                if p.exitcode != 0:
+                    raise RuntimeError(f"Recording failed for slide {sc.si} (exit {p.exitcode})")
+                if _has_video_stream(out_mp4):
+                    break
+                if os.path.exists(out_mp4):
+                    os.remove(out_mp4)
+                print(f"  !video-less recording (attempt {attempt}), retrying", end='', flush=True)
+            else:
+                raise RuntimeError(f"slide {sc.si}: no video stream after 3 attempts")
             print(f"  {sc.total_dur:.1f}s ✓")
 
     def concat(self):

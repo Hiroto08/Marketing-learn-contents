@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>あなたの発信、「買って」ばかりになっていませんか？ | Shorts</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   ENGINE（big style の 02_intermediate/ep08 等から不変のまま移植。
+   触らない：keyframes / rv-* / .se の初期非表示契約は本編と共通）
+═══════════════════════════════════════════════════════════════ */
+@keyframes fadeIn  { from{opacity:0}                           to{opacity:1} }
+@keyframes slideUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:none} }
+@keyframes slideL  { from{opacity:0;transform:translateX(28px)}  to{opacity:1;transform:none} }
+@keyframes slideR  { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:none} }
+@keyframes scaleIn { from{opacity:0;transform:scale(.9)}        to{opacity:1;transform:scale(1)} }
+@keyframes popIn   { from{opacity:0;transform:scale(.8)}        to{opacity:1;transform:scale(1)} }
+.rv-fade  { animation:fadeIn  .6s ease                        forwards }
+.rv-up    { animation:slideUp .55s cubic-bezier(.4,0,.2,1)    forwards }
+.rv-left  { animation:slideL  .55s cubic-bezier(.4,0,.2,1)    forwards }
+.rv-right { animation:slideR  .55s cubic-bezier(.4,0,.2,1)    forwards }
+.rv-scale { animation:scaleIn .65s cubic-bezier(.34,1.56,.64,1) forwards }
+.rv-pop   { animation:popIn   .5s  cubic-bezier(.34,1.56,.64,1) forwards }
+.se { opacity:0; }
+/* make_video.py の record() が element.style.opacity/transform/classList を
+   直接JSで叩く。この HTML 側は「初期状態が不可視」でありさえすればよい
+   （page.evaluate 内蔵のtickループが再生を担当。テンプレ側に別途JSは書かない）。*/
+
+/* ══════════════════════════════════════════════════════════════
+   STAGE（縦型 1080x1920・Shorts専用の新規レイアウト。ここだけ差し替え対象）
+═══════════════════════════════════════════════════════════════ */
+:root{
+  --accent:#A855F7;    /* 本編accentと同一 */
+  --glow-acc:rgba(168,85,247,.25);
+  --key:#FFD54F;       /* 全話共通キーイエロー（design v2.1と同じ運用） */
+  --bg:#0B1220; --ink:#EEEEF8; --muted:#B8BEDD;
+  /* セーフエリア（縦型9:16・1080x1920基準。shorts-production.md §3 準拠） */
+  --safe-top:192px; --safe-bottom:400px; --safe-x:48px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;overflow:hidden;
+  font-family:'Noto Sans JP','Noto Sans CJK JP','Hiragino Kaku Gothic ProN',sans-serif;color:var(--ink);}
+#stage-wrap{position:relative;width:1080px;height:1920px;}
+.slide{position:absolute;inset:0;display:none;flex-direction:column;
+  align-items:center;justify-content:center;
+  padding:var(--safe-top) var(--safe-x) var(--safe-bottom) var(--safe-x);}
+.slide.active{display:flex;}
+.card{width:100%;max-width:880px;margin:0 auto;text-align:center;}
+/* max-width 880px＝右レール（いいね/共有ボタン、実質右120px）と一覧面クロップを
+   両方かわす中央カラム（shorts-production.md §3） */
+.k-num{font-weight:900;font-size:220px;line-height:1;color:var(--accent);
+  text-shadow:0 0 40px var(--glow-acc);}
+.k-line{font-weight:900;font-size:88px;line-height:1.25;color:#fff;}
+.k-line .hi{color:var(--key);}           /* 結論語＝キーイエロー（design v2.1と同じ役割分離） */
+.k-sub{font-weight:500;font-size:44px;line-height:1.4;color:var(--muted);margin-top:24px;}
+.k-tag{display:inline-block;font-weight:900;font-size:40px;padding:.4em 1em;
+  border-radius:999px;border:3px solid var(--accent);color:var(--accent);margin:.2em;}
+/* テロップ帯：下部セーフエリアの直上に固定表示（--safe-bottom自体がボーダーなので
+   ここから加算し、外側にはみ出させない。verify_shorts.py §8 のセーフエリア検査対象） */
+.caption-zone{position:absolute;left:var(--safe-x);right:var(--safe-x);
+  bottom:calc(var(--safe-bottom) + 40px);
+  display:flex;align-items:flex-end;justify-content:center;min-height:160px;}
+.caption{font-weight:900;font-size:52px;line-height:1.35;text-align:center;color:#fff;
+  text-shadow:0 0 14px rgba(0,0,0,.85),0 0 4px rgba(0,0,0,.95);max-width:100%;}
+.caption .hi{color:var(--key);}
+.cta-line{font-weight:900;font-size:60px;color:var(--key);margin-top:.6em;}
+/* ══ 録画用ハートビート（触らない） ══
+   Chromiumのscreencastはdamage-based（画面に変化がある間だけフレームを送出）。
+   本編は背景装飾（浮遊ドット等）が常時ごく僅かに動くためフレームが途切れないが、
+   このテンプレートは静的背景なので、画面が完全静止するスライド（特にS1相当）で
+   1フレームも送出されずvideoトラックが空になる実害が確認された（tpadは最後の
+   フレームを複製する仕組みなので、フレームが0枚だと救えない）。
+   人の目に映らない極小の明滅を常時走らせ、damage detectionを継続的に発火させる。 */
+@keyframes __hb { 0%,100%{opacity:.008} 50%{opacity:.016} }
+#__heartbeat{position:fixed;top:0;left:0;width:2px;height:2px;background:#fff;
+  animation:__hb 2.4s linear infinite;pointer-events:none;z-index:9999;}
+</style>
+</head>
+<body>
+<div id="__heartbeat"></div>
+<div id="stage-wrap">
+<section class="slide" id="s1"><div class="card">
+  <div id="s1-a" class="se k-line">クリックはある。<br><span class="hi">なのに売れない。</span></div>
+</div></section>
+<section class="slide" id="s2"><div class="card">
+  <div id="s2-a" class="se k-sub">人は</div>
+  <div id="s2-b" class="se k-line">知った瞬間には<br><span class="hi">買わない</span></div>
+</div></section>
+<section class="slide" id="s3"><div class="card">
+  <div id="s3-a" class="se k-tag">知る</div>
+  <div id="s3-b" class="se k-tag">好きになる</div>
+  <div id="s3-c" class="se k-tag">調べる</div>
+  <div id="s3-d" class="se k-tag">買う</div>
+  <div id="s3-e" class="se k-tag">また来る</div>
+</div></section>
+<section class="slide" id="s4"><div class="card">
+  <div id="s4-a" class="se k-line">あなたの発信、<br>「<span class="hi">買って</span>」ばかりでは？</div>
+</div></section>
+<section class="slide" id="s5"><div class="card">
+  <div id="s5-a" class="se k-line">まず、<br><span class="hi">好きになってもらう</span></div>
+  <div id="s5-b" class="se cta-line">続きは下の長編リンクへ</div>
+</div></section>
+</div>
+<script>
+/* make_video.py 互換の最小データ契約（本編と同一形式）。
+   yt-shorts-designer が SLIDES_META / STEPS / NARRATIONS / TOTAL_SECS を実データに差し替える。
+   再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
+const SLIDES_META = [
+  {id:'s1', start:0, end:3.2},
+  {id:'s2', start:3.2, end:8.0},
+  {id:'s3', start:8.0, end:14.0},
+  {id:'s4', start:14.0, end:18.5},
+  {id:'s5', start:18.5, end:23.0},
+];
+const STEPS = [
+  {si:0, t:0.0, ids:['s1-a'], anim:'rv-fade'},
+  {si:1, t:0.0, ids:['s2-a'], anim:'rv-fade'},
+  {si:1, t:0.6, ids:['s2-b'], anim:'rv-up'},
+  {si:2, t:0.0, ids:['s3-a'], anim:'rv-pop'},
+  {si:2, t:0.4, ids:['s3-b'], anim:'rv-pop'},
+  {si:2, t:0.8, ids:['s3-c'], anim:'rv-pop'},
+  {si:2, t:1.2, ids:['s3-d'], anim:'rv-pop'},
+  {si:2, t:1.6, ids:['s3-e'], anim:'rv-pop'},
+  {si:3, t:0.0, ids:['s4-a'], anim:'rv-left'},
+  {si:4, t:0.0, ids:['s5-a'], anim:'rv-scale'},
+  {si:4, t:0.9, ids:['s5-b'], anim:'rv-pop'},
+];
+const NARRATIONS = [
+  `クリックはある。なのに売れない。なぜでしょう。`,
+  `人は、知った瞬間には買わないからです。`,
+  `知って、好きになって、調べて、ようやく買う。`,
+  `あなたの発信、『買って』ばかりになっていませんか。`,
+  `クリックの先の道筋が無いだけ。続きは、下の長編リンクへ。`,
+];
+const TOTAL_SECS = 23.0;
+</script>
+</body>
+</html>
