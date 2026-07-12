@@ -23,6 +23,7 @@ when_to_use: "Triggers: 新しいエピソードを作って, EPNNを作成, EPN
 | 7 | QA | `yt-qa` | 全検査の独立再実行（最終ゲート） | PASS/FAILレポート |
 | 8 | 映像編集 | `yt-video-editor` | ビルド・A/V検証・実測タイムスタンプ | final.mp4 |
 | 9 | アナリスト | `yt-analyst` | 公開後KPI分析・スキルへの学び書き戻し | 改善提案＋§7追記 |
+| 10 | 配信オペレーター | `yt-uploader` | YouTube非公開アップロード・メタデータ設定・公開予約（要 YT_* Secrets） | privateの動画＋publish_manifest.json |
 
 ## Shorts専用ロール（5つ・本編完成後に実行）
 
@@ -73,6 +74,7 @@ EP02〜EP08 はこの形式が完成済み。EP09〜EP12 はこの形式へア�
 「EP◯◯をL3で更新して」のような指示が来たら、**まず `docs/episode-briefs.md` の該当EP節を読み**、retention-packaging.md の該当レベルの範囲だけ作業する。
 L3はフローAと同じ工程＋パッケージング先行＋機械検査（ナレーション検査・STEPS密度検査）＋Shorts台本3本。
 「動画化まで」と指示された場合はQA PASS・コミット後に `yt-video-editor` のビルド（BGM/SFX/ラウドネス込み標準コマンド）→A/V検証→実測タイムスタンプ修正→mp4納品まで続けて実行する。
+「アップロードまで」と指示された場合はさらに `yt-uploader` で private アップロード（環境Secrets YT_CLIENT_ID/YT_CLIENT_SECRET/YT_REFRESH_TOKEN が必要。無ければセットアップ手順を案内して停止）。
 
 **フローD（番外編・タイムリー特番）**：「番外編を作って：テーマ◯◯」の指示で、24話シリーズ外の単発動画を作る。
 1. ディレクトリは `07_specials/spNN_<slug>/`（NNは連番2桁。`ls 07_specials/` で次番号を確認し、無ければディレクトリごと新規作成）
