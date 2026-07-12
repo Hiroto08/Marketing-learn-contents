@@ -30,6 +30,11 @@ SCOPE = ("https://www.googleapis.com/auth/youtube.upload "
 PORT = 8765
 
 
+class _ReusableServer(http.server.HTTPServer):
+    # 前回の実行が異常終了してもポートを再利用できるように
+    allow_reuse_address = True
+
+
 def main():
     if len(sys.argv) != 3:
         sys.exit(__doc__)
@@ -43,6 +48,7 @@ def main():
                     "access_type": "offline", "prompt": "consent",
                     "state": state}))
     code_holder = {}
+    got = threading.Event()
 
     class H(http.server.BaseHTTPRequestHandler):
         def do_GET(self):
@@ -50,6 +56,11 @@ def main():
             if q.get("state", [""])[0] == state and "code" in q:
                 code_holder["code"] = q["code"][0]
                 body = "認可完了。ターミナルに戻ってください。".encode()
+                got.set()
+            elif "error" in q:
+                body = f"認可エラー: {q['error'][0]}（ターミナルを確認）".encode()
+                code_holder["error"] = q["error"][0]
+                got.set()
             else:
                 body = "パラメータ不正".encode()
             self.send_response(200)
@@ -60,13 +71,21 @@ def main():
         def log_message(self, *a):
             pass
 
-    srv = http.server.HTTPServer(("localhost", PORT), H)
+    srv = _ReusableServer(("localhost", PORT), H)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
-    print("ブラウザで認可してください…")
+    print("ブラウザで認可してください…（10分でタイムアウト。中断は Ctrl+C）")
     webbrowser.open(auth_url) or print(f"開かない場合はこのURLへ:\n{auth_url}")
-    while "code" not in code_holder:
-        pass
-    srv.shutdown()
+    try:
+        if not got.wait(timeout=600):
+            sys.exit("タイムアウト。もう一度実行してください。")
+    except KeyboardInterrupt:
+        sys.exit("\n中断しました。")
+    finally:
+        srv.shutdown()
+    if "error" in code_holder:
+        sys.exit(f"認可エラー: {code_holder['error']}\n"
+                 "access_denied の場合は OAuth同意画面の「テストユーザー」に"
+                 "ログインするアカウントを追加してから再実行。")
 
     data = urllib.parse.urlencode({
         "client_id": cid, "client_secret": csec,
