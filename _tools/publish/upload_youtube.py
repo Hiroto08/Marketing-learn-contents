@@ -14,6 +14,12 @@
     # オプション: --privacy unlisted / --publish-at 2026-07-20T21:00:00+09:00
     #           --playlist <playlistId> / --thumbnail <png>
 
+サムネイル（本編）:
+  <episode_dir>/thumbnail.png があれば自動で設定される（--thumbnail 指定が優先）。
+  生成は `python3 _tools/publish/make_thumbnail.py <episode_dir>`（thumbnail.mdから文言取得）。
+  動画がアップロード済みでも、サムネPNGが新規/変更されていれば再実行で後追い設定される
+  （publish_manifest.json の thumbSha256 で冪等管理。thumbnails.set=50クォータ単位）。
+
 認証（リポジトリに秘密情報は置かない）:
   環境変数 YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN を使う。
   取得手順は .claude/skills/yt-uploader/SKILL.md を参照
@@ -205,13 +211,22 @@ def upload_video(tok: str, path: str, meta: dict, privacy: str,
     sys.exit("アップロードが20回のリトライ後も完了しない")
 
 
-def set_thumbnail(tok: str, video_id: str, png: str):
+def set_thumbnail(tok: str, video_id: str, png: str) -> bool:
     with open(png, "rb") as f:
         r = requests.post(
             f"https://www.googleapis.com/upload/youtube/v3/thumbnails/set?videoId={video_id}",
             headers={"Authorization": f"Bearer {tok}", "Content-Type": "image/png"},
             data=f, timeout=120)
     print(f"  thumbnail: {'OK' if r.status_code == 200 else f'FAIL {r.status_code} {r.text[:120]}'}")
+    return r.status_code == 200
+
+
+def episode_thumbnail(ep_dir: str, cli_thumb: str | None) -> str | None:
+    """本編サムネの解決: --thumbnail 指定 > <ep>/thumbnail.png（make_thumbnail.py の出力）"""
+    if cli_thumb:
+        return cli_thumb
+    auto = f"{ep_dir}/thumbnail.png"
+    return auto if os.path.exists(auto) else None
 
 
 def add_to_playlist(tok: str, video_id: str, playlist_id: str):
@@ -284,18 +299,31 @@ def main():
 
     tok = access_token()
     checklist = []
+    ep_thumb = episode_thumbnail(a.episode.rstrip("/"), a.thumbnail) if a.episode else None
     for dkey, path, meta in jobs:
         man = load_manifest(dkey)
         digest = sha256(path)
         prev = man.get(os.path.basename(path))
+        is_episode = dkey == (a.episode or "").rstrip("/")
         if prev and prev.get("sha256") == digest:
             print(f"skip（同一ハッシュ済み videoId={prev['videoId']}）: {path}")
+            # 動画は既アップでもサムネが新規/更新なら後追いで設定する（thumbnails.set=50単位）
+            if is_episode and ep_thumb:
+                tdigest = sha256(ep_thumb)
+                if prev.get("thumbSha256") != tdigest:
+                    print(f"  サムネ更新: {ep_thumb} → videoId={prev['videoId']}")
+                    if set_thumbnail(tok, prev["videoId"], ep_thumb):
+                        prev["thumbSha256"] = tdigest
+                        man[os.path.basename(path)] = prev
+                        save_manifest(dkey, man)
             continue
         print(f"uploading: {path}  ({os.path.getsize(path)//1024//1024}MB)")
         vid = upload_video(tok, path, meta, a.privacy, a.publish_at)
         print(f"  → https://studio.youtube.com/video/{vid}/edit  (privacy={a.privacy}{' publishAt=' + a.publish_at if a.publish_at else ''})")
-        if a.thumbnail and dkey == (a.episode or "").rstrip("/"):
-            set_thumbnail(tok, vid, a.thumbnail)
+        thumb_sha = None
+        if is_episode and ep_thumb:
+            if set_thumbnail(tok, vid, ep_thumb):
+                thumb_sha = sha256(ep_thumb)
         if a.playlist:
             add_to_playlist(tok, vid, a.playlist)
         if a.pin_comment:
@@ -303,6 +331,7 @@ def main():
         man[os.path.basename(path)] = {"videoId": vid, "sha256": digest,
                                        "privacy": a.privacy,
                                        "publishAt": a.publish_at,
+                                       "thumbSha256": thumb_sha,
                                        "uploadedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
         save_manifest(dkey, man)
         if "short" in dkey:

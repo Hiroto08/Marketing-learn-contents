@@ -25,22 +25,33 @@ description: YouTube配信オペレーター役。完成した本編/Shortsを�
 ## 手順
 
 1. **QA通過を確認**してから実行（verify_episode / verify_shorts がPASSしていない動画は上げない）
-2. まず `--dry-run` でメタデータ組み立てを確認：
+2. **サムネイル生成**（本編のみ。無ければ必ず作ってから上げる）：
+   ```bash
+   python3 _tools/publish/make_thumbnail.py <ep_dir>   # → <ep_dir>/thumbnail.png
+   ```
+   文言は `<ep_dir>/thumbnail.md` から自動取得（`**採用：**`行 → `**候補A（採用）：**` →
+   最初の太字 → 最初の箇条書き の順で解決。明示指定は thumbnail.md に
+   `## サムネ生成データ` ブロックを作り `main:` / `sub:` 行を書くか、CLI `--main/--sub`）。
+   生成後は **PNG を Read で目視確認**（折返し・文字つぶれ）し、コミットする（コンテナ再作成対策）
+3. まず `--dry-run` でメタデータ組み立てを確認：
    ```bash
    python3 _tools/publish/upload_youtube.py --episode <ep_dir> --dry-run
    python3 _tools/publish/upload_youtube.py --shorts  <ep_dir> --dry-run
    ```
    タイトル100字以内・説明5000字以内・タグは自動で切り詰められる
-3. 本番実行（既定 private。公開予約は `--publish-at 2026-07-20T21:00:00+09:00`）：
+4. 本番実行（既定 private。公開予約は `--publish-at 2026-07-20T21:00:00+09:00`）：
    ```bash
    python3 _tools/publish/upload_youtube.py --episode <ep_dir> \
-     --thumbnail <png> --playlist <playlistId> \
+     --playlist <playlistId> \
      --pin-comment "本編はこちら→（後でStudioでピン留め）"
    python3 _tools/publish/upload_youtube.py --shorts <ep_dir>
    ```
-4. 出力された Studio URL と `publish_manifest.json`（videoId・SHA-256）を確認。
-   **同一ハッシュは自動スキップ**されるので再実行は安全
-5. スクリプト末尾の「残る手動作業」チェックリストをそのままユーザーに渡す
+   `<ep_dir>/thumbnail.png` は**自動で設定される**（`--thumbnail <png>` 指定が優先）。
+   Shortsはカバー画像を別途設定できない（動画フレームがカバーになる仕様）
+5. 出力された Studio URL と `publish_manifest.json`（videoId・SHA-256・thumbSha256）を確認。
+   **同一ハッシュは自動スキップ**されるので再実行は安全。動画が既アップでも
+   サムネPNGが新規/変更なら**再実行だけで後追い設定**される（thumbnails.set=50単位）
+6. スクリプト末尾の「残る手動作業」チェックリストをそのままユーザーに渡す
 
 ## APIで自動化できないもの（must: ユーザーへ明示）
 
