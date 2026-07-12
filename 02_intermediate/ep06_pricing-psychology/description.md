@@ -20,6 +20,8 @@
 
 値付けに悩む個人事業主・小さな会社の担当者・EC運営者の方に特におすすめです。
 明日やることは1つだけ——価格表に「比べる基準」を1つ書き足すこと。
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -52,8 +54,8 @@
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

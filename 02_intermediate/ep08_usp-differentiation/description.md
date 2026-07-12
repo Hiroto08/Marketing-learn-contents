@@ -16,6 +16,8 @@
 ✅ USPの3条件（独自性・競合未提供・購買を動かす）とRosser Reevesが1961年に示した定義
 ✅ 顧客インタビュー・競合分析・バリュープロポジションキャンバスを使ったUSP発見の3手法
 ✅ ブルーオーシャン戦略（ERRC）と「顧客×ベネフィット×根拠」の言語化公式
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -48,8 +50,8 @@
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

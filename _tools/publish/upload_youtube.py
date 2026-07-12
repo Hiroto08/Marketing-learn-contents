@@ -94,7 +94,11 @@ def episode_metadata(ep_dir: str) -> dict:
     for sec in ["メイン説明文", "タイムスタンプ", "シリーズ再生リスト", "関連動画", "参考・補足リソース"]:
         b = _block(md, sec)
         if b:
-            parts.append(b)
+            # 制作用の未確定マーカーを公開文面から除去
+            b = b.replace("：（公開後追記）", "").replace("（公開後追記）", "")
+            b = "\n".join(l for l in b.splitlines()
+                          if "この欄にURLを追記" not in l and "実測値へ更新" not in l)
+            parts.append(b.strip())
     tags_block = _block(md, "ハッシュタグ")
     hashtags = re.findall(r"#[^\s#]+", tags_block)
     if hashtags:
@@ -115,6 +119,7 @@ def shorts_metadata(ep_dir: str) -> list:
         desc = (f"{title}\n\n"
                 f"本編「{ep_title}」の要点を1論点だけ切り出したShortsです。\n"
                 f"続きは、この画面のリンク（関連動画）から本編へ。\n\n"
+                f"※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。\n\n"
                 f"#Shorts #マーケティング #ビジネス")
         out.append({"n": n, "title": title[:100], "description": desc,
                     "tags": ["Shorts", "マーケティング", "ビジネス"]})

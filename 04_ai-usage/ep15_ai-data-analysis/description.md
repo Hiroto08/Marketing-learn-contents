@@ -15,6 +15,8 @@ AIに任せられる作業と、人間が必ずチェックすべき3つの落�
 ✅ クロス集計・NPS（Net Promoter Score）の自動化と、Fred Reichheld（2003年）が示したNPSの考え方
 ✅ 自由回答の自動分類・感情分析の仕組みと、人間との一致率81.7%（JMIR, 2025年の実測データ）
 ✅ 皮肉の誤読・考察への過信・サンプルの偏りという、AIでは解決できない3つの限界
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -47,8 +49,8 @@ AIに任せられる作業と、人間が必ずチェックすべき3つの落�
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

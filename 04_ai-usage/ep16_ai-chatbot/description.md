@@ -16,6 +16,8 @@
 ✅ 会話設計の3原則（1ターン1意図／フィードバックの可視化／トーン設計）とDon Norman・Cathy Pearlの知見
 ✅ カスタマージャーニー上でボットを置くべき場所（認知〜検討／購入〜サポート）
 ✅ エスカレーション設計の3条件と、過剰自動化・ロボット的な言葉づかいなど3つの落とし穴
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -48,8 +50,8 @@
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

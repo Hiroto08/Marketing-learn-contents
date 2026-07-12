@@ -13,6 +13,8 @@
 ✅ ポイント①
 ✅ ポイント②
 ✅ ポイント③
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -32,8 +34,8 @@ X:XX まとめ
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

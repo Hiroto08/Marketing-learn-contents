@@ -14,6 +14,8 @@
 ✅ David Ogilvy・Eugene Schwartz・Joseph Sugarman・Robert Cialdini・Gary Halbertが示した「反応率を上げる5つの法則」
 ✅ ベネフィットファースト／意識レベル／スリッパリースロープ／社会的証明・権威・希少性／具体的な数字の使い方
 ✅ NG例とOK例の比較、A/Bテストの優先順位、ターゲット設定の重要性まで実践ステップで解説
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -46,8 +48,8 @@
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

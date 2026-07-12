@@ -15,6 +15,8 @@ CPA（顧客獲得単価）とLTV（顧客生涯価値）の考え方を徹底�
 ✅ CPAとLTVの定義・計算式と、業種別CPAの目安
 ✅ 投資判断の黄金比「LTV÷CPA＞3」とその理由
 ✅ LTVを上げる3レバー・CPAを下げる3手・リテンション率5%改善で利益が25〜95%増える理由
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -47,8 +49,8 @@ CPA（顧客獲得単価）とLTV（顧客生涯価値）の考え方を徹底�
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

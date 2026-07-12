@@ -16,6 +16,8 @@ SNS広告・SEO・メルマガ・展示会……施策を増やしているの�
 ✅ 4P（Product / Price / Place / Promotion）の正しい設計方法
 ✅ 4Cへのシフト（Customer Solution / Cost / Convenience / Communication）
 ✅ 4Pの整合性が売上を決める——ユニクロとD2Cの実例で学ぶIMCの力
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -50,8 +52,8 @@ SNS広告・SEO・メルマガ・展示会……施策を増やしているの�
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

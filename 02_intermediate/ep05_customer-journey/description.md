@@ -19,6 +19,8 @@
 
 広告運用・SNS担当・ネットショップ運営・個人事業主の方に特におすすめです。
 明日やることは1つだけ——最初に触れるコンテンツを「好きになってもらう」内容に書き換えること。
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -51,8 +53,8 @@
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

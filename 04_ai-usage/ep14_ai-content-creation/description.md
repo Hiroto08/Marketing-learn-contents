@@ -16,6 +16,8 @@ AI活用編の第2回は、記事執筆と画像生成それぞれを「AIが下
 ✅ AI執筆の3ステップ（構造化プロンプト→人の編集→事実検証）とGoogleのE-E-A-T評価基準
 ✅ ブランドボイスを崩さない仕組み化と、HubSpotの実在機能を例にした運用方法
 ✅ 拡散モデルの仕組み（Rombach et al., CVPR 2022）と、著作権・没個性・誤情報という3つの落とし穴
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -48,8 +50,8 @@ AI活用編の第2回は、記事執筆と画像生成それぞれを「AIが下
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

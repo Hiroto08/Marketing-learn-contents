@@ -16,6 +16,8 @@
 ✅ ABテストの定義と統計的基礎（Ronald A. Fisher 1935年の実験計画法）
 ✅ 3大失敗（早期終了・複数変数の同時変更・偏った期間）とその対処法
 ✅ CVR・リフト率・信頼区間による結果の読み方と、CVR 32%改善の実践事例
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -48,8 +50,8 @@
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---

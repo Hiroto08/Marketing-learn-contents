@@ -14,6 +14,8 @@
 ✅ エンゲージメント率の正しい計算式と業種別ベンチマーク（Sprout Social調べ）
 ✅ Instagramアルゴリズムの3段階拡散モデルと、反応を生む5つの投稿型
 ✅ Gary Vaynerchukの「Jab, Jab, Jab, Right Hook」理論とCTA設計、改善事例（エンゲージ率0.4%→3.2%）
+
+※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。
 ```
 
 ---
@@ -46,8 +48,8 @@
 ## シリーズ再生リスト
 
 ```
-▶ YouTubeマーケティング講座 全回まとめ：
-https://www.youtube.com/playlist?list=XXXXXXXX
+▶ YouTubeマーケティング講座 全回まとめ（チャンネルの再生リストから）：
+https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ```
 
 ---
