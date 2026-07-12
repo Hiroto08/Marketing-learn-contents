@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>広告を足す前に、たった1つだけ書き換える場所 | Shorts</title>
+<title>広告を足す前に、たった1つだけ書き換える場所</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;900&display=swap" rel="stylesheet">
 <style>
@@ -31,7 +31,7 @@
    STAGE（縦型 1080x1920・Shorts専用の新規レイアウト。ここだけ差し替え対象）
 ═══════════════════════════════════════════════════════════════ */
 :root{
-  --accent:#A855F7;    /* 本編accentと同一 */
+  --accent:#A855F7;    /* yt-shorts-designer が本編の --accent と揃える */
   --glow-acc:rgba(168,85,247,.25);
   --key:#FFD54F;       /* 全話共通キーイエロー（design v2.1と同じ運用） */
   --bg:#0B1220; --ink:#EEEEF8; --muted:#B8BEDD;
@@ -80,49 +80,71 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<section class="slide" id="s1"><div class="card">
-  <div id="s1-a" class="se k-line">広告を足す前に、<br><span class="hi">見る場所</span></div>
-</div></section>
-<section class="slide" id="s2"><div class="card">
-  <div id="s2-a" class="se k-line">買うまでの道筋＝<br><span class="hi">5段階の地図</span></div>
-</div></section>
-<section class="slide" id="s3"><div class="card">
-  <div id="s3-a" class="se k-tag">知る</div>
-  <div id="s3-b" class="se k-tag">好きになる</div>
-  <div id="s3-c" class="se k-tag">調べる</div>
-  <div id="s3-d" class="se k-tag">買う</div>
-  <div id="s3-e" class="se k-tag">勧める</div>
-</div></section>
-<section class="slide" id="s4"><div class="card">
-  <div id="s4-a" class="se k-line"><span class="hi">いちばん薄い段階</span>を<br>1つだけ、直す</div>
-</div></section>
-<section class="slide" id="s5"><div class="card">
-  <div id="s5-a" class="se k-line">広告を足す前に</div>
-  <div id="s5-b" class="se cta-line">続きは下の長編リンクへ</div>
-</div></section>
+<!-- ══ SHORTS_STAGE_START ══ -->
+<section class="slide" id="s1">
+  <div class="card">
+    <div class="se k-line" id="s1-line"><span class="hi">広告を足す前に</span>、<br>見る場所</div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s1-cap">ご存じですか</div></div>
+</section>
+<section class="slide" id="s2">
+  <div class="card">
+    <div class="se k-line" id="s2-line">買うまでの道筋＝<br><span class="hi">5段階の地図</span></div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s2-cap">紙1枚で書ける</div></div>
+</section>
+<section class="slide" id="s3">
+  <div class="card">
+    <div class="se k-tag" id="s3-t1">知る</div>
+    <div class="se k-tag" id="s3-t2">好きになる</div>
+    <div class="se k-tag" id="s3-t3">調べる</div>
+    <div class="se k-tag" id="s3-t4">買う</div>
+    <div class="se k-tag" id="s3-t5">勧める</div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s3-cap">5つ並べるだけ</div></div>
+</section>
+<section class="slide" id="s4">
+  <div class="card">
+    <div class="se k-line" id="s4-line">いちばん<span class="hi">薄い段階</span>を<br>1つ、直す</div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s4-cap">全部やらなくていい</div></div>
+</section>
+<section class="slide" id="s5">
+  <div class="card">
+    <div class="se k-line" id="s5-line"><span class="hi">広告を足す前に</span>、<br>その地図</div>
+    <div class="se cta-line" id="s5-cta">続きは ↓ 長編リンクへ</div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは下の<span class="hi">長編リンク</span>へ</div></div>
+</section>
+<!-- ══ SHORTS_STAGE_END ══ -->
 </div>
 <script>
 /* make_video.py 互換の最小データ契約（本編と同一形式）。
    yt-shorts-designer が SLIDES_META / STEPS / NARRATIONS / TOTAL_SECS を実データに差し替える。
    再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
 const SLIDES_META = [
-  {id:'s1', start:0, end:3.0},
-  {id:'s2', start:3.0, end:7.5},
-  {id:'s3', start:7.5, end:13.5},
-  {id:'s4', start:13.5, end:18.0},
-  {id:'s5', start:18.0, end:23.0},
+  {id:'s1', start:0.0, end:3.0},
+  {id:'s2', start:3.0, end:8.0},
+  {id:'s3', start:8.0, end:13.5},
+  {id:'s4', start:13.5, end:18.5},
+  {id:'s5', start:18.5, end:23.0},
 ];
 const STEPS = [
-  {si:0, t:0.0, ids:['s1-a'], anim:'rv-fade'},
-  {si:1, t:0.0, ids:['s2-a'], anim:'rv-up'},
-  {si:2, t:0.0, ids:['s3-a'], anim:'rv-pop'},
-  {si:2, t:0.4, ids:['s3-b'], anim:'rv-pop'},
-  {si:2, t:0.8, ids:['s3-c'], anim:'rv-pop'},
-  {si:2, t:1.2, ids:['s3-d'], anim:'rv-pop'},
-  {si:2, t:1.6, ids:['s3-e'], anim:'rv-pop'},
-  {si:3, t:0.0, ids:['s4-a'], anim:'rv-scale'},
-  {si:4, t:0.0, ids:['s5-a'], anim:'rv-fade'},
-  {si:4, t:0.9, ids:['s5-b'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-line'], anim:'rv-scale'},
+  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
+  {si:1, t:3.2, ids:['s2-cap'], anim:'rv-fade'},
+  {si:1, t:3.4, ids:['s2-line'], anim:'rv-pop'},
+  {si:2, t:8.2, ids:['s3-cap'], anim:'rv-fade'},
+  {si:2, t:8.3, ids:['s3-t1'], anim:'rv-left'},
+  {si:2, t:8.8, ids:['s3-t2'], anim:'rv-left'},
+  {si:2, t:9.3, ids:['s3-t3'], anim:'rv-left'},
+  {si:2, t:9.8, ids:['s3-t4'], anim:'rv-left'},
+  {si:2, t:10.3, ids:['s3-t5'], anim:'rv-left'},
+  {si:3, t:13.7, ids:['s4-cap'], anim:'rv-fade'},
+  {si:3, t:13.9, ids:['s4-line'], anim:'rv-right'},
+  {si:4, t:18.5, ids:['s5-line'], anim:'rv-scale'},
+  {si:4, t:18.7, ids:['s5-cap'], anim:'rv-fade'},
+  {si:4, t:20.3, ids:['s5-cta'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `広告を足す前に見る場所、ご存じですか。`,

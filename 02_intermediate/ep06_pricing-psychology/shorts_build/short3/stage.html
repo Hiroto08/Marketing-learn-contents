@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>ターゲット設定で9割がやる失敗【STP分析】</title>
+<title>値下げする前に、価格表へ足すたった1行</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;900&display=swap" rel="stylesheet">
 <style>
@@ -31,8 +31,8 @@
    STAGE（縦型 1080x1920・Shorts専用の新規レイアウト。ここだけ差し替え対象）
 ═══════════════════════════════════════════════════════════════ */
 :root{
-  --accent:#14B8A6;    /* yt-shorts-designer が本編の --accent と揃える */
-  --glow-acc:rgba(20,184,166,.25);
+  --accent:#F97316;    /* yt-shorts-designer が本編の --accent と揃える */
+  --glow-acc:rgba(249,115,22,.25);
   --key:#FFD54F;       /* 全話共通キーイエロー（design v2.1と同じ運用） */
   --bg:#0B1220; --ink:#EEEEF8; --muted:#B8BEDD;
   /* セーフエリア（縦型9:16・1080x1920基準。shorts-production.md §3 準拠） */
@@ -83,33 +83,35 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <!-- ══ SHORTS_STAGE_START ══ -->
 <section class="slide" id="s1">
   <div class="card">
-    <div class="se k-line" id="s1-line">ターゲットは<br>20〜60代の男女</div>
-    <div class="se k-tag" id="s1-tag">一番多い失敗</div>
+    <div class="se k-line" id="s1-line"><span class="hi">値下げ</span>の前に、<br>やること</div>
+    <div class="se k-num" id="s1-num">1つ</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s1-cap">この設定、危険</div></div>
+  <div class="caption-zone"><div class="se caption" id="s1-cap">値下げはまだ早い</div></div>
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-line">それ、日本人の<br><span class="hi">ほぼ全員</span>です</div>
+    <div class="se k-line" id="s2-line">価格表に<br>「<span class="hi">比べる基準</span>」を</div>
+    <div class="se k-num" id="s2-num">＋1行</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s2-cap">誰も選んでいない</div></div>
+  <div class="caption-zone"><div class="se caption" id="s2-cap">足すのは<span class="hi">1行</span>だけ</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-line" id="s3-line">全員に向けた言葉は<br><span class="hi">誰にも刺さらない</span></div>
+    <div class="se k-tag" id="s3-tag1">相場</div>
+    <div class="se k-tag" id="s3-tag2">松竹梅の上の段</div>
+    <div class="se k-sub" id="s3-sub">どちらでも構わない</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s3-cap">刺さる言葉の条件</div></div>
+  <div class="caption-zone"><div class="se caption" id="s3-cap">基準は何でもいい</div></div>
 </section>
 <section class="slide" id="s4">
   <div class="card">
-    <div class="se k-tag" id="s4-tag">QBハウス</div>
-    <div class="se k-line" id="s4-line">“<span class="hi">時間のない人</span>”だけ</div>
+    <div class="se k-line" id="s4-line">基準があると<br><span class="hi">高い/安い</span>が<br>判断できる</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s4-cap">絞った実例</div></div>
+  <div class="caption-zone"><div class="se caption" id="s4-cap">人は比較でしか感じない</div></div>
 </section>
 <section class="slide" id="s5">
   <div class="card">
-    <div class="se k-line" id="s5-line">絞る＝<span class="hi">1番になる</span></div>
+    <div class="se k-line" id="s5-line"><span class="hi">値下げ</span>は、<br>最後の一手</div>
     <div class="se cta-line" id="s5-cta">続きは ↓ 長編リンクへ</div>
   </div>
   <div class="caption-zone"><div class="se caption" id="s5-cap">続きは下の<span class="hi">長編リンク</span>へ</div></div>
@@ -121,35 +123,37 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
    yt-shorts-designer が SLIDES_META / STEPS / NARRATIONS / TOTAL_SECS を実データに差し替える。
    再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
 const SLIDES_META = [
-  {id:'s1', start:0.0, end:3.2},
-  {id:'s2', start:3.2, end:7.5},
-  {id:'s3', start:7.5, end:12.0},
-  {id:'s4', start:12.0, end:17.0},
-  {id:'s5', start:17.0, end:22.5},
+  {id:'s1', start:0.0, end:3.5},
+  {id:'s2', start:3.5, end:8.0},
+  {id:'s3', start:8.0, end:12.5},
+  {id:'s4', start:12.5, end:17.0},
+  {id:'s5', start:17.0, end:22.0},
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-line'], anim:'rv-scale'},
   {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
-  {si:0, t:1.6, ids:['s1-tag'], anim:'rv-pop'},
-  {si:1, t:3.4, ids:['s2-cap'], anim:'rv-fade'},
-  {si:1, t:3.6, ids:['s2-line'], anim:'rv-pop'},
-  {si:2, t:7.7, ids:['s3-cap'], anim:'rv-fade'},
-  {si:2, t:7.8, ids:['s3-line'], anim:'rv-left'},
-  {si:3, t:12.2, ids:['s4-cap'], anim:'rv-fade'},
-  {si:3, t:12.3, ids:['s4-tag'], anim:'rv-right'},
-  {si:3, t:13.2, ids:['s4-line'], anim:'rv-up'},
+  {si:0, t:1.2, ids:['s1-num'], anim:'rv-pop'},
+  {si:1, t:3.7, ids:['s2-cap'], anim:'rv-fade'},
+  {si:1, t:3.8, ids:['s2-line'], anim:'rv-pop'},
+  {si:1, t:5.1, ids:['s2-num'], anim:'rv-scale'},
+  {si:2, t:8.2, ids:['s3-cap'], anim:'rv-fade'},
+  {si:2, t:8.3, ids:['s3-tag1'], anim:'rv-left'},
+  {si:2, t:9.2, ids:['s3-tag2'], anim:'rv-left'},
+  {si:2, t:10.2, ids:['s3-sub'], anim:'rv-up'},
+  {si:3, t:12.7, ids:['s4-cap'], anim:'rv-fade'},
+  {si:3, t:12.9, ids:['s4-line'], anim:'rv-right'},
   {si:4, t:17.0, ids:['s5-line'], anim:'rv-scale'},
   {si:4, t:17.2, ids:['s5-cap'], anim:'rv-fade'},
-  {si:4, t:19.0, ids:['s5-cta'], anim:'rv-pop'},
+  {si:4, t:19.2, ids:['s5-cta'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
-  `ターゲットは20代から60代の男女。一番多い失敗です。`,
-  `それは日本人のほぼ全員。誰も選んでいません。`,
-  `全員に向けた言葉は、誰にも刺さらない。`,
-  `QBハウスは、時間のない人だけに絞りました。`,
-  `ターゲットを絞るとは、1番になること。続きは、下の長編リンクへ。`,
+  `値下げの前に、やることが1つあります。`,
+  `価格表に、比べる基準を1つ足すだけ。`,
+  `相場でも、松竹梅の上の段でも構いません。`,
+  `基準ができると、高いか安いか判断できる。`,
+  `それでもダメなら、値下げは最後の一手。続きは、下の長編リンクへ。`,
 ];
-const TOTAL_SECS = 22.5;
+const TOTAL_SECS = 22.0;
 </script>
 </body>
 </html>

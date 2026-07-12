@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>スペックを語るほど売れない理由【ベネフィット】 | Shorts</title>
+<title>スペックを語るほど売れない理由【ベネフィット】</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@500;900&display=swap" rel="stylesheet">
 <style>
@@ -31,7 +31,7 @@
    STAGE（縦型 1080x1920・Shorts専用の新規レイアウト。ここだけ差し替え対象）
 ═══════════════════════════════════════════════════════════════ */
 :root{
-  --accent:#FB923C;    /* 本編accentと同一 */
+  --accent:#FB923C;    /* yt-shorts-designer が本編の --accent と揃える */
   --glow-acc:rgba(251,146,60,.25);
   --key:#FFD54F;       /* 全話共通キーイエロー（design v2.1と同じ運用） */
   --bg:#0B1220; --ink:#EEEEF8; --muted:#B8BEDD;
@@ -80,49 +80,67 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<section class="slide" id="s1"><div class="card">
-  <div id="s1-a" class="se k-sub">特徴ばかり、並べていませんか</div>
-  <div id="s1-b" class="se k-line">で、<span class="hi">だから何？</span></div>
-</div></section>
-<section class="slide" id="s2"><div class="card">
-  <div id="s2-a" class="se k-line">特徴＝<span class="hi">事実</span></div>
-  <div id="s2-b" class="se k-sub">「だから何？」に答えていない</div>
-</div></section>
-<section class="slide" id="s3"><div class="card">
-  <div id="s3-a" class="se k-sub">ドリル → 穴</div>
-  <div id="s3-b" class="se k-line">特徴 →<br><span class="hi">ベネフィット</span></div>
-</div></section>
-<section class="slide" id="s4"><div class="card">
-  <div id="s4-a" class="se k-sub">週2回・食事指導</div>
-  <div id="s4-b" class="se k-line">だから<br><span class="hi">2ヶ月で体が変わる</span></div>
-</div></section>
-<section class="slide" id="s5"><div class="card">
-  <div id="s5-a" class="se k-line">あなたの<br><span class="hi">"だから何"</span>は？</div>
-  <div id="s5-b" class="se cta-line">続きは下の長編リンクへ</div>
-</div></section>
+<!-- ══ SHORTS_STAGE_START ══ -->
+<section class="slide" id="s1">
+  <div class="card">
+    <div class="se k-line" id="s1-line">「で、<span class="hi">だから何？</span>」</div>
+    <div class="se k-sub" id="s1-sub">客の本音は一言</div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s1-cap">特徴ばかり並べてない？</div></div>
+</section>
+<section class="slide" id="s2">
+  <div class="card">
+    <div class="se k-line" id="s2-line">特徴＝事実の羅列<br><span class="hi">答えになってない</span></div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s2-cap">事実だけでは動かない</div></div>
+</section>
+<section class="slide" id="s3">
+  <div class="card">
+    <div class="se k-tag" id="s3-t1">ドリル → 穴</div>
+    <div class="se k-line" id="s3-line">特徴 →<br><span class="hi">ベネフィット</span></div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s3-cap">欲しいのは開く穴</div></div>
+</section>
+<section class="slide" id="s4">
+  <div class="card">
+    <div class="se k-line" id="s4-line">週2回の指導<br>→ <span class="hi">2ヶ月で体が変わる</span></div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s4-cap">翻訳するとこうなる</div></div>
+</section>
+<section class="slide" id="s5">
+  <div class="card">
+    <div class="se k-line" id="s5-line">あなたの<br>“<span class="hi">だから何</span>”は？</div>
+    <div class="se cta-line" id="s5-cta">続きは ↓ 長編リンクへ</div>
+  </div>
+  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは下の<span class="hi">長編リンク</span>へ</div></div>
+</section>
+<!-- ══ SHORTS_STAGE_END ══ -->
 </div>
 <script>
 /* make_video.py 互換の最小データ契約（本編と同一形式）。
    yt-shorts-designer が SLIDES_META / STEPS / NARRATIONS / TOTAL_SECS を実データに差し替える。
    再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
 const SLIDES_META = [
-  {id:'s1', start:0, end:3.0},
+  {id:'s1', start:0.0, end:3.0},
   {id:'s2', start:3.0, end:7.5},
   {id:'s3', start:7.5, end:12.5},
   {id:'s4', start:12.5, end:17.0},
   {id:'s5', start:17.0, end:21.5},
 ];
 const STEPS = [
-  {si:0, t:0.0, ids:['s1-a'], anim:'rv-fade'},
-  {si:0, t:0.6, ids:['s1-b'], anim:'rv-pop'},
-  {si:1, t:0.0, ids:['s2-a'], anim:'rv-up'},
-  {si:1, t:0.9, ids:['s2-b'], anim:'rv-fade'},
-  {si:2, t:0.0, ids:['s3-a'], anim:'rv-fade'},
-  {si:2, t:0.8, ids:['s3-b'], anim:'rv-scale'},
-  {si:3, t:0.0, ids:['s4-a'], anim:'rv-left'},
-  {si:3, t:0.8, ids:['s4-b'], anim:'rv-left'},
-  {si:4, t:0.0, ids:['s5-a'], anim:'rv-fade'},
-  {si:4, t:0.9, ids:['s5-b'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-line'], anim:'rv-scale'},
+  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
+  {si:0, t:1.4, ids:['s1-sub'], anim:'rv-up'},
+  {si:1, t:3.2, ids:['s2-cap'], anim:'rv-fade'},
+  {si:1, t:3.4, ids:['s2-line'], anim:'rv-pop'},
+  {si:2, t:7.7, ids:['s3-cap'], anim:'rv-fade'},
+  {si:2, t:7.8, ids:['s3-t1'], anim:'rv-left'},
+  {si:2, t:8.8, ids:['s3-line'], anim:'rv-left'},
+  {si:3, t:12.7, ids:['s4-cap'], anim:'rv-fade'},
+  {si:3, t:12.9, ids:['s4-line'], anim:'rv-right'},
+  {si:4, t:17.0, ids:['s5-line'], anim:'rv-scale'},
+  {si:4, t:17.2, ids:['s5-cap'], anim:'rv-fade'},
+  {si:4, t:18.8, ids:['s5-cta'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `特徴ばかり並べていませんか。客の本音は一言です。`,
