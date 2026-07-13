@@ -6,6 +6,11 @@ when_to_use: "Triggers: 新しいエピソードを作って, EPNNを作成, EPN
 
 # エピソード制作スキル（18枚 big style）
 
+> **製造フェーズ（ビルド〜検証〜アップロード）は [pipeline.md](pipeline.md) の
+> 2コマンドに集約されている**：`run_episode.sh` / `run_shorts.sh`。
+> 創作判断が要るのは台本・スライド・パッケージング・Shorts spec までで、
+> そこから先は判断不要の機械ゲート。FAIL時の対処表・クォータ表・禁止事項も pipeline.md が正。
+
 ## 制作体制：9つの役割スキル（本スキルは「監督」としてこれらを束ねる）
 
 実世界の動画制作体制を9ロールに分割し、それぞれ独立実行可能なスキルにしてある。
@@ -34,7 +39,7 @@ Shorts制作は本編と目的・規格が異なる（縦型9:16・30〜45秒・
 |---|--------|--------|------|-----------|
 | S1 | 切り出し企画 | `yt-shorts-clipper` | 長編から3〜5論点を選定 | shorts_plan.md |
 | S2 | フック・ループ脚本 | `yt-shorts-hookwriter` | 冒頭3秒フック・ループ構造・台本 | shorts.md |
-| S3 | 縦型デザイン | `yt-shorts-designer` | セーフエリア・テロップ・STEPS実装 | stage.html |
+| S3 | 縦型デザイン | `yt-shorts-designer` | spec.py作成（stage.htmlはgen_stage.pyで生成） | spec.py＋stage.html |
 | S4 | 映像編集 | `yt-shorts-video-editor` | 縦型ビルド・A/V検証・ループ確認 | shortN_final.mp4 |
 | S5 | QA | `yt-shorts-qa` | verify_shorts.py独立再実行 | PASS/FAILレポート |
 
@@ -198,7 +203,14 @@ for i, d in enumerate(durs):
 
 ## 動画生成コマンド（ビルドを明示的に頼まれた時のみ）
 
-標準ビルドは**BGM・SFXミックス込み**（[audio-production.md](audio-production.md) が正）：
+**標準は一気通貫ランナー**（QA→ビルド→A/V検証→タイムスタンプ実測修正→サムネまで内包。[pipeline.md](pipeline.md) が正）：
+
+```bash
+bash _tools/pipeline/run_episode.sh <episode_dir> [--upload]
+bash _tools/pipeline/run_shorts.sh  <episode_dir> [--upload]
+```
+
+素のビルドコマンド（部分再実行用。BGM・SFXミックス込みが標準＝[audio-production.md](audio-production.md)）：
 
 ```bash
 python3 _tools/video/make_video.py \
@@ -209,4 +221,6 @@ python3 _tools/video/make_video.py \
   --sfx-dir _assets/audio
 ```
 
-実行環境のセットアップ・トラブルシュートは [narration-rules.md](narration-rules.md) の末尾を参照。
+素のビルド後は `python3 _tools/video/postbuild_episode.py <episode_dir>` を必ず実行
+（上記「タイムスタンプ修正」手順を自動化したもの）。
+実行環境のセットアップ・トラブルシュートは [narration-rules.md](narration-rules.md) の末尾と pipeline.md のプレイブックを参照。

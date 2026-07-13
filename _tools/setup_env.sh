@@ -84,13 +84,49 @@ else
 fi
 
 # ── 3. VOICEVOX engine ──
+# Fallback: GitHub releases are blocked in repo-scoped web sessions (proxy 403
+# "not enabled for this session"). Docker Hub is reachable, so pull the engine
+# layer of the official image voicevox/voicevox_engine:cpu-$VV_VER via the
+# registry HTTP API (no dockerd needed) and extract opt/voicevox_engine.
+# Battle-tested 2026-07-12.
+vv_fetch_dockerhub() {
+  log "GitHub blocked; falling back to Docker Hub layer pull (cpu-$VV_VER)"
+  local tok digest
+  tok=$(curl -fsSL "https://auth.docker.io/token?service=registry.docker.io&scope=repository:voicevox/voicevox_engine:pull" \
+        | python3 -c "import json,sys;print(json.load(sys.stdin)['token'])") || return 1
+  digest=$(curl -fsSL -H "Authorization: Bearer $tok" \
+      -H "Accept: application/vnd.oci.image.index.v1+json, application/vnd.docker.distribution.manifest.list.v2+json" \
+      "https://registry-1.docker.io/v2/voicevox/voicevox_engine/manifests/cpu-$VV_VER" \
+    | python3 -c "import json,sys; m=json.load(sys.stdin); print(next(x['digest'] for x in m['manifests'] if x['platform']['architecture']=='amd64'))") || return 1
+  digest=$(curl -fsSL -H "Authorization: Bearer $tok" \
+      -H "Accept: application/vnd.oci.image.manifest.v1+json" \
+      "https://registry-1.docker.io/v2/voicevox/voicevox_engine/manifests/$digest" \
+    | python3 -c "import json,sys; m=json.load(sys.stdin); print(max(m['layers'], key=lambda l: l['size'])['digest'])") || return 1
+  log "downloading engine layer (~1.9GB)"
+  curl -fsSL --retry 3 -H "Authorization: Bearer $tok" -o /tmp/vv_layer.tgz \
+      "https://registry-1.docker.io/v2/voicevox/voicevox_engine/blobs/$digest" || return 1
+  (cd / && tar xzf /tmp/vv_layer.tgz opt/voicevox_engine) || { rm -f /tmp/vv_layer.tgz; return 1; }
+  rm -f /tmp/vv_layer.tgz
+  # docker image layout puts the binary at $VV_DIR/run; create the path the
+  # rest of the tooling expects ($VV_RUN = linux-cpu-x64/run)
+  mkdir -p "$VV_DIR/linux-cpu-x64"
+  ln -sf "$VV_DIR/run" "$VV_RUN"
+  chmod +x "$VV_DIR/run"
+}
+
+if [ ! -x "$VV_RUN" ] && [ -x "$VV_DIR/run" ]; then
+  # docker-layout install from a previous fallback run; just re-link
+  mkdir -p "$VV_DIR/linux-cpu-x64" && ln -sf "$VV_DIR/run" "$VV_RUN"
+fi
 if [ ! -x "$VV_RUN" ]; then
   log "downloading VOICEVOX $VV_VER (~1.7GB, one-time)"
   if curl -fsSL -o /tmp/vv.7z.001 "$VV_URL"; then
     7z x -y -o"$VV_DIR" /tmp/vv.7z.001 >/dev/null 2>&1 && log "VOICEVOX extracted"
     rm -f /tmp/vv.7z.001
+  elif vv_fetch_dockerhub; then
+    log "VOICEVOX extracted from Docker Hub image layer"
   else
-    log "WARN: VOICEVOX download failed (network); audio synth will be unavailable"
+    log "WARN: VOICEVOX download failed (GitHub AND Docker Hub); audio synth unavailable"
   fi
 else
   log "VOICEVOX already installed"
