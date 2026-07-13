@@ -4,6 +4,29 @@ YouTube教育チャンネルの動画（本編9分＋Shorts3本/話）をエピ�
 エピソードは `01_beginner/epNN_*` 〜 のディレクトリ（script.md / slide.html / description.md /
 thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物）。
 
+## 短い指示の解釈規約（ユーザーは詳細を書かない。以下を暗黙に含める）
+
+ユーザーの指示は短い（例:「EP07を作って」「EP07をビルドしてアップまで」「ショート続き」）。
+**次のデフォルトを毎回、指示されなくても実行する**：
+
+| 短い指示 | 実行内容（全部やる） |
+|---|---|
+| 「EPNNを作って／新規作成」 | episode-productionのロール順で創作→QA PASS→コミット→`run_episode.sh --upload`→`run_shorts.sh --upload`→コミット→報告 |
+| 「EPNNをビルドして」「動画化して」 | `run_episode.sh <ep_dir>`（アップロードなし）→コミット→mp4納品 |
+| 「アップ(ロード)まで」「上げて」 | 上記に `--upload` を付け、Shortsも指示に含まれるなら `run_shorts.sh --upload` |
+| 「ショート(だけ)」「Shorts作って」 | `run_shorts.sh <ep_dir> [--upload]` |
+| 「続き」「再開」 | publish_manifest.json と直近コミットから未完了工程を特定して再開（全コマンド冪等） |
+| 「サムネ直して/変えて」 | thumbnail.md の `## サムネ生成データ` を編集→make_thumbnail.py→目視→`upload_youtube.py --episode` 再実行で差し替え→コミット |
+
+**常に適用する実行規約**（プロンプトに書かれていなくても守る）：
+1. ビルド系は**バックグラウンド実行**し完了を待つ（対話をブロックしない）
+2. FAILは `.claude/skills/episode-production/pipeline.md` のプレイブック表の対処のみ。解決したら同じコマンドを再実行
+3. 工程が終わるたびに**成果物をコミット・プッシュ**（mp4以外。コミットメッセージにvideoId等の要点）
+4. mp4/サムネ等の完成物は SendUserFile で納品
+5. 完了報告は「Studio URL・尺・A/V差・LUFS・残る手動作業（公開ボタン/関連動画リンク等）」を定型で
+6. クォータ超過（quotaExceeded）は翌日16時（JST）以降に同コマンド再実行で継続。ユーザーに続き時刻を伝える
+7. 途中で判断に迷う選択肢が出ても、pipeline.md・スキルに既定があるものは**質問せず既定に従う**
+
 ## 作業の入口（迷ったらここ）
 
 | 指示の種類 | 使うもの |
