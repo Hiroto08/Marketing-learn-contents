@@ -909,11 +909,13 @@ class VideoBuilder:
         out_mp4 = os.path.join(self.out_dir, f'{ep}_final.mp4')
         mixing = bool(self.a.bgm or self.a.sfx_dir)
         concat_out = out_mp4 + '.premix.mp4' if mixing else out_mp4
-        # スライドmp4は全て同一エンコード設定（各先頭がIDR）なので、再エンコードせず
-        # ストリームコピーで連結する＝x264世代を1つ減らし、バンディング/チラつきを抑える。
+        # 連結は映像を再エンコードする（-c copy は per-slide AACのプライミング間隙が
+        # 積もってA/Vが0.8秒ほどズレるため不可）。品質はCRF18で実質ロスレス。
+        # 画質の主改善は解像度1080p化（record()のdevice_scale_factor）が担う。
         subprocess.run(
             ['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', list_file,
-             '-c', 'copy', '-movflags', '+faststart', concat_out],
+             '-c:v', 'libx264', '-crf', str(self.a.crf), '-preset', 'fast',
+             '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', concat_out],
             check=True)
         if mixing:
             self.mix_audio(concat_out, out_mp4, slides)
