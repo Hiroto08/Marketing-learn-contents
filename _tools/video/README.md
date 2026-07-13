@@ -52,8 +52,13 @@ python3 _tools/video/make_video.py slide.html --out /tmp/ep02 --no-record
 | `--slide N` | 全て | このスライドインデックス（0始まり）だけ処理（繰り返し可） |
 | `--no-record` | off | TTS のみ生成、録画はスキップ |
 | `--out DIR` | `video_out` | 出力ディレクトリ |
-| `--width/--height` | `1280×720` | 解像度 |
+| `--width/--height` | `1280×720` | CSSレイアウトの論理サイズ（設計は max-width:1280px） |
 | `--crf` | `18` | ffmpeg x264 品質（小さいほど高品質） |
+
+**出力解像度は自動で最低1080pに引き上げる**：viewportは論理1280×720のまま
+`device_scale_factor`（本編1.5倍）で画素密度を上げ、録画を実ピクセル1920×1080で行う。
+Shorts(1080×1920)は既に1080px幅なので等倍。スライド連結は再エンコードせず`-c copy`
+（x264世代を減らしバンディング/チラつきを抑制）。mix_audioも`-c:v copy`で映像は無劣化。
 
 ## VOICEVOX 話者 ID
 

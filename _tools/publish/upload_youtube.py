@@ -272,6 +272,16 @@ def post_comment(tok: str, video_id: str, text: str):
     print(f"  comment: {'投稿OK（ピン留めはStudioで手動）' if r.status_code == 200 else f'FAIL {r.status_code} {r.text[:120]}'}")
 
 
+def delete_video(tok: str, video_id: str) -> bool:
+    """動画を削除（videos.delete=50単位）。再ビルド差し替え時に旧private版を消すのに使う。
+    公開URLが壊れる恐れがあるため、privateの旧版に対してのみ呼ぶこと。"""
+    r = requests.delete(f"{API}/videos?id={video_id}",
+                        headers={"Authorization": f"Bearer {tok}"}, timeout=30)
+    ok = r.status_code in (204, 200)
+    print(f"  旧版削除 {video_id}: {'OK' if ok else f'FAIL {r.status_code} {r.text[:120]}'}")
+    return ok
+
+
 # ──────────────────────────────────────────────────────────────────────────
 def main():
     ap = argparse.ArgumentParser()
@@ -284,6 +294,8 @@ def main():
     ap.add_argument("--thumbnail", help="サムネイルPNG（本編のみ）")
     ap.add_argument("--pin-comment", dest="pin_comment",
                     help="投稿する固定コメント文（ピン留め自体は手動）")
+    ap.add_argument("--replace-old", dest="replace_old", action="store_true",
+                    help="再ビルド差し替え時、旧private版をYouTubeから削除する（新IDで上げ直すため）")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     if not (a.episode or a.shorts):
@@ -346,7 +358,10 @@ def main():
                         man[os.path.basename(path)] = prev
                         save_manifest(dkey, man)
             continue
-        print(f"uploading: {path}  ({os.path.getsize(path)//1024//1024}MB)")
+        # 内容が変わった再アップ（再ビルド差し替え）: 新IDで上げ直し、旧privateは削除する
+        superseded = prev.get("videoId") if prev else None
+        replacing = bool(superseded and prev.get("sha256") != digest)
+        print(f"uploading{'（差し替え）' if replacing else ''}: {path}  ({os.path.getsize(path)//1024//1024}MB)")
         vid = upload_video(tok, path, meta, a.privacy, a.publish_at)
         print(f"  → https://studio.youtube.com/video/{vid}/edit  (privacy={a.privacy}{' publishAt=' + a.publish_at if a.publish_at else ''})")
         thumb_sha = None
@@ -357,10 +372,18 @@ def main():
             add_to_playlist(tok, vid, a.playlist)
         if a.pin_comment:
             post_comment(tok, vid, a.pin_comment)
+        # 旧版の始末: --replace-old が付いていれば削除、無ければ手動確認用にIDを残す
+        if replacing:
+            if a.replace_old and prev.get("privacy", "private") == "private":
+                delete_video(tok, superseded)
+                superseded = None
+            else:
+                checklist.append(f"[ ] 旧版 {superseded} を削除/非公開（新版 {vid} に差し替え済み）")
         man[os.path.basename(path)] = {"videoId": vid, "sha256": digest,
                                        "privacy": a.privacy,
                                        "publishAt": a.publish_at,
                                        "thumbSha256": thumb_sha,
+                                       "supersededVideoId": superseded,
                                        "uploadedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
         save_manifest(dkey, man)
         if "short" in dkey:

@@ -652,12 +652,19 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
                           for e in schedule.anim_events])
     total_ms = int(schedule.total_dur * 1000)
 
+    # 出力を最低1080pに引き上げるためのスーパーサンプリング倍率。
+    # スライドは max-width:1280px でCSS設計されているため、viewportは1280x720のまま
+    # device_scale_factor で画素密度を上げ、録画サイズを実ピクセル(1920x1080)に合わせる。
+    # 本編1280x720→dsf1.5→1920x1080、Shorts1080x1920→dsf1.0（既に1080px幅）。
+    dsf = round(max(1.0, 1080 / min(W, H)) * 2) / 2
+    rw, rh = int(round(W * dsf)), int(round(H * dsf))
     with sync_playwright() as pw:
         browser = pw.chromium.launch(args=['--no-sandbox', '--disable-gpu'])
         ctx = browser.new_context(
             viewport={'width': W, 'height': H},
+            device_scale_factor=dsf,
             record_video_dir=tmp_dir,
-            record_video_size={'width': W, 'height': H},
+            record_video_size={'width': rw, 'height': rh},
         )
         rec_start = time.time()   # video capture begins with page creation
         page = ctx.new_page()
@@ -902,10 +909,11 @@ class VideoBuilder:
         out_mp4 = os.path.join(self.out_dir, f'{ep}_final.mp4')
         mixing = bool(self.a.bgm or self.a.sfx_dir)
         concat_out = out_mp4 + '.premix.mp4' if mixing else out_mp4
+        # スライドmp4は全て同一エンコード設定（各先頭がIDR）なので、再エンコードせず
+        # ストリームコピーで連結する＝x264世代を1つ減らし、バンディング/チラつきを抑える。
         subprocess.run(
             ['ffmpeg', '-y', '-f', 'concat', '-safe', '0', '-i', list_file,
-             '-c:v', 'libx264', '-crf', str(self.a.crf), '-preset', 'fast',
-             '-c:a', 'aac', '-b:a', '192k', concat_out],
+             '-c', 'copy', '-movflags', '+faststart', concat_out],
             check=True)
         if mixing:
             self.mix_audio(concat_out, out_mp4, slides)
