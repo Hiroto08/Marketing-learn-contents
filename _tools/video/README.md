@@ -113,7 +113,9 @@ slide.html
   │                     アニメを schedule に従い発火 → WebM
   │                     full_audio（intro + narr + outro）と結合 → mp4
   │
-  └─ concat()         全スライドを ffmpeg concat → <ep>_final.mp4
+  └─ concat()         全スライドを ffmpeg concat → 本編 <ep>_final.mp4
+                        Shortsは <ep>_short<N>_final.mp4（親dirが short<N> の時。
+                        納品ファイルの識別性のためエピソード名を必ず接頭辞に付ける）
 ```
 
 ## TTS キャッシュ

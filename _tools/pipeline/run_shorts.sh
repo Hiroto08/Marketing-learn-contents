@@ -49,7 +49,10 @@ for spec in "${specs[@]}"; do
   python3 - "$d" "$name" <<'PY'
 import glob, os, subprocess, sys
 d, name = sys.argv[1], sys.argv[2]
-f = f"{d}/{name}_final.mp4"
+# 命名規則: <episode>_short<N>_final.mp4。念のため *_final.mp4 で拾う（.work配下は除外）
+finals = [f for f in glob.glob(f"{d}/*_final.mp4")]
+assert finals, f"{d} に *_final.mp4 が無い（ビルド失敗？）"
+f = finals[0]
 def dur(sel):
     out = subprocess.run(["ffprobe","-v","error","-select_streams",sel,
         "-show_entries","stream=duration","-of","default=noprint_wrappers=1:nokey=1",f],

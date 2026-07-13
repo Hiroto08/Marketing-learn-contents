@@ -891,7 +891,14 @@ class VideoBuilder:
                 if os.path.exists(mp4):
                     f.write(f"file '{os.path.abspath(mp4)}'\n")
 
-        ep = Path(self.slide_html).parent.name
+        # 出力名: 本編は <episode>_final.mp4、Shortsは <episode>_short<N>_final.mp4。
+        # Shortsの親ディレクトリ名は short1 等で区別がつかないため、必ずエピソード名を接頭辞に付ける
+        # （納品ファイルの識別性のため。upload_youtube.py / run_shorts.sh も同じ規則で参照する）
+        p = Path(self.slide_html).parent
+        if re.fullmatch(r'short\d+', p.name) and p.parent.name == 'shorts_build':
+            ep = f'{p.parent.parent.name}_{p.name}'
+        else:
+            ep = p.name
         out_mp4 = os.path.join(self.out_dir, f'{ep}_final.mp4')
         mixing = bool(self.a.bgm or self.a.sfx_dir)
         concat_out = out_mp4 + '.premix.mp4' if mixing else out_mp4

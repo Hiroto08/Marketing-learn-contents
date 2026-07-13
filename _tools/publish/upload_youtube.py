@@ -279,14 +279,19 @@ def main():
         jobs += [(d, m, meta) for m in mp4s[:1]]
     if a.shorts:
         d = a.shorts.rstrip("/")
+        ep_name = os.path.basename(d)
         for sm in shorts_metadata(d):
-            p = f"{d}/shorts_build/short{sm['n']}/short{sm['n']}_final.mp4"
-            if os.path.exists(p):
-                jobs.append((f"{d}/shorts_build/short{sm['n']}", p, sm))
+            sdir = f"{d}/shorts_build/short{sm['n']}"
+            # 命名規則: <episode>_short<N>_final.mp4（旧 short<N>_final.mp4 も後方互換で拾う）
+            cands = [f"{sdir}/{ep_name}_short{sm['n']}_final.mp4",
+                     f"{sdir}/short{sm['n']}_final.mp4"]
+            p = next((c for c in cands if os.path.exists(c)), None)
+            if p:
+                jobs.append((sdir, p, sm))
             elif a.dry_run:
-                jobs.append((f"{d}/shorts_build/short{sm['n']}", p + "(未ビルド)", sm))
+                jobs.append((sdir, cands[0] + "(未ビルド)", sm))
             else:
-                print(f"! 見つからない: {p}")
+                print(f"! 見つからない: {cands[0]}")
 
     if a.dry_run:
         for _, p, m in jobs:
