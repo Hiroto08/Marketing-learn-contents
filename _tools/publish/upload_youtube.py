@@ -115,20 +115,44 @@ def episode_metadata(ep_dir: str) -> dict:
     return {"title": title[:100], "description": description[:4990], "tags": tags}
 
 
+def _episode_video_url(ep_dir: str) -> str | None:
+    """本編の publish_manifest.json から videoId を引き、フル動画URLを返す（未アップならNone）"""
+    p = f"{ep_dir}/publish_manifest.json"
+    if not os.path.exists(p):
+        return None
+    man = json.load(open(p, encoding="utf-8"))
+    for k, v in man.items():
+        if k.endswith("_final.mp4") and "short" not in k and v.get("videoId"):
+            return f"https://youtu.be/{v['videoId']}"
+    return None
+
+
 def shorts_metadata(ep_dir: str) -> list:
     md = open(f"{ep_dir}/shorts.md", encoding="utf-8").read()
     ep_title_m = re.search(r"— (.+)$", md.splitlines()[0])
     ep_title = ep_title_m.group(1).strip() if ep_title_m else ""
+    # エピソード固有のハッシュタグを description.md から流用（ニッチタグの補強）
+    niche = []
+    dpath = f"{ep_dir}/description.md"
+    if os.path.exists(dpath):
+        htags = re.findall(r"#([^\s#]+)", _block(open(dpath, encoding="utf-8").read(), "ハッシュタグ"))
+        niche = [t for t in htags if t not in ("Shorts", "マーケティング", "ビジネス")][:2]
+    full_url = _episode_video_url(ep_dir)
+    # Shortsの概要欄リンクはモバイルではタップ不可（2023.08〜）。本命の送客は
+    # Studioで各Shortに設定する「関連動画」リンク。ここではテキストとして本編URLを併記する
+    link_lines = (f"▶ フル動画（約9分）はこちら\n{full_url}\n\n"
+                  if full_url else "▶ フル動画は、この画面の関連動画リンクから\n\n")
     out = []
     for m in re.finditer(r"## Short (\d+)[：:].*?\*\*タイトル案：\*\* (.*?)\n", md, re.S):
         n, title = int(m.group(1)), m.group(2).strip()
+        tags = ["Shorts", "マーケティング", "ビジネス"] + niche
+        hashtag_line = " ".join(f"#{t}" for t in tags)
         desc = (f"{title}\n\n"
-                f"本編「{ep_title}」の要点を1論点だけ切り出したShortsです。\n"
-                f"続きは、この画面のリンク（関連動画）から本編へ。\n\n"
+                f"本編「{ep_title}」から、この1点だけを切り出したShortsです。\n\n"
+                f"{link_lines}"
                 f"※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。\n\n"
-                f"#Shorts #マーケティング #ビジネス")
-        out.append({"n": n, "title": title[:100], "description": desc,
-                    "tags": ["Shorts", "マーケティング", "ビジネス"]})
+                f"{hashtag_line}")
+        out.append({"n": n, "title": title[:100], "description": desc, "tags": tags})
     return out
 
 
