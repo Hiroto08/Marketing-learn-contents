@@ -114,6 +114,7 @@ ABBR_MAP = {
     "D2C":  "ディーツーシー",
     "Airbnb": "エアビー",    # ×エアブンブ
     "QB":   "キュービー",    # ×キュビ等の分割読み防止（QBハウス、EP02）
+    "M&M's": "エムアンドエムズ",  # ×エムアンドエムエス等（EP08）
 }
 
 # Compound terms read as ONE accent phrase (prevents double/triple-hump
