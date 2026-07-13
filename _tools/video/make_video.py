@@ -652,17 +652,18 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
                           for e in schedule.anim_events])
     total_ms = int(schedule.total_dur * 1000)
 
-    # 出力を最低1080pに引き上げるためのスーパーサンプリング倍率。
-    # スライドは max-width:1280px でCSS設計されているため、viewportは1280x720のまま
-    # device_scale_factor で画素密度を上げ、録画サイズを実ピクセル(1920x1080)に合わせる。
-    # 本編1280x720→dsf1.5→1920x1080、Shorts1080x1920→dsf1.0（既に1080px幅）。
-    dsf = round(max(1.0, 1080 / min(W, H)) * 2) / 2
-    rw, rh = int(round(W * dsf)), int(round(H * dsf))
+    # 出力を最低1080pへ引き上げる（YouTubeで1080pストリームが生成されず720p上限＝ソフト、
+    # かつ低ビットレートで暗いグラデがバンディング/チラつきしていた対策）。
+    # Playwrightのrecord_videoはdevice_scale_factorで映像を高精細化できない（CSS画素で録画し
+    # 余白をグレー埋めする実測不良）ため、viewport自体を出力解像度にし、design(W×H)の
+    # #stage-wrap を左上0,0固定で scale倍して埋める＝真の1080pベクター描画。
+    # 本編1280x720→scale1.5→1920x1080、Shorts1080x1920→scale1.0（無変換）。
+    scale = round(max(1.0, 1080 / min(W, H)) * 2) / 2
+    rw, rh = int(round(W * scale)), int(round(H * scale))
     with sync_playwright() as pw:
         browser = pw.chromium.launch(args=['--no-sandbox', '--disable-gpu'])
         ctx = browser.new_context(
-            viewport={'width': W, 'height': H},
-            device_scale_factor=dsf,
+            viewport={'width': rw, 'height': rh},
             record_video_dir=tmp_dir,
             record_video_size={'width': rw, 'height': rh},
         )
@@ -670,6 +671,20 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
         page = ctx.new_page()
         page.goto(f'file://{os.path.abspath(record_html)}')
         page.wait_for_load_state('networkidle')
+
+        if scale != 1.0:
+            page.evaluate(f"""() => {{
+                document.documentElement.style.margin = '0';
+                document.body.style.margin = '0';
+                const w = document.getElementById('stage-wrap');
+                if (w) {{
+                    w.style.position = 'absolute'; w.style.left = '0'; w.style.top = '0';
+                    w.style.margin = '0';
+                    w.style.width = '{W}px'; w.style.maxWidth = '{W}px'; w.style.height = '{H}px';
+                    w.style.transformOrigin = 'top left';
+                    w.style.transform = 'scale({scale})';
+                }}
+            }}""")
 
         page.evaluate(f"""() => {{
             const si = {si};
