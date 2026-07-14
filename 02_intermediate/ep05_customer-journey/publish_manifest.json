@@ -1,10 +1,11 @@
 {
   "ep05_customer-journey_final.mp4": {
-    "videoId": "0s_wYADsnZo",
-    "sha256": "47742fa427fdc112795c6b5de26c881c8186c9b238acd2e5fcac50886612ba01",
+    "videoId": "3Cqe84Ex1xA",
+    "sha256": "723bcd6bb540daedb1e69b254ce4ba2072fdd4c81203b47c908e3427425849a5",
     "privacy": "private",
     "publishAt": null,
-    "uploadedAt": "2026-07-12T09:05:18Z",
-    "thumbSha256": "3d3b3bc753d96eeba0a81cc9ae23cc922cd54cf9a2d3f7ecac782ccbfbb714bf"
+    "thumbSha256": "3d3b3bc753d96eeba0a81cc9ae23cc922cd54cf9a2d3f7ecac782ccbfbb714bf",
+    "supersededVideoId": null,
+    "uploadedAt": "2026-07-14T14:15:55Z"
   }
 }

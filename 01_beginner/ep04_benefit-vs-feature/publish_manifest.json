@@ -1,10 +1,11 @@
 {
   "ep04_benefit-vs-feature_final.mp4": {
-    "videoId": "QFYPCEuxZuw",
-    "sha256": "07741bc35307ba39eff96161a28f29911a6e99a4a56732ce0c00155da9811a21",
+    "videoId": "bYAMhcQxY2g",
+    "sha256": "effee6bc79703d2053edea1a976686d90cc27637e55fdab6eda9449bdb212634",
     "privacy": "private",
     "publishAt": null,
-    "uploadedAt": "2026-07-12T08:44:19Z",
-    "thumbSha256": "0685b9cc3f847f0de0beba3f60c6538bc5fb38520a1c384652131ed8eb4d64dd"
+    "thumbSha256": "0685b9cc3f847f0de0beba3f60c6538bc5fb38520a1c384652131ed8eb4d64dd",
+    "supersededVideoId": null,
+    "uploadedAt": "2026-07-14T14:15:33Z"
   }
 }

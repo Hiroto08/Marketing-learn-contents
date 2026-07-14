@@ -1,10 +1,11 @@
 {
   "ep01_what-is-marketing_final.mp4": {
-    "videoId": "VUHSBVSzP1g",
-    "sha256": "ea5909bf64fc1a28e49ba71546cc7bde57d765d8370520f5c74cdca051608b5f",
+    "videoId": "z6YKR5d3_Yg",
+    "sha256": "d1010199af6711243fb5549aa2b09fcc230883d5452e501d53d1e72013c4c9d3",
     "privacy": "private",
     "publishAt": null,
-    "uploadedAt": "2026-07-12T07:34:56Z",
-    "thumbSha256": "312c121b34ced5f4092fcc59d4ec2d11e9714fd4fa960a9bd9731d6327a75388"
+    "thumbSha256": "312c121b34ced5f4092fcc59d4ec2d11e9714fd4fa960a9bd9731d6327a75388",
+    "supersededVideoId": null,
+    "uploadedAt": "2026-07-14T14:14:50Z"
   }
 }

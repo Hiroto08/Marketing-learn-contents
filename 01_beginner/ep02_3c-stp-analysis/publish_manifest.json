@@ -1,10 +1,11 @@
 {
   "ep02_3c-stp-analysis_final.mp4": {
-    "videoId": "s2OEiNJZzYg",
-    "sha256": "0e600c0bbdf4bc0545bf187de9f18a1f0be1230c6abb057f6b18a0ce0b85aef6",
+    "videoId": "rRMoT16g-NA",
+    "sha256": "3a74adb18fef36256fb89b8166df2b2fd2f81a010b1eb3d11fa8dea69209f018",
     "privacy": "private",
     "publishAt": null,
-    "uploadedAt": "2026-07-12T07:57:54Z",
-    "thumbSha256": "675490347d13248e5b587a454ecc73ea2ec0935b8201ba80f38cc537dcb4b411"
+    "thumbSha256": "675490347d13248e5b587a454ecc73ea2ec0935b8201ba80f38cc537dcb4b411",
+    "supersededVideoId": null,
+    "uploadedAt": "2026-07-14T14:15:07Z"
   }
 }
