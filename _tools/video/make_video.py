@@ -879,13 +879,31 @@ class VideoBuilder:
             _concat_wavs([intro_w, narr_wav, outro_w], full_w)
 
             out_mp4 = os.path.join(self.video_dir, f'slide_{sc.si:02d}.mp4')
+            # 録画キャッシュの鍵: ナレーションハッシュ＋解像度＋前後の無音尺。
+            # ファイル存在だけで再利用すると、ナレーション改稿後も旧録画が使われて
+            # 完成尺が変わらない事故になる（音声側narr_XX.wavにはハッシュ検証があるが
+            # 録画側に無かった）。sidecarが無い/不一致なら必ず録り直す。
+            slide_key = hashlib.md5(
+                f"{_narr_hash(self.sd.narrations[ni], a.speaker, a.speed, a.sent_gap, a.para_gap)}"
+                f"|{a.width}x{a.height}|{a.intro:.2f}|{tail:.2f}|{a.lead:.2f}|{a.step_gap:.2f}"
+                .encode()).hexdigest()
+            slide_sidecar = out_mp4 + '.json'
             print(f"  slide {sc.si+1} ({self.sd.meta[sc.si].id})", end='', flush=True)
             if os.path.exists(out_mp4):
-                if _has_video_stream(out_mp4):
+                cached_key = None
+                if os.path.exists(slide_sidecar):
+                    try:
+                        with open(slide_sidecar) as f:
+                            cached_key = json.load(f).get('key')
+                    except Exception:
+                        cached_key = None
+                if cached_key == slide_key and _has_video_stream(out_mp4):
                     print(f"  {sc.total_dur:.1f}s (cached)")
                     continue
-                # stale audio-only artifact from an interrupted/failed run
+                # stale recording (narration/params changed) or audio-only artifact
                 os.remove(out_mp4)
+                if os.path.exists(slide_sidecar):
+                    os.remove(slide_sidecar)
             # Run in isolated subprocess so Playwright/Chromium memory is fully
             # released between slides (prevents crash after ~5 consecutive sessions)
             # Chromium's screencast sporadically emits ZERO video frames under
@@ -904,6 +922,8 @@ class VideoBuilder:
                 print(f"  !video-less recording (attempt {attempt}), retrying", end='', flush=True)
             else:
                 raise RuntimeError(f"slide {sc.si}: no video stream after 3 attempts")
+            with open(slide_sidecar, 'w') as f:
+                json.dump({'key': slide_key}, f)
             print(f"  {sc.total_dur:.1f}s ✓")
 
     def concat(self):
