@@ -95,8 +95,17 @@ def check_quality(md_narr):
         fail(f"逆接・因果接続詞{n_b}回（最低6）")
     if md_narr and not re.search(r"(でしょうか|と思いますか|？)", md_narr[-1]):
         fail("S18に未解決の問い（開ループ）が無い")
+    # 最低尺ゲート: 実測はナレーション推定とほぼ一致する（speed1.1・ポーズ込み）。
+    # 完成動画は8:00以上が必須のため、推定495s(8:15)未満はFAILさせて増補を促す
+    est = sum(
+        len(n.replace("\n", "")) / 6.8 + (n.count("\n") + 1) * 0.45
+        + len([s for s in re.split(r"[。？?！]", n) if s.strip()]) * 0.28
+        for n in md_narr
+    )
+    if est < 495:
+        fail(f"推定尺 {int(est//60)}:{int(est%60):02d}（最低8:15）→ ナレーションを増補（目安 総字数{int((495-est)*6.8)}字以上追加）")
     if not FAILS:
-        ok(f"問いかけ{n_q} / 逆接因果{n_b} / そして系{n_s}")
+        ok(f"問いかけ{n_q} / 逆接因果{n_b} / そして系{n_s} / 推定尺 {int(est//60)}:{int(est%60):02d}")
 
 
 def check_steps(html):
