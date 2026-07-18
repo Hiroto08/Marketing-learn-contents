@@ -116,7 +116,12 @@ def check_steps(html):
     for si, t in steps:
         per[int(si)].append(float(t))
     n0 = len(FAILS)
+    last_sid = max(int(s) for s, _, _ in meta) if meta else 0
     for sid, start, end in meta:
+        # 最終スライドは空白エンド枠（Studioのエンドスクリーンを重ねる前提。
+        # 次回予告・登録CTAはナレーション音声のみ）のためSTEPS密度を課さない
+        if int(sid) == last_sid:
+            continue
         i, dur = int(sid) - 1, float(end) - float(start)
         need = math.ceil(dur / 7)
         ts = sorted(per.get(i, []))

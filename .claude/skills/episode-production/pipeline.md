@@ -79,6 +79,7 @@ publish_manifest.json による冪等化があるので**同じコマンドの�
 | verify_episode / verify_shorts FAIL | 出力の✗行が具体的な修正対象。該当ファイルを直して再実行（ナレーション不一致→NARRATIONS/spec.pyをmdに合わせる、セーフエリア侵犯→`<br>`位置や文言短縮） |
 | verify「推定尺 < 8:15」/ postbuild「最低尺 < 8:00」 | 本編は**最低8分**（水増しでなく内容で増補：事例の具体描写・数字の根拠・適用手順の細分化）。script.mdとNARRATIONSを同時に増補（文字一致維持）→verify PASS→再ビルド。narration-rules.md「尺の目安」参照 |
 | postbuild「A/V 単体超過」 | 表示されたコマンド通り該当slide_NN.mp4を消して `--slide N` 付きで再ビルド→postbuild再実行 |
+| スライドの**見た目だけ**変えた（ナレーション不変） | 録画キャッシュはナレーションハッシュ鍵のため自動では再録画されない。`video_build/out/.work/slides/slide_NN.mp4`（と`.json`）を削除してから run_episode.sh 再実行 |
 | postbuild「LUFS帯外」 | ビルドコマンドの `--bgm/--sfx-dir` 指定漏れが典型。run_episode.sh経由なら起きない |
 | Shortsのvideoストリーム欠落 | エンジンが3回まで自動再録画する。それでも残ればverify出力の指示通り`--slide N`で再録画。stage.htmlの`#__heartbeat`を消していないか確認 |
 | アップロードで`quotaExceeded` | 本日分終了。翌日16時（JST）以降に同じコマンドを再実行（冪等なので安全） |
