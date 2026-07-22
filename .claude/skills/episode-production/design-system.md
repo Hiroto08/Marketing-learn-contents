@@ -161,6 +161,11 @@ missing = pg.evaluate("""()=>{
 # であることを確認する
 ```
 
+さらに、各スライドで `.se/.sh` 要素が枠（section）の**上端・下端・左右からはみ出していない**ことを確認する
+（`getBoundingClientRect()` の top<section.top / bottom>section.bottom を検出）。これは
+`verify_episode.py` の check 7 に統合済み（上端も検出する）。要素の多い図解スライドは、密度を上げた結果
+縦にあふれて**上端で見出しが見切れる**ことがあるため、`.active` 付与のスクショで必ず目視する。
+
 ## よくある問題と対処
 
 | 問題 | 原因 | 対処 |
@@ -168,4 +173,5 @@ missing = pg.evaluate("""()=>{
 | スマホで文字が小さい | Referenceスタイル（vwベース）を使用 | Big style（cqwベース）に差し替え |
 | 独立SVG図が小さく表示される | `.se`コンテナがshrink-wrapし`%`幅が潰れる（EP07 S12で実例） | SVGの`style`を`width:min(78cqw,800px)`のように**cqw基準**で指定し、親divに`width:100%`。描画後にPlaywrightで`getBoundingClientRect()`の実寸を確認 |
 | アニメーション（`epN-pulse`等）が消える | slide.html再構築時にCSSを削除 | 元ファイルから`@keyframes`ブロックをコピー（ステージとJSのみ置換すれば起きない） |
+| **見出しや図が枠の上端で見切れる（縦オーバーフロー）** | 要素が多い図解スライドで内容が枠より高く、縦センタリングで**上へはみ出す**（下だけでなく上も切れる） | 要素・STEPは削らず、そのスライドの`.pad`/`.pad-t`にinlineで余白を詰める（例 `style="gap:.3em;padding-top:5%;padding-bottom:8%;"`）。`verify_episode.py` check 7 は**上下左右のはみ出しを検出**するが、念のため該当スライドを`.active`付与でスクショし上端を目視。STEPS密度を増やすほど要素が増えて起きやすい—密度確保と縦の収まりはセットで確認する |
 | `Read`でファイルを開けない（1MB超） | base64フォントで巨大 | `sed`/`grep`で必要箇所だけ部分読み |
