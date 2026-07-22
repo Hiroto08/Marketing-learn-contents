@@ -5,6 +5,7 @@
 
 この計画書は今後の全エピソード更新指示の**唯一の基準文書**とする。
 実作業ルールは `.claude/skills/episode-production/retention-packaging.md`（本計画書から生成した実装仕様）に反映済み。
+事業レイヤー（収益化の目的・フェーズ・収益モデル）は `docs/monetization-strategy.md` が正。
 
 ---
 
