@@ -257,7 +257,7 @@ def check_browser(html_path):
             const sr=sec.getBoundingClientRect();
             sec.querySelectorAll('.se,.sh').forEach(e=>{
               const r=e.getBoundingClientRect();
-              if(r.width && (r.right>sr.right+4||r.left<sr.left-4||r.bottom>sr.bottom+4))
+              if(r.width && (r.right>sr.right+4||r.left<sr.left-4||r.bottom>sr.bottom+4||r.top<sr.top-4))
                 over.push(sec.id+':'+(e.id||e.className));
               if(e.scrollWidth>e.clientWidth+4) over.push(sec.id+':overflow:'+(e.id||e.className));
             });
