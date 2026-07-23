@@ -53,6 +53,10 @@ description: YouTube配信オペレーター役。完成した本編/Shortsを�
    サムネPNGが新規/変更なら**再実行だけで後追い設定**される（thumbnails.set=50単位）
 6. スクリプト末尾の「残る手動作業」チェックリストをそのままユーザーに渡す
 
+## 自動申告されるもの
+
+- **AI合成コンテンツ開示**（`status.containsSyntheticMedia=True`）：VOICEVOX音声のため既定で申告（改革計画§10.4）。付けない特別な回のみ `--no-synthetic-disclosure`。**Studioでの手動チェックは不要になった**
+
 ## APIで自動化できないもの（must: ユーザーへ明示）
 
 - **Shortsの「関連動画」リンク**（送客の本命導線。Studio → Short → 関連動画で手動設定）
