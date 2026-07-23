@@ -3,6 +3,9 @@
 作成日：2026-07-22 ／ 位置づけ：`docs/monetization-strategy.md` M1「16週連続配信」を人手ほぼゼロで回すための運用手順。
 Routine（スケジュール起動）で「毎週：次話をL3制作 → QA → 非公開アップロード＋公開予約」を自動化する。
 
+> **⚙️ 稼働状況（2026-07-23〜）：制作ジョブ（毎週月9:00 JST）・分析ジョブ（毎週水9:00 JST）の2本を有効化済み。**
+> Routine IDと詳細は §3.3。停止・変更もそこを参照。
+
 > **正直な前提**：これは「完全放置」ではなく **監督付き自律** です。制作・検品・アップロード・公開予約までは自動、
 > 残る人手は**週あたり数分**（下の§4のStudio作業のみ）。YouTube APIに存在しない操作（A/Bサムネ・Shorts関連動画リンク）は原理的に人が押します。
 
@@ -49,8 +52,21 @@ monetization-strategy.md §4.2 の表とYPP進捗（総再生時間/登録者）
 異常（CTR<2% や 30秒残存<60%）があれば次回への具体的な変更指示を1〜3件添えて報告。
 ```
 
-**登録方法**：`create_trigger` で cron（最小粒度は毎時、UTCで指定）。fresh-session（`create_new_session_on_fire=true`）で毎回クリーンに走らせるのが安全。
-例）月曜9:00 JST制作＝UTC日曜0:00 → cron `0 0 * * 0`／火曜9:00 JST分析＝UTC月曜0:00 → cron `0 0 * * 1`。
+**登録方法**：`create_trigger` で cron（最小粒度は毎時、**UTCで指定**）。fresh-session（`create_new_session_on_fire=true`）で毎回クリーンに走らせるのが安全。
+JST(UTC+9)→UTCは9時間引く（引いて日をまたぐ場合は曜日もずらす）。
+例）月曜9:00 JST ＝ 月曜0:00 UTC → cron `0 0 * * 1`／水曜9:00 JST ＝ 水曜0:00 UTC → cron `0 0 * * 3`。
+
+## 3.3 現在有効なRoutine（このリポジトリで稼働中）
+
+| Routine | ID | cron(UTC) | 起動(JST) | 通知 |
+|---------|----|-----------|-----------|------|
+| 制作ジョブ | `trig_01RmfF3nbsb1LaAdPXTxS8cG` | `0 0 * * 1` | 毎週月 9:00 | push+mail |
+| 分析ジョブ | `trig_018EMUQBZtiFKMLbCbQkwJR6` | `0 0 * * 3` | 毎週水 9:00 | push |
+
+- どちらも **fresh-session**（毎回クリーンな環境で起動。ビルド成果物は毎回破棄されディスクに蓄積しない）
+- 本編の公開予約は制作ジョブ内で **土曜18:00 JST** に設定（改革計画§9.6の固定配信枠）
+- **注意**：fresh-sessionにはMCPコネクタ（GitHub等）が渡らない。git操作は`git push`コマンドで行う設計なので問題ないが、GitHub APIを使う作業を足す場合はこのRoutineでは動かない
+- 変更・停止：`update_trigger`（cronやprompt差し替え）／`delete_trigger`（ID指定）。一時停止は`enabled=false`
 
 ## 4. 毎週残る人手（Studio・APIで自動化不可）※合計数分
 
