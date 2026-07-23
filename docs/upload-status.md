@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-07-23 02:51 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
+> 自動生成：2026-07-23 03:01 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
 > ブランチにコミット済み。他セッションはこのファイルで最新の到達点を確認できる。
 
 凡例：public=公開済 / private=非公開（公開待ち） / 削除=YouTubeに無い / 未UP=未アップロード / —=対象物なし
@@ -23,7 +23,7 @@
 | EP14 | `ep14_ai-content-creation` | `3C7KbVzj_t4` | private | `GhIqXanJswE` `8kR0LLjWUic` `bUKm3uK0flg` | private |
 | EP15 | `ep15_ai-data-analysis` | `RWYeR8GAqGg` | private | `cRGQQu9tT7w` `xJjCi9HGkh4` `Bnf7r91FtX8` | private |
 | EP16 | `ep16_ai-chatbot` | `75cAh0oOggk` | private | `Oh03uErojXo` `KX0DzopgbyA` `sSXzopIb964` | private |
-| EP17 | `ep17_brand-equity` | — | 未UP | 未UP | 未UP |
+| EP17 | `ep17_brand-equity` | `w2REF-0o1fc` | private | 未UP | 未UP |
 | EP18 | `ep18_ltv-crm-strategy` | — | 未UP | 未UP | 未UP |
 | EP19 | `ep19_marketing-org` | — | 未UP | 未UP | 未UP |
 | EP20 | `ep20_growth-hack` | — | 未UP | 未UP | 未UP |
@@ -32,7 +32,7 @@
 | EP23 | `ep23_failure-cases` | — | 未UP | — | — |
 | EP24 | `ep24_future-marketer` | — | 未UP | — | — |
 
-**集計**：manifest記録 55本中 public=24 / private=31 / 削除=0
+**集計**：manifest記録 56本中 public=24 / private=32 / 削除=0
 
 ## 残作業
 - private の回：Studioで公開（or 公開予約）
