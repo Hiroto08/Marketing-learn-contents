@@ -26,7 +26,9 @@ import urllib.request
 import webbrowser
 
 SCOPE = ("https://www.googleapis.com/auth/youtube.upload "
-         "https://www.googleapis.com/auth/youtube")
+         "https://www.googleapis.com/auth/youtube "
+         # 公開後のCTR・維持率・流入元を取得して改善ループを閉じるため
+         "https://www.googleapis.com/auth/yt-analytics.readonly")
 PORT = 8765
 
 

@@ -29,6 +29,9 @@
 冪等性: 各ディレクトリの publish_manifest.json に videoId と mp4 の SHA-256 を記録。
         同一ハッシュのファイルは再アップロードせずスキップする。
 
+AI合成コンテンツ開示: VOICEVOX音声のため status.containsSyntheticMedia=True を既定で申告
+  （改革計画 §10.4）。付けない場合は --no-synthetic-disclosure。
+
 APIで自動化できないもの（アップロード後にStudioで手動、checklistに出力）:
   ・Shorts の「関連動画」リンク設定（公式APIなし）
   ・固定コメントのピン留め（APIなし。コメント投稿自体は --pin-comment で投稿だけ実施）
@@ -148,8 +151,11 @@ def save_manifest(d: str, man: dict):
 
 
 def upload_video(tok: str, path: str, meta: dict, privacy: str,
-                 publish_at: str | None) -> str:
-    status = {"privacyStatus": privacy, "selfDeclaredMadeForKids": False}
+                 publish_at: str | None, synthetic: bool = True) -> str:
+    status = {"privacyStatus": privacy, "selfDeclaredMadeForKids": False,
+              # VOICEVOX合成音声を使うため「改変または合成されたコンテンツ」を申告
+              # （改革計画 §10.4）。API: status.containsSyntheticMedia（2024-10-30〜）
+              "containsSyntheticMedia": synthetic}
     if publish_at:
         status["privacyStatus"] = "private"
         status["publishAt"] = publish_at
@@ -245,6 +251,9 @@ def main():
     ap.add_argument("--thumbnail", help="サムネイルPNG（本編のみ）")
     ap.add_argument("--pin-comment", dest="pin_comment",
                     help="投稿する固定コメント文（ピン留め自体は手動）")
+    ap.add_argument("--no-synthetic-disclosure", dest="synthetic",
+                    action="store_false",
+                    help="AI合成コンテンツ開示を付けない（既定は付ける＝VOICEVOX前提）")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     if not (a.episode or a.shorts):
@@ -279,7 +288,8 @@ def main():
             print(f"  title: {m['title']}")
             print(f"  tags : {m['tags']}")
             print(f"  desc : {m['description'][:200]}…({len(m['description'])}字)")
-        print(f"\n{len(jobs)}本（dry-run・アップロードなし）")
+        print(f"\n  AI合成開示(containsSyntheticMedia): {a.synthetic}")
+        print(f"{len(jobs)}本（dry-run・アップロードなし）")
         return
 
     tok = access_token()
@@ -292,7 +302,7 @@ def main():
             print(f"skip（同一ハッシュ済み videoId={prev['videoId']}）: {path}")
             continue
         print(f"uploading: {path}  ({os.path.getsize(path)//1024//1024}MB)")
-        vid = upload_video(tok, path, meta, a.privacy, a.publish_at)
+        vid = upload_video(tok, path, meta, a.privacy, a.publish_at, a.synthetic)
         print(f"  → https://studio.youtube.com/video/{vid}/edit  (privacy={a.privacy}{' publishAt=' + a.publish_at if a.publish_at else ''})")
         if a.thumbnail and dkey == (a.episode or "").rstrip("/"):
             set_thumbnail(tok, vid, a.thumbnail)
