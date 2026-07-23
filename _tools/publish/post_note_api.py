@@ -96,9 +96,13 @@ def session() -> requests.Session:
         if "=" in part:
             k, v = part.strip().split("=", 1)
             s.cookies.set(k, v, domain=".note.com")
+    # note側WAF(CloudFront)がUA無しのPOSTを403で弾くため、ブラウザ相当のUAを必ず送る
     s.headers.update({"X-Requested-With": "XMLHttpRequest",
                       "Content-Type": "application/json",
                       "Accept": "application/json",
+                      "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                                     "AppleWebKit/537.36 (KHTML, like Gecko) "
+                                     "Chrome/126.0.0.0 Safari/537.36"),
                       "Origin": EDITOR, "Referer": f"{EDITOR}/"})
     return s
 
