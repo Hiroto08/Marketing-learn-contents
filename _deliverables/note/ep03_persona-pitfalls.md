@@ -69,7 +69,7 @@
 
 🎬 動画で見る：https://youtu.be/L_3cGEIDKVA
 📺 チャンネル（全話）：https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
-✉️ 全話の要点をまとめた無料チートシートも配布中（プロフィールのリンクから）
+✉️ 全話の要点をまとめた無料チートシートをプレゼント中👉 https://witty-composer-9473.kit.com/ac0f4ce77b
 
 役に立ったら、スキとフォローで応援してもらえると励みになります。
 

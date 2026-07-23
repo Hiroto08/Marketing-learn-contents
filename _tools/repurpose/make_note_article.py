@@ -32,6 +32,8 @@ DROP_WHOLE = re.compile(r"^(タイトル|オープニング|次への|次回|エ
 NO_HEADING = re.compile(r"^(約束|フック|コールドオープン|リフック|回収|導入|問題提起|ケース|適用)")
 
 DEFAULT_CHANNEL = "https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw"
+# Kitオプトイン（無料チートシート配布LP）。LEAD_NEXT_URLで上書き可
+DEFAULT_NEXT = "https://witty-composer-9473.kit.com/ac0f4ce77b"
 
 _ENUM = re.compile(r"^(原則|基本|ポイント|ステップ|手順|法則|方法|コツ|要素|続き)"
                    r"[①-⑳0-9]*\s*[：:]?\s*")
@@ -114,7 +116,7 @@ def parse(ep_dir: str) -> dict | None:
 
 def render(ep: dict) -> str:
     ch = os.environ.get("LEAD_CHANNEL_URL", DEFAULT_CHANNEL)
-    nxt = os.environ.get("LEAD_NEXT_URL")  # 未ホストなら None
+    nxt = os.environ.get("LEAD_NEXT_URL") or DEFAULT_NEXT
     vid = os.environ.get("NOTE_VIDEO_URL") or ep.get("video_url")
 
     L = [f"# {ep['title']}", ""]
@@ -135,10 +137,7 @@ def render(ep: dict) -> str:
     if vid:
         L.append(f"🎬 動画で見る：{vid}")
     L.append(f"📺 チャンネル（全話）：{ch}")
-    if nxt:
-        L.append(f"✉️ 全話の要点をまとめた無料チートシート：{nxt}")
-    else:
-        L.append("✉️ 全話の要点をまとめた無料チートシートも配布中（プロフィールのリンクから）")
+    L.append(f"✉️ 全話の要点をまとめた無料チートシートをプレゼント中👉 {nxt}")
     L += ["",
           "役に立ったら、スキとフォローで応援してもらえると励みになります。",
           "",

@@ -77,10 +77,17 @@ YouTube概要欄1行目付近 / note記事末尾 / チャンネル概要 / バ�
 - [ ] 生成される**オプトインURL**を控える → 下記の差し込みに使う
 
 ### リポジトリ側（このセッションで用意済み／半自動）
-- [x] リードマグネット本体（全20話チートシート）を生成
-- [x] オプトインLP・ウェルカムメールの文面資産（`_deliverables/list/`）
-- [ ] `note-packager` のCTAに**オプトインURL**を反映（`LEAD_NEXT_URL` 環境変数で全note記事に一括反映可）
-- [ ] YouTube概要欄テンプレ（`description.md`）冒頭にオプトインURL行を追加（※概要欄はYouTube担当領域なので連携）
+- [x] リードマグネット本体（全20話チートシート・Markdown＋PDF）を生成
+- [x] オプトインLP・ウェルカムメールの文面資産（`_deliverables/list/`）＋Kit貼り付けシート
+- [x] **オプトインURL確定**：`https://witty-composer-9473.kit.com/ac0f4ce77b`（Kit Landing Page）
+- [x] 全note記事のCTAにオプトインURLを反映（`make_note_article.py` の `DEFAULT_NEXT` にも設定＝今後も自動）
+- [ ] YouTube概要欄（`description.md`）冒頭にオプトインURL行を追加（※概要欄はYouTube担当領域なので下記文言を連携）
+
+**YouTube概要欄・貼り付け用（先頭付近に）**：
+```
+▼【無料】マーケの型 全20話まとめチートシート（PDF）
+https://witty-composer-9473.kit.com/ac0f4ce77b
+```
 
 ## 7. まとめ（進め方の一言）
 
