@@ -33,6 +33,13 @@ when_to_use: "Triggers: EPNNのnote記事を作って, note記事を仕上げて
 2. `note-writer` → `note-packager` → `note-proofreader` を順に実行。各ロールの完了条件を満たさないまま次へ進まない。
 3. `note-qa` を実行し `python3 _tools/checks/verify_note.py <file>` が **RESULT: PASS**。
 4. PASS後にコミット（`_deliverables/note/` のみ。下書きの再生成で上書きしないよう、以後の編集は生成物への直接編集で行う）。
+5. **note下書き自動保存（任意・要 note 認証）**：`docs/monetization-strategy.md` の「非公開投稿」原則に沿い、校了記事を note に**下書き（非公開）**として保存する。**公開は人間**。
+   ```bash
+   python3 _tools/publish/post_note.py --file _deliverables/note/ep<NN>_*.md --screenshot /tmp/note.png
+   ```
+   - 認証：`NOTE_COOKIE`（推奨）または `NOTE_EMAIL`/`NOTE_PASSWORD` をSecretsに
+   - **必ず `--dry-run` でパースを確認してから実行**。初回・note UI変更時は `--headful --screenshot` で挙動確認し、壊れたら post_note.py の `SEL`（セレクタ）を調整
+   - noteに公式APIは無く**UI操作のため壊れやすい**。verify_note.py PASS を前提に、下書き保存の成否は必ずスクショで確認
 
 ## 実行原則（最重要）
 
