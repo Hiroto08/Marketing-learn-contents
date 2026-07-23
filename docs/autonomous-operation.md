@@ -64,21 +64,23 @@ monetization-strategy.md §4.2 の表とYPP進捗（総再生時間/登録者）
 JST(UTC+9)→UTCは9時間引く（引いて日をまたぐ場合は曜日もずらす）。
 例）月曜9:00 JST ＝ 月曜0:00 UTC → cron `0 0 * * 1`／水曜9:00 JST ＝ 水曜0:00 UTC → cron `0 0 * * 3`。
 
-## 3.3 Routineの立ち上げ方（YouTube担当セッションが実施）
+## 3.3 稼働中のRoutine（実体あり・YouTube担当セッションが運用）
 
-このセッションはYouTube以外を担当するため**ここではRoutineを作らない**。YouTube配信の恒常運用を引き継ぐセッションが、下記スペックで `create_trigger` すれば即稼働する。
+アカウント全体で可視（`list_triggers`で確認可）。fresh-session方式で env `env_01XfJV8K…` に起動。
 
-| Routine | 推奨cron(UTC) | 起動(JST) | プロンプト | 通知 |
-|---------|--------------|-----------|-----------|------|
-| 配信ジョブ | `0 0 * * 1` | 毎週月 9:00 | §3.1 | push+mail |
-| 分析ジョブ | `0 0 * * 3` | 毎週水 9:00 | §3.2 | push |
+| Routine | ID | cron(UTC) | 起動(JST) | プロンプト | 通知 |
+|---------|----|-----------|-----------|-----------|------|
+| アップロード配信ジョブ | `trig_01EbHiCbrAJu1j48x6oSczgS` | `0 0 * * 1` | 毎週月 9:00 | §3.1 | push+mail |
+| アナリティクス分析ジョブ | `trig_01CKAp4o3eyQ26PgFEtDYmda` | `0 0 * * 3` | 毎週水 9:00 | §3.2 | push |
 
-- **fresh-session推奨**（`create_new_session_on_fire=true`）。毎回クリーンな環境で起動しビルド成果物を残さない
-- **前提**：Routineを作る側の環境に §2 の Secrets／ビルド依存が入っていること。fresh-sessionにはMCPコネクタ（GitHub等）が渡らないため、git操作は`git push`コマンドで行う（本ランブックのプロンプトはそう設計済み）
-- JST→UTC変換：9時間引く（日をまたぐ場合は曜日もずらす）。例）月9:00 JST＝月0:00 UTC→`0 0 * * 1`／水9:00 JST＝水0:00 UTC→`0 0 * * 3`
-- 変更・停止：`update_trigger`／`delete_trigger`／一時停止は`enabled=false`
+- **fresh-session**（`create_new_session_on_fire=true`）。毎回クリーンな環境で起動しビルド成果物を残さない
+- **前提**：起動先envに §2 の Secrets／ビルド依存が必要（`env_01XfJV8K…`は充足済み）。fresh-sessionにはMCPコネクタ（GitHub等）が渡らないため、git操作は`git push`コマンドで行う
+- 制御：`update_trigger`（`enabled=false`で一時停止／cron・prompt差し替え）／`delete_trigger`
 
-> **参考**：以前このセッションで作った2本（`trig_01RmfF…`／`trig_018EMU…`）は、stale前提かつ担当分離のため**削除済み**。上記スペックで作り直すこと。
+> **⚠️ 運用上の注意（YouTube担当セッションへ）**
+> 1. **一括キャッチアップと同時期は衝突注意**：キャッチアップと配信ジョブが同じ「次の未UP回」を掴むと二重処理になる。キャッチアップ完了までは配信ジョブを `enabled=false` にしておくのが安全。
+> 2. **真実源はブランチ依存**：`docs/upload-status.md`・`gen_upload_status.py` は YouTube作業ブランチ側の資産。fresh-sessionがcloneするデフォルトブランチにこれらが無いと機能しない。**これらを持つブランチをデフォルトにマージしてから**恒常運用に乗せること。
+> 3. 以前の2本（`trig_01RmfF…`／`trig_018EMU…`）は stale前提だったため削除済み。上表が現行。
 
 ## 4. 毎週残る人手（Studio・APIで自動化不可）※合計数分
 
