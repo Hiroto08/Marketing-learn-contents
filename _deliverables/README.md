@@ -16,7 +16,9 @@ python3 _tools/repurpose/make_lead_magnet.py \
   --out _deliverables/lead-magnet/marketing-lab-cheatsheet.md
 ```
 
-- CTAリンクは環境変数で差し込む：`LEAD_CHANNEL_URL` / `LEAD_NEXT_URL` / `LEAD_CONTACT_URL`
+- **チャンネルURLは実チャンネルを既定値**に設定済み（`LEAD_CHANNEL_URL`で上書き可）
+- `LEAD_NEXT_URL`（特典）/`LEAD_CONTACT_URL`（問い合わせ）は**未設定なら該当行を出さない**
+  （チートシートをどこかにホストしたらURLを渡す。空プレースホルダは出力しない）
 - **公開動画と文言を一致させたい場合は、script.md が正となるブランチで実行**すること
   （ブランチにより台本内容が異なりうる。真実源は各話の実制作ブランチ）。
 - PDF化する場合は任意のMarkdown→PDF変換で（本ツールはMarkdownまで生成）。
@@ -32,8 +34,10 @@ python3 _tools/repurpose/make_note_article.py --all          # 実スクリプ�
 python3 _tools/repurpose/make_note_article.py --episode <ep_dir>
 ```
 
-- 差し込み（環境変数・任意）：`LEAD_CHANNEL_URL`（チャンネル）／`LEAD_NEXT_URL`（特典）／`NOTE_VIDEO_URL`（その回の動画）
-- 動画URLは `docs/upload-status.md` の videoId から手で補える（本ツールはYouTubeに触れない）
+- チャンネルURLは実チャンネルを既定値に設定済み（`LEAD_CHANNEL_URL`で上書き可）
+- **動画URLは `docs/upload-status.md` があれば各話のvideoIdから自動解決**（無ければ該当行を出さない。
+  `NOTE_VIDEO_URL`で単一上書きも可）。canonicalブランチで実行すれば全話に動画リンクが入る
+- `LEAD_NEXT_URL`（特典）未設定時はソフト文言（「プロフィールのリンクから」）で出す
 - 公開前に軽く目視推敲を推奨（AIナレーションは口語のため、note向けに接続を整えると尚良い）
 
 ## 今後追加予定（戦略書のオフYouTube施策）
