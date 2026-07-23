@@ -38,21 +38,27 @@ SKIP_HEADING = re.compile(
     r"^(タイトル|フック|まとめ|オープニング|次回|次への|エンド|CTA|"
     r"コールドオープン|約束|ケース|リフック|回収|導入|問題提起)")
 
-# 見出し先頭の列挙・段階ラベル（原則①/適用②/As-Is 等）を落として実質だけ残す
-_ENUM = re.compile(r"^(原則|基本|ポイント|ステップ|手順|法則|方法|コツ|要素|適用)"
+DEFAULT_CHANNEL = "https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw"
+
+# 見出し先頭の列挙・段階ラベル（原則①/適用②/As-Is/続き 等）を落として実質だけ残す
+_ENUM = re.compile(r"^(原則|基本|ポイント|ステップ|手順|法則|方法|コツ|要素|適用|続き)"
                    r"[①-⑳0-9]*\s*[：:]?\s*")
 _PHASE = re.compile(r"^(As[\-\s]?Is|To[\-\s]?Be)\s*[：:]?\s*", re.I)
 # 末尾のタイムスタンプ括弧だけを除去（（AMA）（ドリルと穴）等の意味ある括弧は残す）
 _TS = re.compile(r"\s*（[\d:：〜~\.\-\s]+）\s*$")
-# 見出し末尾の制作用注記（＋ミニ問いかけ／（エピソード固有図解）等）を落とす
+# 見出し末尾の制作用注記（＋ミニ問いかけ／（エピソード固有図解）／（NEW）等）を落とす
 _ANNOT = re.compile(r"(＋[^、。（]*(問い|問いかけ)[^、。]*|"
-                    r"（[^）]*(図解|固有|問いかけ)[^）]*）)\s*$")
+                    r"（[^）]*(図解|固有|問いかけ)[^）]*）|"
+                    r"（(NEW|New|新|改|更新)[!！]?）)\s*$")
 
 
 def clean_point(head: str) -> str:
     head = re.sub(r"\s*[—―–]{2,}\s*", "：", head)   # —— を : に寄せる
-    head = _ENUM.sub("", head)
-    head = _PHASE.sub("", head)
+    prev = None                        # 「法則②続き」等の二重ラベルを繰り返し除去
+    while prev != head:
+        prev = head
+        head = _ENUM.sub("", head)
+        head = _PHASE.sub("", head)
     head = _ANNOT.sub("", head)
     return head.strip("：: 　").strip()
 
@@ -88,9 +94,9 @@ def parse_episode(path: str) -> dict | None:
 
 
 def render(eps: list) -> str:
-    ch = os.environ.get("LEAD_CHANNEL_URL", "（チャンネルURLをここに）")
-    nxt = os.environ.get("LEAD_NEXT_URL", "（次のステップURLをここに）")
-    contact = os.environ.get("LEAD_CONTACT_URL", "（お問い合わせURLをここに）")
+    ch = os.environ.get("LEAD_CHANNEL_URL", DEFAULT_CHANNEL)
+    nxt = os.environ.get("LEAD_NEXT_URL")
+    contact = os.environ.get("LEAD_CONTACT_URL")
 
     L = ["# マーケティング超入門｜全話まとめ＆実践チートシート",
          "",
@@ -129,13 +135,13 @@ def render(eps: list) -> str:
             L.append(f"### 第{e['num']}回　{e['title']}")
             L.append("")
 
-    L += ["---", "",
-          "## この先へ",
-          "",
-          f"- 📺 **全話を動画で見る**：{ch}",
-          f"- ✉️ **次の一歩（テンプレ・特典）**：{nxt}",
-          f"- 💬 **相談・お仕事のご依頼**：{contact}",
-          "",
+    L += ["---", "", "## この先へ", "",
+          f"- 📺 **全話を動画で見る**：{ch}"]
+    if nxt:
+        L.append(f"- ✉️ **次の一歩（テンプレ・特典）**：{nxt}")
+    if contact:
+        L.append(f"- 💬 **相談・お仕事のご依頼**：{contact}")
+    L += ["",
           "> このチートシートは「AI時代のマーケティング・ラボ」の内容をまとめた無料配布物です。"
           "役に立ったら、ぜひチャンネル登録で最新回を受け取ってください。"]
     return "\n".join(L) + "\n"
