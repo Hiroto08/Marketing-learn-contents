@@ -45,6 +45,12 @@ Routine（スケジュール起動）で「毎週：次話をL3制作 → QA →
 完了後、publish_manifest.json をコミット・push し、python3 _tools/publish/gen_upload_status.py で docs/upload-status.md を再生成してコミット（次回ジョブの真実源になる）。
 QA（verify_episode / verify_shorts）が一度でも FAIL したらアップロードせず、原因と現状を報告して停止（不完全な動画は上げない）。
 git はその回専用の新ブランチで作業し push -u origin まで行う。
+
+【追加ステップ・メンバー向けメール案の同時生成（本編を新規アップ/公開予約した回のみ・アップと同じタイミング）】この回で本編動画を新規に非公開アップロード（または公開予約）した場合、そのアップと同じタイミングで当該本編EPのメーリングリスト向けブロードキャストメール案を生成する。
+1. make_broadcast.py が作業ブランチに無ければ note-articles から取り込む：git checkout origin/claude/note-articles -- _tools/repurpose/make_broadcast.py
+2. python3 _tools/repurpose/make_broadcast.py --episode <本編EP_dir>（動画URLは再生成済みの docs/upload-status.md から自動解決）→ _deliverables/broadcast/ep<NN>_*.md
+3. 草稿を同じ作業ブランチにコミット・push（送信はしない。KitでのブロードキャストはユーザーがKit側で最終確認して送る）。報告にファイルパスと件名を含める。
+Shortsのみ／本編の新規アップが無い回はスキップ。メール案の生成失敗はアップロードを止めない（非致命・報告に添えるのみ）。
 ```
 
 > **注意（stale事故の教訓）**：`publish_manifest.json` は作業ブランチによって有無が食い違う。必ず `docs/upload-status.md`（実照会済み）を真実源にすること。ローカルに manifest が無い＝未UP とは限らない。
@@ -70,8 +76,11 @@ JST(UTC+9)→UTCは9時間引く（引いて日をまたぐ場合は曜日もず
 
 | Routine | ID | cron(UTC) | 起動(JST) | プロンプト | 通知 |
 |---------|----|-----------|-----------|-----------|------|
-| アップロード配信ジョブ | `trig_01EbHiCbrAJu1j48x6oSczgS` | `0 0 * * 1` | 毎週月 9:00 | §3.1 | push+mail |
+| アップロード配信ジョブ（＋メール案生成） | `trig_01EbHiCbrAJu1j48x6oSczgS` | `0 0 * * 1` | 毎週月 9:00 | §3.1 | push+mail |
 | アナリティクス分析ジョブ | `trig_01CKAp4o3eyQ26PgFEtDYmda` | `0 0 * * 3` | 毎週水 9:00 | §3.2 | push |
+
+> **メール案の同時生成（2026-07-24 追加）**：アップロード配信ジョブは、本編を新規アップ/公開予約した回に限り、同じ実行内で `make_broadcast.py` を回してメンバー向けメール案（`_deliverables/broadcast/ep<NN>_*.md`）を生成・コミットする（送信はKitで人間が実施）。§3.1の【追加ステップ】参照。
+> - **耐久性の注意**：この追加ステップは `make_broadcast.py` を毎回 `origin/claude/note-articles` から取り込む前提。恒常運用では make_broadcast.py を YouTube作業ブランチ／既定ブランチにマージして取り込みを不要にするのが望ましい（upload-status.md と同じブランチ依存の課題）。
 
 - **fresh-session**（`create_new_session_on_fire=true`）。毎回クリーンな環境で起動しビルド成果物を残さない
 - **前提**：起動先envに §2 の Secrets／ビルド依存が必要（`env_01XfJV8K…`は充足済み）。fresh-sessionにはMCPコネクタ（GitHub等）が渡らないため、git操作は`git push`コマンドで行う
