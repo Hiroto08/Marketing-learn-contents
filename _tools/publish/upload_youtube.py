@@ -11,6 +11,9 @@
     # メタデータの組み立て結果だけ確認（アップロードしない）
     python3 _tools/publish/upload_youtube.py --episode <dir> --dry-run
 
+    # アップ済み動画の概要欄/タイトル/タグだけを差し替え（再アップなし・videoId不変・約50quota）
+    python3 _tools/publish/upload_youtube.py --episode <dir> --sync-meta [--dry-run]
+
     # オプション: --privacy unlisted / --publish-at 2026-07-20T21:00:00+09:00
     #           --playlist <playlistId> / --thumbnail <png>
 
@@ -289,6 +292,35 @@ def delete_video(tok: str, video_id: str) -> bool:
 
 
 # ──────────────────────────────────────────────────────────────────────────
+def _episode_video_id(ep_dir: str) -> str | None:
+    """本編の publish_manifest.json から本編videoIdを引く（未アップならNone）。"""
+    p = f"{ep_dir}/publish_manifest.json"
+    if not os.path.exists(p):
+        return None
+    man = json.load(open(p, encoding="utf-8"))
+    for k, v in man.items():
+        if k.endswith("_final.mp4") and "short" not in k and v.get("videoId"):
+            return v["videoId"]
+    return None
+
+
+def sync_meta(tok: str, video_id: str, meta: dict) -> bool:
+    """既存動画の snippet（タイトル/概要欄/タグ）だけを更新する。
+    再アップロードせず videos.update を使う（quota=約50単位。videoIdは不変）。"""
+    body = {"id": video_id,
+            "snippet": {"title": meta["title"], "description": meta["description"],
+                        "tags": meta["tags"], "categoryId": CATEGORY_EDUCATION,
+                        "defaultLanguage": "ja", "defaultAudioLanguage": "ja"}}
+    r = requests.put(f"{API}/videos?part=snippet",
+                     headers={"Authorization": f"Bearer {tok}",
+                              "Content-Type": "application/json; charset=UTF-8"},
+                     data=json.dumps(body), timeout=60)
+    if r.status_code == 200:
+        return True
+    print(f"  ! videos.update 失敗 {r.status_code}: {r.text[:300]}")
+    return False
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--episode", help="本編のエピソードディレクトリ")
@@ -305,10 +337,34 @@ def main():
     ap.add_argument("--no-synthetic-disclosure", dest="synthetic",
                     action="store_false",
                     help="AI合成コンテンツ開示を付けない（既定は付ける＝VOICEVOX前提）")
+    ap.add_argument("--sync-meta", dest="sync_meta", action="store_true",
+                    help="既存動画の概要欄/タイトル/タグだけを description.md から更新（再アップなし・videoId不変）")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     if not (a.episode or a.shorts):
         ap.error("--episode か --shorts を指定")
+
+    # ── メタのみ同期モード（アップ済み動画の概要欄差し替え。mp4不要） ──
+    if a.sync_meta:
+        if not a.episode:
+            ap.error("--sync-meta は --episode と併用する（本編の概要欄同期）")
+        d = a.episode.rstrip("/")
+        vid = _episode_video_id(d)
+        meta = episode_metadata(d)
+        if not vid:
+            print(f"! {d}: publish_manifest.json に本編videoIdが無い（未アップ）→ 同期スキップ")
+            return
+        if a.dry_run:
+            print(f"═══ {d}  videoId={vid}")
+            print(f"  title: {meta['title']}")
+            print(f"  tags : {meta['tags']}")
+            print(f"  desc : {meta['description'][:200]}…({len(meta['description'])}字)")
+            print("  (dry-run・更新なし)")
+            return
+        tok = access_token()
+        ok = sync_meta(tok, vid, meta)
+        print(f"{'✓ 概要欄同期' if ok else '✗ 失敗'}: {d} → https://studio.youtube.com/video/{vid}/edit")
+        return
 
     jobs = []  # (dir_key, mp4, meta)
     if a.episode:
