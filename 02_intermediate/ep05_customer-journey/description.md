@@ -115,3 +115,17 @@ https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 7:52 次回予告
 ```
 </content>
+
+---
+
+## アフィリエイト
+
+```
+――――――――――
+📚 この動画で触れた本（Amazonアソシエイトのリンク）
+
+・『マーケティング4.0』／Philip Kotler, Hermawan Kartajaya, Iwan Setiawan
+　https://www.amazon.co.jp/s?k=Philip+Kotler%2C+Hermawan+Kartajaya%2C+Iwan+Setiawan+%E3%83%9E%E3%83%BC%E3%82%B1%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B04.0&tag=aicreateslife-22
+
+※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
+```

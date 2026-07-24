@@ -111,3 +111,17 @@ https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 7:20 まとめ
 7:53 次回予告
 ```
+
+---
+
+## アフィリエイト
+
+```
+――――――――――
+📚 この動画で触れた本（Amazonアソシエイトのリンク）
+
+・『The Mom Test』／Rob Fitzpatrick
+　https://www.amazon.co.jp/s?k=Rob+Fitzpatrick+The+Mom+Test&tag=aicreateslife-22
+
+※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
+```

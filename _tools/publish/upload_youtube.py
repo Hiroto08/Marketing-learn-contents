@@ -27,7 +27,7 @@
 
 メタデータの出どころ:
   本編   … <episode_dir>/description.md（メイン説明文/タイムスタンプ/再生リスト/
-            関連動画/参考リソース/ハッシュタグ の各セクションを結合）
+            関連動画/参考リソース/アフィリエイト/ハッシュタグ の各セクションを結合）
             タイトルは description.md の見出し（`— ` 以降）
   Shorts … <episode_dir>/shorts.md の「## Short N」ごとの **タイトル案：**。
             説明文は固定ひな形＋#Shorts ハッシュタグ（3〜5個）
@@ -100,7 +100,7 @@ def episode_metadata(ep_dir: str) -> dict:
     title = m.group(1).strip() if m else os.path.basename(ep_dir)
 
     parts = []
-    for sec in ["メイン説明文", "タイムスタンプ", "シリーズ再生リスト", "関連動画", "参考・補足リソース"]:
+    for sec in ["メイン説明文", "タイムスタンプ", "シリーズ再生リスト", "関連動画", "参考・補足リソース", "アフィリエイト"]:
         b = _block(md, sec)
         if b:
             # 制作用の未確定マーカーを公開文面から除去
