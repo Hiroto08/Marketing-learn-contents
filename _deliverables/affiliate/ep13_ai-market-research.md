@@ -4,7 +4,7 @@
 📚 この動画で触れた本（Amazonアソシエイトのリンク）
 
 ・『The Mom Test』／Rob Fitzpatrick
-　https://www.amazon.co.jp/s?k=Rob+Fitzpatrick+The+Mom+Test&tag=REPLACE-TAG-22
+　https://www.amazon.co.jp/s?k=Rob+Fitzpatrick+The+Mom+Test&tag=aicreateslife-22
 
 ※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
 

@@ -4,7 +4,7 @@
 📚 この動画で触れた本（Amazonアソシエイトのリンク）
 
 ・『Managing Brand Equity』／David A. Aaker
-　https://www.amazon.co.jp/s?k=David+A.+Aaker+Managing+Brand+Equity&tag=REPLACE-TAG-22
+　https://www.amazon.co.jp/s?k=David+A.+Aaker+Managing+Brand+Equity&tag=aicreateslife-22
 
 ※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
 
