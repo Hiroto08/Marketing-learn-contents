@@ -14,6 +14,12 @@ description: YouTube動画制作の配信担当役。概要欄SEO・サムネイ
 ## 手順
 1. `.claude/skills/episode-production/retention-packaging.md` §5（SEO規則）・§6（Shorts）と `templates.md` の description テンプレを開く
 2. **description.md**：冒頭2行にKW＋視聴メリット（「第N回」禁止）／サブKW入りチャプター／参考文献はscript.mdと一致／ハッシュタグ
+   - **リードマグネットCTA（必須）**：メイン説明文の**フック直後（2段落目）**に無料チートシートの導線を入れる（リスト獲得＝収益化戦略§L3の入口）。定型：
+     ```
+     ▼【無料】マーケの型 全20話まとめ＆実践チートシート（PDF）を配布中
+     👉 https://witty-composer-9473.kit.com/ac0f4ce77b
+     ```
+     （URLは `docs/mailing-list-plan.md` が正。変わったらそこと本行を更新）
 3. **thumbnail.md**：パッケージング表のサムネ文字・約束と整合させる（背景 #0B1220 シリーズ共通、アクセントは slide.html の `--accent` と同色、A/B用の代替案を1つ以上）。
    **このファイルは機械可読**——`make_thumbnail.py` が「## メインテキスト…」の `**採用：**` 行（無ければ最初の太字）と「## サブテキスト…」の候補A行からPNGを自動生成する。確実に指定したい場合は `## サムネ生成データ` ブロックに `main:` / `sub:` を書く
 4. **サムネPNG生成**：`python3 _tools/publish/make_thumbnail.py <ep_dir>` → `<ep_dir>/thumbnail.png`（1280x720・シリーズ共通デザイン・数字はアクセント色強調）。生成後にReadで目視確認し**コミットする**。アップロード時に upload_youtube.py が自動設定する
