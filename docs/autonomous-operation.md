@@ -80,7 +80,7 @@ JST(UTC+9)→UTCは9時間引く（引いて日をまたぐ場合は曜日もず
 | アナリティクス分析ジョブ | `trig_01CKAp4o3eyQ26PgFEtDYmda` | `0 0 * * 3` | 毎週水 9:00 | §3.2 | push |
 
 > **メール案の同時生成（2026-07-24 追加）**：アップロード配信ジョブは、本編を新規アップ/公開予約した回に限り、同じ実行内で `make_broadcast.py` を回してメンバー向けメール案（`_deliverables/broadcast/ep<NN>_*.md`）を生成・コミットする（送信はKitで人間が実施）。§3.1の【追加ステップ】参照。
-> - **耐久性の注意**：この追加ステップは `make_broadcast.py` を毎回 `origin/claude/note-articles` から取り込む前提。恒常運用では make_broadcast.py を YouTube作業ブランチ／既定ブランチにマージして取り込みを不要にするのが望ましい（upload-status.md と同じブランチ依存の課題）。
+> - **耐久性（2026-07-24 対応済み）**：`make_broadcast.py` と `list-broadcast` スキルを基点ブランチ（`claude/build-upload-bqpddd`＝最新のYouTube作業／既定ブランチ `claude/setup-marketing-course-dirs-GH2OH`）へ追加済み。以後、これらから派生する各実行ブランチは取り込み不要でツールを持つ。§3.1 の `git checkout origin/claude/note-articles -- …` は基点にツールが無い場合のみ働く保険として残す（追加のみ・副作用なし。自己完結＝stdlibのみ）。
 
 - **fresh-session**（`create_new_session_on_fire=true`）。毎回クリーンな環境で起動しビルド成果物を残さない
 - **前提**：起動先envに §2 の Secrets／ビルド依存が必要（`env_01XfJV8K…`は充足済み）。fresh-sessionにはMCPコネクタ（GitHub等）が渡らないため、git操作は`git push`コマンドで行う
