@@ -38,22 +38,19 @@ Kitの各画面で、下の「→ ここに貼る」をコピペする。
 
 ---
 
-## STEP 3：特典配布（実機確認済み・確定版）
+## STEP 3：特典配布（確認メール方式・確定版）
 
-**判明した仕様**：このKit UIには独立した「Incentiveタブ」は無い。特典配布は2つのどちらかで行う。
+**判明した仕様**：このKit UIには独立した「Incentiveタブ」は無い。**確認メール（Confirmation email）自体が特典配布の乗り物**。
 
-- **✅ 採用した方式＝Automationで配布**（実機で動作確認済み）：
-  - Landing Page の **「Send confirmation email」はOFFのまま**（＝登録は即時・確認メール無し。
-    Subscribers一覧にすぐ反映される。ダブルオプトインが無いのでフリーメール送信元の到達率問題も回避しやすい）
-  - **Automate → Visual Automations → New Automation**
-    - Trigger：「Subscribes to a form」→ このLanding Pageのフォームを選択
-    - Action：「Send email」→ 本文エディタの「＋」ブロックから**Add file**で
-      `marketing-lab-cheatsheet.pdf` を添付（無ければDrive等の共有リンクで代替）
-    - 件名・本文は下記をそのまま貼る
-  - この方式は**確認メールのON/OFF設定に依存しない**ため、以後この形で運用する
-- （非採用）Landing Page の「Confirmation email」をONにして、その本文にダウンロードリンクを
-  仕込む方式もあるが、確認メール自体がフリーメール送信元で迷惑メール判定されやすく、
-  今回はこちらで詰まったため不採用
+- **✅ 採用方式＝確認メール（Confirmation email）に特典を仕込む**：
+  - Landing Page → **Settings → Confirmation email → 「Send confirmation email」をON**
+  - 本文エディタで、下記の文面を貼り、**「▼こちらからどうぞ」の下に本文エディタの「＋」ブロックから
+    Add file**で `marketing-lab-cheatsheet.pdf` を添付（＝クリックでDLできるリンクになる）
+  - 件名・本文は下記をそのまま貼る
+- **Automationは削除済み**（重複配信を避けるため。確認メール方式のみで運用）
+- ⚠️ **要目視確認**：フリーGmail送信元だと確認メールが迷惑メール判定される事例があった。
+  設定後に**必ず別メールで登録テストし、確認メールが受信箱に届くか確認**すること。
+  届かない/迷惑メールに入る場合は、独自ドメイン＋SPF/DKIM認証（`docs/mailing-list-plan.md` 保留事項）を検討
 
 **件名（Subject）→ ここに貼る**
 ```
