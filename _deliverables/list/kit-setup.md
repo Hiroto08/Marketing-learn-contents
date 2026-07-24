@@ -38,12 +38,22 @@ Kitの各画面で、下の「→ ここに貼る」をコピペする。
 
 ---
 
-## STEP 3：Incentive email（Landing Page → Settings → Incentive）
+## STEP 3：特典配布（実機確認済み・確定版）
 
-- **Incentive email：ON**
-- **特典ファイル**：「Add a file / Download」で **`marketing-lab-cheatsheet.pdf` をアップロード**
-  （＝メール内の「こちらからどうぞ」ボタンがこのPDFのDLリンクになる）
-- **Double opt-in（確認メール）：ON のまま**（確認＆納品を兼ねる）
+**判明した仕様**：このKit UIには独立した「Incentiveタブ」は無い。特典配布は2つのどちらかで行う。
+
+- **✅ 採用した方式＝Automationで配布**（実機で動作確認済み）：
+  - Landing Page の **「Send confirmation email」はOFFのまま**（＝登録は即時・確認メール無し。
+    Subscribers一覧にすぐ反映される。ダブルオプトインが無いのでフリーメール送信元の到達率問題も回避しやすい）
+  - **Automate → Visual Automations → New Automation**
+    - Trigger：「Subscribes to a form」→ このLanding Pageのフォームを選択
+    - Action：「Send email」→ 本文エディタの「＋」ブロックから**Add file**で
+      `marketing-lab-cheatsheet.pdf` を添付（無ければDrive等の共有リンクで代替）
+    - 件名・本文は下記をそのまま貼る
+  - この方式は**確認メールのON/OFF設定に依存しない**ため、以後この形で運用する
+- （非採用）Landing Page の「Confirmation email」をONにして、その本文にダウンロードリンクを
+  仕込む方式もあるが、確認メール自体がフリーメール送信元で迷惑メール判定されやすく、
+  今回はこちらで詰まったため不採用
 
 **件名（Subject）→ ここに貼る**
 ```
