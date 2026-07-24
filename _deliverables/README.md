@@ -29,8 +29,14 @@ python3 _tools/repurpose/make_lead_magnet.py \
 ## list/ — メール/LINEリストの文面資産（§L3・`docs/mailing-list-plan.md`）
 
 - `opt-in-lp.md` … オプトインLP/フォームのコピー（メールサービスに貼る）
-- `welcome-email.md` … 登録直後の自動返信#1（チートシート納品）。`{{CHEATSHEET_URL}}`/`{{CHANNEL_URL}}`を差し込む
+- `welcome-email.md` … 登録直後の自動返信#1（チートシート納品）
+- `kit-setup.md` … Kitの貼り付けシート（確認メール方式・確定版）
 - 進め方の全体像は `docs/mailing-list-plan.md`
+
+## broadcast/ — 週次ブロードキャストメール草稿（定常配信・EP07開始）
+
+- 生成：`_tools/repurpose/make_broadcast.py --episode <ep_dir>`（script.md→短いダイジェスト）
+- 役割：`list-broadcast` スキル。**送信はKit → Broadcasts で人間が最終確認して送る**
 
 ## 今後追加予定
 
