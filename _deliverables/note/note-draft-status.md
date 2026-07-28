@@ -24,7 +24,7 @@ status の意味：
 | EP05 | ep05_customer-journey.md | 下書き保存済み | 171462935 | https://editor.note.com/notes/171462935/edit | 2026-07-24 |
 | EP06 | ep06_pricing-psychology.md | 下書き保存済み | 171462938 | https://editor.note.com/notes/171462938/edit | 2026-07-24 |
 | EP07 | ep07_4p-4c-mix.md | 下書き保存済み | 171960790 | https://editor.note.com/notes/171960790/edit | 2026-07-27 |
-| EP08 | ep08_usp-differentiation.md | 生成のまま（校了前） | - | - | - |
+| EP08 | ep08_usp-differentiation.md | 下書き保存済み | 172111882 | https://editor.note.com/notes/172111882/edit | 2026-07-28 |
 | EP09 | ep09_cpa-ltv.md | 生成のまま（校了前） | - | - | - |
 | EP10 | ep10_copywriting-5laws.md | 生成のまま（校了前） | - | - | - |
 | EP11 | ep11_sns-engagement.md | 生成のまま（校了前） | - | - | - |
