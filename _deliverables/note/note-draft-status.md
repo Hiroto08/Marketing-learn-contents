@@ -23,7 +23,7 @@ status の意味：
 | EP04 | ep04_benefit-vs-feature.md | 下書き保存済み | 171462932 | https://editor.note.com/notes/171462932/edit | 2026-07-24 |
 | EP05 | ep05_customer-journey.md | 下書き保存済み | 171462935 | https://editor.note.com/notes/171462935/edit | 2026-07-24 |
 | EP06 | ep06_pricing-psychology.md | 下書き保存済み | 171462938 | https://editor.note.com/notes/171462938/edit | 2026-07-24 |
-| EP07 | ep07_4p-4c-mix.md | 生成のまま（校了前） | - | - | - |
+| EP07 | ep07_4p-4c-mix.md | 校了・下書き未保存 | - | - | - |
 | EP08 | ep08_usp-differentiation.md | 生成のまま（校了前） | - | - | - |
 | EP09 | ep09_cpa-ltv.md | 生成のまま（校了前） | - | - | - |
 | EP10 | ep10_copywriting-5laws.md | 生成のまま（校了前） | - | - | - |
@@ -40,8 +40,7 @@ status の意味：
 
 <!--
 運用メモ：
-- 現在「校了・下書き未保存」は0本。EP07以降を校了させるまで、週次noteジョブは「保存対象なし」で
-  安全に停止する（未校了記事は投稿しない）。
-- EP07以降を校了させるには note-production スキル（リライト→パッケージ→校正→QA）を回す。
+- 現在「校了・下書き未保存」はEP07の1本。次の週次noteジョブがEP07を下書き保存する。
+- EP08以降を校了させるには note-production スキル（リライト→パッケージ→校正→QA）を回す。
   校了できたら該当行を「校了・下書き未保存」に更新 → 次の月曜ジョブが自動で下書き保存する。
 -->
