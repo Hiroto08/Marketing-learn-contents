@@ -41,6 +41,8 @@ for ep,d,main,shorts,hsm in eps:
     o.append(f"| EP{ep:02d} | `{os.path.basename(d)}` | {('`'+mv+'`') if mv else '—'} | {mp} | {svs} | {sp} |\n")
 pub=sum(1 for v in priv.values() if v=='public'); pri=sum(1 for v in priv.values() if v=='private'); dele=sum(1 for v in priv.values() if v=='削除' or v not in ('public','private'))
 o.append(f"\n**集計**：manifest記録 {len(priv)}本中 public={pub} / private={pri} / 削除={dele}\n")
-o.append("\n## 残作業\n- private の回：Studioで公開（or 公開予約）\n- 各Short：Studioで「関連動画」に本編を設定（API不可）\n- 未UP：EP17〜24（EP20は一旦Studioから削除済み・要再UP）／ EP21〜24は未制作\n")
+unup=[f"EP{ep:02d}" for ep,d,main,shorts,hsm in eps if not main]
+unup_line=f"未UP：{'／'.join(unup)}" if unup else "未UP：なし"
+o.append(f"\n## 残作業\n- private の回：Studioで公開（or 公開予約）\n- 各Short：Studioで「関連動画」に本編を設定（API不可）\n- {unup_line}\n")
 open("docs/upload-status.md","w",encoding="utf-8").write("".join(o))
 print(f"regenerated. public={pub} private={pri} deleted={dele} tracked={len(priv)}")
