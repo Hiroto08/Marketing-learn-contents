@@ -43,6 +43,7 @@ Routine（スケジュール起動）で「毎週：次話をL3制作 → QA →
 「アップロード（非公開ドラフト作成）」と「公開（public化・--publish-at での公開予約を含む）」は別物として扱う。公開は必ずEP番号の昇順で、飛び級厳禁。
 - 公開してよいのは常に「現在YouTubeで公開(public)済みの最大EP番号 = N の、次の EP(N+1)」だけ。EP(N+1) より先のEPは、たとえ非公開UP済みでも新規制作可能でも、絶対に公開・公開予約しない。
 - 手順：全本編の公開状態をYouTubeで実照会 → public済み最大EP=Nを特定 → EP(N+1)の本編が非公開UP済みなら、それを公開（or 次の土曜18:00 JSTに公開予約）する。EP(N+1)が未UPなら、まずそれを非公開で用意してから公開する（先のEPには進まない）。
+- **本編とShortは同時公開**：EP(N+1)を公開するときは、その回のShorts（通常3本）も必ず同じタイミングで公開する（公開予約なら本編と同じ publishAt に揃える）。本編だけ公開してShortを非公開のまま残さない／Shortだけ先に公開しない。該当Shortが未UPなら、先に非公開で用意してから本編と同時に公開する。
 - アップロード（非公開ドラフトのギャップ埋め）は下記(1)〜(3)の優先度でEP順に進めてよいが、それはあくまで「非公開」まで。「公開」は上のEP順ルールだけに従う。
 
 アップロード（非公開ドラフト作成）の優先度：
@@ -50,7 +51,8 @@ Routine（スケジュール起動）で「毎週：次話をL3制作 → QA →
 (2) 本編が「未UP」で slide.html 完成済み → 本編＋Shortsを非公開アップロード。
 (3) 未制作EP（現状 EP21〜24）→ docs/episode-briefs.md に従い L3 新規制作（verify_episode.py が RESULT: PASS まで）→ 動画化→非公開アップロード。
 ※上記の「現状EP◯◯」は例示。実際の対象は必ず upload-status.md ＋ YouTube実照会で判定する。
-アップロードは yt-uploader（upload_youtube.py・AI合成開示 既定ON）。公開予約は上の【公開順序の絶対則】に従い EP(N+1) のみ --publish-at で次の土曜18:00 JST に設定。
+アップロード（非公開ドラフト作成）は yt-uploader（upload_youtube.py・AI合成開示 既定ON）。
+【公開の実行】既に非公開UP済みの回を公開する（＝現状の通常ケース）ときは **`python3 _tools/publish/publish_episode.py --episode <ep_dir>`** を使う。このツールが (a) EP順ガード（EP(N+1)以外は拒否）と (b) 本編＋その回のShorts3本の同時公開 を保証する。次の土曜18:00 JSTに予約公開したい場合は `--at 2026-MM-DDT18:00:00+09:00` を付ける（本編・Shorts全てに同じ publishAt が入る）。新規アップロード時に直接予約したい場合のみ upload_youtube.py の --publish-at を使う。いずれも上の【公開順序の絶対則】に従うこと。
 完了後、publish_manifest.json をコミット・push し、python3 _tools/publish/gen_upload_status.py で docs/upload-status.md を再生成してコミット（次回ジョブの真実源になる）。
 QA（verify_episode / verify_shorts）が一度でも FAIL したらアップロードせず、原因と現状を報告して停止（不完全な動画は上げない）。
 git はその回専用の新ブランチで作業し push -u origin まで行う。

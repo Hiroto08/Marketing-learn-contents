@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-08-09 05:35 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
+> 自動生成：2026-08-09 05:44 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
 > ブランチにコミット済み。他セッションはこのファイルで最新の到達点を確認できる。
 
 凡例：public=公開済 / private=非公開（公開待ち） / 削除=YouTubeに無い / 未UP=未アップロード / —=対象物なし
@@ -15,7 +15,7 @@
 | EP06 | `ep06_pricing-psychology` | `q7I5eP_-eR4` | public | `yIx-1wNM3nU` `9LVGLlNPCBg` `iCFnGGDAHXU` | public |
 | EP07 | `ep07_4p-4c-mix` | `h4DOXLBXIe4` | public | `9UWuv-HF5oE` `2NkjvLtVUjU` `UJMGQodVN-c` | public |
 | EP08 | `ep08_usp-differentiation` | `kR4cVze8Ito` | public | `OX9e4ssdxoY` `b8-oH6LUwVk` `gWePnm0hIqo` | public |
-| EP09 | `ep09_cpa-ltv` | `ttAbub0eouw` | public | `6fYRo5RvjP4` `9llVEW_M6gg` `KGiIHoni0dA` | private |
+| EP09 | `ep09_cpa-ltv` | `ttAbub0eouw` | public | `6fYRo5RvjP4` `9llVEW_M6gg` `KGiIHoni0dA` | public |
 | EP10 | `ep10_copywriting-5laws` | `EVkSwCcuosE` | private | `Zz_hEf8nqns` `a5jQe-2u2FM` `wyNmdxO2xEQ` | private |
 | EP11 | `ep11_sns-engagement` | `VZKZsOg6sQg` | private | `bfGqXt5yi1g` `IlIJZlksD1w` `FZWP3a1tXmQ` | private |
 | EP12 | `ep12_ab-testing` | `CRFcbyviN0o` | private | `UeI-AnCBmRc` `7knKhSg9A7w` `3zW17hWP8DY` | private |
@@ -32,7 +32,7 @@
 | EP23 | `ep23_failure-cases` | — | 未UP | — | — |
 | EP24 | `ep24_future-marketer` | — | 未UP | — | — |
 
-**集計**：manifest記録 71本中 public=33 / private=38 / 削除=0
+**集計**：manifest記録 71本中 public=36 / private=35 / 削除=0
 
 ## 公開順序（絶対則：飛び級厳禁）
 - 現在 public 済みの最大EP＝**EP09**／次に公開してよいのは**EP10のみ**。
