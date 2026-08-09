@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-07-23 03:45 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
+> 自動生成：2026-08-09 05:35 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
 > ブランチにコミット済み。他セッションはこのファイルで最新の到達点を確認できる。
 
 凡例：public=公開済 / private=非公開（公開待ち） / 削除=YouTubeに無い / 未UP=未アップロード / —=対象物なし
@@ -13,9 +13,9 @@
 | EP04 | `ep04_benefit-vs-feature` | `dVoMSTPfjaQ` | public | `3tgBbO9SgyM` `eQ6aZwe81eY` `gZhv3uUzOLE` | public |
 | EP05 | `ep05_customer-journey` | `3Cqe84Ex1xA` | public | `C5zBAGyPhPg` `B0WRE-CfWyk` `Kmebn5wMCdM` | public |
 | EP06 | `ep06_pricing-psychology` | `q7I5eP_-eR4` | public | `yIx-1wNM3nU` `9LVGLlNPCBg` `iCFnGGDAHXU` | public |
-| EP07 | `ep07_4p-4c-mix` | `h4DOXLBXIe4` | private | `9UWuv-HF5oE` `2NkjvLtVUjU` `UJMGQodVN-c` | private |
-| EP08 | `ep08_usp-differentiation` | `kR4cVze8Ito` | private | `OX9e4ssdxoY` `b8-oH6LUwVk` `gWePnm0hIqo` | private |
-| EP09 | `ep09_cpa-ltv` | `ttAbub0eouw` | private | `6fYRo5RvjP4` `9llVEW_M6gg` `KGiIHoni0dA` | private |
+| EP07 | `ep07_4p-4c-mix` | `h4DOXLBXIe4` | public | `9UWuv-HF5oE` `2NkjvLtVUjU` `UJMGQodVN-c` | public |
+| EP08 | `ep08_usp-differentiation` | `kR4cVze8Ito` | public | `OX9e4ssdxoY` `b8-oH6LUwVk` `gWePnm0hIqo` | public |
+| EP09 | `ep09_cpa-ltv` | `ttAbub0eouw` | public | `6fYRo5RvjP4` `9llVEW_M6gg` `KGiIHoni0dA` | private |
 | EP10 | `ep10_copywriting-5laws` | `EVkSwCcuosE` | private | `Zz_hEf8nqns` `a5jQe-2u2FM` `wyNmdxO2xEQ` | private |
 | EP11 | `ep11_sns-engagement` | `VZKZsOg6sQg` | private | `bfGqXt5yi1g` `IlIJZlksD1w` `FZWP3a1tXmQ` | private |
 | EP12 | `ep12_ab-testing` | `CRFcbyviN0o` | private | `UeI-AnCBmRc` `7knKhSg9A7w` `3zW17hWP8DY` | private |
@@ -25,16 +25,21 @@
 | EP16 | `ep16_ai-chatbot` | `75cAh0oOggk` | private | `Oh03uErojXo` `KX0DzopgbyA` `sSXzopIb964` | private |
 | EP17 | `ep17_brand-equity` | `w2REF-0o1fc` | private | `Ae-I_qOe_uw` `mEt-LbMpCec` `riyV0MK61Oc` | private |
 | EP18 | `ep18_ltv-crm-strategy` | `66yGh5qYznQ` | private | `JCv21G8JOQA` `8OwmvUpYveY` `KJvC4xXDMMI` | private |
-| EP19 | `ep19_marketing-org` | — | 未UP | 未UP | 未UP |
-| EP20 | `ep20_growth-hack` | — | 未UP | 未UP | 未UP |
+| EP19 | `ep19_marketing-org` | `G3muSAmlt24` | private※YT補完 | 未UP | 未UP |
+| EP20 | `ep20_growth-hack` | `O3ANMg1Fdb8` | private※YT補完 | 未UP | 未UP |
 | EP21 | `ep21_hit-products` | — | 未UP | — | — |
 | EP22 | `ep22_v-shaped-recovery` | — | 未UP | — | — |
 | EP23 | `ep23_failure-cases` | — | 未UP | — | — |
 | EP24 | `ep24_future-marketer` | — | 未UP | — | — |
 
-**集計**：manifest記録 69本中 public=24 / private=45 / 削除=0
+**集計**：manifest記録 71本中 public=33 / private=38 / 削除=0
+
+## 公開順序（絶対則：飛び級厳禁）
+- 現在 public 済みの最大EP＝**EP09**／次に公開してよいのは**EP10のみ**。
+- ※本編は必ずEP番号の昇順で公開。先のEPが非公開UP済みでも飛ばして公開しない（詳細 docs/autonomous-operation.md §3.1）。
 
 ## 残作業
-- private の回：Studioで公開（or 公開予約）
-- 各Short：Studioで「関連動画」に本編を設定（API不可）
-- 未UP：EP17〜24（EP20は一旦Studioから削除済み・要再UP）／ EP21〜24は未制作
+- 次に公開：上記「次に公開してよいEP」を public 化（or 次の土曜18:00 JSTに公開予約）
+- private の後続回：EP順を守って順次公開
+- 各Short：Studioで「関連動画」に本編を設定（API不可・docs/shorts-related-video-checklist.md）
+- 未制作：EP21〜24（L3新規制作）
