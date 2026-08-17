@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-08-10 00:13 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
+> 自動生成：2026-08-17 00:18 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
 > ブランチにコミット済み。他セッションはこのファイルで最新の到達点を確認できる。
 
 凡例：public=公開済 / private=非公開（公開待ち） / 削除=YouTubeに無い / 未UP=未アップロード / —=対象物なし
@@ -26,13 +26,13 @@
 | EP17 | `ep17_brand-equity` | `w2REF-0o1fc` | private | `Ae-I_qOe_uw` `mEt-LbMpCec` `riyV0MK61Oc` | private |
 | EP18 | `ep18_ltv-crm-strategy` | `66yGh5qYznQ` | private | `JCv21G8JOQA` `8OwmvUpYveY` `KJvC4xXDMMI` | private |
 | EP19 | `ep19_marketing-org` | `G3muSAmlt24` | private※YT補完 | `5EiVzcWnYcY` `Y6J1pAUvp6g` `VKXMiuSjavY` | private |
-| EP20 | `ep20_growth-hack` | `O3ANMg1Fdb8` | private※YT補完 | 未UP | 未UP |
+| EP20 | `ep20_growth-hack` | `O3ANMg1Fdb8` | private※YT補完 | `l3FUvHcNYEc` `JV1lzXzxx7c` `-o5X_JSyQY4` | private |
 | EP21 | `ep21_hit-products` | — | 未UP | — | — |
 | EP22 | `ep22_v-shaped-recovery` | — | 未UP | — | — |
 | EP23 | `ep23_failure-cases` | — | 未UP | — | — |
 | EP24 | `ep24_future-marketer` | — | 未UP | — | — |
 
-**集計**：manifest記録 74本中 public=36 / private=38 / 削除=0
+**集計**：manifest記録 77本中 public=36 / private=41 / 削除=0
 
 ## 公開順序（絶対則：飛び級厳禁）
 - 現在 public 済みの最大EP＝**EP09**／次に公開してよいのは**EP10のみ**。
