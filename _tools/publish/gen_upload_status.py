@@ -78,6 +78,8 @@ nextep=(max(pubeps)+1) if pubeps else 1
 o.append("\n## 公開順序（絶対則：飛び級厳禁）\n")
 o.append(f"- 現在 public 済みの最大EP＝**EP{max(pubeps):02d}**／次に公開してよいのは**EP{nextep:02d}のみ**。\n" if pubeps else "- まだpublicの本編なし。\n")
 o.append("- ※本編は必ずEP番号の昇順で公開。先のEPが非公開UP済みでも飛ばして公開しない（詳細 docs/autonomous-operation.md §3.1）。\n")
-o.append("\n## 残作業\n- 次に公開：上記「次に公開してよいEP」を public 化（or 次の土曜18:00 JSTに公開予約）\n- private の後続回：EP順を守って順次公開\n- 各Short：Studioで「関連動画」に本編を設定（API不可・docs/shorts-related-video-checklist.md）\n- 未制作：EP21〜24（L3新規制作）\n")
+unmade=[ep for ep,d,main,shorts,hsm,msrc in eps if not main]
+unmade_str=("EP"+"・EP".join(f"{ep:02d}" for ep in unmade)) if unmade else "なし"
+o.append(f"\n## 残作業\n- 次に公開：上記「次に公開してよいEP」を public 化（or 次の土曜18:00 JSTに公開予約）\n- private の後続回：EP順を守って順次公開\n- 各Short：Studioで「関連動画」に本編を設定（API不可・docs/shorts-related-video-checklist.md）\n- 未制作：{unmade_str}（L3新規制作）\n")
 open("docs/upload-status.md","w",encoding="utf-8").write("".join(o))
 print(f"regenerated. public={pub} private={pri} deleted={dele} tracked={len(priv)}")
