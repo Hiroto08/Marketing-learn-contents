@@ -28,7 +28,7 @@ status の意味：
 | EP09 | ep09_cpa-ltv.md | 下書き保存済み | 174283548 | https://editor.note.com/notes/174283548/edit | 2026-08-11 |
 | EP10 | ep10_copywriting-5laws.md | 下書き保存済み | 175444888 | https://editor.note.com/notes/175444888/edit | 2026-08-18 |
 | EP11 | ep11_sns-engagement.md | 下書き保存済み | 176625438 | https://editor.note.com/notes/176625438/edit | 2026-08-25 |
-| EP12 | ep12_ab-testing.md | 生成のまま（校了前） | - | - | - |
+| EP12 | ep12_ab-testing.md | 下書き保存済み | 177845517 | https://editor.note.com/notes/177845517/edit | 2026-09-01 |
 | EP13 | ep13_ai-market-research.md | 生成のまま（校了前） | - | - | - |
 | EP14 | ep14_ai-content-creation.md | 生成のまま（校了前） | - | - | - |
 | EP15 | ep15_ai-data-analysis.md | 生成のまま（校了前） | - | - | - |
