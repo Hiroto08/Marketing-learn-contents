@@ -29,7 +29,7 @@ status の意味：
 | EP10 | ep10_copywriting-5laws.md | 下書き保存済み | 175444888 | https://editor.note.com/notes/175444888/edit | 2026-08-18 |
 | EP11 | ep11_sns-engagement.md | 下書き保存済み | 176625438 | https://editor.note.com/notes/176625438/edit | 2026-08-25 |
 | EP12 | ep12_ab-testing.md | 下書き保存済み | 177845517 | https://editor.note.com/notes/177845517/edit | 2026-09-01 |
-| EP13 | ep13_ai-market-research.md | 生成のまま（校了前） | - | - | - |
+| EP13 | ep13_ai-market-research.md | 下書き保存済み | 179093953 | https://editor.note.com/notes/179093953/edit | 2026-09-08 |
 | EP14 | ep14_ai-content-creation.md | 生成のまま（校了前） | - | - | - |
 | EP15 | ep15_ai-data-analysis.md | 生成のまま（校了前） | - | - | - |
 | EP16 | ep16_ai-chatbot.md | 生成のまま（校了前） | - | - | - |
