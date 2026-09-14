@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-09-07 01:28 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
+> 自動生成：2026-09-14 01:14 UTC ／ ソース＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会
 > ブランチにコミット済み。他セッションはこのファイルで最新の到達点を確認できる。
 
 凡例：public=公開済 / private=非公開（公開待ち） / 削除=YouTubeに無い / 未UP=未アップロード / —=対象物なし
@@ -30,9 +30,9 @@
 | EP21 | `ep21_hit-products` | `K_VbaZCL1zE` | private | `oM4-5LikyTo` `gySkRFXZ-bs` `5bwru3XThg4` | private |
 | EP22 | `ep22_v-shaped-recovery` | `qCVqPmcoJZE` | private | `npVdcb6WkX0` `70U5I68Df1U` `BIGlUgljaWw` | private |
 | EP23 | `ep23_failure-cases` | `oC1oCzRBxpA` | private | `_yrnwzZNvKs` `7GPZiMWNk1s` `l6WZ8BV_aHo` | private |
-| EP24 | `ep24_future-marketer` | — | 未UP | — | — |
+| EP24 | `ep24_future-marketer` | `fUwzpA76OUw` | private | `iI2YMYYHQVk` `OmlvDbc0CjU` `A_vq8EUYT8U` | private |
 
-**集計**：manifest記録 89本中 public=48 / private=41 / 削除=0
+**集計**：manifest記録 93本中 public=48 / private=45 / 削除=0
 
 ## 公開順序（絶対則：飛び級厳禁）
 - 現在 public 済みの最大EP＝**EP12**／次に公開してよいのは**EP13のみ**。
@@ -42,4 +42,4 @@
 - 次に公開：上記「次に公開してよいEP」を public 化（or 次の土曜18:00 JSTに公開予約）
 - private の後続回：EP順を守って順次公開
 - 各Short：Studioで「関連動画」に本編を設定（API不可・docs/shorts-related-video-checklist.md）
-- 未制作：EP24（L3新規制作）
+- 未制作：なし（L3新規制作）
