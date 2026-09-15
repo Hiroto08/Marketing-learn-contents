@@ -30,7 +30,7 @@ status の意味：
 | EP11 | ep11_sns-engagement.md | 下書き保存済み | 176625438 | https://editor.note.com/notes/176625438/edit | 2026-08-25 |
 | EP12 | ep12_ab-testing.md | 下書き保存済み | 177845517 | https://editor.note.com/notes/177845517/edit | 2026-09-01 |
 | EP13 | ep13_ai-market-research.md | 下書き保存済み | 179093953 | https://editor.note.com/notes/179093953/edit | 2026-09-08 |
-| EP14 | ep14_ai-content-creation.md | 生成のまま（校了前） | - | - | - |
+| EP14 | ep14_ai-content-creation.md | 下書き保存済み | 180333349 | https://editor.note.com/notes/180333349/edit | 2026-09-15 |
 | EP15 | ep15_ai-data-analysis.md | 生成のまま（校了前） | - | - | - |
 | EP16 | ep16_ai-chatbot.md | 生成のまま（校了前） | - | - | - |
 | EP17 | ep17_brand-equity.md | 生成のまま（校了前） | - | - | - |
@@ -40,8 +40,8 @@ status の意味：
 
 <!--
 運用メモ：
-- 現在「校了・下書き未保存」は0本。EP12以降を校了させるまで、週次noteジョブは「保存対象なし」で
+- 現在「校了・下書き未保存」は0本。EP15以降を校了させるまで、週次noteジョブは「保存対象なし」で
   安全に停止する（未校了記事は投稿しない）。
-- EP12以降を校了させるには note-production スキル（リライト→パッケージ→校正→QA）を回す。
+- EP15以降を校了させるには note-production スキル（リライト→パッケージ→校正→QA）を回す。
   校了できたら該当行を「校了・下書き未保存」に更新 → 次の火曜ジョブが自動で下書き保存する。
 -->
