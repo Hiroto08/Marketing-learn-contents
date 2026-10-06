@@ -33,7 +33,7 @@ status の意味：
 | EP14 | ep14_ai-content-creation.md | 下書き保存済み | 180333349 | https://editor.note.com/notes/180333349/edit | 2026-09-15 |
 | EP15 | ep15_ai-data-analysis.md | 下書き保存済み | 181552984 | https://editor.note.com/notes/181552984/edit | 2026-09-22 |
 | EP16 | ep16_ai-chatbot.md | 下書き保存済み | 182816598 | https://editor.note.com/notes/182816598/edit | 2026-09-29 |
-| EP17 | ep17_brand-equity.md | 生成のまま（校了前） | - | - | - |
+| EP17 | ep17_brand-equity.md | 下書き保存済み | 184074389 | https://editor.note.com/notes/184074389/edit | 2026-10-06 |
 | EP18 | ep18_ltv-crm-strategy.md | 生成のまま（校了前） | - | - | - |
 | EP19 | ep19_marketing-org.md | 生成のまま（校了前） | - | - | - |
 | EP20 | ep20_growth-hack.md | 生成のまま（校了前） | - | - | - |
