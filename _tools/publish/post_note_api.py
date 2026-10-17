@@ -221,8 +221,8 @@ def my_notes(s) -> dict:
         page += 1
 
 
-def fetch_note(s, key, nid) -> dict:
-    r = s.get(f"{BASE}/api/v3/notes/{key}", params={"draft": "true", "draft_reedit": "false",
+def fetch_note(s, key, nid, draft=True) -> dict:
+    r = s.get(f"{BASE}/api/v3/notes/{key}", params={"draft": "true" if draft else "false", "draft_reedit": "false",
                                                      "ts": int(time.time() * 1000)}, timeout=30)
     if r.status_code in (401, 403):
         sys.exit(f"取得 {r.status_code}：_note_session_v5 Cookie の期限切れの可能性（Secretを更新）")
@@ -260,6 +260,91 @@ def upload_eyecatch(s, nid, png: str) -> str:
     return j["data"]["url"]
 
 
+def note_payload(d, body, name, tags, notify):
+    """PUT /api/v1/text_notes/<id> の本文（2026-10-17 HAR の公開リクエストと同形）"""
+    return {"author_ids": [], "body_length": text_len(body), "disable_comment": bool(d.get("disable_comment")),
+            "exclude_from_creator_top": bool(d.get("exclude_from_creator_top")),
+            "exclude_ai_learning_reward": bool(d.get("exclude_ai_learning_reward")),
+            "free_body": body, "hashtags": tags, "image_keys": [], "index": False, "is_refund": False,
+            "limited": False, "magazine_ids": [], "magazine_keys": list(d.get("belonging_magazine_keys") or []),
+            "name": name, "pay_body": "", "price": 0, "send_notifications_flag": notify, "separator": None,
+            "slug": d.get("slug") or f"slug-{d['key']}", "status": "published", "circle_permissions": [],
+            "discount_campaigns": [], "lead_form": {"is_active": False, "consent_url": ""},
+            "line_add_friend": {"is_active": False, "keyword": "", "add_friend_url": ""},
+            "line_add_friend_access_token": uuid.uuid4().hex, "pro_coupon_keys": []}
+
+
+def put_note(s, nid, payload):
+    r = s.put(f"{BASE}/api/v1/text_notes/{nid}", json=payload, timeout=60)
+    j = r.json() if r.headers.get("content-type", "").startswith("application/json") else {}
+    data = j.get("data") or {}
+    if r.status_code != 200 or data.get("status") != "published":
+        sys.exit(f"公開/更新失敗 {r.status_code}: {r.text[:300]}")
+    return data
+
+
+def with_cta(s, d, ep, body, notes):
+    """本文に YouTube 導線（冒頭の動画埋め込み・章の時刻リンク・末尾の回遊リンク）を差し込む（note_cta.py）"""
+    import note_cta
+    vid, st = note_cta.video_row(ep)
+    if not vid or st != "public":
+        print(f"  （EP{ep:02d} の動画が public でないため導線の差し込みは省略）")
+        return body
+    r = s.get(f"{BASE}/api/v2/embed_by_external_api", params={"url": f"https://youtu.be/{vid}", "service": "youtube",
+                                                              "embeddable_key": d["key"], "embeddable_type": "Note"}, timeout=30)
+    e = (r.json().get("data") or {}) if r.status_code == 200 else {}
+    if not e.get("html_for_embed") or not e.get("key"):
+        print(f"  （動画埋め込みの取得に失敗 {r.status_code}：導線の差し込みは省略）")
+        return body
+    return note_cta.enhance(body, ep, e["html_for_embed"], e["key"], note_cta.next_info(ep, notes, status_rows()))
+
+
+def outline(body):
+    import note_cta
+    out = []
+    for b in note_cta.split_blocks(body):
+        t = note_cta._text(b).strip()
+        if b.startswith("<figure"):
+            out.append("  [動画埋め込み]")
+        elif t.startswith(note_cta.MARKS) or t.startswith("🎬"):
+            out.append("  " + t[:70])
+    return "\n".join(out)
+
+
+def update_cta(ep: int, dry: bool, s=None, notes=None):
+    """公開済みの記事の導線を最新化（冒頭埋め込み・章リンク・次の回など）。本文の他の部分は変えない"""
+    row = status_rows().get(ep)
+    if not row or not row["note_id"].isdigit():
+        print(f"EP{ep:02d}: 状態表に note_id が無い → スキップ")
+        return
+    s = s or session()
+    notes = notes if notes is not None else my_notes(s)
+    nid = int(row["note_id"])
+    n = notes.get(nid)
+    if not n or n["status"] != "published":
+        print(f"EP{ep:02d}: note 上で未公開 → スキップ（公開時に --publish-ep が差し込む）")
+        return
+    d = fetch_note(s, n["key"], nid, draft=False)
+    body, name = d.get("body"), d.get("name")
+    if not body or not name:
+        sys.exit(f"EP{ep:02d}: 公開本文が取得できない → 停止")
+    new = with_cta(s, d, ep, body, notes)
+
+    def norm(h):  # id・埋め込みキー・埋め込み中身の違いは「変更」とみなさない
+        h = re.sub(r'\s(?:name|id|embedded-content-key)="[^"]*"', "", h)
+        return re.sub(r"(<figure[^>]*>).*?</figure>", r"\1</figure>", h, flags=re.S)
+    if norm(new) == norm(body):
+        print(f"EP{ep:02d}: 変更なし")
+        return
+    tags = [h["hashtag"]["name"] for h in d.get("hashtag_notes") or [] if h.get("hashtag", {}).get("name")]
+    print(f"EP{ep:02d}「{name}」 導線を更新:\n{outline(new)}")
+    if dry:
+        print("  [dry] 送信していない")
+        return
+    data = put_note(s, nid, note_payload(d, new, name, tags, notify=False))
+    print(f"  ✓ 更新: {data.get('note_url')}")
+
+
 def publish_ep(ep: int, dry: bool, force: bool):
     row = status_rows().get(ep)
     if not row:
@@ -275,7 +360,8 @@ def publish_ep(ep: int, dry: bool, force: bool):
     png = f"_deliverables/note/thumbnails/ep{ep:02d}.png"
     nid = int(row["note_id"])
     s = session()
-    n = my_notes(s).get(nid)
+    notes = my_notes(s)
+    n = notes.get(nid)
     if not n or not n.get("key"):
         sys.exit(f"note_id {nid} が自分の記事一覧に無い（削除済み？）→ 停止")
     if n["status"] == "published":
@@ -290,19 +376,13 @@ def publish_ep(ep: int, dry: bool, force: bool):
     body, name = draft.get("body") or d.get("body"), draft.get("name") or d.get("name")
     if not body or not name:
         sys.exit("下書き本文/タイトルが取得できない → 停止")
+    body = with_cta(s, d, ep, body, notes)
     tags = hashtags_from(md)
-    payload = {"author_ids": [], "body_length": text_len(body), "disable_comment": False,
-               "exclude_from_creator_top": False, "exclude_ai_learning_reward": False,
-               "free_body": body, "hashtags": tags, "image_keys": [], "index": False, "is_refund": False,
-               "limited": False, "magazine_ids": [], "magazine_keys": [], "name": name, "pay_body": "",
-               "price": 0, "send_notifications_flag": True, "separator": None, "slug": d.get("slug") or f"slug-{d['key']}",
-               "status": "published", "circle_permissions": [], "discount_campaigns": [],
-               "lead_form": {"is_active": False, "consent_url": ""},
-               "line_add_friend": {"is_active": False, "keyword": "", "add_friend_url": ""},
-               "line_add_friend_access_token": uuid.uuid4().hex, "pro_coupon_keys": []}
+    payload = note_payload(d, body, name, tags, notify=True)
     eyecatch = d.get("eyecatch")
     print(f"EP{ep:02d} id={nid} key={d.get('key')}「{name}」 本文{payload['body_length']}字 タグ{len(tags)}個 "
           f"見出し画像={'設定済み' if eyecatch else ('アップロード予定 ' + png if os.path.exists(png) else 'なし')}")
+    print(outline(body))
     if dry:
         print("[dry] 読み取りのみ。アップロード・公開はしていない")
         return
@@ -310,13 +390,23 @@ def publish_ep(ep: int, dry: bool, force: bool):
         if not os.path.exists(png):
             sys.exit(f"見出し画像 {png} が無い → make_note_thumbnail.py で生成してから再実行")
         print("  見出し画像:", upload_eyecatch(s, nid, png))
-    r = s.put(f"{BASE}/api/v1/text_notes/{nid}", json=payload, timeout=60)
-    j = r.json() if r.headers.get("content-type", "").startswith("application/json") else {}
-    data = j.get("data") or {}
-    if r.status_code != 200 or data.get("status") != "published":
-        sys.exit(f"公開失敗 {r.status_code}: {r.text[:300]}")
+    data = put_note(s, nid, payload)
     set_status(ep, f"公開済み {dt.datetime.now(dt.timezone(dt.timedelta(hours=9))):%Y-%m-%d}")
     print(f"✓ 公開: {data.get('note_url')}  （{STATUS} を更新）")
+    # 前の回の「次の回」リンクをこの回の記事URLへ更新（非致命）
+    if ep > 1:
+        try:
+            update_cta(ep - 1, False, s, my_notes(s))
+        except SystemExit as e:
+            print(f"  （EP{ep - 1:02d} の導線更新に失敗：{e}）")
+
+
+def ep_list(spec: str):
+    out = []
+    for part in spec.split(","):
+        a, _, b = part.partition("-")
+        out += list(range(int(a), int(b or a) + 1))
+    return out
 
 
 def main():
@@ -325,11 +415,18 @@ def main():
     g.add_argument("--file", help="下書き作成するMarkdown")
     g.add_argument("--publish-ep", type=int, help="この回の下書きを公開（見出し画像も設定）")
     g.add_argument("--sync-status", action="store_true", help="note上の公開状態を状態表に取り込む（読み取りのみ）")
+    g.add_argument("--update-cta", help="公開済み記事のYouTube導線を最新化（例 12 / 1-12 / 3,5）")
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--force", action="store_true", help="--publish-ep で YouTube 公開チェックを省略")
     a = ap.parse_args()
     if a.sync_status:
         sync_status()
+        return
+    if a.update_cta:
+        s = session()
+        notes = my_notes(s)
+        for ep in ep_list(a.update_cta):
+            update_cta(ep, a.dry_run, s, notes)
         return
     if a.publish_ep:
         publish_ep(a.publish_ep, a.dry_run, a.force)

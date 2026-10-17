@@ -21,7 +21,8 @@ git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude
 - `_deliverables/note/note-draft-status.md` … 下書き/公開の状態（行の status：生成のまま → 校了・下書き未保存 → 下書き保存済み → 公開済み YYYY-MM-DD）
 - `_deliverables/note/note-publish-schedule.md` … 公開スケジュール（毎日20:00 JST・EP順・動画公開日より前には出さない。`_tools/publish/note_publish_schedule.py` で再生成）
 - 自動ジョブ：火曜9:00「週次note自動化ジョブ」（1回2話を校了→下書き保存。公開はしない）／毎日19:55「note 毎日公開ジョブ」（`post_note_api.py --publish-ep NN` で当日分を公開＋見出し画像設定＋状態表更新）
-- 公開ツール：`python3 _tools/publish/post_note_api.py --publish-ep NN [--dry-run]`（下書き保存済み・YouTube本編 public の回のみ）／`--sync-status`（note上の公開状態を状態表へ取り込み）
+- 公開ツール：`python3 _tools/publish/post_note_api.py --publish-ep NN [--dry-run]`（下書き保存済み・YouTube本編 public の回のみ）／`--sync-status`（note上の公開状態を状態表へ取り込み）／`--update-cta 1-12`（公開済み記事のYouTube導線を最新化）
+- YouTube導線（`_tools/publish/note_cta.py`、公開時に自動差し込み・冪等）：①リード直後に「図解つきの動画版」＋動画プレーヤー埋め込み ②真ん中の見出し前に「この章は動画の M:SS から」時刻リンク ③末尾に全24話の再生リスト・チャンネル登録（sub_confirmation）・次の回（動画/記事）。公開時は前の回の「次の回」も自動更新。記事Markdown側に導線を手書きしない
 - 同じ回を手作業で校了・下書き保存・公開したら、**その場で状態表を更新して上記ブランチへ書き戻す**（しないとジョブが二重処理する）
 - ルーティンのプロンプトを書き換えるときは現行内容（1回2話・基点ブランチ）を引き継ぐ
 
