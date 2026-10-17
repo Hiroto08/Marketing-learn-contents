@@ -1,6 +1,6 @@
 # note 公開スケジュール
 
-> 自動生成 2026-10-17 17:58 JST（`python3 _tools/publish/note_publish_schedule.py`）。毎日20:00 JSTに1本・EP順。EPnの記事は動画EPnの公開日より前に出さない（追いついた後は動画と同日）。
+> 自動生成 2026-10-17 18:00 JST（`python3 _tools/publish/note_publish_schedule.py`）。毎日20:00 JSTに1本・EP順。EPnの記事は動画EPnの公開日より前に出さない（追いついた後は動画と同日）。
 > 公開は毎日19:55 JSTの「note 毎日公開ジョブ」が `post_note_api.py --publish-ep NN` で自動実行（見出し画像 `_deliverables/note/thumbnails/epNN.png` も自動設定・状態表も自動更新）。手動で公開した回は `post_note_api.py --sync-status` で状態表に取り込まれる。
 
 | 公開予定 | EP | タイトル | 動画公開日 | 下書きstatus | 編集URL |
@@ -16,12 +16,12 @@
 | 公開済み | EP09 | 広告費、その計算だと赤字です【CPAとLTV】 | 公開済み | 公開済み 2026-09-06 | https://editor.note.com/notes/174283548/edit |
 | 公開済み | EP10 | 1行で売上が変わる伝え方【コピーライティング】 | 公開済み | 公開済み 2026-09-19 | https://editor.note.com/notes/175444888/edit |
 | 公開済み | EP11 | フォロワー1万人で売上0円の理由【SNS運用】 | 公開済み | 公開済み 2026-10-17 | https://editor.note.com/notes/176625438/edit |
-| 10/18(Sun) 20:00 | EP12 | その改善、気のせいかもしれません【ABテスト】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/177845517/edit |
-| 10/19(Mon) 20:00 | EP13 | AI任せの市場調査が危ない理由【プロンプトの型】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/179093953/edit |
-| 10/20(Tue) 20:00 | EP14 | AI任せの記事量産が、没個性になる理由【記事作成】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/180333349/edit |
-| 10/21(Wed) 20:00 | EP15 | 1000件の声を10分で読む【ChatGPT分析】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/181552984/edit |
-| 10/22(Thu) 20:00 | EP16 | 嫌われるチャットボットの共通点【AI接客の設計】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/182816598/edit |
-| 10/23(Fri) 20:00 | EP17 | 広告をやめても売れる状態の作り方【ブランディング】 | 10/21(Wed) | 下書き保存済み | https://editor.note.com/notes/184074389/edit |
+| 公開済み | EP12 | その改善、気のせいかもしれません【ABテスト】 | 公開済み | 公開済み 2026-10-17 | https://editor.note.com/notes/177845517/edit |
+| 10/18(Sun) 20:00 | EP13 | AI任せの市場調査が危ない理由【プロンプトの型】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/179093953/edit |
+| 10/19(Mon) 20:00 | EP14 | AI任せの記事量産が、没個性になる理由【記事作成】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/180333349/edit |
+| 10/20(Tue) 20:00 | EP15 | 1000件の声を10分で読む【ChatGPT分析】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/181552984/edit |
+| 10/21(Wed) 20:00 | EP16 | 嫌われるチャットボットの共通点【AI接客の設計】 | 公開済み | 下書き保存済み | https://editor.note.com/notes/182816598/edit |
+| 10/22(Thu) 20:00 | EP17 | 広告をやめても売れる状態の作り方【ブランディング】 | 10/21(Wed) | 下書き保存済み | https://editor.note.com/notes/184074389/edit |
 | 10/24(Sat) 20:00 | EP18 | 新規客を追うほど利益が減る理由【CRM入門】 | 10/24(Sat) | 下書き保存済み | https://editor.note.com/notes/185292968/edit |
 | 10/28(Wed) 20:00 | EP19 | マーケが機能しない組織の共通点【P&Gに学ぶ】 | 10/28(Wed) | 生成のまま（校了前） | - |
 | 10/31(Sat) 20:00 | EP20 | 広告費ゼロで増え続けた会社の仕組み【グロースハック】 | 10/31(Sat) | 生成のまま（校了前） | - |
