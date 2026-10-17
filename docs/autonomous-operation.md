@@ -37,7 +37,15 @@ Routine（スケジュール起動）で「毎週：次話をL3制作 → QA →
 ### 3.1 制作・配信ジョブ（週1・例：毎週月曜）※upload-status.md基準
 
 ```
-週次配信ジョブ。まず docs/upload-status.md（＝各話 publish_manifest.json の videoId を YouTube videos.list で実照会した状態表）を最新化し、それを唯一の真実として次の1本を決める。
+週次配信ジョブ。
+
+【0. 開始時の同期（必須・停滞事故の教訓 2026-10）】判断の前に必ず次を実行する：
+  git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude/build-upload-bqpddd
+  python3 -m pip install -q requests 2>/dev/null; python3 _tools/publish/gen_upload_status.py
+→ docs/upload-status.md を YouTube 実体から再生成してから判断する（ブランチ上の古い表で判断しない）。
+回の判定は動画タグ mlab-epNN（本編）/ mlab-epNN-sM（Short）。公開タイトルには「第N回：」を付けない（upload_youtube.py が自動で外し、タグを自動付与する）。タイトル照合で「未UP」と判定しないこと。
+
+それを唯一の真実として次の1本を決める。
 
 【公開順序の絶対則（最重要・EP20飛び級公開事故の教訓 2026-08）】
 「アップロード（非公開ドラフト作成）」と「公開（public化・--publish-at での公開予約を含む）」は別物として扱う。公開は必ずEP番号の昇順で、飛び級厳禁。
@@ -54,8 +62,15 @@ Routine（スケジュール起動）で「毎週：次話をL3制作 → QA →
 アップロード（非公開ドラフト作成）は yt-uploader（upload_youtube.py・AI合成開示 既定ON）。
 【公開の実行】既に非公開UP済みの回を公開する（＝現状の通常ケース）ときは **`python3 _tools/publish/publish_episode.py --episode <ep_dir>`** を使う。このツールが (a) EP順ガード（EP(N+1)以外は拒否）と (b) 本編＋その回のShorts3本の同時公開 を保証する。次の土曜18:00 JSTに予約公開したい場合は `--at 2026-MM-DDT18:00:00+09:00` を付ける（本編・Shorts全てに同じ publishAt が入る）。新規アップロード時に直接予約したい場合のみ upload_youtube.py の --publish-at を使う。いずれも上の【公開順序の絶対則】に従うこと。
 完了後、publish_manifest.json をコミット・push し、python3 _tools/publish/gen_upload_status.py で docs/upload-status.md を再生成してコミット（次回ジョブの真実源になる）。
+【公開・アップ後の付帯処理（各回・非致命）】
+- 字幕：本編を新規アップ or 公開した回は python3 _tools/publish/upload_captions.py --episode <ep_dir>（台本ナレーションから正確な日本語字幕。400単位/本。既に字幕ありならスキップ）。
+- 再生リスト：python3 _tools/publish/sync_playlists.py（全話・章別・Shortsまとめに不足分だけEP順位置へ追加。冪等）。
+- クォータ（1日約10,000単位・16:00 JSTリセット）が尽きたら付帯処理は次回に回してよい（どちらも再実行で続きから処理）。
 QA（verify_episode / verify_shorts）が一度でも FAIL したらアップロードせず、原因と現状を報告して停止（不完全な動画は上げない）。
 git はその回専用の新ブランチで作業し push -u origin まで行う。
+【終了時の書き戻し（必須）】作業ブランチの成果（manifest・upload-status.md・メール案等）を基点ブランチへ戻す：
+  git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude/build-upload-bqpddd && git push origin HEAD:claude/build-upload-bqpddd
+（コンフリクト時は docs/upload-status.md を gen_upload_status.py で再生成して解消。他は報告して手動判断を仰ぐ）。これを怠ると次回ジョブが古い状態表から始まり停止・二重アップの原因になる。
 
 【追加ステップ・メンバー向けメール案の同時生成（本編を新規アップ/公開予約した回のみ・アップと同じタイミング）】この回で本編動画を新規に非公開アップロード（または公開予約）した場合、そのアップと同じタイミングで当該本編EPのメーリングリスト向けブロードキャストメール案を生成する。
 1. make_broadcast.py が作業ブランチに無ければ note-articles から取り込む：git checkout origin/claude/note-articles -- _tools/repurpose/make_broadcast.py
@@ -65,6 +80,8 @@ Shortsのみ／本編の新規アップが無い回はスキップ。メール�
 ```
 
 > **注意（stale事故の教訓）**：`publish_manifest.json` は作業ブランチによって有無が食い違う。必ず `docs/upload-status.md`（実照会済み）を真実源にすること。ローカルに manifest が無い＝未UP とは限らない。
+>
+> **停滞事故（2026-10）**：各実行ブランチが基点 `claude/build-upload-bqpddd` に戻されず、基点が 08-09 時点で凍結 → 以後のジョブが古い状態表を見てガード停止（38秒で終了）／二重アップを起こした。対策＝上記【0. 開始時の同期】と【終了時の書き戻し】、および状態表の YouTube 実体＋タグ判定化（`_tools/publish/yt_index.py`）。
 
 ### 3.2 分析ジョブ（週1・例：毎週火曜）
 
