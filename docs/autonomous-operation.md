@@ -63,6 +63,7 @@ Routine（スケジュール起動）で「毎週：次話をL3制作 → QA →
 【公開の実行】既に非公開UP済みの回を公開する（＝現状の通常ケース）ときは **`python3 _tools/publish/publish_episode.py --episode <ep_dir>`** を使う。このツールが (a) EP順ガード（EP(N+1)以外は拒否）と (b) 本編＋その回のShorts3本の同時公開 を保証する。特定の枠に予約公開したい場合は `--at 2026-MM-DDT18:00:00+09:00` を付ける（本編・Shorts全てに同じ publishAt が入る）。新規アップロード時に直接予約したい場合のみ upload_youtube.py の --publish-at を使う。いずれも上の【公開順序の絶対則】に従うこと。
 完了後、publish_manifest.json をコミット・push し、python3 _tools/publish/gen_upload_status.py で docs/upload-status.md を再生成してコミット（次回ジョブの真実源になる）。
 【公開予約の連鎖（2026-10-17〜・既定運用）】非公開UP済みの回は **`python3 _tools/publish/publish_episode.py --schedule-all`** で「毎週 水・土 18:00 JST（週2本）・EP順・本編＋Shorts同時刻」の公開予約を張る（予約済みは動かさず、末尾から延長するだけ＝毎週流して安全）。即時公開は、予約の枠を過ぎても非公開のまま残った回（予約失敗・TIMED回の単発実行が失敗した等）を拾うときだけ `--episode <dir>` で行う。出力に `TIMED EPnn` が出た回（過去に一度公開された動画は publishAt 不可）は報告に明記する（その時刻に即時公開する単発スケジュールが必要）。
+【メールの予約送信（2026-10-17〜）】環境変数 KIT_API_KEY（Kit → Settings → Developer の v4 API キー）があれば `python3 _tools/repurpose/schedule_kit_broadcasts.py` で、公開予約済みの各回のメール草稿を「動画の publishAt と同時刻」の Kit 予約ブロードキャストとして登録する（description のマーカー mlab-epNN で冪等）。TIMED 回は `--episode <dir> --send-at <RFC3339>`。宛先を絞るときは KIT_SEGMENT_ID / KIT_TAG_ID。キーが無い間は従来どおり人間が Kit で予約。
 【公開・アップ後の付帯処理（各回・非致命）】
 - 字幕：本編を新規アップ or 公開した回は python3 _tools/publish/upload_captions.py --episode <ep_dir>（台本ナレーションから正確な日本語字幕。400単位/本。既に字幕ありならスキップ）。
 - 再生リスト：python3 _tools/publish/sync_playlists.py（全話・章別・Shortsまとめに不足分だけEP順位置へ追加。冪等）。
