@@ -8,6 +8,9 @@
 ペルソナの作り方、間違っていませんか？初心者ほどやりがちな失敗を、Soup Stock Tokyoの伝説の企画書「秋野つゆ」1本で解説します。
 丁寧に属性を書き込んだペルソナほど役に立たない本当の理由と、実際に売上を生む「たった1人」の描き方が10分で分かります。
 
+▼【無料】マーケの型 全20話まとめ＆実践チートシート（PDF）を配布中
+👉 https://witty-composer-9473.kit.com/ac0f4ce77b
+
 多くの人は、年齢・性別・年収…と属性を細かく埋めれば良いペルソナになると考えます。しかし本当に大事なのは「この人は好むか?」と判断が下せる、生きた1人になっているかどうかです。
 
 この動画では以下を解説します：
@@ -106,4 +109,20 @@ https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 7:42 丁寧ほど役立たない理由
 8:09 まとめ・明日やること
 8:44 次回予告
+```
+
+---
+
+## アフィリエイト
+
+```
+――――――――――
+📚 この動画で触れた本（Amazonアソシエイトのリンク）
+
+・『スープで、いきます 商社マンがSoup Stock Tokyoを作る』／遠山正道
+　https://www.amazon.co.jp/s?k=%E9%81%A0%E5%B1%B1%E6%AD%A3%E9%81%93+%E3%82%B9%E3%83%BC%E3%83%97%E3%81%A7%E3%80%81%E3%81%84%E3%81%8D%E3%81%BE%E3%81%99+%E5%95%86%E7%A4%BE%E3%83%9E%E3%83%B3%E3%81%8CSoup+Stock+Tokyo%E3%82%92%E4%BD%9C%E3%82%8B&tag=aicreateslife-22
+・『The Inmates Are Running the Asylum』／Alan Cooper
+　https://www.amazon.co.jp/s?k=Alan+Cooper+The+Inmates+Are+Running+the+Asylum&tag=aicreateslife-22
+
+※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
 ```

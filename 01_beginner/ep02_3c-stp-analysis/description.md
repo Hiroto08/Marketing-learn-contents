@@ -8,6 +8,9 @@
 STP分析のやり方を、10分1000円カット「QBハウス」の実話1本で解説。売る相手の決め方が分かります。
 客を絞ったのに、のべ3億人が来た——「全員に売ろうとすると誰にも売れない」理由と、勘に頼らず売る相手を決める手順を10分で。
 
+▼【無料】マーケの型 全20話まとめ＆実践チートシート（PDF）を配布中
+👉 https://witty-composer-9473.kit.com/ac0f4ce77b
+
 良い商品なのに売れないとき、多くの人はもっと広く宣伝しようとします。しかし先に決めるべきは「誰に売って、誰に売らないか」のほうです。
 
 この動画では以下のことを解説します：
@@ -109,4 +112,20 @@ https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 8:07 答え合わせ
 8:45 まとめ
 9:16 次回予告
+```
+
+---
+
+## アフィリエイト
+
+```
+――――――――――
+📚 この動画で触れた本（Amazonアソシエイトのリンク）
+
+・『The Mind of the Strategist』／大前研一
+　https://www.amazon.co.jp/s?k=%E5%A4%A7%E5%89%8D%E7%A0%94%E4%B8%80+The+Mind+of+the+Strategist&tag=aicreateslife-22
+・『マーケティング・マネジメント』／Philip Kotler & Kevin Keller
+　https://www.amazon.co.jp/s?k=Philip+Kotler+%26+Kevin+Keller+%E3%83%9E%E3%83%BC%E3%82%B1%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B0%E3%83%BB%E3%83%9E%E3%83%8D%E3%82%B8%E3%83%A1%E3%83%B3%E3%83%88&tag=aicreateslife-22
+
+※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
 ```

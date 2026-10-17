@@ -8,6 +8,9 @@
 カスタマージャーニーの作り方を、広告に頼らず上場した実在の店の実話で解説します。
 広告のクリックはあるのに売れない――その本当の理由は「買うまでの道筋（5段階）」が用意されていないことです。
 
+▼【無料】マーケの型 全20話まとめ＆実践チートシート（PDF）を配布中
+👉 https://witty-composer-9473.kit.com/ac0f4ce77b
+
 「北欧、暮らしの道具店」を運営するクラシコムは、商品ページより先に「暮らしの読みもの」を配信し、
 「知る→好きになる→買う→また来る」という道筋そのものを設計。大きな広告費に頼らないまま、
 アプリ経由売上を全体の約8割まで伸ばし、2022年に東証グロース市場へ上場しました。
@@ -112,3 +115,17 @@ https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 7:52 次回予告
 ```
 </content>
+
+---
+
+## アフィリエイト
+
+```
+――――――――――
+📚 この動画で触れた本（Amazonアソシエイトのリンク）
+
+・『マーケティング4.0』／Philip Kotler, Hermawan Kartajaya, Iwan Setiawan
+　https://www.amazon.co.jp/s?k=Philip+Kotler%2C+Hermawan+Kartajaya%2C+Iwan+Setiawan+%E3%83%9E%E3%83%BC%E3%82%B1%E3%83%86%E3%82%A3%E3%83%B3%E3%82%B04.0&tag=aicreateslife-22
+
+※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
+```

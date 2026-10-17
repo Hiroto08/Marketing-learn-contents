@@ -7,6 +7,9 @@
 ```
 【第13回】AIで市場調査を10倍速くする。プロンプトのコツ
 
+▼【無料】マーケの型 全20話まとめ＆実践チートシート（PDF）を配布中
+👉 https://witty-composer-9473.kit.com/ac0f4ce77b
+
 競合サイトを1社ずつ巡回し、インタビューの録音を聞き直し、レポートを1から書く——
 その市場調査、まだ数日かけていませんか。
 AI活用編スタートの今回は、AIを「正しく」使って市場調査を高速化するための
@@ -107,4 +110,18 @@ https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 6:50 実例：10倍速化ワークフロー
 7:20 まとめ
 7:53 次回予告
+```
+
+---
+
+## アフィリエイト
+
+```
+――――――――――
+📚 この動画で触れた本（Amazonアソシエイトのリンク）
+
+・『The Mom Test』／Rob Fitzpatrick
+　https://www.amazon.co.jp/s?k=Rob+Fitzpatrick+The+Mom+Test&tag=aicreateslife-22
+
+※上記はAmazonアソシエイトのリンクです。当チャンネルは適格販売により収入を得ています。
 ```
