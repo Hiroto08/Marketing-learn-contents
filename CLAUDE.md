@@ -42,7 +42,8 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
    postbuild_episode）。FAIL時は pipeline.md のプレイブック表に従う
 2. **エンジンを編集しない**——slide.html/stage.html の keyframes・rv-*・`.se`・`#__heartbeat`。
    Shortsの見た目は spec.py だけを編集し gen_stage.py で再生成する
-3. **アップロードは常にprivate**。公開ボタンは人間がStudioで押す
+3. **アップロードは常にprivate**。公開は `publish_episode.py`（`--schedule-all` の週次予約連鎖 or `--episode`）経由でのみ行い、
+   **EP番号の昇順・本編＋同回Shorts同時**を厳守（飛び級厳禁。docs/autonomous-operation.md §3.1）
 4. mp4はコミットしない（gitignore済み）。spec.py / stage.html / thumbnail.png /
    publish_manifest.json / タイムスタンプ修正は**コミットする**
 5. ナレーション・タイムスタンプを目分量で書かない（文字一致検査と実測書き戻しがある）
