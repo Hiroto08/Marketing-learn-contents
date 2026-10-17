@@ -57,6 +57,18 @@ def main():
     o.append(f"- 現在 public 済みの最大EP＝**EP{n:02d}**／次に公開してよいのは**EP{n + 1:02d}のみ**"
              f"（`python3 _tools/publish/publish_episode.py --episode <dir>` で本編＋Shortsを同時公開）。\n")
     o.append("- 本編は必ずEP番号の昇順で公開。先のEPが非公開UP済みでも飛ばさない（docs/autonomous-operation.md §3.1）。\n")
+    cal = [(ep, s["items"][s["main"]]["status"]["publishAt"]) for ep, s in sorted(idx.items())
+           if s["main"] and privacy(s["items"][s["main"]]) == "private" and s["items"][s["main"]]["status"].get("publishAt")]
+    o.append("\n## 公開予約カレンダー（本編＋同回Shortsが同時刻）\n")
+    if cal:
+        jst = datetime.timezone(datetime.timedelta(hours=9))
+        for ep, at in cal:
+            t = datetime.datetime.fromisoformat(at.replace("Z", "+00:00")).astimezone(jst)
+            o.append(f"- EP{ep:02d}：{t:%Y-%m-%d (%a) %H:%M} JST\n")
+    else:
+        o.append("- なし\n")
+    o.append("- 延長・組み直し：`python3 _tools/publish/publish_episode.py --schedule-all [--start <RFC3339>]`"
+             "（予約不可の回は TIMED と表示 → その時刻に即時公開する単発スケジュールで対応）\n")
     o.append("\n## 残作業\n"
              "- 次に公開：上記「次に公開してよいEP」を public 化（or 次の土曜18:00 JSTに公開予約）\n"
              "- 各Short：Studioで「関連動画」に本編を設定（API不可・docs/shorts-related-video-checklist.md）\n"
