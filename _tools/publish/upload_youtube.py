@@ -101,6 +101,9 @@ def episode_metadata(ep_dir: str) -> dict:
     head = md.splitlines()[0]
     m = re.search(r"— (.+)$", head)
     title = m.group(1).strip() if m else os.path.basename(ep_dir)
+    # 「第N回：」は公開タイトルに入れない（新規視聴者に“1話から”を強いる・検索表示の先頭を浪費）。
+    # 回の識別はタグ mlab-epNN で行う（gen_upload_status / publish_episode が参照）
+    title = strip_episode_prefix(title)
 
     parts = []
     for sec in ["メイン説明文", "タイムスタンプ", "シリーズ再生リスト", "関連動画", "参考・補足リソース", "アフィリエイト"]:
@@ -117,8 +120,18 @@ def episode_metadata(ep_dir: str) -> dict:
         parts.append(" ".join(hashtags[:15]))
     description = "\n\n".join(parts)
     # YouTube制限: description<=5000文字・タグ合計<=500文字
-    tags = [h.lstrip("#") for h in hashtags][:20]
+    tags = [h.lstrip("#") for h in hashtags][:18] + series_tags(ep_dir)
     return {"title": title[:100], "description": description[:4990], "tags": tags}
+
+
+def strip_episode_prefix(title: str) -> str:
+    return re.sub(r"^第\s*\d+\s*回\s*[：:]\s*", "", title)
+
+
+def series_tags(ep_dir: str, short_n: int = 0) -> list:
+    """回を識別する追跡タグ（視聴者には見えない）。short_n>0 なら Shorts 用"""
+    ep = int(re.search(r"ep(\d+)", os.path.basename(ep_dir.rstrip("/"))).group(1))
+    return ["mlab-series", f"mlab-ep{ep:02d}" + (f"-s{short_n}" if short_n else "")]
 
 
 def _episode_video_url(ep_dir: str) -> str | None:
@@ -136,7 +149,7 @@ def _episode_video_url(ep_dir: str) -> str | None:
 def shorts_metadata(ep_dir: str) -> list:
     md = open(f"{ep_dir}/shorts.md", encoding="utf-8").read()
     ep_title_m = re.search(r"— (.+)$", md.splitlines()[0])
-    ep_title = ep_title_m.group(1).strip() if ep_title_m else ""
+    ep_title = strip_episode_prefix(ep_title_m.group(1).strip()) if ep_title_m else ""
     # エピソード固有のハッシュタグを description.md から流用（ニッチタグの補強）
     niche = []
     dpath = f"{ep_dir}/description.md"
@@ -158,7 +171,8 @@ def shorts_metadata(ep_dir: str) -> list:
                 f"{link_lines}"
                 f"※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。\n\n"
                 f"{hashtag_line}")
-        out.append({"n": n, "title": title[:100], "description": desc, "tags": tags})
+        out.append({"n": n, "title": title[:100], "description": desc,
+                    "tags": tags + series_tags(ep_dir, n)})
     return out
 
 
