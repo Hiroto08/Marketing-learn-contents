@@ -62,6 +62,7 @@ Routine（スケジュール起動）で「毎週：次話をL3制作 → QA →
 アップロード（非公開ドラフト作成）は yt-uploader（upload_youtube.py・AI合成開示 既定ON）。
 【公開の実行】既に非公開UP済みの回を公開する（＝現状の通常ケース）ときは **`python3 _tools/publish/publish_episode.py --episode <ep_dir>`** を使う。このツールが (a) EP順ガード（EP(N+1)以外は拒否）と (b) 本編＋その回のShorts3本の同時公開 を保証する。次の土曜18:00 JSTに予約公開したい場合は `--at 2026-MM-DDT18:00:00+09:00` を付ける（本編・Shorts全てに同じ publishAt が入る）。新規アップロード時に直接予約したい場合のみ upload_youtube.py の --publish-at を使う。いずれも上の【公開順序の絶対則】に従うこと。
 完了後、publish_manifest.json をコミット・push し、python3 _tools/publish/gen_upload_status.py で docs/upload-status.md を再生成してコミット（次回ジョブの真実源になる）。
+【公開予約の連鎖（2026-10-17〜・既定運用）】非公開UP済みの回は **`python3 _tools/publish/publish_episode.py --schedule-all`** で「毎週土曜18:00 JST・EP順・本編＋Shorts同時刻」の公開予約を張る（予約済みは動かさず、末尾から延長するだけ＝毎週流して安全）。即時公開は、予約の枠を過ぎても非公開のまま残った回（予約失敗・TIMED回の単発実行が失敗した等）を拾うときだけ `--episode <dir>` で行う。出力に `TIMED EPnn` が出た回（過去に一度公開された動画は publishAt 不可）は報告に明記する（その時刻に即時公開する単発スケジュールが必要）。
 【公開・アップ後の付帯処理（各回・非致命）】
 - 字幕：本編を新規アップ or 公開した回は python3 _tools/publish/upload_captions.py --episode <ep_dir>（台本ナレーションから正確な日本語字幕。400単位/本。既に字幕ありならスキップ）。
 - 再生リスト：python3 _tools/publish/sync_playlists.py（全話・章別・Shortsまとめに不足分だけEP順位置へ追加。冪等）。
@@ -92,6 +93,7 @@ retention-packaging.md §7 に「- YYYY-MM-DD EP◯◯: 事象 → ルール変�
 毎月最初の実行時は python3 _tools/publish/fetch_analytics.py --channel --days 28 も実行し、
 monetization-strategy.md §4.2 の表とYPP進捗（総再生時間/登録者）を突合して報告。
 異常（CTR<2% や 30秒残存<60%）があれば次回への具体的な変更指示を1〜3件添えて報告。
+毎回（Analytics の可否に関係なく）python3 _tools/publish/weekly_stats.py で公開統計スナップショット（docs/stats/YYYY-MM-DD.json）と前週比レポート（docs/weekly-stats.md）を作りコミット。fetch_analytics.py が 403（yt-analytics.readonly 未認可）の間は、この weekly_stats の前週比だけで「伸びた/伸びない回・登録者推移」を報告して正常終了する。
 ```
 
 **登録方法**：`create_trigger` で cron（最小粒度は毎時、**UTCで指定**）。fresh-session（`create_new_session_on_fire=true`）で毎回クリーンに走らせるのが安全。
@@ -119,6 +121,7 @@ JST(UTC+9)→UTCは9時間引く（引いて日をまたぐ場合は曜日もず
 > 2. **真実源はブランチ依存**：`docs/upload-status.md`・`gen_upload_status.py` は YouTube作業ブランチ側の資産。fresh-sessionがcloneするデフォルトブランチにこれらが無いと機能しない。**これらを持つブランチをデフォルトにマージしてから**恒常運用に乗せること。
 > 3. 以前の2本（`trig_01RmfF…`／`trig_018EMU…`）は stale前提だったため削除済み。上表が現行。
 > 4. **2026-10-17 プロンプト更新**：アップロード配信ジョブは「`origin/claude/build-upload-bqpddd` を基点 → 開始時に gen_upload_status.py で再生成 → publish_episode.py でEP順公開 → 字幕・再生リスト同期 → 基点へ書き戻し（拒否時は作業ブランチのみ）」に変更。既定ブランチの古い upload-status.md（07-23）を掴んでガード停止していた問題の対策。
+> 6. **2026-10-17 予約運用へ移行**：EP17〜24 を毎週土曜18:00 JST に予約（EP24＝12/12 で全話完結）。配信ジョブは毎週 `--schedule-all` で連鎖を維持し、字幕・再生リスト・メール案の残りを処理する。分析ジョブは Analytics 未認可でも `weekly_stats.py` で週次推移を記録する。
 > 5. **クォータ配分**：月曜 0:00 UTC 実行は「日曜16:00 JST開始のクォータ日」の後半にあたる。日曜に手動で大量消費（字幕一括等）するときは配信ジョブ用に4,000単位以上残すこと。
 
 ## 4. 毎週残る人手（Studio・APIで自動化不可）※合計数分
