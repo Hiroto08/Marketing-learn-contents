@@ -123,7 +123,7 @@ JST(UTC+9)→UTCは9時間引く（引いて日をまたぐ場合は曜日もず
 > 3. 以前の2本（`trig_01RmfF…`／`trig_018EMU…`）は stale前提だったため削除済み。上表が現行。
 > 4. **2026-10-17 プロンプト更新**：アップロード配信ジョブは「`origin/claude/build-upload-bqpddd` を基点 → 開始時に gen_upload_status.py で再生成 → publish_episode.py でEP順公開 → 字幕・再生リスト同期 → 基点へ書き戻し（拒否時は作業ブランチのみ）」に変更。既定ブランチの古い upload-status.md（07-23）を掴んでガード停止していた問題の対策。
 > 6. **2026-10-17 予約運用へ移行**：EP17〜24 を毎週 水・土 18:00 JST（週2本）に予約（EP17＝10/21 〜 EP24＝11/14 で全話完結。2026-10-17 ユーザー指示で週1→週2）。配信ジョブは毎週 `--schedule-all` で連鎖を維持し、字幕・再生リスト・メール案の残りを処理する。分析ジョブは Analytics 未認可でも `weekly_stats.py` で週次推移を記録する。
-> 7. **note 公開スケジュール（2026-10-17〜）**：`_deliverables/note/note-publish-schedule.md`（`note_publish_schedule.py` で生成）に従い、毎日20:00 JSTに1本ずつEP順で公開（EP01=10/18 → 追いつき後は動画と同日、EP24=11/14）。EPnの記事は動画EPnの公開日より前に出さない。毎日 19:55 JST の「note 毎日公開ジョブ」（`trig_016rMGashP6rbAzFGJpABDQi`）が前提を点検し、公開APIが未実装の間は手動公開の依頼（編集URL・見出し画像パス）を通知する。公開の自動化には note の公開操作の HAR（sanitized）1回分のキャプチャが必要。週次noteジョブは1回2話に増量済み。
+> 7. **note 公開の自動化（2026-10-17〜）**：`_deliverables/note/note-publish-schedule.md`（`note_publish_schedule.py` で生成）に従い毎日20:00 JST枠でEP順に公開（EP01〜11は公開済み。EP12=10/18〜EP16=10/22で追いつき、EP17以降は動画と同日・EP24=11/14）。毎日19:55 JSTの「note 毎日公開ジョブ」（`trig_016rMGashP6rbAzFGJpABDQi`）が `post_note_api.py --sync-status` → `--publish-ep NN`（見出し画像アップロード＋公開＋状態表更新）を実行。API仕様は 2026-10-17 の HAR＋editor公開画面コードで確定（post_note_api.py 冒頭）。週次noteジョブは1回2話・下書きまで。
 > 5. **クォータ配分**：月曜 0:00 UTC 実行は「日曜16:00 JST開始のクォータ日」の後半にあたる。日曜に手動で大量消費（字幕一括等）するときは配信ジョブ用に4,000単位以上残すこと。
 
 ## 4. 毎週残る人手（Studio・APIで自動化不可）※合計数分

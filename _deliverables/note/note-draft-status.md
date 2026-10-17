@@ -2,7 +2,7 @@
 このファイルは note 下書き保存の「唯一の真実源」（YouTube側の docs/upload-status.md 相当）。
 週次noteジョブ（Routine）はこの表を読み、status が「校了・下書き未保存」の先頭1本だけを
 note に下書き（非公開）として保存し、成功したら status を「下書き保存済み」に更新して
-note_id / edit_url / saved_at を書き戻す。**公開は常に人間**（post_note_api.py に公開処理は無い）。
+note_id / edit_url / saved_at を書き戻す。公開は毎日19:55 JSTの「note 毎日公開ジョブ」が note-publish-schedule.md の予定どおり `post_note_api.py --publish-ep NN` で行い、status を「公開済み YYYY-MM-DD」に更新する（2026-10-17〜）。
 
 status の意味：
 - 生成のまま（校了前）  … make_note_article.py の下書きのまま。動画口語が残る。**保存対象外**。
@@ -18,17 +18,17 @@ status の意味：
 
 | EP | ファイル | status | note_id | edit_url | saved_at |
 |----|---------|--------|---------|----------|----------|
-| EP01 | ep01_what-is-marketing.md | 下書き保存済み | 171461571 | https://editor.note.com/notes/171461571/edit | 2026-07-24 |
-| EP02 | ep02_3c-stp-analysis.md | 下書き保存済み | 171462924 | https://editor.note.com/notes/171462924/edit | 2026-07-24 |
-| EP03 | ep03_persona-pitfalls.md | 下書き保存済み | 171462928 | https://editor.note.com/notes/171462928/edit | 2026-07-24 |
-| EP04 | ep04_benefit-vs-feature.md | 下書き保存済み | 171462932 | https://editor.note.com/notes/171462932/edit | 2026-07-24 |
-| EP05 | ep05_customer-journey.md | 下書き保存済み | 171462935 | https://editor.note.com/notes/171462935/edit | 2026-07-24 |
-| EP06 | ep06_pricing-psychology.md | 下書き保存済み | 171462938 | https://editor.note.com/notes/171462938/edit | 2026-07-24 |
-| EP07 | ep07_4p-4c-mix.md | 下書き保存済み | 171960790 | https://editor.note.com/notes/171960790/edit | 2026-07-27 |
-| EP08 | ep08_usp-differentiation.md | 下書き保存済み | 172111882 | https://editor.note.com/notes/172111882/edit | 2026-07-28 |
-| EP09 | ep09_cpa-ltv.md | 下書き保存済み | 174283548 | https://editor.note.com/notes/174283548/edit | 2026-08-11 |
-| EP10 | ep10_copywriting-5laws.md | 下書き保存済み | 175444888 | https://editor.note.com/notes/175444888/edit | 2026-08-18 |
-| EP11 | ep11_sns-engagement.md | 下書き保存済み | 176625438 | https://editor.note.com/notes/176625438/edit | 2026-08-25 |
+| EP01 | ep01_what-is-marketing.md | 公開済み 2026-07-23 | 171461571 | https://editor.note.com/notes/171461571/edit | 2026-07-24 |
+| EP02 | ep02_3c-stp-analysis.md | 公開済み 2026-07-26 | 171462924 | https://editor.note.com/notes/171462924/edit | 2026-07-24 |
+| EP03 | ep03_persona-pitfalls.md | 公開済み 2026-07-26 | 171462928 | https://editor.note.com/notes/171462928/edit | 2026-07-24 |
+| EP04 | ep04_benefit-vs-feature.md | 公開済み 2026-07-27 | 171462932 | https://editor.note.com/notes/171462932/edit | 2026-07-24 |
+| EP05 | ep05_customer-journey.md | 公開済み 2026-08-10 | 171462935 | https://editor.note.com/notes/171462935/edit | 2026-07-24 |
+| EP06 | ep06_pricing-psychology.md | 公開済み 2026-08-23 | 171462938 | https://editor.note.com/notes/171462938/edit | 2026-07-24 |
+| EP07 | ep07_4p-4c-mix.md | 公開済み 2026-08-30 | 171960790 | https://editor.note.com/notes/171960790/edit | 2026-07-27 |
+| EP08 | ep08_usp-differentiation.md | 公開済み 2026-08-30 | 172111882 | https://editor.note.com/notes/172111882/edit | 2026-07-28 |
+| EP09 | ep09_cpa-ltv.md | 公開済み 2026-09-06 | 174283548 | https://editor.note.com/notes/174283548/edit | 2026-08-11 |
+| EP10 | ep10_copywriting-5laws.md | 公開済み 2026-09-19 | 175444888 | https://editor.note.com/notes/175444888/edit | 2026-08-18 |
+| EP11 | ep11_sns-engagement.md | 公開済み 2026-10-17 | 176625438 | https://editor.note.com/notes/176625438/edit | 2026-08-25 |
 | EP12 | ep12_ab-testing.md | 下書き保存済み | 177845517 | https://editor.note.com/notes/177845517/edit | 2026-09-01 |
 | EP13 | ep13_ai-market-research.md | 下書き保存済み | 179093953 | https://editor.note.com/notes/179093953/edit | 2026-09-08 |
 | EP14 | ep14_ai-content-creation.md | 下書き保存済み | 180333349 | https://editor.note.com/notes/180333349/edit | 2026-09-15 |

@@ -86,8 +86,9 @@ def main():
     o = ["# note 公開スケジュール\n\n",
          f"> 自動生成 {now.astimezone(JST):%Y-%m-%d %H:%M} JST（`python3 _tools/publish/note_publish_schedule.py`）。"
          f"毎日{a.hour}:00 JSTに1本・EP順。EPnの記事は動画EPnの公開日より前に出さない（追いついた後は動画と同日）。\n"
-         "> 公開は note 編集画面の「公開に進む → 投稿する」（見出し画像は `_deliverables/note/thumbnails/epNN.png` を設定）。"
-         "公開したら note-draft-status.md の status を「公開済み YYYY-MM-DD」に書き換える。\n\n",
+         "> 公開は毎日19:55 JSTの「note 毎日公開ジョブ」が `post_note_api.py --publish-ep NN` で自動実行"
+         "（見出し画像 `_deliverables/note/thumbnails/epNN.png` も自動設定・状態表も自動更新）。"
+         "手動で公開した回は `post_note_api.py --sync-status` で状態表に取り込まれる。\n\n",
          "| 公開予定 | EP | タイトル | 動画公開日 | 下書きstatus | 編集URL |\n|---|---|---|---|---|---|\n"]
     for ep, s, t, url, v, st in rows:
         when = s if isinstance(s, str) else f"{s:%m/%d(%a) %H:%M}"

@@ -20,7 +20,8 @@ git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude
 
 - `_deliverables/note/note-draft-status.md` … 下書き/公開の状態（行の status：生成のまま → 校了・下書き未保存 → 下書き保存済み → 公開済み YYYY-MM-DD）
 - `_deliverables/note/note-publish-schedule.md` … 公開スケジュール（毎日20:00 JST・EP順・動画公開日より前には出さない。`_tools/publish/note_publish_schedule.py` で再生成）
-- 自動ジョブ：火曜9:00「週次note自動化ジョブ」（1回2話を校了→下書き保存）／毎日19:55「note 毎日公開ジョブ」（当日分の公開 or 手動公開依頼の通知）
+- 自動ジョブ：火曜9:00「週次note自動化ジョブ」（1回2話を校了→下書き保存。公開はしない）／毎日19:55「note 毎日公開ジョブ」（`post_note_api.py --publish-ep NN` で当日分を公開＋見出し画像設定＋状態表更新）
+- 公開ツール：`python3 _tools/publish/post_note_api.py --publish-ep NN [--dry-run]`（下書き保存済み・YouTube本編 public の回のみ）／`--sync-status`（note上の公開状態を状態表へ取り込み）
 - 同じ回を手作業で校了・下書き保存・公開したら、**その場で状態表を更新して上記ブランチへ書き戻す**（しないとジョブが二重処理する）
 - ルーティンのプロンプトを書き換えるときは現行内容（1回2話・基点ブランチ）を引き継ぐ
 

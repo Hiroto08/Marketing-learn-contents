@@ -1,14 +1,20 @@
 #!/usr/bin/env python3
-"""note.com へ「下書き（非公開）」を作成する（非公式API／requests版）。
+"""note.com へ「下書き（非公開）」を作成する／下書きを公開する（非公式API／requests版）。
 
 このコンテナはブラウザ(Playwright)が外部へ出られない一方、requests/HTTPは
-プロキシ越しに note へ到達できる。よって**コンテナ内の自動化（Routine）で下書き
-保存するにはこのAPI版を使う**（ブラウザ版 post_note.py はローカルPC専用）。
+プロキシ越しに note へ到達できる。よって**コンテナ内の自動化（Routine）ではこのAPI版を使う**
+（ブラウザ版 post_note.py はローカルPC専用）。
 
-⚠️ note に公式APIは無い。本ツールは 2026-07 の実測キャプチャに基づく非公式API利用で、
-   note側の仕様変更で壊れうる。**常に下書き（非公開）まで。公開操作は一切しない。**
-   draft_save の仕様は実測確定。create（空draft作成でidを得る）のみ推定なので、
-   もし create で失敗したら、その1リクエストだけ再キャプチャして CONFIG['create_path'] を直す。
+⚠️ note に公式APIは無い。本ツールは実測キャプチャに基づく非公式API利用で、note側の仕様変更で壊れうる。
+   - 下書き作成（--file）：2026-07 キャプチャ。draft_save は実測確定、create のみ推定。
+   - 公開（--publish-ep）：2026-10-17 キャプチャ（HAR）＋ editor.note.com の公開画面コードで確定。
+       GET  /api/v3/notes/<id>?draft=true           … 下書き本文・key・見出し画像の有無を取得
+       POST /api/v1/image_upload/note_eyecatch      … 見出し画像（multipart: note_id, file, width=1920, height=1005）
+       PUT  /api/v1/text_notes/<id>  status=published … 公開（本文はサーバ上の最新下書きをそのまま送る＝手直しを保持）
+     **公開は --publish-ep だけ**。note-draft-status.md が「下書き保存済み」かつ docs/upload-status.md で
+     同じEPの YouTube 本編が public の回しか公開しない（--force で動画チェックのみ省略可）。成功したら
+     note-draft-status.md の status を「公開済み YYYY-MM-DD」に書き換える。
+   失敗（4xx・仕様変化）時は推測で直さず停止。その1リクエストだけ再キャプチャして直す。
 
     # 本文HTML変換だけ確認（認証・ネットワーク不要）
     python3 _tools/publish/post_note_api.py --file _deliverables/note/ep01_*.md --dry-run
@@ -16,12 +22,19 @@
     # 実際に下書き作成（要 NOTE_COOKIE。新セッションでSecret注入後に実行）
     python3 _tools/publish/post_note_api.py --file _deliverables/note/ep01_*.md
 
+    # 公開（--dry-run は読み取りGETのみで送信内容を表示）
+    python3 _tools/publish/post_note_api.py --publish-ep 1 --dry-run
+    python3 _tools/publish/post_note_api.py --publish-ep 1
+
 認証: NOTE_COOKIE（"_note_session_v5=...." 形式）を Secrets に。requestsがCookieとして送る。
 """
 import argparse
+import datetime as dt
+import html as htmlmod
 import os
 import re
 import sys
+import time
 import uuid
 
 import requests
@@ -149,11 +162,178 @@ def create_draft(title: str, html: str, body_len: int):
         sys.exit(1)
 
 
+# ── 公開（2026-10-17 HAR＋editor公開画面コードで確定） ───────────────────────
+STATUS = "_deliverables/note/note-draft-status.md"
+ROW = re.compile(r"^\| EP(\d+) \| ([^|]*?) \| ([^|]*?) \| ([^|]*?) \| ([^|]*?) \| ([^|]*?) \|$", re.M)
+
+
+def status_rows() -> dict:
+    t = open(STATUS, encoding="utf-8").read()
+    return {int(m[1]): {"file": m[2].strip(), "status": m[3].strip(), "note_id": m[4].strip(),
+                        "edit_url": m[5].strip(), "saved_at": m[6].strip()} for m in ROW.finditer(t)}
+
+
+def set_status(ep: int, status: str):
+    t = open(STATUS, encoding="utf-8").read()
+
+    def rep(m):
+        if int(m[1]) != ep:
+            return m[0]
+        return f"| EP{m[1]} | {m[2]} | {status} | {m[4]} | {m[5]} | {m[6]} |"
+    open(STATUS, "w", encoding="utf-8").write(ROW.sub(rep, t))
+
+
+def video_is_public(ep: int) -> bool:
+    t = open("docs/upload-status.md", encoding="utf-8").read()
+    m = re.search(rf"^\| EP{ep:02d} \| [^|]*\| [^|]*\| ([^|]+)\|", t, re.M)
+    return bool(m) and m[1].strip() == "public"
+
+
+def hashtags_from(md_path: str) -> list:
+    for ln in reversed(open(md_path, encoding="utf-8").read().splitlines()):
+        s = ln.strip()
+        if re.fullmatch(r"#[^\s#]+(?:\s+#[^\s#]+)*", s):
+            return s.split()
+    return []
+
+
+def text_len(body_html: str) -> int:
+    t = re.sub(r"<[^>]+>", "", body_html)
+    return len(htmlmod.unescape(t))
+
+
+def my_notes(s) -> dict:
+    """{id: {key, status, publishAt, name}} — 自分の全記事（下書き＋公開）。/v2/note_list/contents（読み取り）"""
+    out, page = {}, 1
+    while True:
+        r = s.get(f"{BASE}/api/v2/note_list/contents",
+                  params={"limit": 50, "page": page, "without_magazines": "true"}, timeout=30)
+        if r.status_code in (401, 403):
+            sys.exit(f"一覧取得 {r.status_code}：_note_session_v5 Cookie の期限切れの可能性（Secretを更新）")
+        if r.status_code != 200:
+            sys.exit(f"記事一覧の取得失敗 {r.status_code}: {r.text[:200]}")
+        notes = (r.json().get("data") or {}).get("notes") or []
+        for n in notes:
+            out[int(n["id"])] = {"key": n.get("key"), "status": n.get("status"),
+                                 "publishAt": n.get("publishAt") or n.get("publish_at"), "name": n.get("name")}
+        if len(notes) < 50 or page >= 20:
+            return out
+        page += 1
+
+
+def fetch_note(s, key, nid) -> dict:
+    r = s.get(f"{BASE}/api/v3/notes/{key}", params={"draft": "true", "draft_reedit": "false",
+                                                     "ts": int(time.time() * 1000)}, timeout=30)
+    if r.status_code in (401, 403):
+        sys.exit(f"取得 {r.status_code}：_note_session_v5 Cookie の期限切れの可能性（Secretを更新）")
+    if r.status_code != 200:
+        sys.exit(f"note取得失敗 {r.status_code}: {r.text[:200]}")
+    d = r.json().get("data") or {}
+    if str(d.get("id")) != str(nid):
+        sys.exit(f"取得したnoteのidが一致しない（{d.get('id')} != {nid}）→ 停止")
+    return d
+
+
+def sync_status(s=None, quiet=False) -> dict:
+    """note 上で公開済みなのに状態表が未反映の回を「公開済み YYYY-MM-DD」に直す（手動公開の取り込み）"""
+    s = s or session()
+    notes = my_notes(s)
+    for ep, row in sorted(status_rows().items()):
+        n = notes.get(int(row["note_id"])) if row["note_id"].isdigit() else None
+        if n and n["status"] == "published" and not row["status"].startswith("公開済み"):
+            day = (n["publishAt"] or "")[:10] or f"{dt.date.today():%Y-%m-%d}"
+            set_status(ep, f"公開済み {day}")
+            if not quiet:
+                print(f"EP{ep:02d}: note上で公開済み（{day}）→ 状態表を更新")
+    return notes
+
+
+def upload_eyecatch(s, nid, png: str) -> str:
+    with open(png, "rb") as f:
+        r = s.post(f"{BASE}/api/v1/image_upload/note_eyecatch",
+                   files={"file": (os.path.basename(png), f, "image/png")},
+                   data={"note_id": str(nid), "width": "1920", "height": "1005"},
+                   headers={"Content-Type": None}, timeout=60)
+    j = r.json() if r.headers.get("content-type", "").startswith("application/json") else {}
+    if r.status_code not in (200, 201) or j.get("error") or not (j.get("data") or {}).get("url"):
+        sys.exit(f"見出し画像アップロード失敗 {r.status_code}: {r.text[:200]}")
+    return j["data"]["url"]
+
+
+def publish_ep(ep: int, dry: bool, force: bool):
+    row = status_rows().get(ep)
+    if not row:
+        sys.exit(f"EP{ep:02d} が {STATUS} に無い")
+    if row["status"].startswith("公開済み"):
+        print(f"EP{ep:02d} は既に公開済み（{row['status']}）→ 何もしない")
+        return
+    if row["status"] != "下書き保存済み" or not row["note_id"].isdigit():
+        sys.exit(f"EP{ep:02d} は公開できる状態でない（status={row['status']} note_id={row['note_id']}）")
+    if not video_is_public(ep) and not force:
+        sys.exit(f"EP{ep:02d} の YouTube 本編がまだ public でない（docs/upload-status.md）→ 記事の動画リンクが切れるので公開しない")
+    md = f"_deliverables/note/{row['file']}"
+    png = f"_deliverables/note/thumbnails/ep{ep:02d}.png"
+    nid = int(row["note_id"])
+    s = session()
+    n = my_notes(s).get(nid)
+    if not n or not n.get("key"):
+        sys.exit(f"note_id {nid} が自分の記事一覧に無い（削除済み？）→ 停止")
+    if n["status"] == "published":
+        print(f"EP{ep:02d} は note 上で既に公開済み（{n['publishAt']}）→ 状態表だけ更新")
+        if not dry:
+            set_status(ep, f"公開済み {(n['publishAt'] or '')[:10]}")
+        return
+    d = fetch_note(s, n["key"], nid)
+    if d.get("status") != "draft":
+        sys.exit(f"想定外の status={d.get('status')} → 停止")
+    draft = d.get("note_draft") or {}
+    body, name = draft.get("body") or d.get("body"), draft.get("name") or d.get("name")
+    if not body or not name:
+        sys.exit("下書き本文/タイトルが取得できない → 停止")
+    tags = hashtags_from(md)
+    payload = {"author_ids": [], "body_length": text_len(body), "disable_comment": False,
+               "exclude_from_creator_top": False, "exclude_ai_learning_reward": False,
+               "free_body": body, "hashtags": tags, "image_keys": [], "index": False, "is_refund": False,
+               "limited": False, "magazine_ids": [], "magazine_keys": [], "name": name, "pay_body": "",
+               "price": 0, "send_notifications_flag": True, "separator": None, "slug": d.get("slug") or f"slug-{d['key']}",
+               "status": "published", "circle_permissions": [], "discount_campaigns": [],
+               "lead_form": {"is_active": False, "consent_url": ""},
+               "line_add_friend": {"is_active": False, "keyword": "", "add_friend_url": ""},
+               "line_add_friend_access_token": uuid.uuid4().hex, "pro_coupon_keys": []}
+    eyecatch = d.get("eyecatch")
+    print(f"EP{ep:02d} id={nid} key={d.get('key')}「{name}」 本文{payload['body_length']}字 タグ{len(tags)}個 "
+          f"見出し画像={'設定済み' if eyecatch else ('アップロード予定 ' + png if os.path.exists(png) else 'なし')}")
+    if dry:
+        print("[dry] 読み取りのみ。アップロード・公開はしていない")
+        return
+    if not eyecatch:
+        if not os.path.exists(png):
+            sys.exit(f"見出し画像 {png} が無い → make_note_thumbnail.py で生成してから再実行")
+        print("  見出し画像:", upload_eyecatch(s, nid, png))
+    r = s.put(f"{BASE}/api/v1/text_notes/{nid}", json=payload, timeout=60)
+    j = r.json() if r.headers.get("content-type", "").startswith("application/json") else {}
+    data = j.get("data") or {}
+    if r.status_code != 200 or data.get("status") != "published":
+        sys.exit(f"公開失敗 {r.status_code}: {r.text[:300]}")
+    set_status(ep, f"公開済み {dt.datetime.now(dt.timezone(dt.timedelta(hours=9))):%Y-%m-%d}")
+    print(f"✓ 公開: {data.get('note_url')}  （{STATUS} を更新）")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--file", required=True)
+    g = ap.add_mutually_exclusive_group(required=True)
+    g.add_argument("--file", help="下書き作成するMarkdown")
+    g.add_argument("--publish-ep", type=int, help="この回の下書きを公開（見出し画像も設定）")
+    g.add_argument("--sync-status", action="store_true", help="note上の公開状態を状態表に取り込む（読み取りのみ）")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--force", action="store_true", help="--publish-ep で YouTube 公開チェックを省略")
     a = ap.parse_args()
+    if a.sync_status:
+        sync_status()
+        return
+    if a.publish_ep:
+        publish_ep(a.publish_ep, a.dry_run, a.force)
+        return
     title, html, body_len = md_to_html(a.file)
     if a.dry_run:
         print(f"タイトル: {title}")
