@@ -70,7 +70,7 @@ def main():
     o.append("- 延長・組み直し：`python3 _tools/publish/publish_episode.py --schedule-all [--start <RFC3339>]`"
              "（予約不可の回は TIMED と表示 → その時刻に即時公開する単発スケジュールで対応）\n")
     o.append("\n## 残作業\n"
-             "- 次に公開：上記「次に公開してよいEP」を public 化（or 次の土曜18:00 JSTに公開予約）\n"
+             "- 次に公開：上記「次に公開してよいEP」を public 化（or `publish_episode.py --schedule-all` で水・土18:00 JSTの枠に予約）\n"
              "- 各Short：Studioで「関連動画」に本編を設定（API不可・docs/shorts-related-video-checklist.md）\n"
              f"- 未UP（本編）：{'／'.join(unup) if unup else 'なし'}\n")
     open("docs/upload-status.md", "w", encoding="utf-8").write("".join(o))

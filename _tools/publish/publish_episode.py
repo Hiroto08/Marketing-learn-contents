@@ -15,8 +15,8 @@ publish_episode.py — 既に非公開(private)でアップロード済みのエ
   python3 _tools/publish/publish_episode.py --episode 03_practical/ep10_copywriting-5laws
   python3 _tools/publish/publish_episode.py --episode <ep_dir> --at 2026-10-24T18:00:00+09:00
   python3 _tools/publish/publish_episode.py --episode <ep_dir> --dry-run
-  # 非公開UP済みの回を EP順に毎週1本ずつ一括予約（既定：毎週土曜18:00 JST）
-  python3 _tools/publish/publish_episode.py --schedule-all [--start 2026-10-24T18:00:00+09:00] [--every-days 7] [--dry-run]
+  # 非公開UP済みの回を EP順に一括予約（既定：毎週 水・土 18:00 JST＝週2本）
+  python3 _tools/publish/publish_episode.py --schedule-all [--start 2026-10-21T18:00:00+09:00] [--days wed,sat] [--dry-run]
     --start 省略時：既存の予約の最後の回の次の枠から延長（予約済みの回は動かさない＝冪等。毎週流してよい）
     --start 指定時：未公開の回を全てその日時から組み直す
 必要スコープ: https://www.googleapis.com/auth/youtube（videos.update）
@@ -53,10 +53,15 @@ def iso(t):
     return t.astimezone(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
-def next_saturday_18(after):
+WEEKDAYS = {"mon": 0, "tue": 1, "wed": 2, "thu": 3, "fri": 4, "sat": 5, "sun": 6}
+
+
+def next_slot(after, days):
+    """after より後で、曜日が days（0=月…6=日）に含まれる最初の 18:00 JST"""
     t = after.astimezone(JST).replace(hour=18, minute=0, second=0, microsecond=0)
-    t += dt.timedelta(days=(5 - t.weekday()) % 7)
-    return t if t > after + dt.timedelta(hours=1) else t + dt.timedelta(days=7)
+    while not (t > after and t.weekday() in days):
+        t += dt.timedelta(days=1)
+    return t
 
 
 def expected_shorts(ep):
@@ -110,7 +115,7 @@ def apply(tok, s, ep, at, dry):
     return True
 
 
-def schedule_all(tok, idx, start, every, dry):
+def schedule_all(tok, idx, start, days, dry):
     pub = public_max_ep(idx)
     now = dt.datetime.now(dt.timezone.utc)
     prev_t, plan = None, []
@@ -125,9 +130,9 @@ def schedule_all(tok, idx, start, every, dry):
         if start is None and cur and (prev_t is None or cur > prev_t):
             t = cur                                   # 既存予約は維持（延長モード）
         elif start is not None:
-            t = start + dt.timedelta(days=every * len(plan))
+            t = next_slot(prev_t, days) if prev_t else start
         else:
-            t = (prev_t + dt.timedelta(days=every)) if prev_t else next_saturday_18(now)
+            t = next_slot(prev_t or now + dt.timedelta(hours=1), days)
         plan.append((ep, t))
         prev_t = t
         ep += 1
@@ -154,14 +159,15 @@ def main():
     g.add_argument("--schedule-all", action="store_true", help="非公開UP済みの回をEP順に一括予約")
     ap.add_argument("--at", help="RFC3339の公開予約日時（例 2026-10-24T18:00:00+09:00）。省略で即時public")
     ap.add_argument("--start", help="--schedule-all の最初の枠（RFC3339）。省略で既存予約から延長")
-    ap.add_argument("--every-days", type=int, default=7)
+    ap.add_argument("--days", default="wed,sat", help="公開曜日（18:00 JST）。既定 wed,sat＝週2本")
     ap.add_argument("--force", action="store_true", help="EP順ガードを無視して公開する")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()
     tok = token()
     idx = episode_index(tok)
     if a.schedule_all:
-        schedule_all(tok, idx, parse(a.start) if a.start else None, a.every_days, a.dry_run)
+        days = {WEEKDAYS[d.strip().lower()] for d in a.days.split(",")}
+        schedule_all(tok, idx, parse(a.start) if a.start else None, days, a.dry_run)
         return
     ep = int(re.search(r"ep(\d+)", os.path.basename(a.episode.rstrip("/"))).group(1))
     s = idx.get(ep)
