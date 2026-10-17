@@ -9,6 +9,21 @@ when_to_use: "Triggers: EPNNのnote記事を作って, note記事を仕上げて
 実世界の対応役割：オウンドメディアの**編集長／デスク**。個々の執筆・校正はロールに委ね、監督は「角度の決定・進行・校了判定」を担う。
 原則：**下書きは機械生成（make_note_article.py）で用意し、人手ロールが読み物に引き上げる。校了は verify_note.py の RESULT: PASS が唯一の合否**。感覚的な「良くなった」で公開しない。
 
+## 作業開始時の同期（必須・複数セッション／ルーティンの衝突防止 2026-10-17）
+
+note の状態は **`claude/build-upload-bqpddd` が唯一の正**（YouTube運用・火曜noteルーティン・毎日公開ジョブが全てここを読む）。
+どのセッション・ブランチで作業する場合も、最初に必ず：
+```bash
+git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude/build-upload-bqpddd
+```
+作業後は自ブランチに push したうえで `git push origin HEAD:claude/build-upload-bqpddd`（non-fast-forward なら fetch→merge→再push）で書き戻す。
+
+- `_deliverables/note/note-draft-status.md` … 下書き/公開の状態（行の status：生成のまま → 校了・下書き未保存 → 下書き保存済み → 公開済み YYYY-MM-DD）
+- `_deliverables/note/note-publish-schedule.md` … 公開スケジュール（毎日20:00 JST・EP順・動画公開日より前には出さない。`_tools/publish/note_publish_schedule.py` で再生成）
+- 自動ジョブ：火曜9:00「週次note自動化ジョブ」（1回2話を校了→下書き保存）／毎日19:55「note 毎日公開ジョブ」（当日分の公開 or 手動公開依頼の通知）
+- 同じ回を手作業で校了・下書き保存・公開したら、**その場で状態表を更新して上記ブランチへ書き戻す**（しないとジョブが二重処理する）
+- ルーティンのプロンプトを書き換えるときは現行内容（1回2話・基点ブランチ）を引き継ぐ
+
 ## 制作体制：note編集の4ロール（本スキルが順に実行）
 
 | # | ロール | スキル | 担当 | 主な成果物 |
