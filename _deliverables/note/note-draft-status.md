@@ -9,6 +9,7 @@ status の意味：
                           note-production スキルの編集ロールで校了させると「校了・下書き未保存」へ。
 - 校了・下書き未保存    … 編集パイプライン通過＋verify_note.py PASS。**次にジョブが保存する対象**。
 - 下書き保存済み        … note に下書き保存済み（非公開）。note_id / edit_url を記録。
+- 公開済み YYYY-MM-DD   … note で公開済み。公開日は _deliverables/note/note-publish-schedule.md の予定に従う。
 
 手動で校了させたら、その回の status を「校了・下書き未保存」に手で書き換えること。
 -->
@@ -37,6 +38,10 @@ status の意味：
 | EP18 | ep18_ltv-crm-strategy.md | 下書き保存済み | 185292968 | https://editor.note.com/notes/185292968/edit | 2026-10-13 |
 | EP19 | ep19_marketing-org.md | 生成のまま（校了前） | - | - | - |
 | EP20 | ep20_growth-hack.md | 生成のまま（校了前） | - | - | - |
+| EP21 | ep21_hit-products.md | 生成のまま（校了前） | - | - | - |
+| EP22 | ep22_v-shaped-recovery.md | 生成のまま（校了前） | - | - | - |
+| EP23 | ep23_failure-cases.md | 生成のまま（校了前） | - | - | - |
+| EP24 | ep24_future-marketer.md | 生成のまま（校了前） | - | - | - |
 
 <!--
 運用メモ：
