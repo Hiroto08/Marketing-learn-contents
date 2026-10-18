@@ -97,9 +97,11 @@ def set_privacy(tok, v, at=None, dry=False):
 
 
 def apply(tok, s, ep, at, dry):
-    """本編＋Shortsを同じ状態へ。既に同じ状態の動画は飛ばす。本編が失敗したらShortsは触らず False"""
+    """本編＋Shortsを同じ状態へ。既に同じ状態の動画は飛ばす。
+    本編が失敗したらShortsは触らず False、Shortだけ失敗したら "partial"（その回は枠の時刻に --episode で即時公開して揃える）"""
     shorts = [s["shorts"][n] for n in sorted(s["shorts"])]
     print(f"EP{ep:02d} を{'予約公開(' + at + ')' if at else '公開'}（本編＋Shorts{len(shorts)}本 同時）")
+    partial = False
     for kind, vid in [("本編 ", s["main"])] + [("Short", x) for x in shorts]:
         v = s["items"][vid]
         if (at and when(v) and when(v) == parse(at)) or (not at and privacy(v) == "public"):
@@ -110,9 +112,11 @@ def apply(tok, s, ep, at, dry):
         if kind.startswith("本編") and ": FAIL" in r:
             print("  ! 本編の状態変更に失敗 → Shorts は変更しない（単独公開を防ぐ）")
             return False
+        if ": FAIL" in r:
+            partial = True
     if not shorts:
         print("  ! この回の Shorts が見つからない（未UP）。本編のみ処理した。")
-    return True
+    return "partial" if partial else True
 
 
 def schedule_all(tok, idx, start, days, dry):
@@ -144,12 +148,14 @@ def schedule_all(tok, idx, start, days, dry):
         print(f"  EP{ep:02d}  {t.astimezone(JST):%Y-%m-%d (%a) %H:%M JST}")
     timed = []
     for ep, t in plan:
-        if not apply(tok, idx[ep], ep, iso(t), dry):
+        res = apply(tok, idx[ep], ep, iso(t), dry)
+        if res is not True:
             timed.append((ep, t))
     for ep, t in timed:
         # 一度でも公開された動画は publishAt を受け付けない（例：EP20 は8/8に誤公開→非公開に戻した）。
         # その枠の時刻に「publish_episode.py --episode <dir>（即時公開）」を走らせる単発スケジュールが必要。
-        print(f"TIMED EP{ep:02d} {iso(t)}  ← 予約不可。この時刻に publish_episode.py --episode で即時公開する単発実行を登録すること")
+        print(f"TIMED EP{ep:02d} {iso(t)}  ← 予約できない動画あり（本編 or Short）。この時刻の直後に"
+              f" publish_episode.py --episode で即時公開する単発実行を登録すること（予約済みの分は変更なしで飛ばされる）")
 
 
 def main():

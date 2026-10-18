@@ -27,6 +27,8 @@ import webbrowser
 
 SCOPE = ("https://www.googleapis.com/auth/youtube.upload "
          "https://www.googleapis.com/auth/youtube "
+         # 字幕のアップロード（captions.insert は youtube.force-ssl が必須）
+         "https://www.googleapis.com/auth/youtube.force-ssl "
          # 公開後のCTR・維持率・流入元を取得して改善ループを閉じるため
          "https://www.googleapis.com/auth/yt-analytics.readonly")
 PORT = 8765

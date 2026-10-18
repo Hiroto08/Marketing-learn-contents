@@ -119,6 +119,9 @@ def upload(tok: str, video_id: str, body: str) -> str:
         return "OK"
     if r.status_code == 403 and "quota" in r.text.lower():
         raise SystemExit(f"quotaExceeded: 翌日16:00 JST（PT0時）以降に同じコマンドで再開（{video_id} 未処理）")
+    if r.status_code == 403 and "insufficient" in r.text.lower():
+        raise SystemExit("権限不足（youtube.force-ssl スコープが無い）：手元PCで get_refresh_token.py を再実行し"
+                         " Secret YT_REFRESH_TOKEN を更新すると字幕をアップロードできる（アナリティクスも同時に有効化）")
     return f"FAIL {r.status_code} {r.text[:200]}"
 
 
