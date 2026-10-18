@@ -1,0 +1,66 @@
+{
+  "_comment": "新しいテーマ用の series.json の雛形。リポジトリ直下の series.json をこれで置き換え、<…> を埋める（docs/replication-playbook.md §3）。",
+  "series_name": "<チャンネル名（例：AI時代の経理ラボ）>",
+  "tag_prefix": "<英小文字2〜6字の識別子（例：acct）。動画タグ <prefix>-ep01 に使う。他シリーズと重複させない>",
+  "total_episodes": 24,
+  "schedule": {
+    "days": [
+      "wed",
+      "sat"
+    ],
+    "youtube_hour_jst": 18,
+    "note_hour_jst": 20
+  },
+  "youtube": {
+    "channel_id": "<UCで始まるチャンネルID>",
+    "master_playlist_id": "",
+    "channel_description": "<チャンネル説明（1000字以内）。講座の約束・対象者・特典URL・公開曜日を書く>",
+    "channel_keywords": "<スペース区切りのキーワード（500字以内）。複数語は \"…\" で囲む>",
+    "country": "JP",
+    "default_language": "ja",
+    "playlists": [
+      {
+        "title": "<講座名> 全24話｜<約束>",
+        "description": "<全話の説明>",
+        "episodes": [
+          1,
+          24
+        ],
+        "kind": "main"
+      },
+      {
+        "title": "<章名>（第1〜4回）",
+        "description": "<章の説明>",
+        "episodes": [
+          1,
+          4
+        ],
+        "kind": "main"
+      },
+      {
+        "title": "1分でわかる<テーマ>｜Shorts まとめ",
+        "description": "<Shortsまとめの説明>",
+        "episodes": [
+          1,
+          24
+        ],
+        "kind": "shorts"
+      }
+    ]
+  },
+  "note": {
+    "urlname": "<note のユーザー名（note.com/<ここ>）>"
+  },
+  "kit": {
+    "optin_url": "<Kit の特典LP（フォーム）URL>",
+    "lead_magnet": "<特典名（例：経理の型 チートシート（PDF））>"
+  },
+  "voice": {
+    "engine": "VOICEVOX",
+    "speaker_id": 11,
+    "speaker_name": "玄野武宏"
+  },
+  "brand": {
+    "bg_color": "#0B1220"
+  }
+}

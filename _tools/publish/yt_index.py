@@ -13,9 +13,12 @@ import os
 import re
 import urllib.parse
 import urllib.request
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 API = "https://www.googleapis.com/youtube/v3"
-TAG_RE = re.compile(r"^mlab-ep(\d{2})(?:-s(\d+))?$")
+TAG_RE = S.TAG_RE   # 例 mlab-ep09 / mlab-ep09-s1（接頭辞は series.json の tag_prefix）
 
 
 def token() -> str:

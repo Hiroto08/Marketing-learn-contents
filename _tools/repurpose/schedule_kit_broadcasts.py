@@ -28,9 +28,11 @@ import re
 import sys
 import urllib.error
 import urllib.request
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 KIT = "https://api.kit.com/v4"
-MARK = "mlab-ep{:02d}"
+MARK = S.PREFIX + "-ep{:02d}"
 
 
 def kit(method, path, body=None):
@@ -54,7 +56,7 @@ def existing():
         q = "broadcasts?per_page=500&slim=true" + (f"&after={after}" if after else "")
         r = kit("GET", q)
         for b in r.get("broadcasts", []):
-            m = re.search(r"mlab-ep(\d{2})", b.get("description") or "")
+            m = S.MARK_RE.search(b.get("description") or "")
             if m and b.get("status") != "aborted":
                 out[int(m[1])] = b
         pg = r.get("pagination", {})

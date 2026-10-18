@@ -23,6 +23,8 @@ import glob
 import os
 import re
 import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 SECTIONS = [
     ("01_beginner", "初級編：マーケティングの型"),
@@ -38,7 +40,7 @@ SKIP_HEADING = re.compile(
     r"^(タイトル|フック|まとめ|オープニング|次回|次への|エンド|CTA|"
     r"コールドオープン|約束|ケース|リフック|回収|導入|問題提起)")
 
-DEFAULT_CHANNEL = "https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw"
+DEFAULT_CHANNEL = S.CHANNEL_URL
 
 # 見出し先頭の列挙・段階ラベル（原則①/適用②/As-Is/続き 等）を落として実質だけ残す
 _ENUM = re.compile(r"^(原則|基本|ポイント|ステップ|手順|法則|方法|コツ|要素|適用|続き)"
@@ -100,7 +102,7 @@ def render(eps: list) -> str:
 
     L = ["# マーケティング超入門｜全話まとめ＆実践チートシート",
          "",
-         "「AI時代のマーケティング・ラボ」で解説した各テーマの要点を、"
+         f"「{S.NAME}」で解説した各テーマの要点を、"
          "1枚で見返せるチートシートにまとめました。動画を見返す前の地図として、"
          "また実務でフレームワークを使うときの手順書としてお使いください。",
          "",
@@ -142,7 +144,7 @@ def render(eps: list) -> str:
     if contact:
         L.append(f"- 💬 **相談・お仕事のご依頼**：{contact}")
     L += ["",
-          "> このチートシートは「AI時代のマーケティング・ラボ」の内容をまとめた無料配布物です。"
+          f"> このチートシートは「{S.NAME}」の内容をまとめた無料配布物です。"
           "役に立ったら、ぜひチャンネル登録で最新回を受け取ってください。"]
     return "\n".join(L) + "\n"
 

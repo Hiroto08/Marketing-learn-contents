@@ -21,6 +21,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from publish_episode import JST, next_slot  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 STATUS = "_deliverables/note/note-draft-status.md"
 OUT = "_deliverables/note/note-publish-schedule.md"
@@ -38,7 +40,7 @@ def video_dates(now):
             t = dt.datetime.strptime(st[3:].strip(), "%Y-%m-%d %H:%M").replace(tzinfo=dt.timezone.utc)
             out[ep] = last = t
         elif st in ("private", "unlisted"):
-            last = next_slot(last, {2, 5})   # 水・土 18:00 JST の連鎖を仮定
+            last = next_slot(last, S.PUBLISH_DAYS)   # publish_episode.py と同じ公開曜日の連鎖を仮定
             out[ep] = last
     return out
 
@@ -62,7 +64,7 @@ def title(f):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--start", help="最初の枠の日付 YYYY-MM-DD（省略：今日の枠が過ぎていれば明日）")
-    ap.add_argument("--hour", type=int, default=20)
+    ap.add_argument("--hour", type=int, default=S.NOTE_HOUR)
     a = ap.parse_args()
     now = dt.datetime.now(dt.timezone.utc)
     vd = video_dates(now)

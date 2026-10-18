@@ -25,15 +25,17 @@ import glob
 import os
 import re
 import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 # 章立てから除外（YouTube固有のイントロ/アウトロ枠。ナレーションごと落とす）
 DROP_WHOLE = re.compile(r"^(タイトル|オープニング|次への|次回|エンド|CTA)")
 # 見出しは出さず地の文として流す（物語の導入・事例・適用など）
 NO_HEADING = re.compile(r"^(約束|フック|コールドオープン|リフック|回収|導入|問題提起|ケース|適用)")
 
-DEFAULT_CHANNEL = "https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw"
+DEFAULT_CHANNEL = S.CHANNEL_URL
 # Kitオプトイン（無料チートシート配布LP）。LEAD_NEXT_URLで上書き可
-DEFAULT_NEXT = "https://witty-composer-9473.kit.com/ac0f4ce77b"
+DEFAULT_NEXT = S.OPTIN_URL
 
 _ENUM = re.compile(r"^(原則|基本|ポイント|ステップ|手順|法則|方法|コツ|要素|続き)"
                    r"[①-⑳0-9]*\s*[：:]?\s*")
@@ -132,7 +134,7 @@ def render(ep: dict) -> str:
     L += ["---", "",
           "## この記事は動画でも見られます",
           "",
-          f"この記事は「AI時代のマーケティング・ラボ 第{ep['num']}回」の内容を、"
+          f"この記事は「{S.NAME} 第{ep['num']}回」の内容を、"
           "読み物として再構成したものです。図解つきの動画版もあります👇", ""]
     if vid:
         L.append(f"🎬 動画で見る：{vid}")

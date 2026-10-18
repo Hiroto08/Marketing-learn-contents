@@ -58,6 +58,8 @@ import sys
 import time
 
 import requests
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 API = "https://www.googleapis.com/youtube/v3"
 UPLOAD_API = "https://www.googleapis.com/upload/youtube/v3/videos"
@@ -131,7 +133,7 @@ def strip_episode_prefix(title: str) -> str:
 def series_tags(ep_dir: str, short_n: int = 0) -> list:
     """回を識別する追跡タグ（視聴者には見えない）。short_n>0 なら Shorts 用"""
     ep = int(re.search(r"ep(\d+)", os.path.basename(ep_dir.rstrip("/"))).group(1))
-    return ["mlab-series", f"mlab-ep{ep:02d}" + (f"-s{short_n}" if short_n else "")]
+    return [S.SERIES_TAG, S.tag(ep, short_n)]
 
 
 def _episode_video_url(ep_dir: str) -> str | None:
@@ -169,7 +171,7 @@ def shorts_metadata(ep_dir: str) -> list:
         desc = (f"{title}\n\n"
                 f"本編「{ep_title}」から、この1点だけを切り出したShortsです。\n\n"
                 f"{link_lines}"
-                f"※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。\n\n"
+                f"{S.VOICE_CREDIT}\n\n"
                 f"{hashtag_line}")
         out.append({"n": n, "title": title[:100], "description": desc,
                     "tags": tags + series_tags(ep_dir, n)})

@@ -41,6 +41,8 @@ import sys
 import tempfile
 import time
 import urllib.parse
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 import urllib.request
 from multiprocessing import Process
 from pathlib import Path
@@ -56,8 +58,8 @@ def parse_args():
     p = argparse.ArgumentParser(description="Slide → video builder")
     p.add_argument("slide_html", help="Path to slide.html")
     p.add_argument("--out",          default="video_out")
-    p.add_argument("--speaker",      type=int,   default=11,
-                   help="VOICEVOX speaker ID (11=玄野武宏 ノーマル)")
+    p.add_argument("--speaker",      type=int,   default=S.VOICE["speaker_id"],
+                   help="VOICEVOX speaker ID（既定は series.json の voice.speaker_id）")
     p.add_argument("--speed",        type=float, default=1.1)
     p.add_argument("--lead",         type=float, default=1.2,
                    help="Seconds each step fires before its narration moment (slightly early feels natural)")

@@ -24,38 +24,14 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from yt_index import API, api, episode_index, token  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
-SUFFIX = ("\n\n▼無料特典：マーケの型 全20話まとめ＆実践チートシート（PDF）\n"
-          "https://witty-composer-9473.kit.com/ac0f4ce77b\n\n"
-          "※ナレーションはAI音声合成（VOICEVOX:玄野武宏）を使用しています。")
+SUFFIX = f"\n\n▼無料特典：{S.LEAD_MAGNET}\n{S.OPTIN_URL}\n\n{S.VOICE_CREDIT}"
 
-PLAYLISTS = [
-    ("マーケティング入門講座 全24話｜売れる仕組みを第1回から順に学ぶ",
-     "マーケティングを基礎から実践・AI活用まで、全24話で体系的に学べる講座です。各回8〜9分、実在企業の実話1本で「売れる仕組み」を解説します。"
-     "第1回から順に再生すると、STP分析・ペルソナ・価格設定・4P/4C・USP・CPA/LTV・コピーライティング・ABテスト・AI活用・ブランディング・CRMまで一通り身につきます。",
-     range(1, 25), "main"),
-    ("入門編｜マーケティングとは・STP分析・ペルソナ・ベネフィット（第1〜4回）",
-     "マーケティングの入口。「良い商品なのに売れない」理由、売る相手の決め方（STP分析）、ペルソナの作り方と落とし穴、特徴ではなくベネフィットで伝える方法を、実話で学びます。",
-     range(1, 5), "main"),
-    ("中級編｜カスタマージャーニー・価格設定の心理学・4Pと4C・USP（第5〜8回）",
-     "買うまでの道筋（カスタマージャーニー）、安売りせずに選ばれる価格設定の心理学、4Pと4Cのマーケティングミックス、競合と差別化するUSPの作り方を学びます。",
-     range(5, 9), "main"),
-    ("実践編｜CPAとLTV・コピーライティング・SNS運用・ABテスト（第9〜12回）",
-     "広告費を赤字にしないCPAとLTVの考え方、1行で売上が変わるコピーライティング、フォロワー数より大切なSNS運用、正しいABテストのやり方を実践レベルで学びます。",
-     range(9, 13), "main"),
-    ("AI活用編｜AI市場調査・AI記事作成・ChatGPTで顧客分析・AIチャットボット（第13〜16回）",
-     "生成AIをマーケティングに使う実践編。AIで市場調査を速くするプロンプト、AIで量産しても没個性にしない記事作成、ChatGPTでアンケートを分析する方法、嫌われないチャットボット設計を学びます。",
-     range(13, 17), "main"),
-    ("上級編｜ブランディング・CRM・マーケ組織・グロースハック（第17〜20回）",
-     "広告をやめても売れるブランディング、新規より既存客で利益を伸ばすCRM、マーケが機能する組織の作り方、広告費ゼロで伸びるグロースハックを学びます。",
-     range(17, 21), "main"),
-    ("事例編｜ヒット商品・V字回復・失敗事例・これからのマーケター（第21〜24回）",
-     "身近なヒット商品の仕掛け、倒産寸前からのV字回復、良い商品なのに売れなかった失敗事例、AI時代に生き残るマーケターの条件を、実在企業の事例で学びます。",
-     range(21, 25), "main"),
-    ("1分でわかるマーケティング｜Shorts まとめ",
-     "マーケティングの「なるほど」を1本1分以内で。実在企業の事例と数字で、売れる仕組みの核心だけを切り出したShortsです。気になった回は本編（各8〜9分）でじっくりどうぞ。",
-     range(1, 25), "shorts"),
-]
+# 再生リスト（タイトル・説明・対象EP範囲・本編/Shorts）は series.json の youtube.playlists
+PLAYLISTS = [(p["title"], p["description"], range(p["episodes"][0], p["episodes"][1] + 1), p["kind"])
+             for p in S.YT["playlists"]]
 
 
 def post(tok, path, body):

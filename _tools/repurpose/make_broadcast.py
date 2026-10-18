@@ -19,9 +19,11 @@ import glob
 import os
 import re
 import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
-DEFAULT_CHANNEL = "https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw"
-OPT_IN = "https://witty-composer-9473.kit.com/ac0f4ce77b"
+DEFAULT_CHANNEL = S.CHANNEL_URL
+OPT_IN = S.OPTIN_URL
 
 HOOK_HEADING = re.compile(r"(コールドオープン|フック)")
 _TS = re.compile(r"\s*（[\d:：〜~\.\-\s]+）\s*$")
@@ -94,7 +96,7 @@ def render(ep: dict, video: str | None, note: str | None) -> str:
     subject = re.sub(r"【[^】]*】", "", ep["title"]).strip()  # 件名は【】を外す
     hook = first_sentences(ep["hook"], 3)
 
-    L = [f"件名: {subject}", "", "---", "", "こんにちは、AI時代のマーケティング・ラボです。", "",
+    L = [f"件名: {subject}", "", "---", "", f"こんにちは、{S.NAME}です。", "",
          "今回の動画のさわりを、3分だけ。", "", hook, ""]
     if ep["goal"]:
         L += [f"この続きでは、{ep['goal']}——そんな状態を目指します。", ""]
@@ -105,7 +107,7 @@ def render(ep: dict, video: str | None, note: str | None) -> str:
     L += ["", "━━━━━━━━━━",
           "＜まだの方へ＞ 全20話の要点を1枚にまとめた無料チートシート（PDF）を配布中です。",
           f"👉 {OPT_IN}",
-          "", "それでは、また次回（毎週水・土の18時に新しい回を公開しています）。", "AI時代のマーケティング・ラボ",
+          "", f"それでは、また次回（{S.CADENCE}に新しい回を公開しています）。", S.NAME,
           "", "※配信停止はこのメール下部からいつでも可能です。"]
     return "\n".join(L) + "\n"
 

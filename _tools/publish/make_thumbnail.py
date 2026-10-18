@@ -20,6 +20,8 @@ import argparse
 import os
 import re
 import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 W, H = 1280, 720
 
@@ -124,7 +126,7 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;
   background:linear-gradient(90deg,{accent},{accent}00 82%)}}
 </style></head><body><div id="t">
   <div class="badge">第{no}回</div>
-  <div class="series">AI時代のマーケティング・ラボ</div>
+  <div class="series">{S.NAME}</div>
   <div class="main">{main_html}</div>
   {sub_html}
   <div class="bar"></div>

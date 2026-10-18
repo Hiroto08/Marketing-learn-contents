@@ -13,10 +13,13 @@ import glob
 import os
 import re
 import uuid
+import sys
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
-CHANNEL = "https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw"
-PLAYLIST = "https://www.youtube.com/playlist?list=PLazN5XmDSQHo"   # 全24話（第1回から順に）
-NOTE_USER = "marketing_lab_jp"
+CHANNEL = S.CHANNEL_URL
+PLAYLIST = S.PLAYLIST_URL   # 全話（第1回から順に）
+NOTE_USER = S.NOTE_USER
 JST = dt.timezone(dt.timedelta(hours=9))
 
 # 前回差し込んだ段落の目印（本文の先頭文字列）。ここに無い段落は触らない
@@ -152,8 +155,8 @@ def enhance(body, ep, embed_html, embed_key, next_info):
     end = next((i + 1 for i in range(len(blocks) - 1, -1, -1) if _text(blocks[i]).strip().startswith("🎬")), None)
     if end is None:
         end = next((i for i in range(len(blocks) - 1, -1, -1) if _text(blocks[i]).strip().startswith("#")), len(blocks))
-    tail = [_p(f"📚 第1回から順に見る（全24話の再生リスト）：{_a(PLAYLIST)}"),
-            _p(f"🔔 チャンネル登録で新しい回（毎週水・土18時）を受け取る：{_a(CHANNEL + '?sub_confirmation=1')}")]
+    tail = ([_p(f"📚 第1回から順に見る（全{S.TOTAL}話の再生リスト）：{_a(PLAYLIST)}")] if PLAYLIST else []) + \
+        [_p(f"🔔 チャンネル登録で新しい回（毎週{S.DAYS_JA}{S.YT_HOUR}時）を受け取る：{_a(CHANNEL + '?sub_confirmation=1')}")]
     if next_info:
         tail.append(_p(next_info))
     blocks[end:end] = tail

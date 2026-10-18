@@ -33,6 +33,8 @@ import urllib.request
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from yt_index import API, episode_index, privacy, public_max_ep, token  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 JST = dt.timezone(dt.timedelta(hours=9))
 
@@ -58,7 +60,7 @@ WEEKDAYS = {"mon": 0, "tue": 1, "wed": 2, "thu": 3, "fri": 4, "sat": 5, "sun": 6
 
 def next_slot(after, days):
     """after より後で、曜日が days（0=月…6=日）に含まれる最初の 18:00 JST"""
-    t = after.astimezone(JST).replace(hour=18, minute=0, second=0, microsecond=0)
+    t = after.astimezone(JST).replace(hour=S.YT_HOUR, minute=0, second=0, microsecond=0)
     while not (t > after and t.weekday() in days):
         t += dt.timedelta(days=1)
     return t
@@ -165,7 +167,7 @@ def main():
     g.add_argument("--schedule-all", action="store_true", help="非公開UP済みの回をEP順に一括予約")
     ap.add_argument("--at", help="RFC3339の公開予約日時（例 2026-10-24T18:00:00+09:00）。省略で即時public")
     ap.add_argument("--start", help="--schedule-all の最初の枠（RFC3339）。省略で既存予約から延長")
-    ap.add_argument("--days", default="wed,sat", help="公開曜日（18:00 JST）。既定 wed,sat＝週2本")
+    ap.add_argument("--days", default=",".join(S.CFG["schedule"]["days"]), help="公開曜日。既定は series.json の schedule.days")
     ap.add_argument("--force", action="store_true", help="EP順ガードを無視して公開する")
     ap.add_argument("--dry-run", action="store_true")
     a = ap.parse_args()

@@ -14,6 +14,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from yt_index import api, episode_index, privacy, public_max_ep, token  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
 
 def state(v):
@@ -30,7 +32,7 @@ def main():
             for d in glob.glob("0*/ep*") if os.path.isdir(d)}
     now = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
     o = [f"# アップロード状況（{ch}）\n\n",
-         f"> 自動生成：{now} ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完\n",
+         f"> 自動生成：{now} ／ ソース＝YouTube実体（タグ {S.PREFIX}-epNN で回を判定）＋ローカル manifest で補完\n",
          "> 生成：`python3 _tools/publish/gen_upload_status.py`。他セッション・ルーティンはこのファイルで到達点を確認する。\n\n",
          "凡例：public=公開済 / private=非公開 / 予約=公開予約済 / 未UP=未アップロード / —=対象物なし\n\n",
          "| EP | ディレクトリ | 本編 | 本編状態 | Shorts | Shorts状態 |\n|----|----|----|----|----|----|\n"]
@@ -70,7 +72,7 @@ def main():
     o.append("- 延長・組み直し：`python3 _tools/publish/publish_episode.py --schedule-all [--start <RFC3339>]`"
              "（予約不可の回は TIMED と表示 → その時刻に即時公開する単発スケジュールで対応）\n")
     o.append("\n## 残作業\n"
-             "- 次に公開：上記「次に公開してよいEP」を public 化（or `publish_episode.py --schedule-all` で水・土18:00 JSTの枠に予約）\n"
+             f"- 次に公開：上記「次に公開してよいEP」を public 化（or `publish_episode.py --schedule-all` で{S.DAYS_JA}{S.YT_HOUR}:00 JSTの枠に予約）\n"
              "- 各Short：Studioで「関連動画」に本編を設定（API不可・docs/shorts-related-video-checklist.md）\n"
              f"- 未UP（本編）：{'／'.join(unup) if unup else 'なし'}\n")
     open("docs/upload-status.md", "w", encoding="utf-8").write("".join(o))
