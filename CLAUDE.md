@@ -35,6 +35,7 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 | ビルド・動画化・アップロード（製造） | `.claude/skills/episode-production/pipeline.md` の2コマンド：`bash _tools/pipeline/run_episode.sh <ep_dir> [--upload]` / `bash _tools/pipeline/run_shorts.sh <ep_dir> [--upload]` |
 | 個別作業（読み監査だけ・サムネだけ等） | 該当する `yt-*` ロールスキル |
 | ツールの部品表 | `_tools/README.md` |
+| 別テーマへの横展開・シリーズ固有の設定 | `docs/replication-playbook.md`／`series.json`（チャンネルID・シリーズ名・タグ接頭辞・公開曜日・特典URL等。**ツールに直書きしない**） |
 
 ## 絶対則（全モデル共通）
 

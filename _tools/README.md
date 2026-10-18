@@ -1,5 +1,7 @@
 # _tools — 製造ラインの見取り図
 
+> シリーズ固有の値（チャンネルID・シリーズ名・タグ接頭辞・公開曜日・特典URL・声など）はリポジトリ直下の `series.json` にあり、各ツールは `_tools/series.py` 経由で読む。新しいテーマの立ち上げは `docs/replication-playbook.md`、設定チェックは `python3 _tools/series_doctor.py [--online]`。
+
 制作（創作判断）は `.claude/skills/` のロールスキル、製造（機械作業）はここのツール。
 **一気通貫の入口は `pipeline/` の2本**。個別ツールはその部品。
 FAIL時の対処・クォータ・禁止事項は `.claude/skills/episode-production/pipeline.md` が正。
