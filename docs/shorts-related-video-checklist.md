@@ -1,59 +1,97 @@
-# Shorts「関連動画」貼り付けチェックリスト（現行ID・2026-08-02）
+# Shorts「関連動画」設定チェックリスト
 
-> 分析で判明した最重要改善：Shortは総再生の99.5%を稼ぐが本編・登録への送客が実質ゼロ。
-> 各Shortの「関連動画」に本編を設定すると送客導線が復活する（**Studio専用・API不可**）。
-> 手順：Studio→該当Short→編集→関連動画→下記「本編ID」を指定。
+> 各Shortの「関連動画」に同じ回の本編を設定すると、Shorts の視聴者を本編へ送れる（**YouTube Studio 専用・API では設定不可**）。
+> 手順：Studio → コンテンツ → ショート → 対象の Short の「詳細」（鉛筆）→「関連動画」→ 本編を選ぶ → 保存。本編が公開された後に設定する。
+> 設定したら `[ ]` を `[x]` に。再生数は 2026-10-18 時点。IDは docs/upload-status.md（YouTube実体）から生成。
 
-| 済 | EP | Short ID | → 本編ID |
-|----|----|----|----|
-| [ ] | EP01 | `OCXc7UIPkss` | `z6YKR5d3_Yg` |
-| [ ] | EP01 | `-xkRAFGzWgk` | `z6YKR5d3_Yg` |
-| [ ] | EP01 | `XPbqym9b83s` | `z6YKR5d3_Yg` |
-| [ ] | EP02 | `oNxn6VyIGW4` | `rRMoT16g-NA` |
-| [ ] | EP02 | `MTVubY3bEaU` | `rRMoT16g-NA` |
-| [ ] | EP02 | `ATHdF689AZY` | `rRMoT16g-NA` |
-| [ ] | EP03 | `xtJ6vY1HnDI` | `L_3cGEIDKVA` |
-| [ ] | EP03 | `AKjhwKKq1gg` | `L_3cGEIDKVA` |
-| [ ] | EP03 | `iWhkHQbS2O4` | `L_3cGEIDKVA` |
-| [ ] | EP04 | `3tgBbO9SgyM` | `dVoMSTPfjaQ` |
-| [ ] | EP04 | `eQ6aZwe81eY` | `dVoMSTPfjaQ` |
-| [ ] | EP04 | `gZhv3uUzOLE` | `dVoMSTPfjaQ` |
-| [ ] | EP05 | `C5zBAGyPhPg` | `3Cqe84Ex1xA` |
-| [ ] | EP05 | `B0WRE-CfWyk` | `3Cqe84Ex1xA` |
-| [ ] | EP05 | `Kmebn5wMCdM` | `3Cqe84Ex1xA` |
-| [ ] | EP06 | `yIx-1wNM3nU` | `q7I5eP_-eR4` |
-| [ ] | EP06 | `9LVGLlNPCBg` | `q7I5eP_-eR4` |
-| [ ] | EP06 | `iCFnGGDAHXU` | `q7I5eP_-eR4` |
-| [ ] | EP07 | `9UWuv-HF5oE` | `h4DOXLBXIe4` |
-| [ ] | EP07 | `2NkjvLtVUjU` | `h4DOXLBXIe4` |
-| [ ] | EP07 | `UJMGQodVN-c` | `h4DOXLBXIe4` |
-| [ ] | EP08 | `OX9e4ssdxoY` | `kR4cVze8Ito` |
-| [ ] | EP08 | `b8-oH6LUwVk` | `kR4cVze8Ito` |
-| [ ] | EP08 | `gWePnm0hIqo` | `kR4cVze8Ito` |
-| [ ] | EP09 | `6fYRo5RvjP4` | `ttAbub0eouw` |
-| [ ] | EP09 | `9llVEW_M6gg` | `ttAbub0eouw` |
-| [ ] | EP09 | `KGiIHoni0dA` | `ttAbub0eouw` |
-| [ ] | EP10 | `Zz_hEf8nqns` | `EVkSwCcuosE` |
-| [ ] | EP10 | `a5jQe-2u2FM` | `EVkSwCcuosE` |
-| [ ] | EP10 | `wyNmdxO2xEQ` | `EVkSwCcuosE` |
-| [ ] | EP11 | `bfGqXt5yi1g` | `VZKZsOg6sQg` |
-| [ ] | EP11 | `IlIJZlksD1w` | `VZKZsOg6sQg` |
-| [ ] | EP11 | `FZWP3a1tXmQ` | `VZKZsOg6sQg` |
-| [ ] | EP12 | `UeI-AnCBmRc` | `CRFcbyviN0o` |
-| [ ] | EP12 | `7knKhSg9A7w` | `CRFcbyviN0o` |
-| [ ] | EP12 | `3zW17hWP8DY` | `CRFcbyviN0o` |
-| [ ] | EP14 | `GhIqXanJswE` | `3C7KbVzj_t4` |
-| [ ] | EP14 | `8kR0LLjWUic` | `3C7KbVzj_t4` |
-| [ ] | EP14 | `bUKm3uK0flg` | `3C7KbVzj_t4` |
-| [ ] | EP15 | `cRGQQu9tT7w` | `RWYeR8GAqGg` |
-| [ ] | EP15 | `xJjCi9HGkh4` | `RWYeR8GAqGg` |
-| [ ] | EP15 | `Bnf7r91FtX8` | `RWYeR8GAqGg` |
-| [ ] | EP16 | `Oh03uErojXo` | `75cAh0oOggk` |
-| [ ] | EP16 | `KX0DzopgbyA` | `75cAh0oOggk` |
-| [ ] | EP16 | `sSXzopIb964` | `75cAh0oOggk` |
-| [ ] | EP17 | `Ae-I_qOe_uw` | `w2REF-0o1fc` |
-| [ ] | EP17 | `mEt-LbMpCec` | `w2REF-0o1fc` |
-| [ ] | EP17 | `riyV0MK61Oc` | `w2REF-0o1fc` |
-| [ ] | EP18 | `JCv21G8JOQA` | `66yGh5qYznQ` |
-| [ ] | EP18 | `8OwmvUpYveY` | `66yGh5qYznQ` |
-| [ ] | EP18 | `KJvC4xXDMMI` | `66yGh5qYznQ` |
+## まず最初に（再生の多い Shorts 上位10本）
+
+| 済 | EP | Short（タイトル） | Short ID | → 本編ID | 再生 |
+|----|----|----|----|----|----|
+| [ ] | EP05 | あなたの発信、「買って」ばかりになっていませんか？ | `B0WRE-CfWyk` | `3Cqe84Ex1xA` | 2812 |
+| [ ] | EP06 | 同じワインが、45ドルだとおいしくなる話 | `9LVGLlNPCBg` | `q7I5eP_-eR4` | 2801 |
+| [ ] | EP14 | このCMのモデル、実在しません【伊藤園のAIタレント】 | `GhIqXanJswE` | `3C7KbVzj_t4` | 1945 |
+| [ ] | EP02 | 客を絞ったのに3億人が来た店、何を売った？ | `oNxn6VyIGW4` | `rRMoT16g-NA` | 1719 |
+| [ ] | EP06 | 値下げする前に、価格表へ足すたった1行 | `iCFnGGDAHXU` | `q7I5eP_-eR4` | 1537 |
+| [ ] | EP03 | 「その客、実在しない」のに53店舗【ペルソナの作り方】 | `xtJ6vY1HnDI` | `L_3cGEIDKVA` | 1184 |
+| [ ] | EP13 | AIは自信満々に嘘をつく【市場調査の落とし穴】 | `rdQSW7nVaR0` | `FbYaIyerJ4g` | 1067 |
+| [ ] | EP04 | スペックを語るほど売れない理由【ベネフィット】 | `eQ6aZwe81eY` | `dVoMSTPfjaQ` | 1010 |
+| [ ] | EP01 | あなたの商品、「誰の穴」か答えられますか？【マーケティングとは】 | `-xkRAFGzWgk` | `z6YKR5d3_Yg` | 957 |
+| [ ] | EP04 | 売れる言葉に変える、たった1つの問い【明日やる】 | `gZhv3uUzOLE` | `dVoMSTPfjaQ` | 591 |
+
+## 全Shorts（EP順）
+
+| 済 | EP | 本編の公開 | Short（タイトル） | Short ID | → 本編ID |
+|----|----|----|----|----|----|
+| [ ] | EP01 | 公開済み | 商品を変えずに売上2.2倍にした会社、何を変えた？ | `OCXc7UIPkss` | `z6YKR5d3_Yg` |
+| [ ] | EP01 | 公開済み | あなたの商品、「誰の穴」か答えられますか？【マーケティングとは】 | `-xkRAFGzWgk` | `z6YKR5d3_Yg` |
+| [ ] | EP01 | 公開済み | 良い商品が売れない時、広告より先にやること1つ | `XPbqym9b83s` | `z6YKR5d3_Yg` |
+| [ ] | EP02 | 公開済み | 客を絞ったのに3億人が来た店、何を売った？ | `oNxn6VyIGW4` | `rRMoT16g-NA` |
+| [ ] | EP02 | 公開済み | ターゲット設定で9割がやる失敗【STP分析】 | `MTVubY3bEaU` | `rRMoT16g-NA` |
+| [ ] | EP02 | 公開済み | 今日からできるSTP分析の最初の一歩 | `ATHdF689AZY` | `rRMoT16g-NA` |
+| [ ] | EP03 | 公開済み | 「その客、実在しない」のに53店舗【ペルソナの作り方】 | `xtJ6vY1HnDI` | `L_3cGEIDKVA` |
+| [ ] | EP03 | 公開済み | ペルソナに"これ"が無いと売れない【ジョブ理論】 | `AKjhwKKq1gg` | `L_3cGEIDKVA` |
+| [ ] | EP03 | 公開済み | 顧客の本音を掘る「なぜ3回」【ペルソナの作り方】 | `iWhkHQbS2O4` | `L_3cGEIDKVA` |
+| [ ] | EP04 | 公開済み | 2ヶ月35万円のジムが選ばれた理由【機能で売るな】 | `3tgBbO9SgyM` | `dVoMSTPfjaQ` |
+| [ ] | EP04 | 公開済み | スペックを語るほど売れない理由【ベネフィット】 | `eQ6aZwe81eY` | `dVoMSTPfjaQ` |
+| [ ] | EP04 | 公開済み | 売れる言葉に変える、たった1つの問い【明日やる】 | `gZhv3uUzOLE` | `dVoMSTPfjaQ` |
+| [ ] | EP05 | 公開済み | 広告に頼らず上場した店が、いちばん力を入れていること | `C5zBAGyPhPg` | `3Cqe84Ex1xA` |
+| [ ] | EP05 | 公開済み | あなたの発信、「買って」ばかりになっていませんか？ | `B0WRE-CfWyk` | `3Cqe84Ex1xA` |
+| [ ] | EP05 | 公開済み | 広告を足す前に、たった1つだけ書き換える場所 | `Kmebn5wMCdM` | `3Cqe84Ex1xA` |
+| [ ] | EP06 | 公開済み | 原価率60%の店が、なぜか潰れない理由 | `yIx-1wNM3nU` | `q7I5eP_-eR4` |
+| [ ] | EP06 | 公開済み | 同じワインが、45ドルだとおいしくなる話 | `9LVGLlNPCBg` | `q7I5eP_-eR4` |
+| [ ] | EP06 | 公開済み | 値下げする前に、価格表へ足すたった1行 | `iCFnGGDAHXU` | `q7I5eP_-eR4` |
+| [ ] | EP07 | 公開済み | 値引き0・CM0で日本2000店。スタバは何を売った？ | `9UWuv-HF5oE` | `h4DOXLBXIe4` |
+| [ ] | EP07 | 公開済み | 施策を足すほど売れなくなる会社の共通点【4P】 | `2NkjvLtVUjU` | `h4DOXLBXIe4` |
+| [ ] | EP07 | 公開済み | 広告を増やす前に、紙に4行書いてください【4P】 | `UJMGQodVN-c` | `h4DOXLBXIe4` |
+| [ ] | EP08 | 公開済み | 100円で買えるものを1万円で500万本売った方法 | `OX9e4ssdxoY` | `kR4cVze8Ito` |
+| [ ] | EP08 | 公開済み | その紹介文、社名を替えてもバレません【USP】 | `b8-oH6LUwVk` | `kR4cVze8Ito` |
+| [ ] | EP08 | 公開済み | 自社の強みが3秒で見つかる「消去法」【USP】 | `gWePnm0hIqo` | `kR4cVze8Ito` |
+| [ ] | EP09 | 公開済み | 客1人に広告費1万円。高い？安い？【CPAとLTV】 | `6fYRo5RvjP4` | `ttAbub0eouw` |
+| [ ] | EP09 | 公開済み | 広告のCPAが安いのに赤字になる会社の共通点 | `9llVEW_M6gg` | `ttAbub0eouw` |
+| [ ] | EP09 | 公開済み | 広告を増やす前に作る、たった2列の表【LTV】 | `KGiIHoni0dA` | `ttAbub0eouw` |
+| [ ] | EP10 | 公開済み | 同じ商品なのに売れる人が語っていること【コピーライティング】 | `Zz_hEf8nqns` | `EVkSwCcuosE` |
+| [ ] | EP10 | 公開済み | 録音機をシニアに大ヒットさせた高田明さんの一言【ジャパネット】 | `a5jQe-2u2FM` | `EVkSwCcuosE` |
+| [ ] | EP10 | 公開済み | 反応ゼロのチラシは1行目だけ直せばいい【コピーライティング】 | `wyNmdxO2xEQ` | `EVkSwCcuosE` |
+| [ ] | EP11 | 公開済み | フォロワー1万人で売上0円になる理由【SNS運用】 | `bfGqXt5yi1g` | `VZKZsOg6sQg` |
+| [ ] | EP11 | 公開済み | 宣伝をやめた家電メーカーが80万人に愛された話【シャープ】 | `IlIJZlksD1w` | `VZKZsOg6sQg` |
+| [ ] | EP11 | 公開済み | SNSの成績は電卓1分でわかる【エンゲージメント率】 | `FZWP3a1tXmQ` | `VZKZsOg6sQg` |
+| [ ] | EP12 | 公開済み | 売上が上がっても喜んではいけない理由【ABテスト】 | `UeI-AnCBmRc` | `CRFcbyviN0o` |
+| [ ] | EP12 | 公開済み | プロの施策も3つに2つは外れる【ABテストの真実】 | `7knKhSg9A7w` | `CRFcbyviN0o` |
+| [ ] | EP12 | 公開済み | 0円で今日からできるABテストのやり方 | `3zW17hWP8DY` | `CRFcbyviN0o` |
+| [ ] | EP13 | 公開済み | AIに「調査して」と頼むと失敗する理由 | `yuS4CQlmSUg` | `FbYaIyerJ4g` |
+| [ ] | EP13 | 公開済み | AIは自信満々に嘘をつく【市場調査の落とし穴】 | `rdQSW7nVaR0` | `FbYaIyerJ4g` |
+| [ ] | EP13 | 公開済み | AIの回答は「読ませる」だけで正確になる | `iy4hpgL7c0g` | `FbYaIyerJ4g` |
+| [ ] | EP14 | 公開済み | このCMのモデル、実在しません【伊藤園のAIタレント】 | `GhIqXanJswE` | `3C7KbVzj_t4` |
+| [ ] | EP14 | 公開済み | AIで作った記事が読まれない本当の理由【没個性の正体】 | `8kR0LLjWUic` | `3C7KbVzj_t4` |
+| [ ] | EP14 | 公開済み | AIの下書きに個性を宿す紙1枚【らしさの設計図】 | `bUKm3uK0flg` | `3C7KbVzj_t4` |
+| [ ] | EP15 | 公開済み | アンケート1000件は読まなくていい【AI分析】 | `cRGQQu9tT7w` | `RWYeR8GAqGg` |
+| [ ] | EP15 | 公開済み | スシローがすし皿を1枚ずつ数える理由【データ分析】 | `xJjCi9HGkh4` | `RWYeR8GAqGg` |
+| [ ] | EP15 | 公開済み | コピペで使えるアンケート分類プロンプト【ChatGPT】 | `Bnf7r91FtX8` | `RWYeR8GAqGg` |
+| [ ] | EP16 | 公開済み | チャットボットが客を怒らせる本当の理由【AI接客】 | `Oh03uErojXo` | `75cAh0oOggk` |
+| [ ] | EP16 | 公開済み | 問い合わせの5割を捌くチャットボットの秘密【LOHACO】 | `KX0DzopgbyA` | `75cAh0oOggk` |
+| [ ] | EP16 | 公開済み | ボット導入前にやる紙1枚の準備【FAQトップ10】 | `sSXzopIb964` | `75cAh0oOggk` |
+| [ ] | EP17 | 10/21（水） 18:00 以降 | 広告を止めると売上が消える会社の共通点【ブランディング】 | `Ae-I_qOe_uw` | `w2REF-0o1fc` |
+| [ ] | EP17 | 10/21（水） 18:00 以降 | ブランドを否定して最強ブランドになった無印良品 | `mEt-LbMpCec` | `w2REF-0o1fc` |
+| [ ] | EP17 | 10/21（水） 18:00 以降 | 指名買いされる店になる「約束の1行」の書き方 | `riyV0MK61Oc` | `w2REF-0o1fc` |
+| [ ] | EP18 | 10/24（土） 18:00 以降 | 新規客は既存客の5倍高くつく【CRM】 | `JCv21G8JOQA` | `66yGh5qYznQ` |
+| [ ] | EP18 | 10/24（土） 18:00 以降 | 無料でコーヒーマシンを配ったネスレが大儲けした理由 | `8OwmvUpYveY` | `66yGh5qYznQ` |
+| [ ] | EP18 | 10/24（土） 18:00 以降 | 利益を増やす第一歩は常連10人の書き出し【顧客台帳】 | `KJvC4xXDMMI` | `66yGh5qYznQ` |
+| [ ] | EP19 | 10/28（水） 18:00 以降 | 優秀な人を雇っても成果が出ない会社の犯人【マーケ組織】 | `5EiVzcWnYcY` | `G3muSAmlt24` |
+| [ ] | EP19 | 10/28（水） 18:00 以降 | 1931年のメモが世界中の会社を変えた【ブランドマネージャー】 | `Y6J1pAUvp6g` | `G3muSAmlt24` |
+| [ ] | EP19 | 10/28（水） 18:00 以降 | 会議ばかりで決まらない会社の直し方【週30分】 | `VKXMiuSjavY` | `G3muSAmlt24` |
+| [ ] | EP20 | 10/31（土） 18:00 以降 | 広告費ゼロで利用者が40倍に増えた会社の秘密【グロースハック】 | `l3FUvHcNYEc` | `O3ANMg1Fdb8` |
+| [ ] | EP20 | 10/31（土） 18:00 以降 | 集客を増やす前に見るべき「穴の空いたバケツ」【AARRR】 | `JV1lzXzxx7c` | `O3ANMg1Fdb8` |
+| [ ] | EP20 | 10/31（土） 18:00 以降 | 客が客を連れてくる「成長ループ」の作り方【紹介設計】 | `-o5X_JSyQY4` | `O3ANMg1Fdb8` |
+| [ ] | EP21 | 11/04（水） 18:00 以降 | 宣伝費15万円が5億円に化けた話【ヒット商品の理由】 | `oM4-5LikyTo` | `K_VbaZCL1zE` |
+| [ ] | EP21 | 11/04（水） 18:00 以降 | 拡散施策ゼロで広告賞13個獲得した「お詫びCM」の正体 | `gySkRFXZ-bs` | `K_VbaZCL1zE` |
+| [ ] | EP21 | 11/04（水） 18:00 以降 | ヒットの再現式「誰に×どんな価値×どう広がるか」 | `5bwru3XThg4` | `K_VbaZCL1zE` |
+| [ ] | EP22 | 11/07（土） 18:00 以降 | 730万人が1390万人になった理由【V字回復の事例】 | `npVdcb6WkX0` | `qCVqPmcoJZE` |
+| [ ] | EP22 | 11/07（土） 18:00 以降 | 新設ゼロで大行列。USJが後ろ向きに走らせた理由 | `70U5I68Df1U` | `qCVqPmcoJZE` |
+| [ ] | EP22 | 11/07（土） 18:00 以降 | V字回復に必要なのは、たった3つの手 | `BIGlUgljaWw` | `qCVqPmcoJZE` |
+| [ ] | EP23 | 11/11（水） 18:00 以降 | 資金も技術もあったのに91日で消えた理由 | `_yrnwzZNvKs` | `oC1oCzRBxpA` |
+| [ ] | EP23 | 11/11（水） 18:00 以降 | あなたの会社は大丈夫？3つの死因チェック | `7GPZiMWNk1s` | `oC1oCzRBxpA` |
+| [ ] | EP23 | 11/11（水） 18:00 以降 | 明日やること、たった1つ【マーケティング失敗事例】 | `l6WZ8BV_aHo` | `oC1oCzRBxpA` |
+| [ ] | EP24 | 11/14（土） 18:00 以降 | マーケターの仕事の8割が消える、は本当か | `iI2YMYYHQVk` | `fUwzpA76OUw` |
+| [ ] | EP24 | 11/14（土） 18:00 以降 | AIに奪われない仕事の見分けかた | `OmlvDbc0CjU` | `fUwzpA76OUw` |
+| [ ] | EP24 | 11/14（土） 18:00 以降 | 明日やること、たった1つ【シリーズ最終回】 | `A_vq8EUYT8U` | `fUwzpA76OUw` |
