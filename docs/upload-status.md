@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-10-18 08:33 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
+> 自動生成：2026-10-18 10:56 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
 > 生成：`python3 _tools/publish/gen_upload_status.py`。他セッション・ルーティンはこのファイルで到達点を確認する。
 
 凡例：public=公開済 / private=非公開 / 予約=公開予約済 / 未UP=未アップロード / —=対象物なし
@@ -27,9 +27,9 @@
 | EP18 | `ep18_ltv-crm-strategy` | `66yGh5qYznQ` | 予約 2026-10-24 09:00 | `JCv21G8JOQA` `8OwmvUpYveY` `KJvC4xXDMMI` | private／予約 2026-10-24 09:00 |
 | EP19 | `ep19_marketing-org` | `G3muSAmlt24` | 予約 2026-10-28 09:00 | `5EiVzcWnYcY` `Y6J1pAUvp6g` `VKXMiuSjavY` | 予約 2026-10-28 09:00 |
 | EP20 | `ep20_growth-hack` | `O3ANMg1Fdb8` | private | `l3FUvHcNYEc` `JV1lzXzxx7c` `-o5X_JSyQY4` | private |
-| EP21 | `ep21_hit-products` | `K_VbaZCL1zE` | 予約 2026-11-04 09:00 | `oM4-5LikyTo` `gySkRFXZ-bs` `5bwru3XThg4` | private／予約 2026-11-04 09:00 |
+| EP21 | `ep21_hit-products` | `K_VbaZCL1zE` | 予約 2026-11-04 09:00 | `oM4-5LikyTo` `gySkRFXZ-bs` `5bwru3XThg4` | 予約 2026-11-04 09:00 |
 | EP22 | `ep22_v-shaped-recovery` | `qCVqPmcoJZE` | 予約 2026-11-07 09:00 | `npVdcb6WkX0` `70U5I68Df1U` `BIGlUgljaWw` | 予約 2026-11-07 09:00 |
-| EP23 | `ep23_failure-cases` | `oC1oCzRBxpA` | private | `_yrnwzZNvKs` `7GPZiMWNk1s` `l6WZ8BV_aHo` | 予約 2026-11-11 09:00 |
+| EP23 | `ep23_failure-cases` | `oC1oCzRBxpA` | 予約 2026-11-11 09:00 | `_yrnwzZNvKs` `7GPZiMWNk1s` `l6WZ8BV_aHo` | 予約 2026-11-11 09:00 |
 | EP24 | `ep24_future-marketer` | `fUwzpA76OUw` | 予約 2026-11-14 09:00 | `iI2YMYYHQVk` `OmlvDbc0CjU` `A_vq8EUYT8U` | 予約 2026-11-14 09:00 |
 
 **集計**：追跡 96本中 public=64 / private=32 / unlisted=0
@@ -44,6 +44,7 @@
 - EP19：2026-10-28 (Wed) 18:00 JST
 - EP21：2026-11-04 (Wed) 18:00 JST
 - EP22：2026-11-07 (Sat) 18:00 JST
+- EP23：2026-11-11 (Wed) 18:00 JST
 - EP24：2026-11-14 (Sat) 18:00 JST
 - 延長・組み直し：`python3 _tools/publish/publish_episode.py --schedule-all [--start <RFC3339>]`（予約不可の回は TIMED と表示 → その時刻に即時公開する単発スケジュールで対応）
 

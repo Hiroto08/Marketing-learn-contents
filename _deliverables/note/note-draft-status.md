@@ -30,7 +30,7 @@ status の意味：
 | EP10 | ep10_copywriting-5laws.md | 公開済み 2026-09-19 | 175444888 | https://editor.note.com/notes/175444888/edit | 2026-08-18 |
 | EP11 | ep11_sns-engagement.md | 公開済み 2026-10-17 | 176625438 | https://editor.note.com/notes/176625438/edit | 2026-08-25 |
 | EP12 | ep12_ab-testing.md | 公開済み 2026-10-17 | 177845517 | https://editor.note.com/notes/177845517/edit | 2026-09-01 |
-| EP13 | ep13_ai-market-research.md | 下書き保存済み | 179093953 | https://editor.note.com/notes/179093953/edit | 2026-09-08 |
+| EP13 | ep13_ai-market-research.md | 公開済み 2026-10-18 | 179093953 | https://editor.note.com/notes/179093953/edit | 2026-09-08 |
 | EP14 | ep14_ai-content-creation.md | 下書き保存済み | 180333349 | https://editor.note.com/notes/180333349/edit | 2026-09-15 |
 | EP15 | ep15_ai-data-analysis.md | 下書き保存済み | 181552984 | https://editor.note.com/notes/181552984/edit | 2026-09-22 |
 | EP16 | ep16_ai-chatbot.md | 下書き保存済み | 182816598 | https://editor.note.com/notes/182816598/edit | 2026-09-29 |
