@@ -32,7 +32,7 @@ status の意味：
 | EP12 | ep12_ab-testing.md | 公開済み 2026-10-17 | 177845517 | https://editor.note.com/notes/177845517/edit | 2026-09-01 |
 | EP13 | ep13_ai-market-research.md | 公開済み 2026-10-18 | 179093953 | https://editor.note.com/notes/179093953/edit | 2026-09-08 |
 | EP14 | ep14_ai-content-creation.md | 公開済み 2026-10-19 | 180333349 | https://editor.note.com/notes/180333349/edit | 2026-09-15 |
-| EP15 | ep15_ai-data-analysis.md | 下書き保存済み | 181552984 | https://editor.note.com/notes/181552984/edit | 2026-09-22 |
+| EP15 | ep15_ai-data-analysis.md | 公開済み 2026-10-20 | 181552984 | https://editor.note.com/notes/181552984/edit | 2026-09-22 |
 | EP16 | ep16_ai-chatbot.md | 下書き保存済み | 182816598 | https://editor.note.com/notes/182816598/edit | 2026-09-29 |
 | EP17 | ep17_brand-equity.md | 下書き保存済み | 184074389 | https://editor.note.com/notes/184074389/edit | 2026-10-06 |
 | EP18 | ep18_ltv-crm-strategy.md | 下書き保存済み | 185292968 | https://editor.note.com/notes/185292968/edit | 2026-10-13 |
