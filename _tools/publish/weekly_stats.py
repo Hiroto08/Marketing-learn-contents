@@ -24,7 +24,7 @@ def main():
     ch = api(tok, "channels", {"part": "statistics,snippet", "mine": "true"})["items"][0]
     idx = episode_index(tok)
     today = datetime.date.today().isoformat()
-    snap = {"date": today, "channel": {k: int(v) for k, v in ch["statistics"].items() if v.isdigit()}, "videos": {}}
+    snap = {"date": today, "channel": {k: int(v) for k, v in ch["statistics"].items() if isinstance(v, str) and v.isdigit()}, "videos": {}}
     for ep, s in idx.items():
         for vid, v in s["items"].items():
             st = v.get("statistics", {})
