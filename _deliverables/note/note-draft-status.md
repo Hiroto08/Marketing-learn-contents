@@ -34,7 +34,7 @@ status の意味：
 | EP14 | ep14_ai-content-creation.md | 公開済み 2026-10-19 | 180333349 | https://editor.note.com/notes/180333349/edit | 2026-09-15 |
 | EP15 | ep15_ai-data-analysis.md | 公開済み 2026-10-20 | 181552984 | https://editor.note.com/notes/181552984/edit | 2026-09-22 |
 | EP16 | ep16_ai-chatbot.md | 公開済み 2026-10-21 | 182816598 | https://editor.note.com/notes/182816598/edit | 2026-09-29 |
-| EP17 | ep17_brand-equity.md | 下書き保存済み | 184074389 | https://editor.note.com/notes/184074389/edit | 2026-10-06 |
+| EP17 | ep17_brand-equity.md | 公開済み 2026-10-22 | 184074389 | https://editor.note.com/notes/184074389/edit | 2026-10-06 |
 | EP18 | ep18_ltv-crm-strategy.md | 下書き保存済み | 185292968 | https://editor.note.com/notes/185292968/edit | 2026-10-13 |
 | EP19 | ep19_marketing-org.md | 下書き保存済み | 186508394 | https://editor.note.com/notes/186508394/edit | 2026-10-20 |
 | EP20 | ep20_growth-hack.md | 下書き保存済み | 186508475 | https://editor.note.com/notes/186508475/edit | 2026-10-20 |
