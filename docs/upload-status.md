@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-10-22 10:56 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
+> 自動生成：2026-10-23 10:56 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
 > 生成：`python3 _tools/publish/gen_upload_status.py`。他セッション・ルーティンはこのファイルで到達点を確認する。
 
 凡例：public=公開済 / private=非公開 / 予約=公開予約済 / 未UP=未アップロード / —=対象物なし
