@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-10-23 10:56 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
+> 自動生成：2026-10-24 09:03 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
 > 生成：`python3 _tools/publish/gen_upload_status.py`。他セッション・ルーティンはこのファイルで到達点を確認する。
 
 凡例：public=公開済 / private=非公開 / 予約=公開予約済 / 未UP=未アップロード / —=対象物なし
@@ -24,7 +24,7 @@
 | EP15 | `ep15_ai-data-analysis` | `RWYeR8GAqGg` | public | `cRGQQu9tT7w` `xJjCi9HGkh4` `Bnf7r91FtX8` | public |
 | EP16 | `ep16_ai-chatbot` | `75cAh0oOggk` | public | `Oh03uErojXo` `KX0DzopgbyA` `sSXzopIb964` | public |
 | EP17 | `ep17_brand-equity` | `w2REF-0o1fc` | public | `Ae-I_qOe_uw` `mEt-LbMpCec` `riyV0MK61Oc` | public |
-| EP18 | `ep18_ltv-crm-strategy` | `66yGh5qYznQ` | 予約 2026-10-24 09:00 | `JCv21G8JOQA` `8OwmvUpYveY` `KJvC4xXDMMI` | private／予約 2026-10-24 09:00 |
+| EP18 | `ep18_ltv-crm-strategy` | `66yGh5qYznQ` | public | `JCv21G8JOQA` `8OwmvUpYveY` `KJvC4xXDMMI` | public |
 | EP19 | `ep19_marketing-org` | `G3muSAmlt24` | 予約 2026-10-28 09:00 | `5EiVzcWnYcY` `Y6J1pAUvp6g` `VKXMiuSjavY` | 予約 2026-10-28 09:00 |
 | EP20 | `ep20_growth-hack` | `O3ANMg1Fdb8` | private | `l3FUvHcNYEc` `JV1lzXzxx7c` `-o5X_JSyQY4` | private |
 | EP21 | `ep21_hit-products` | `K_VbaZCL1zE` | 予約 2026-11-04 09:00 | `oM4-5LikyTo` `gySkRFXZ-bs` `5bwru3XThg4` | 予約 2026-11-04 09:00 |
@@ -32,14 +32,13 @@
 | EP23 | `ep23_failure-cases` | `oC1oCzRBxpA` | 予約 2026-11-11 09:00 | `_yrnwzZNvKs` `7GPZiMWNk1s` `l6WZ8BV_aHo` | 予約 2026-11-11 09:00 |
 | EP24 | `ep24_future-marketer` | `fUwzpA76OUw` | 予約 2026-11-14 09:00 | `iI2YMYYHQVk` `OmlvDbc0CjU` `A_vq8EUYT8U` | 予約 2026-11-14 09:00 |
 
-**集計**：追跡 96本中 public=68 / private=28 / unlisted=0
+**集計**：追跡 96本中 public=72 / private=24 / unlisted=0
 
 ## 公開順序（絶対則：飛び級厳禁）
-- 現在 public 済みの最大EP＝**EP17**／次に公開してよいのは**EP18のみ**（`python3 _tools/publish/publish_episode.py --episode <dir>` で本編＋Shortsを同時公開）。
+- 現在 public 済みの最大EP＝**EP18**／次に公開してよいのは**EP19のみ**（`python3 _tools/publish/publish_episode.py --episode <dir>` で本編＋Shortsを同時公開）。
 - 本編は必ずEP番号の昇順で公開。先のEPが非公開UP済みでも飛ばさない（docs/autonomous-operation.md §3.1）。
 
 ## 公開予約カレンダー（本編＋同回Shortsが同時刻）
-- EP18：2026-10-24 (Sat) 18:00 JST
 - EP19：2026-10-28 (Wed) 18:00 JST
 - EP21：2026-11-04 (Wed) 18:00 JST
 - EP22：2026-11-07 (Sat) 18:00 JST
