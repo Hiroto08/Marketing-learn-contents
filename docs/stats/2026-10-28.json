@@ -1,0 +1,970 @@
+{
+ "date": "2026-10-28",
+ "channel": {
+  "viewCount": 24335,
+  "subscriberCount": 15,
+  "videoCount": 72
+ },
+ "videos": {
+  "-xkRAFGzWgk": {
+   "ep": 1,
+   "kind": "short",
+   "title": "あなたの商品、「誰の穴」か答えられますか？【マーケティングとは】",
+   "privacy": "public",
+   "sec": 20,
+   "views": 957,
+   "likes": 1,
+   "comments": 1
+  },
+  "XPbqym9b83s": {
+   "ep": 1,
+   "kind": "short",
+   "title": "良い商品が売れない時、広告より先にやること1つ",
+   "privacy": "public",
+   "sec": 23,
+   "views": 274,
+   "likes": 1,
+   "comments": 0
+  },
+  "z6YKR5d3_Yg": {
+   "ep": 1,
+   "kind": "main",
+   "title": "良い商品が売れない理由の9割【マーケティングとは】",
+   "privacy": "public",
+   "sec": 527,
+   "views": 13,
+   "likes": 2,
+   "comments": 1
+  },
+  "OCXc7UIPkss": {
+   "ep": 1,
+   "kind": "short",
+   "title": "商品を変えずに売上2.2倍にした会社、何を変えた？",
+   "privacy": "public",
+   "sec": 23,
+   "views": 366,
+   "likes": 1,
+   "comments": 0
+  },
+  "O3ANMg1Fdb8": {
+   "ep": 20,
+   "kind": "main",
+   "title": "広告費ゼロで増え続けた会社の仕組み【グロースハック】",
+   "privacy": "private",
+   "sec": 553,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "-o5X_JSyQY4": {
+   "ep": 20,
+   "kind": "short",
+   "title": "客が客を連れてくる「成長ループ」の作り方【紹介設計】",
+   "privacy": "private",
+   "sec": 25,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "JV1lzXzxx7c": {
+   "ep": 20,
+   "kind": "short",
+   "title": "集客を増やす前に見るべき「穴の空いたバケツ」【AARRR】",
+   "privacy": "private",
+   "sec": 21,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "l3FUvHcNYEc": {
+   "ep": 20,
+   "kind": "short",
+   "title": "広告費ゼロで利用者が40倍に増えた会社の秘密【グロースハック】",
+   "privacy": "private",
+   "sec": 25,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "K_VbaZCL1zE": {
+   "ep": 21,
+   "kind": "main",
+   "title": "ヒット商品の仕掛けは宣伝費15万円だった",
+   "privacy": "private",
+   "sec": 530,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "gySkRFXZ-bs": {
+   "ep": 21,
+   "kind": "short",
+   "title": "拡散施策ゼロで広告賞13個獲得した「お詫びCM」の正体",
+   "privacy": "private",
+   "sec": 23,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "oM4-5LikyTo": {
+   "ep": 21,
+   "kind": "short",
+   "title": "宣伝費15万円が5億円に化けた話【ヒット商品の理由】",
+   "privacy": "private",
+   "sec": 22,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "5bwru3XThg4": {
+   "ep": 21,
+   "kind": "short",
+   "title": "ヒットの再現式「誰に×どんな価値×どう広がるか」",
+   "privacy": "private",
+   "sec": 22,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "ATHdF689AZY": {
+   "ep": 2,
+   "kind": "short",
+   "title": "今日からできるSTP分析の最初の一歩",
+   "privacy": "public",
+   "sec": 22,
+   "views": 203,
+   "likes": 0,
+   "comments": 0
+  },
+  "oNxn6VyIGW4": {
+   "ep": 2,
+   "kind": "short",
+   "title": "客を絞ったのに3億人が来た店、何を売った？",
+   "privacy": "public",
+   "sec": 20,
+   "views": 1719,
+   "likes": 1,
+   "comments": 0
+  },
+  "MTVubY3bEaU": {
+   "ep": 2,
+   "kind": "short",
+   "title": "ターゲット設定で9割がやる失敗【STP分析】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 243,
+   "likes": 0,
+   "comments": 0
+  },
+  "rRMoT16g-NA": {
+   "ep": 2,
+   "kind": "main",
+   "title": "売る相手を間違えると全部ムダ【STP分析のやり方】",
+   "privacy": "public",
+   "sec": 588,
+   "views": 40,
+   "likes": 1,
+   "comments": 0
+  },
+  "q7I5eP_-eR4": {
+   "ep": 6,
+   "kind": "main",
+   "title": "原価率60%でも儲かる価格設定の心理学",
+   "privacy": "public",
+   "sec": 565,
+   "views": 12,
+   "likes": 1,
+   "comments": 0
+  },
+  "9LVGLlNPCBg": {
+   "ep": 6,
+   "kind": "short",
+   "title": "同じワインが、45ドルだとおいしくなる話",
+   "privacy": "public",
+   "sec": 20,
+   "views": 2801,
+   "likes": 4,
+   "comments": 0
+  },
+  "yIx-1wNM3nU": {
+   "ep": 6,
+   "kind": "short",
+   "title": "原価率60%の店が、なぜか潰れない理由",
+   "privacy": "public",
+   "sec": 21,
+   "views": 229,
+   "likes": 0,
+   "comments": 0
+  },
+  "iCFnGGDAHXU": {
+   "ep": 6,
+   "kind": "short",
+   "title": "値下げする前に、価格表へ足すたった1行",
+   "privacy": "public",
+   "sec": 21,
+   "views": 1537,
+   "likes": 1,
+   "comments": 0
+  },
+  "G3muSAmlt24": {
+   "ep": 19,
+   "kind": "main",
+   "title": "マーケが機能しない組織の共通点【P&Gに学ぶ】",
+   "privacy": "private",
+   "sec": 499,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "5EiVzcWnYcY": {
+   "ep": 19,
+   "kind": "short",
+   "title": "優秀な人を雇っても成果が出ない会社の犯人【マーケ組織】",
+   "privacy": "private",
+   "sec": 23,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "VKXMiuSjavY": {
+   "ep": 19,
+   "kind": "short",
+   "title": "会議ばかりで決まらない会社の直し方【週30分】",
+   "privacy": "private",
+   "sec": 21,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "Y6J1pAUvp6g": {
+   "ep": 19,
+   "kind": "short",
+   "title": "1931年のメモが世界中の会社を変えた【ブランドマネージャー】",
+   "privacy": "private",
+   "sec": 23,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "3C7KbVzj_t4": {
+   "ep": 14,
+   "kind": "main",
+   "title": "AIで量産しても没個性にしない記事作成のやり方",
+   "privacy": "public",
+   "sec": 504,
+   "views": 69,
+   "likes": 0,
+   "comments": 0
+  },
+  "bUKm3uK0flg": {
+   "ep": 14,
+   "kind": "short",
+   "title": "AIの下書きに個性を宿す紙1枚【らしさの設計図】",
+   "privacy": "public",
+   "sec": 24,
+   "views": 39,
+   "likes": 0,
+   "comments": 0
+  },
+  "8kR0LLjWUic": {
+   "ep": 14,
+   "kind": "short",
+   "title": "AIで作った記事が読まれない本当の理由【没個性の正体】",
+   "privacy": "public",
+   "sec": 24,
+   "views": 177,
+   "likes": 0,
+   "comments": 0
+  },
+  "GhIqXanJswE": {
+   "ep": 14,
+   "kind": "short",
+   "title": "このCMのモデル、実在しません【伊藤園のAIタレント】",
+   "privacy": "public",
+   "sec": 25,
+   "views": 1949,
+   "likes": 0,
+   "comments": 0
+  },
+  "Kmebn5wMCdM": {
+   "ep": 5,
+   "kind": "short",
+   "title": "広告を足す前に、たった1つだけ書き換える場所",
+   "privacy": "public",
+   "sec": 23,
+   "views": 217,
+   "likes": 0,
+   "comments": 0
+  },
+  "3Cqe84Ex1xA": {
+   "ep": 5,
+   "kind": "main",
+   "title": "広告は良いのに売れない時、見る場所【カスタマージャーニーの作り方】",
+   "privacy": "public",
+   "sec": 502,
+   "views": 9,
+   "likes": 0,
+   "comments": 0
+  },
+  "B0WRE-CfWyk": {
+   "ep": 5,
+   "kind": "short",
+   "title": "あなたの発信、「買って」ばかりになっていませんか？",
+   "privacy": "public",
+   "sec": 20,
+   "views": 2812,
+   "likes": 5,
+   "comments": 0
+  },
+  "C5zBAGyPhPg": {
+   "ep": 5,
+   "kind": "short",
+   "title": "広告に頼らず上場した店が、いちばん力を入れていること",
+   "privacy": "public",
+   "sec": 23,
+   "views": 384,
+   "likes": 0,
+   "comments": 0
+  },
+  "mEt-LbMpCec": {
+   "ep": 17,
+   "kind": "short",
+   "title": "ブランドを否定して最強ブランドになった無印良品",
+   "privacy": "public",
+   "sec": 26,
+   "views": 6,
+   "likes": 0,
+   "comments": 0
+  },
+  "Ae-I_qOe_uw": {
+   "ep": 17,
+   "kind": "short",
+   "title": "広告を止めると売上が消える会社の共通点【ブランディング】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 34,
+   "likes": 0,
+   "comments": 0
+  },
+  "w2REF-0o1fc": {
+   "ep": 17,
+   "kind": "main",
+   "title": "広告をやめても売れる状態の作り方【ブランディング】",
+   "privacy": "public",
+   "sec": 508,
+   "views": 13,
+   "likes": 0,
+   "comments": 0
+  },
+  "riyV0MK61Oc": {
+   "ep": 17,
+   "kind": "short",
+   "title": "指名買いされる店になる「約束の1行」の書き方",
+   "privacy": "public",
+   "sec": 26,
+   "views": 81,
+   "likes": 0,
+   "comments": 0
+  },
+  "npVdcb6WkX0": {
+   "ep": 22,
+   "kind": "short",
+   "title": "730万人が1390万人になった理由【V字回復の事例】",
+   "privacy": "private",
+   "sec": 26,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "BIGlUgljaWw": {
+   "ep": 22,
+   "kind": "short",
+   "title": "V字回復に必要なのは、たった3つの手",
+   "privacy": "private",
+   "sec": 22,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "qCVqPmcoJZE": {
+   "ep": 22,
+   "kind": "main",
+   "title": "V字回復の仕掛けは、たった3つの手だった",
+   "privacy": "private",
+   "sec": 484,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "70U5I68Df1U": {
+   "ep": 22,
+   "kind": "short",
+   "title": "新設ゼロで大行列。USJが後ろ向きに走らせた理由",
+   "privacy": "private",
+   "sec": 23,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "3tgBbO9SgyM": {
+   "ep": 4,
+   "kind": "short",
+   "title": "2ヶ月35万円のジムが選ばれた理由【機能で売るな】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 211,
+   "likes": 1,
+   "comments": 0
+  },
+  "dVoMSTPfjaQ": {
+   "ep": 4,
+   "kind": "main",
+   "title": "機能で売るな【ベネフィットと特徴の違い】",
+   "privacy": "public",
+   "sec": 578,
+   "views": 2,
+   "likes": 1,
+   "comments": 0
+  },
+  "eQ6aZwe81eY": {
+   "ep": 4,
+   "kind": "short",
+   "title": "スペックを語るほど売れない理由【ベネフィット】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 1010,
+   "likes": 3,
+   "comments": 0
+  },
+  "gZhv3uUzOLE": {
+   "ep": 4,
+   "kind": "short",
+   "title": "売れる言葉に変える、たった1つの問い【明日やる】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 591,
+   "likes": 0,
+   "comments": 0
+  },
+  "UJMGQodVN-c": {
+   "ep": 7,
+   "kind": "short",
+   "title": "広告を増やす前に、紙に4行書いてください【4P】",
+   "privacy": "public",
+   "sec": 24,
+   "views": 323,
+   "likes": 0,
+   "comments": 0
+  },
+  "2NkjvLtVUjU": {
+   "ep": 7,
+   "kind": "short",
+   "title": "施策を足すほど売れなくなる会社の共通点【4P】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 349,
+   "likes": 0,
+   "comments": 0
+  },
+  "9UWuv-HF5oE": {
+   "ep": 7,
+   "kind": "short",
+   "title": "値引き0・CM0で日本2000店。スタバは何を売った？",
+   "privacy": "public",
+   "sec": 23,
+   "views": 182,
+   "likes": 0,
+   "comments": 0
+  },
+  "h4DOXLBXIe4": {
+   "ep": 7,
+   "kind": "main",
+   "title": "全部やってるのに売れない会社の共通点【4Pと4C】",
+   "privacy": "public",
+   "sec": 493,
+   "views": 180,
+   "likes": 3,
+   "comments": 0
+  },
+  "3zW17hWP8DY": {
+   "ep": 12,
+   "kind": "short",
+   "title": "0円で今日からできるABテストのやり方",
+   "privacy": "public",
+   "sec": 25,
+   "views": 91,
+   "likes": 0,
+   "comments": 0
+  },
+  "7knKhSg9A7w": {
+   "ep": 12,
+   "kind": "short",
+   "title": "プロの施策も3つに2つは外れる【ABテストの真実】",
+   "privacy": "public",
+   "sec": 21,
+   "views": 154,
+   "likes": 1,
+   "comments": 0
+  },
+  "CRFcbyviN0o": {
+   "ep": 12,
+   "kind": "main",
+   "title": "その改善、気のせいかもしれません【ABテスト】",
+   "privacy": "public",
+   "sec": 496,
+   "views": 2,
+   "likes": 0,
+   "comments": 0
+  },
+  "UeI-AnCBmRc": {
+   "ep": 12,
+   "kind": "short",
+   "title": "売上が上がっても喜んではいけない理由【ABテスト】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 151,
+   "likes": 0,
+   "comments": 0
+  },
+  "Oh03uErojXo": {
+   "ep": 16,
+   "kind": "short",
+   "title": "チャットボットが客を怒らせる本当の理由【AI接客】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 4,
+   "likes": 0,
+   "comments": 0
+  },
+  "75cAh0oOggk": {
+   "ep": 16,
+   "kind": "main",
+   "title": "嫌われるチャットボットの共通点【AI接客の設計】",
+   "privacy": "public",
+   "sec": 485,
+   "views": 2,
+   "likes": 0,
+   "comments": 0
+  },
+  "KX0DzopgbyA": {
+   "ep": 16,
+   "kind": "short",
+   "title": "問い合わせの5割を捌くチャットボットの秘密【LOHACO】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 182,
+   "likes": 0,
+   "comments": 0
+  },
+  "sSXzopIb964": {
+   "ep": 16,
+   "kind": "short",
+   "title": "ボット導入前にやる紙1枚の準備【FAQトップ10】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 1,
+   "likes": 0,
+   "comments": 0
+  },
+  "AKjhwKKq1gg": {
+   "ep": 3,
+   "kind": "short",
+   "title": "ペルソナに\"これ\"が無いと売れない【ジョブ理論】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 92,
+   "likes": 0,
+   "comments": 0
+  },
+  "xtJ6vY1HnDI": {
+   "ep": 3,
+   "kind": "short",
+   "title": "「その客、実在しない」のに53店舗【ペルソナの作り方】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 1185,
+   "likes": 1,
+   "comments": 0
+  },
+  "iWhkHQbS2O4": {
+   "ep": 3,
+   "kind": "short",
+   "title": "顧客の本音を掘る「なぜ3回」【ペルソナの作り方】",
+   "privacy": "public",
+   "sec": 20,
+   "views": 183,
+   "likes": 0,
+   "comments": 0
+  },
+  "L_3cGEIDKVA": {
+   "ep": 3,
+   "kind": "main",
+   "title": "ペルソナ作りで9割がやる失敗【作り方】",
+   "privacy": "public",
+   "sec": 558,
+   "views": 33,
+   "likes": 2,
+   "comments": 0
+  },
+  "OX9e4ssdxoY": {
+   "ep": 8,
+   "kind": "short",
+   "title": "100円で買えるものを1万円で500万本売った方法",
+   "privacy": "public",
+   "sec": 23,
+   "views": 421,
+   "likes": 0,
+   "comments": 0
+  },
+  "gWePnm0hIqo": {
+   "ep": 8,
+   "kind": "short",
+   "title": "自社の強みが3秒で見つかる「消去法」【USP】",
+   "privacy": "public",
+   "sec": 24,
+   "views": 4,
+   "likes": 0,
+   "comments": 0
+  },
+  "kR4cVze8Ito": {
+   "ep": 8,
+   "kind": "main",
+   "title": "1万円ルーペが500万本売れた理由【USPの作り方】",
+   "privacy": "public",
+   "sec": 494,
+   "views": 4,
+   "likes": 0,
+   "comments": 0
+  },
+  "b8-oH6LUwVk": {
+   "ep": 8,
+   "kind": "short",
+   "title": "その紹介文、社名を替えてもバレません【USP】",
+   "privacy": "public",
+   "sec": 25,
+   "views": 219,
+   "likes": 0,
+   "comments": 0
+  },
+  "iI2YMYYHQVk": {
+   "ep": 24,
+   "kind": "short",
+   "title": "マーケターの仕事の8割が消える、は本当か",
+   "privacy": "private",
+   "sec": 20,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "fUwzpA76OUw": {
+   "ep": 24,
+   "kind": "main",
+   "title": "マーケター不要論、その8割は誤解【シリーズ最終回】",
+   "privacy": "private",
+   "sec": 482,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "OmlvDbc0CjU": {
+   "ep": 24,
+   "kind": "short",
+   "title": "AIに奪われない仕事の見分けかた",
+   "privacy": "private",
+   "sec": 21,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "A_vq8EUYT8U": {
+   "ep": 24,
+   "kind": "short",
+   "title": "明日やること、たった1つ【シリーズ最終回】",
+   "privacy": "private",
+   "sec": 18,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "RWYeR8GAqGg": {
+   "ep": 15,
+   "kind": "main",
+   "title": "1000件の声を10分で読む【ChatGPT分析】",
+   "privacy": "public",
+   "sec": 494,
+   "views": 2,
+   "likes": 0,
+   "comments": 0
+  },
+  "Bnf7r91FtX8": {
+   "ep": 15,
+   "kind": "short",
+   "title": "コピペで使えるアンケート分類プロンプト【ChatGPT】",
+   "privacy": "public",
+   "sec": 26,
+   "views": 182,
+   "likes": 0,
+   "comments": 0
+  },
+  "cRGQQu9tT7w": {
+   "ep": 15,
+   "kind": "short",
+   "title": "アンケート1000件は読まなくていい【AI分析】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 132,
+   "likes": 0,
+   "comments": 0
+  },
+  "xJjCi9HGkh4": {
+   "ep": 15,
+   "kind": "short",
+   "title": "スシローがすし皿を1枚ずつ数える理由【データ分析】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 380,
+   "likes": 1,
+   "comments": 0
+  },
+  "a5jQe-2u2FM": {
+   "ep": 10,
+   "kind": "short",
+   "title": "録音機をシニアに大ヒットさせた高田明さんの一言【ジャパネット】",
+   "privacy": "public",
+   "sec": 21,
+   "views": 342,
+   "likes": 1,
+   "comments": 0
+  },
+  "wyNmdxO2xEQ": {
+   "ep": 10,
+   "kind": "short",
+   "title": "反応ゼロのチラシは1行目だけ直せばいい【コピーライティング】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 157,
+   "likes": 0,
+   "comments": 0
+  },
+  "Zz_hEf8nqns": {
+   "ep": 10,
+   "kind": "short",
+   "title": "同じ商品なのに売れる人が語っていること【コピーライティング】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 267,
+   "likes": 2,
+   "comments": 0
+  },
+  "EVkSwCcuosE": {
+   "ep": 10,
+   "kind": "main",
+   "title": "1行で売上が変わる伝え方【コピーライティング】",
+   "privacy": "public",
+   "sec": 494,
+   "views": 16,
+   "likes": 0,
+   "comments": 0
+  },
+  "FZWP3a1tXmQ": {
+   "ep": 11,
+   "kind": "short",
+   "title": "SNSの成績は電卓1分でわかる【エンゲージメント率】",
+   "privacy": "public",
+   "sec": 24,
+   "views": 197,
+   "likes": 0,
+   "comments": 0
+  },
+  "bfGqXt5yi1g": {
+   "ep": 11,
+   "kind": "short",
+   "title": "フォロワー1万人で売上0円になる理由【SNS運用】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 191,
+   "likes": 0,
+   "comments": 0
+  },
+  "IlIJZlksD1w": {
+   "ep": 11,
+   "kind": "short",
+   "title": "宣伝をやめた家電メーカーが80万人に愛された話【シャープ】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 371,
+   "likes": 0,
+   "comments": 0
+  },
+  "VZKZsOg6sQg": {
+   "ep": 11,
+   "kind": "main",
+   "title": "フォロワー1万人で売上0円の理由【SNS運用】",
+   "privacy": "public",
+   "sec": 501,
+   "views": 43,
+   "likes": 0,
+   "comments": 0
+  },
+  "rdQSW7nVaR0": {
+   "ep": 13,
+   "kind": "short",
+   "title": "AIは自信満々に嘘をつく【市場調査の落とし穴】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 1069,
+   "likes": 1,
+   "comments": 1
+  },
+  "FbYaIyerJ4g": {
+   "ep": 13,
+   "kind": "main",
+   "title": "AIで市場調査を10倍速くする。プロンプトのコツ",
+   "privacy": "public",
+   "sec": 499,
+   "views": 9,
+   "likes": 0,
+   "comments": 0
+  },
+  "yuS4CQlmSUg": {
+   "ep": 13,
+   "kind": "short",
+   "title": "AIに「調査して」と頼むと失敗する理由",
+   "privacy": "public",
+   "sec": 24,
+   "views": 284,
+   "likes": 1,
+   "comments": 0
+  },
+  "iy4hpgL7c0g": {
+   "ep": 13,
+   "kind": "short",
+   "title": "AIの回答は「読ませる」だけで正確になる",
+   "privacy": "public",
+   "sec": 22,
+   "views": 190,
+   "likes": 0,
+   "comments": 0
+  },
+  "oC1oCzRBxpA": {
+   "ep": 23,
+   "kind": "main",
+   "title": "失敗事例に学ぶ、良い商品が売れない3つの理由",
+   "privacy": "private",
+   "sec": 503,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "l6WZ8BV_aHo": {
+   "ep": 23,
+   "kind": "short",
+   "title": "明日やること、たった1つ【マーケティング失敗事例】",
+   "privacy": "private",
+   "sec": 19,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "7GPZiMWNk1s": {
+   "ep": 23,
+   "kind": "short",
+   "title": "あなたの会社は大丈夫？3つの死因チェック",
+   "privacy": "private",
+   "sec": 22,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "_yrnwzZNvKs": {
+   "ep": 23,
+   "kind": "short",
+   "title": "資金も技術もあったのに91日で消えた理由",
+   "privacy": "private",
+   "sec": 22,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "KJvC4xXDMMI": {
+   "ep": 18,
+   "kind": "short",
+   "title": "利益を増やす第一歩は常連10人の書き出し【顧客台帳】",
+   "privacy": "public",
+   "sec": 21,
+   "views": 0,
+   "likes": 0,
+   "comments": 0
+  },
+  "66yGh5qYznQ": {
+   "ep": 18,
+   "kind": "main",
+   "title": "新規客を追うほど利益が減る理由【CRM入門】",
+   "privacy": "public",
+   "sec": 495,
+   "views": 3,
+   "likes": 0,
+   "comments": 0
+  },
+  "JCv21G8JOQA": {
+   "ep": 18,
+   "kind": "short",
+   "title": "新規客は既存客の5倍高くつく【CRM】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 44,
+   "likes": 0,
+   "comments": 0
+  },
+  "8OwmvUpYveY": {
+   "ep": 18,
+   "kind": "short",
+   "title": "無料でコーヒーマシンを配ったネスレが大儲けした理由",
+   "privacy": "public",
+   "sec": 22,
+   "views": 49,
+   "likes": 0,
+   "comments": 0
+  },
+  "KGiIHoni0dA": {
+   "ep": 9,
+   "kind": "short",
+   "title": "広告を増やす前に作る、たった2列の表【LTV】",
+   "privacy": "public",
+   "sec": 22,
+   "views": 204,
+   "likes": 1,
+   "comments": 0
+  },
+  "9llVEW_M6gg": {
+   "ep": 9,
+   "kind": "short",
+   "title": "広告のCPAが安いのに赤字になる会社の共通点",
+   "privacy": "public",
+   "sec": 23,
+   "views": 231,
+   "likes": 1,
+   "comments": 0
+  },
+  "ttAbub0eouw": {
+   "ep": 9,
+   "kind": "main",
+   "title": "広告費、その計算だと赤字です【CPAとLTV】",
+   "privacy": "public",
+   "sec": 512,
+   "views": 7,
+   "likes": 0,
+   "comments": 0
+  },
+  "6fYRo5RvjP4": {
+   "ep": 9,
+   "kind": "short",
+   "title": "客1人に広告費1万円。高い？安い？【CPAとLTV】",
+   "privacy": "public",
+   "sec": 23,
+   "views": 207,
+   "likes": 0,
+   "comments": 0
+  }
+ }
+}
