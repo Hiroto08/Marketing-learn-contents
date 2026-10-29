@@ -62,9 +62,68 @@ def main():
             dv = d(vid, "views")
             o.append(f"| EP{v['ep']:02d} | [{v['title'][:30]}](https://youtu.be/{vid}) | {v['views']} | "
                      f"{'—' if dv is None else f'{dv:+d}'} | {v['likes']} | {v['comments']} |\n")
+    o += note_section() + kit_section()
     open("docs/weekly-stats.md", "w", encoding="utf-8").write("".join(o))
     print(f"saved docs/stats/{today}.json  subs={c.get('subscriberCount')} views={c.get('viewCount')}"
           f"  prev={prev['date'] if prev else None}")
+
+
+CA = "/root/.ccr/ca-bundle.crt"
+
+
+def note_section():
+    """note の閲覧数（note のダッシュボードと同じ GET /api/v1/stats/pv・読み取りのみ）。Cookie が無ければ省略"""
+    ck = os.environ.get("_note_session_v5")
+    if not ck:
+        return ["\n## note\n\n（_note_session_v5 が無いため未取得）\n"]
+    try:
+        import requests
+        out = ["\n## note（記事の閲覧数）\n\n| 期間 | 閲覧 | スキ |\n|---|---|---|\n"]
+        weekly = []
+        for flt, label in [("weekly", "直近7日"), ("all", "全期間")]:
+            r = requests.get("https://note.com/api/v1/stats/pv", params={"filter": flt, "page": 1, "sort": "pv"},
+                             cookies={"_note_session_v5": ck}, verify=CA, timeout=30,
+                             headers={"User-Agent": "Mozilla/5.0", "X-Requested-With": "XMLHttpRequest"})
+            dd = r.json().get("data", {}) if r.status_code == 200 else {}
+            if not dd:
+                return [f"\n## note\n\n（取得失敗 {r.status_code}。Cookie 期限切れの可能性）\n"]
+            out.append(f"| {label} | {dd.get('total_pv', 0)} | {dd.get('total_like', 0)} |\n")
+            if flt == "weekly":
+                weekly = dd.get("note_stats") or []
+        out.append("\n| 直近7日の記事 | 閲覧 | スキ |\n|---|---|---|\n")
+        for n in sorted(weekly, key=lambda n: -int(n.get("read_count") or 0))[:10]:
+            out.append(f"| {(n.get('name') or '')[:36]} | {n.get('read_count', 0)} | {n.get('like_count', 0)} |\n")
+        return out
+    except Exception as e:  # noqa: BLE001  統計は非致命
+        return [f"\n## note\n\n（取得失敗：{str(e)[:80]}）\n"]
+
+
+def kit_section():
+    """Kit の購読者数と直近の送信済みメールの開封率（v4 API・読み取りのみ）。キーが無ければ省略"""
+    key = os.environ.get("KIT_API_KEY")
+    if not key:
+        return ["\n## メール（Kit）\n\n（KIT_API_KEY が無いため未取得）\n"]
+    try:
+        import requests
+        h = {"X-Kit-Api-Key": key, "Accept": "application/json"}
+        r = requests.get("https://api.kit.com/v4/subscribers", params={"per_page": 1, "include_total_count": "true",
+                                                                        "status": "active"}, headers=h, verify=CA, timeout=30)
+        total = (r.json().get("pagination") or {}).get("total_count") if r.status_code == 200 else None
+        out = [f"\n## メール（Kit）\n\n- 購読者（有効）：{total if total is not None else f'取得失敗 {r.status_code}'}\n"]
+        r = requests.get("https://api.kit.com/v4/broadcasts", params={"per_page": 100, "slim": "true", "status": "completed"},
+                         headers=h, verify=CA, timeout=30)
+        sent = sorted((r.json().get("broadcasts") or []) if r.status_code == 200 else [],
+                      key=lambda b: b.get("send_at") or "", reverse=True)[:5]
+        if sent:
+            out.append("\n| 送信日 | 件名 | 受信 | 開封率 | クリック率 |\n|---|---|---|---|---|\n")
+        for b in sent:
+            s = requests.get(f"https://api.kit.com/v4/broadcasts/{b['id']}/stats", headers=h, verify=CA, timeout=30)
+            st = ((s.json().get("broadcast") or {}).get("stats") or {}) if s.status_code == 200 else {}
+            out.append(f"| {(b.get('send_at') or '')[:10]} | {(b.get('subject') or '')[:30]} | {st.get('recipients', '—')} | "
+                       f"{st.get('open_rate', '—')} | {st.get('click_rate', '—')} |\n")
+        return out
+    except Exception as e:  # noqa: BLE001
+        return [f"\n## メール（Kit）\n\n（取得失敗：{str(e)[:80]}）\n"]
 
 
 if __name__ == "__main__":
