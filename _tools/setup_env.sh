@@ -45,6 +45,15 @@ python3 -c "import playwright" >/dev/null 2>&1 || {
   pip3 install --quiet playwright
 }
 export PLAYWRIGHT_BROWSERS_PATH="$PWB"
+# Python版playwrightがプリインストール済みブラウザより新しいと、起動はできても録画(webm)が
+# 0バイトになる実害がある（2026-11-02: py 1.64.1 × chromium-1243/ffmpeg-1011）。
+# 同梱の Node 版 playwright（＝プリインストールのブラウザと同じ版）に Python 側を揃える。
+node_pw=$(npm ls -g playwright 2>/dev/null | grep -oE 'playwright@[0-9.]+' | head -1 | cut -d@ -f2)
+py_pw=$(python3 -c "import importlib.metadata as m; print(m.version('playwright'))" 2>/dev/null)
+if [ -n "$node_pw" ] && [ -n "$py_pw" ] && [ "$node_pw" != "$py_pw" ]; then
+  log "pin python playwright $py_pw -> $node_pw (match preinstalled browsers)"
+  pip3 install --quiet "playwright==$node_pw" || true
+fi
 # The base image ships a cached chromium build (e.g. chromium-1194) but the
 # installed playwright may expect a different revision number, and the official
 # browser download CDN is blocked here. Bridge the gap by symlinking the cached
@@ -72,7 +81,12 @@ PY
     ln -sf "$cbase" "$PWB/chromium-$wver"
     if [ -n "$hbase" ]; then
       mkdir -p "$PWB/chromium_headless_shell-$wver/chrome-headless-shell-linux64"
-      ln -sf "$hbase/chrome-linux/headless_shell" \
+      # 旧レイアウト(chrome-linux/headless_shell)と新レイアウト(chrome-headless-shell-linux64/)の両対応
+      hbin=""
+      for c in "$hbase/chrome-headless-shell-linux64/chrome-headless-shell" "$hbase/chrome-linux/headless_shell"; do
+        [ -x "$c" ] && [ ! -L "$c" ] && { hbin="$c"; break; }
+      done
+      [ -n "$hbin" ] && ln -sfn "$hbin" \
         "$PWB/chromium_headless_shell-$wver/chrome-headless-shell-linux64/chrome-headless-shell"
     fi
   else
@@ -81,6 +95,22 @@ PY
   fi
 else
   log "playwright chromium OK"
+fi
+# 録画（make_video の record_video）は playwright 付属 ffmpeg の「期待リビジョン」を見に行く。
+# 版ズレで ffmpeg-NNNN が無いと全スライドの録画が失敗するため、手元の版へリンクを張る。
+want_ff=$(python3 - <<'PY' 2>/dev/null
+import json, os, playwright
+p = os.path.join(os.path.dirname(playwright.__file__), "driver/package/browsers.json")
+for b in json.load(open(p))["browsers"]:
+    if b["name"] == "ffmpeg": print(b["revision"])
+PY
+)
+have_ff=$(ls -d "$PWB"/ffmpeg-[0-9]* 2>/dev/null | grep -v "ffmpeg-$want_ff$" | head -1)
+if [ -n "$want_ff" ] && [ ! -e "$PWB/ffmpeg-$want_ff/ffmpeg-linux" ] && [ -n "$have_ff" ]; then
+  log "symlink playwright ffmpeg $have_ff -> rev $want_ff"
+  mkdir -p "$PWB/ffmpeg-$want_ff"
+  ln -sfn "$have_ff/ffmpeg-linux" "$PWB/ffmpeg-$want_ff/ffmpeg-linux"
+  touch "$PWB/ffmpeg-$want_ff/INSTALLATION_COMPLETE"
 fi
 
 # ── 3. VOICEVOX engine ──

@@ -1,0 +1,185 @@
+/* ══════════════════════════════════════════════════════════════════════
+   SEASON 2 "CASE FILE" THEME（売れる仕組みの裏側）
+   build_casefile.py が slide.html の <style id="ep-css"> に差し込む。
+   エンジン（base CSS の keyframes / rv-* / .se / JS）は一切変更しない。
+   ここで足すのは「見た目のレイヤー」と追加アニメ rv-grow / rv-stamp / rv-draw だけ。
+   ・配色 70:25:5 を継承：背景=墨色、本文=白、結論=キーイエロー、数字/固有名詞=回のアクセント
+   ・シーズン1（暗紺×ゴシック中心）と一目で区別できるよう、紙の「証拠カード」と明朝の見出しを導入
+══════════════════════════════════════════════════════════════════════ */
+:root{
+  --cf-bg:#111216; --cf-bg2:#191B21; --cf-line:rgba(255,255,255,.07);
+  --cf-paper:#F3EEE4; --cf-paper2:#E7DFD0; --cf-ink:#1D1E23; --cf-ink2:#5A5650;
+  --cf-red:#E5484D; --key:#FFD54F; --text:#F1EFEA; --muted2:#B9B4AA; --muted:#8E897F;
+  --slide-bg:var(--cf-bg);
+  --serif:'Noto Serif CJK JP','Noto Serif JP','Hiragino Mincho ProN',serif;
+}
+
+/* ── 背景：墨色＋ビネット＋かすかな方眼（シーズン1のドットグリッドを置き換え） ── */
+#stage{ background:var(--cf-bg); }
+/* ベースCSSの #s1〜#sN 個別指定（紫系radial背景・中央寄せ）を全て打ち消す。
+   ※ベースに #s1-title 等のID指定が残っているため、spec の要素idは s1-head のように別名を使う */
+#stage .slide{ align-items:stretch !important; justify-content:flex-start !important; text-align:left; }
+#stage .slide{ background:
+  radial-gradient(ellipse 80% 70% at 50% 40%, rgba(255,255,255,.035) 0%, transparent 70%),
+  radial-gradient(ellipse 120% 90% at 50% 50%, transparent 55%, rgba(0,0,0,.55) 100%),
+  var(--cf-bg) !important; }
+.slide::before{
+  background-image:
+    linear-gradient(var(--cf-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--cf-line) 1px, transparent 1px);
+  background-size: 64px 64px; opacity:.55;
+  -webkit-mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 30%, transparent 85%);
+          mask-image: radial-gradient(ellipse 75% 70% at 50% 45%, #000 30%, transparent 85%);
+}
+.slide-num{ display:none; }
+.step-dots{ bottom:3.2%; right:3.4%; }
+.step-dot.done{ background:var(--accent); } .step-dot.active{ background:var(--key); }
+
+/* ── 透かし文字（回の主語。奥行きと「この回の物語」の主張） ── */
+.cf-wm{ position:absolute; right:-1.5%; bottom:6%; z-index:0; pointer-events:none;
+  font-family:'Inter','Noto Sans CJK JP',sans-serif; font-weight:900; letter-spacing:-.02em;
+  font-size:15cqw; line-height:1; color:rgba(255,255,255,.022); white-space:nowrap; }
+
+/* ── ヘッダー帯：ファイル名＋章トラッカー（途中から見た人の現在地） ── */
+.cf-top{ position:absolute; left:0; right:0; top:0; height:8.4%; z-index:5;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 3.4%; border-bottom:1px solid rgba(255,255,255,.08);
+  background:linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,0)); }
+.cf-file{ display:flex; align-items:center; gap:.7em; font-size:1.45cqw; font-weight:800;
+  letter-spacing:.12em; color:var(--muted2); font-family:'Inter','Noto Sans CJK JP',sans-serif; }
+.cf-file b{ color:var(--accent); letter-spacing:.14em; }
+.cf-file .cf-subj{ color:var(--text); letter-spacing:.04em; font-weight:700; }
+.cf-rec{ width:.62em; height:.62em; border-radius:50%; background:var(--cf-red);
+  box-shadow:0 0 .6em var(--cf-red); animation:cfRec 1.6s ease-in-out infinite; }
+@keyframes cfRec{ 0%,100%{opacity:1} 50%{opacity:.35} }
+.cf-chap{ display:flex; gap:.35em; font-size:1.25cqw; font-weight:700; }
+.cf-chap span{ padding:.28em .85em; border-radius:999px; color:var(--muted);
+  border:1px solid rgba(255,255,255,.10); }
+.cf-chap span.done{ color:var(--muted2); border-color:rgba(255,255,255,.18); }
+.cf-chap span.on{ color:#15161A; background:var(--accent); border-color:var(--accent);
+  box-shadow:0 0 1.2em var(--glow-acc); }
+
+/* ── 本文エリア：上はヘッダー下、下はシークバー帯（下14%）を避ける ── */
+.cf-body{ position:relative; z-index:1; height:100%; display:flex; flex-direction:column;
+  justify-content:center; gap:.55em; padding:10.5% 6.5% 13.5%; }
+.cf-body.center{ align-items:center; text-align:center; }
+.cf-row{ display:flex; gap:3.2%; align-items:stretch; }
+.cf-row > *{ flex:1; }
+
+/* ── 見出し：キッカー（英字ラベル）＋明朝タイトル ── */
+.cf-kick{ font-family:'Inter','Noto Sans CJK JP',sans-serif; font-size:1.5cqw; font-weight:800;
+  letter-spacing:.22em; color:var(--accent); display:flex; align-items:center; gap:.8em; }
+.cf-kick::before{ content:''; width:2.6em; height:2px; background:var(--accent); }
+.cf-body.center .cf-kick::after{ content:''; width:2.6em; height:2px; background:var(--accent); }
+.cf-title{ font-family:var(--serif); font-weight:700; color:var(--text);
+  font-size:clamp(34px,4.3cqw,62px); line-height:1.28; letter-spacing:.02em; }
+.cf-title .k, .k{ color:var(--key); }
+.cf-title .a, .a{ color:var(--accent); }
+.cf-lead{ color:var(--muted2); font-weight:700; }
+
+/* ── 証拠カード（紙）：数字は必ず出典つき ── */
+.cf-paper{ position:relative; background:
+    linear-gradient(180deg, rgba(255,255,255,.55), rgba(255,255,255,0) 30%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.018) 0 2px, transparent 2px 5px),
+    var(--cf-paper);
+  color:var(--cf-ink); border-radius:6px; padding:1.1em 1.4em 1em;
+  box-shadow:0 1.4em 2.6em rgba(0,0,0,.55), 0 0 0 1px rgba(0,0,0,.15);
+  rotate:-.6deg; }   /* rotate は transform と独立＝rv-* の transform:none に消されない */
+.cf-paper.r{ rotate:.5deg; }
+.cf-paper .lbl{ font-size:1.55cqw; font-weight:800; color:var(--cf-ink2); letter-spacing:.06em; }
+.cf-paper .big{ font-family:var(--serif); font-weight:700; line-height:1.05;
+  font-size:clamp(48px,7.2cqw,104px); color:var(--cf-ink); letter-spacing:-.01em; }
+.cf-paper .big small{ font-size:.42em; margin-left:.12em; letter-spacing:0; }
+.cf-paper .big .a{ color:#B4531E; }
+.cf-paper .txt{ font-size:2.25cqw; font-weight:700; line-height:1.45; color:var(--cf-ink); }
+.cf-src{ font-size:1.18cqw; font-weight:600; color:var(--cf-ink2); margin-top:.7em;
+  padding-top:.55em; border-top:1px dashed rgba(0,0,0,.25); }
+.cf-src.dark{ color:var(--muted); border-top-color:rgba(255,255,255,.15); }
+/* 確認スタンプ */
+.cf-stamp{ position:absolute; right:4%; top:10%; font-family:var(--serif); font-weight:700;
+  font-size:1.7cqw; color:var(--cf-red); border:.18em solid var(--cf-red); border-radius:.3em;
+  padding:.15em .55em; rotate:-9deg; opacity:.88; letter-spacing:.1em;
+  mix-blend-mode:multiply; }
+
+/* ── 構成比バー（rv-grow で左から伸びる） ── */
+.cf-bar{ display:flex; height:3.6cqw; border-radius:6px; overflow:hidden;
+  background:rgba(0,0,0,.12); margin-top:.5em; }
+.cf-seg{ height:100%; display:flex; align-items:center; padding-left:.7em; white-space:nowrap;
+  font-size:1.5cqw; font-weight:800; color:#fff; }
+.cf-seg.main{ background:linear-gradient(90deg,#B4531E,var(--accent)); }
+.cf-seg.rest{ background:#9A948A; color:#fff; }
+.cf-legend{ display:flex; justify-content:space-between; font-size:1.35cqw; font-weight:700;
+  color:var(--cf-ink2); margin-top:.45em; }
+
+/* ── お金の流れ図（ノード→矢印→ノード） ── */
+.cf-flow{ display:flex; align-items:center; justify-content:center; gap:1.6%; }
+.cf-node{ flex:0 0 auto; min-width:19%; text-align:center; padding:.75em .9em;
+  border-radius:14px; background:var(--cf-bg2); border:2px solid rgba(255,255,255,.12); }
+.cf-node .ic{ font-size:3.4cqw; line-height:1.2; margin:0 auto; width:auto; height:auto; }
+.cf-node .nm{ font-size:2.2cqw; font-weight:900; color:var(--text); }
+.cf-node .ds{ font-size:1.35cqw; font-weight:700; color:var(--muted2); margin-top:.2em; }
+.cf-node.hq{ border-color:var(--accent); box-shadow:0 0 2.2em var(--glow-acc); }
+.cf-arrow{ flex:1; max-width:24%; text-align:center; }
+.cf-arrow .ln{ height:4px; border-radius:2px; position:relative;
+  background:repeating-linear-gradient(90deg,var(--accent) 0 14px,transparent 14px 22px); }
+.cf-arrow .ln::after{ content:''; position:absolute; right:-2px; top:50%; transform:translateY(-50%);
+  border-left:16px solid var(--accent); border-top:10px solid transparent; border-bottom:10px solid transparent; }
+.cf-arrow .lb{ font-size:1.45cqw; font-weight:800; color:var(--accent); margin-bottom:.45em; line-height:1.3; }
+.cf-arrow .lb2{ font-size:1.25cqw; font-weight:700; color:var(--muted2); margin-top:.45em; line-height:1.3; }
+
+/* ── 比較2列（回転で稼ぐ／回数で稼ぐ） ── */
+.cf-col{ border-radius:12px; padding:.9em 1.1em; background:var(--cf-bg2);
+  border:1px solid rgba(255,255,255,.1); }
+.cf-col.win{ border:2px solid var(--accent); box-shadow:0 0 2em var(--glow-acc); }
+.cf-col .hd{ font-size:1.5cqw; font-weight:800; letter-spacing:.12em; color:var(--muted); }
+.cf-col.win .hd{ color:var(--accent); }
+.cf-col .nm{ font-family:var(--serif); font-size:3cqw; font-weight:700; margin:.15em 0 .35em; }
+.cf-col ul{ list-style:none; display:flex; flex-direction:column; gap:.32em; }
+.cf-col li{ font-size:1.95cqw; font-weight:700; color:var(--text); padding-left:1.1em; position:relative; }
+.cf-col li::before{ content:'—'; position:absolute; left:0; color:var(--muted); }
+.cf-col.win li::before{ content:'●'; color:var(--accent); font-size:.7em; top:.3em; }
+
+/* ── 視聴者への問い（吹き出し） ── */
+.cf-ask{ align-self:center; display:inline-flex; align-items:center; gap:.7em;
+  background:rgba(255,213,79,.10); border:2px solid var(--key); color:var(--key);
+  border-radius:999px; padding:.45em 1.3em; font-weight:900; }
+.cf-ask i{ font-style:normal; font-size:1.2em; }
+
+/* ── メモ帳（明日やる1つ） ── */
+.cf-memo{ background:
+    linear-gradient(90deg, transparent 2.6em, rgba(229,72,77,.45) 2.6em, rgba(229,72,77,.45) calc(2.6em + 2px), transparent calc(2.6em + 2px)),
+    repeating-linear-gradient(180deg, transparent 0 2.05em, rgba(60,90,160,.22) 2.05em calc(2.05em + 1px)),
+    var(--cf-paper);
+  color:var(--cf-ink); border-radius:6px; padding:1em 1.4em 1em 3.6em;
+  box-shadow:0 1.4em 2.6em rgba(0,0,0,.55); rotate:-.4deg; }
+.cf-memo .ln{ font-size:2.3cqw; font-weight:800; line-height:2.05em; }
+.cf-memo .ln b{ color:#B4531E; }
+
+/* ── バナー（ベースの hl-banner をシーズン2の色に） ── */
+.hl-banner{ display:block; text-align:center; background:linear-gradient(90deg, rgba(224,136,74,.10), rgba(255,255,255,.03));
+  border:none; border-left:6px solid var(--accent); border-radius:4px; color:var(--text);
+  padding:.55em 1em; font-size:clamp(24px,2.7cqw,38px); font-weight:900; }
+.hl-banner span{ display:inline; }
+
+/* ── 大見出し数字（暗背景用） ── */
+.cf-num{ font-family:var(--serif); font-weight:700; color:var(--accent); line-height:1;
+  font-size:clamp(70px,11cqw,160px); text-shadow:0 0 .4em var(--glow-acc); }
+.cf-num small{ font-size:.38em; color:var(--text); margin-left:.1em; }
+
+/* ── 表紙（S1）── */
+.cf-body.cover, .cf-cover{ align-items:center; text-align:center; gap:.5em; }
+.cf-badge{ display:inline-flex; align-items:center; gap:.8em; font-family:'Inter','Noto Sans CJK JP',sans-serif;
+  font-size:1.6cqw; font-weight:800; letter-spacing:.3em; color:var(--accent);
+  border:2px solid var(--accent); padding:.4em 1.2em; border-radius:4px; }
+.cf-body.cover .cf-title, .cf-cover .cf-title{ font-size:clamp(44px,6cqw,88px); line-height:1.2; }
+.cf-ans{ background:var(--key); color:#15161A; font-weight:900; padding:.25em .8em; border-radius:4px;
+  box-shadow:0 .6em 1.6em rgba(255,213,79,.18); }
+.cf-series{ font-size:1.5cqw; font-weight:700; color:var(--muted2); letter-spacing:.18em; }
+
+/* ── 追加アニメ（エンジン外のテーマ用。STEPS の anim に指定できる） ── */
+@keyframes cfGrow  { from{opacity:1;transform:scaleX(0)} to{opacity:1;transform:scaleX(1)} }
+@keyframes cfStamp { 0%{opacity:0;transform:scale(2.2)} 60%{opacity:.95;transform:scale(.92)} 100%{opacity:.88;transform:scale(1)} }
+@keyframes cfDraw  { from{opacity:1;clip-path:inset(0 100% 0 0)} to{opacity:1;clip-path:inset(0 0 0 0)} }
+.rv-grow  { animation:cfGrow  1.1s cubic-bezier(.2,.8,.2,1) forwards; transform-origin:left center; }
+.rv-stamp { animation:cfStamp .55s cubic-bezier(.3,1.4,.6,1) forwards; }
+.rv-draw  { animation:cfDraw  .9s ease-out forwards; }

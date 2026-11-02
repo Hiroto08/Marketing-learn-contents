@@ -64,7 +64,12 @@ missing = [os.path.basename(s) for s in sorted(glob.glob(f"{d}/.work/slides/slid
                "-of","csv=p=0",s],capture_output=True,text=True).stdout.split()) < {"video","audio"}]
 print(f"dur={v:.2f}s av_diff={abs(v-a):.3f}s missing={missing}")
 assert abs(v-a) <= 0.1, "A/V差>0.1s"
-assert 15 <= v <= 30, "尺が15〜30秒の外"
+import sys as _s; _s.path.insert(0, "_tools")
+from profiles import shorts_profile
+_pn, _pf = shorts_profile(open(f"{d}/stage.html", encoding="utf-8").read())
+lo, hi = _pf["dur"]
+pad = 3 if _pn != "standard" else 0   # s2は話数の長いスライドの前後余白ぶんを許容
+assert lo <= v <= hi + pad, f"尺が{lo}〜{hi + pad}秒の外（profile {_pn}）"
 assert not missing, f"videoストリーム欠落: {missing}（該当slide_NN.mp4を消して --slide N で再録画）"
 print("OK")
 PY

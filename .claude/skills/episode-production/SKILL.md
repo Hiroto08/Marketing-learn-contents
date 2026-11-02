@@ -88,6 +88,14 @@ L3はフローAと同じ工程＋パッケージング先行＋機械検査（�
 4. 相違点は3つだけ：話数バッジは「番外編」表記／S18の接続先は「テーマが最も近いシリーズ回」（episode-briefs.mdの表から選ぶ）／主人公の重複禁止表への追記は同様に行う
 5. description.md のシリーズ案内には「本編シリーズはこちら」として再生リストを載せる
 
+**フローE（シーズン2「売れる仕組みの裏側」＝ケースファイル本編・裏側ショート）**：方針は `docs/post-series-strategy.md` v0.2、各回の前提は `docs/season2-briefs.md`。
+1. ディレクトリ：本編＝`10_season2/epNN_cfMM-<slug>/`（EP番号は25から連番＝既存の upload/status/note ツールがそのまま使える）。本編なしのテストShorts＝`10_season2/tMM_<slug>/`（shorts.md＋shorts_build/short1/spec.py）
+2. 本編は **slide.html を手で書かない**：`casefile_spec.py`（スライドのHTML断片＋話す順のSTEPS）を書き、`python3 _tools/season2/build_casefile.py <ep_dir>` で生成する。NARRATIONS は script.md から自動コピー（不一致が起きない）。見た目は `_tools/season2/casefile_theme.css`（全回共通。回ごとに変えるのは accent と透かし文字だけ）
+3. 形式：10〜12枚・推定5:05〜7:45（`_tools/profiles.py` の casefile。verify/postbuild が slide.html の `<meta name="episode-profile" content="casefile">` を見て自動で基準を切り替える）。S1で答えを言い切る→証拠（一次資料の数字＋出典＋スタンプ）→種明かし→型（1つだけ）→あなたの商売→明日やる1つ→次の問い
+4. Shorts：spec.py に `"theme":"casefile","profile":"s2","header":{...},"watermark":"..."` を足す（20〜45秒・4〜7枚・230字。`k-card`＝紙の証拠カード、`k-kicker`、`k-src` が使える）
+5. サムネ：make_thumbnail.py が casefile を自動判定してシーズン2の型で作る。main の `[語]` はキーイエロー
+6. 公開：シーズン2は「Shortsと本編を別の日に出す」ため、`publish_episode.py` の同時公開ルールの対象外にする改修（post-series-strategy §6 E3）が済むまで **アップロードは保留**（ビルドとmp4納品まで）
+
 参照ファイル（必要な時だけ読む。常時読み込み不要）：
 - [retention-packaging.md](retention-packaging.md) — **維持率・パッケージング仕様v2**（タイトル/サムネ/検索KW先行、コールドオープン、ナレーション機械検査、STEPS密度基準、Shorts）。根拠は `docs/youtube-reform-plan.md`
 - [story-writing.md](story-writing.md) — **ストーリー設計ガイド**（事例リサーチ→ワークシート→文体ルール→10点ルーブリック採点。台本前の必須工程）

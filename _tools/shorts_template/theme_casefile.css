@@ -1,0 +1,55 @@
+/* ══════════════════════════════════════════════════════════════
+   SEASON 2 "CASE FILE" THEME for Shorts（gen_stage.py が spec の "theme":"casefile" で差し込む）
+   エンジン（keyframes / rv-* / .se / #__heartbeat）は触らない。見た目のレイヤーだけ。
+   本編 _tools/season2/casefile_theme.css と同じ語彙（墨色・明朝・紙の証拠カード・赤スタンプ）。
+═══════════════════════════════════════════════════════════════ */
+:root{ --bg:#111216; --ink:#F1EFEA; --muted:#B9B4AA; --paper:#F3EEE4; --paper-ink:#1D1E23; --red:#E5484D;
+  --serif:'Noto Serif CJK JP','Noto Serif JP',serif; }
+html,body{ background:var(--bg); }
+.slide{ background:
+  radial-gradient(ellipse 80% 55% at 50% 42%, rgba(255,255,255,.05) 0%, transparent 70%),
+  radial-gradient(ellipse 140% 100% at 50% 50%, transparent 55%, rgba(0,0,0,.6) 100%), var(--bg); }
+.slide::before{ content:''; position:absolute; inset:0; pointer-events:none; opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:72px 72px;
+  -webkit-mask-image:radial-gradient(ellipse 70% 60% at 50% 45%,#000 30%,transparent 85%);
+          mask-image:radial-gradient(ellipse 70% 60% at 50% 45%,#000 30%,transparent 85%); }
+/* 透かし文字 */
+.cf-wm{ position:absolute; left:50%; top:50%; transform:translate(-50%,-50%) rotate(-90deg); z-index:0;
+  font-family:'Inter','Noto Sans CJK JP',sans-serif; font-weight:900; font-size:300px; letter-spacing:-.02em;
+  color:rgba(255,255,255,.025); white-space:nowrap; pointer-events:none; }
+/* ヘッダー（上部セーフエリア直下・全スライド共通の静的要素） */
+.cf-head{ position:absolute; top:calc(var(--safe-top) + 8px); left:var(--safe-x); right:calc(var(--safe-x) + 72px);
+  display:flex; align-items:center; gap:18px; font-family:'Inter','Noto Sans CJK JP',sans-serif;
+  font-size:34px; font-weight:900; letter-spacing:.16em; color:var(--accent); z-index:2; }
+.cf-head::before{ content:'';  width:20px; height:20px; border-radius:50%; background:var(--red); box-shadow:0 0 18px var(--red);
+  animation:cfRec 1.6s ease-in-out infinite; flex:none; }
+@keyframes cfRec{ 0%,100%{opacity:1} 50%{opacity:.35} }
+.cf-head .subj{ color:var(--ink); letter-spacing:.04em; font-weight:700; }
+.card{ position:relative; z-index:1; }
+/* 見出し・本文 */
+.k-kicker{ font-family:'Inter','Noto Sans CJK JP',sans-serif; font-size:36px; font-weight:900; letter-spacing:.22em;
+  color:var(--accent); margin-bottom:22px; }
+.k-line{ font-family:var(--serif); font-weight:700; font-size:92px; line-height:1.26; color:var(--ink);
+  text-shadow:0 8px 30px rgba(0,0,0,.6); }
+.k-line .a{ color:var(--accent); }
+.k-num{ font-family:var(--serif); font-weight:700; }
+.k-sub{ color:var(--muted); font-weight:700; }
+/* 紙の証拠カード */
+.k-card{ background:linear-gradient(180deg,rgba(255,255,255,.5),rgba(255,255,255,0) 30%),
+    repeating-linear-gradient(0deg,rgba(0,0,0,.02) 0 2px,transparent 2px 6px), var(--paper);
+  color:var(--paper-ink); border-radius:10px; padding:40px 44px 34px; rotate:-1.2deg; text-align:left;
+  box-shadow:0 30px 60px rgba(0,0,0,.6); position:relative; margin:10px 8px 0; }
+.k-card .lbl{ font-size:38px; font-weight:800; color:#5A5650; line-height:1.35; }
+.k-card .big{ font-family:var(--serif); font-weight:700; font-size:170px; line-height:1.05; color:var(--paper-ink); }
+.k-card .big small{ font-size:.4em; margin-left:.1em; }
+.k-card .big .a{ color:#B4531E; }
+.k-card .txt{ font-size:54px; font-weight:900; line-height:1.4; }
+.k-card .txt b{ color:#B4531E; }
+.k-card .stamp{ position:absolute; right:26px; top:-30px; font-family:var(--serif); font-weight:700; font-size:40px;
+  color:var(--red); border:6px solid var(--red); border-radius:10px; padding:2px 16px; rotate:-9deg;
+  background:rgba(243,238,228,.9); }
+.k-src{ font-size:28px; font-weight:700; color:var(--muted); margin-top:26px; line-height:1.4; }
+.k-card .k-src, .k-card + .k-src{ color:#6B665E; }
+.cta-line{ font-family:'Noto Sans JP','Noto Sans CJK JP',sans-serif; }

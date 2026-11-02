@@ -133,6 +133,60 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;
 </div></body></html>"""
 
 
+def _casefile(ep_dir: str):
+    """シーズン2（casefile プロファイル）なら (case_no, subject) を返す。それ以外は None"""
+    html = open(f"{ep_dir}/slide.html", encoding="utf-8").read()
+    if 'name="episode-profile" content="casefile"' not in html:
+        return None
+    import ast
+    spec = ast.literal_eval(open(f"{ep_dir}/casefile_spec.py", encoding="utf-8").read())
+    return spec["case_no"], spec["subject"]
+
+
+def render_casefile_html(case_no: str, subject: str, accent: str, main: str, sub: str | None) -> str:
+    """シーズン2「売れる仕組みの裏側」のサムネ（墨色×明朝×紙の証拠カード）"""
+    # main の [語] はキーイエローで強調（例「客より[店]で稼ぐ」）
+    plain = re.sub(r"[\[\]]", "", main)
+    lines = [main] if len(re.sub(r"\s", "", plain)) <= 8 else _split_two_lines(main)
+    longest = max(len(re.sub(r"[\s\[\]]", "", l)) for l in lines)
+    size = min(170, int(1080 / max(longest, 1)))
+    main_html = "<br>".join(re.sub(r"\[(.+?)\]", r'<span class="acc">\1</span>', _hi(l)) for l in lines)
+    card = (f'<div class="card"><div class="sub">{_hi(sub, "acc2")}</div><div class="stamp">有報で確認</div></div>'
+            if sub else "")
+    return f"""<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><style>
+*{{box-sizing:border-box;margin:0;padding:0}}
+html,body{{width:{W}px;height:{H}px;overflow:hidden;font-family:'Noto Sans JP','Noto Sans CJK JP',sans-serif}}
+#t{{position:relative;width:{W}px;height:{H}px;padding:44px 56px;color:#F1EFEA;
+  background:radial-gradient(ellipse 70% 80% at 30% 40%, rgba(255,255,255,.06) 0%, transparent 70%),
+             radial-gradient(ellipse 120% 100% at 50% 50%, transparent 55%, rgba(0,0,0,.6) 100%),#111216}}
+#t::before{{content:'';position:absolute;inset:0;opacity:.5;
+  background-image:linear-gradient(rgba(255,255,255,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.06) 1px,transparent 1px);
+  background-size:64px 64px}}
+.badge{{position:relative;display:inline-flex;align-items:center;gap:14px;font-family:'Inter','Noto Sans CJK JP',sans-serif;
+  font-weight:900;font-size:30px;letter-spacing:.28em;color:{accent};border:3px solid {accent};padding:8px 20px;border-radius:4px}}
+.dot{{width:16px;height:16px;border-radius:50%;background:#E5484D;box-shadow:0 0 14px #E5484D}}
+.subj{{position:relative;font-family:'Noto Serif CJK JP',serif;font-weight:700;font-size:58px;margin-top:16px;color:#F1EFEA}}
+.main{{position:relative;font-family:'Noto Serif CJK JP',serif;font-weight:700;font-size:{size}px;line-height:1.12;
+  margin-top:26px;white-space:nowrap;text-shadow:0 8px 34px rgba(0,0,0,.7)}}
+.main .acc{{color:#FFD54F}}
+.card{{position:absolute;right:52px;bottom:54px;background:#F3EEE4;color:#1D1E23;border-radius:6px;padding:22px 30px 24px;
+  rotate:-2deg;box-shadow:0 22px 44px rgba(0,0,0,.6)}}
+.sub{{font-weight:900;font-size:50px;line-height:1.2}}
+.sub .acc2{{color:#B4531E}}
+.stamp{{position:absolute;right:-22px;top:-34px;font-family:'Noto Serif CJK JP',serif;font-weight:700;font-size:30px;color:#E5484D;
+  border:5px solid #E5484D;border-radius:8px;padding:2px 12px;rotate:-10deg;background:rgba(243,238,228,.85)}}
+.series{{position:absolute;left:58px;bottom:50px;font-weight:700;font-size:26px;letter-spacing:.2em;color:#B9B4AA}}
+.bar{{position:absolute;left:0;top:0;width:100%;height:12px;background:linear-gradient(90deg,{accent},{accent}00 80%)}}
+</style></head><body><div id="t">
+  <div class="bar"></div>
+  <div class="badge"><span class="dot"></span>CASE FILE {case_no}</div>
+  <div class="subj">{subject}</div>
+  <div class="main">{main_html}</div>
+  {card}
+  <div class="series">売れる仕組みの裏側</div>
+</div></body></html>"""
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("episode_dir")
@@ -148,7 +202,9 @@ def main():
         sys.exit(f"メインテキストが見つからない: {ep}/thumbnail.md を確認するか --main を指定")
     out = a.out or f"{ep}/thumbnail.png"
 
-    html = render_html(_episode_no(ep), _accent(ep), main_text, sub_text)
+    cf = _casefile(ep)
+    html = (render_casefile_html(cf[0], cf[1], _accent(ep), main_text, sub_text) if cf
+            else render_html(_episode_no(ep), _accent(ep), main_text, sub_text))
     tmp = f"{out}.src.html"
     open(tmp, "w", encoding="utf-8").write(html)
     from playwright.sync_api import sync_playwright

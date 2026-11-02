@@ -76,12 +76,17 @@ def main():
             i = int(re.search(r"(\d+)", n).group(1))
             print(f"    → 再録画: rm {out}/.work/slides/{n} して make_video.py に --slide {i} を付けて再実行")
 
-    # ── 1b. 最低尺（完成動画は8:00以上が必須） ──
-    if vd < 480.0:
+    # ── 1b. 最低尺（standard=8:00 / casefile=4:45。_tools/profiles.py が正） ──
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+    from profiles import episode_profile
+    pname, prof = episode_profile(open(f"{ep}/slide.html", encoding="utf-8").read())
+    fmin = prof["final_min"]
+    lab = f"{fmin//60}:{fmin%60:02d}"
+    if vd < fmin:
         FAILS.append("最低尺")
-        print(f"✗ 最低尺: {int(vd//60)}:{int(vd%60):02d} < 8:00 → script.md/slide.htmlのナレーションを増補して再ビルド（verify_episodeの推定尺ゲート8:15を先に通すこと）")
+        print(f"✗ 最低尺: {int(vd//60)}:{int(vd%60):02d} < {lab}（{pname}）→ script.md/slide.htmlのナレーションを増補して再ビルド（verify_episodeの推定尺ゲートを先に通すこと）")
     else:
-        print(f"✓ 最低尺: {int(vd//60)}:{int(vd%60):02d} ≥ 8:00")
+        print(f"✓ 最低尺: {int(vd//60)}:{int(vd%60):02d} ≥ {lab}（{pname}）")
 
     # ── 2. ラウドネス ──
     r = subprocess.run(["ffmpeg", "-nostats", "-i", final,

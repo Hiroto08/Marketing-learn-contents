@@ -22,6 +22,12 @@ spec.py の形式（Pythonリテラル辞書。例は既存の spec.py を参照
     }, ...
   ],
   "narrations": ["...", ...],              # shorts.md と文字単位で一致させること
+  # ── シーズン2（任意）──
+  "theme": "casefile",                     # theme_casefile.css を差し込む（紙の証拠カード・明朝・ヘッダー）
+  "profile": "s2",                         # 検査基準（_tools/profiles.py：20〜45秒・4〜7枚・230字）
+  "header": {"label": "CASE FILE 01", "subject": "コメダ珈琲"},   # 全スライド上部の静的ヘッダー
+  "watermark": "KOMEDA",                   # 背景の透かし文字
+  # els の cls に k-card（html内で .lbl/.big/.txt/.stamp）、k-kicker、k-src が使える
 }
 
 生成後は必ず verify_shorts.py を通す:
@@ -40,6 +46,19 @@ def main(spec_path, out_path):
     tpl = open(TEMPLATE, encoding="utf-8").read()
 
     tpl = tpl.replace("SHORTS_TITLE", spec["title"])
+    if spec.get("theme"):
+        css = open(os.path.join(os.path.dirname(TEMPLATE), f"theme_{spec['theme']}.css"), encoding="utf-8").read()
+        tpl = tpl.replace("</style>\n</head>", css + "\n</style>\n</head>", 1)
+    if spec.get("profile"):
+        tpl = tpl.replace('<meta charset="UTF-8">',
+                          f'<meta charset="UTF-8">\n<meta name="shorts-profile" content="{spec["profile"]}">', 1)
+    head_html = ""
+    if spec.get("header"):
+        h = spec["header"]
+        head_html = (f'  <div class="cf-head">{h["label"]}'
+                     f'<span class="subj">{h.get("subject", "")}</span></div>\n')
+    if spec.get("watermark"):
+        head_html = f'  <div class="cf-wm" aria-hidden="true">{spec["watermark"]}</div>\n' + head_html
     tpl = tpl.replace("--accent:#FFD54F;", f"--accent:{spec['accent']};")
     tpl = tpl.replace("--glow-acc:rgba(255,213,79,.25);", f"--glow-acc:{spec['glow']};")
 
@@ -48,7 +67,7 @@ def main(spec_path, out_path):
     meta = []
     start = 0.0
     for i, sl in enumerate(spec["slides"], 1):
-        stage.write(f'<section class="slide" id="s{i}">\n  <div class="card">\n')
+        stage.write(f'<section class="slide" id="s{i}">\n{head_html}  <div class="card">\n')
         for el in sl["els"]:
             stage.write(f'    <div class="se {el["cls"]}" id="{el["id"]}">{el["html"]}</div>\n')
             steps.append((i - 1, start + el["t"], el["id"], el["anim"]))

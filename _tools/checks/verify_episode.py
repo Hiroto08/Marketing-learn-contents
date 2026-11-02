@@ -21,7 +21,11 @@ import re
 import sys
 from collections import defaultdict
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from profiles import episode_profile  # noqa: E402  standard(18枚) / casefile(シーズン2)
+
 EP = None
+PROF_NAME, PROF = "standard", None
 FAILS = []
 WARNS = []
 
@@ -62,10 +66,12 @@ def check_counts(md, html, md_narr, h_narr):
             fail(f"{f} が無い")
     n_sec = len(re.findall(r'<section class="slide[^"]*" id="s\d+"', html))
     metas = len(re.findall(r"\{id:'s\d+',\s*start:", html))
-    if not (len(md_narr) == len(h_narr) == n_sec == metas == 18):
-        fail(f"枚数不一致: script={len(md_narr)} NARRATIONS={len(h_narr)} section={n_sec} META={metas}（全て18のこと）")
+    lo, hi = PROF["slides"]
+    if not (len(md_narr) == len(h_narr) == n_sec == metas and lo <= n_sec <= hi):
+        fail(f"枚数不一致: script={len(md_narr)} NARRATIONS={len(h_narr)} section={n_sec} META={metas}"
+             f"（全て一致し、{PROF_NAME}は{lo}〜{hi}枚のこと）")
     else:
-        ok("script/NARRATIONS/section/SLIDES_META = 18 で一致")
+        ok(f"script/NARRATIONS/section/SLIDES_META = {n_sec} で一致（profile: {PROF_NAME}）")
 
 
 def check_match(md_narr, h_narr):
@@ -74,7 +80,7 @@ def check_match(md_narr, h_narr):
     if bad:
         fail(f"S{bad} が script.md と slide.html で不一致")
     else:
-        ok("18/18 完全一致")
+        ok(f"{len(md_narr)}/{len(md_narr)} 完全一致")
 
 
 def check_quality(md_narr):
@@ -94,7 +100,7 @@ def check_quality(md_narr):
     if n_b < 6:
         fail(f"逆接・因果接続詞{n_b}回（最低6）")
     if md_narr and not re.search(r"(でしょうか|と思いますか|？)", md_narr[-1]):
-        fail("S18に未解決の問い（開ループ）が無い")
+        fail(f"S{len(md_narr)}（最終枚）に未解決の問い（開ループ）が無い")
     # 最低尺ゲート: 実測はナレーション推定とほぼ一致する（speed1.1・ポーズ込み）。
     # 完成動画は8:00以上が必須のため、推定495s(8:15)未満はFAILさせて増補を促す
     est = sum(
@@ -102,8 +108,11 @@ def check_quality(md_narr):
         + len([s for s in re.split(r"[。？?！]", n) if s.strip()]) * 0.28
         for n in md_narr
     )
-    if est < 495:
-        fail(f"推定尺 {int(est//60)}:{int(est%60):02d}（最低8:15）→ ナレーションを増補（目安 総字数{int((495-est)*6.8)}字以上追加）")
+    lo_s, hi_s = PROF["est_min"], PROF["est_max"]
+    if est < lo_s:
+        fail(f"推定尺 {int(est//60)}:{int(est%60):02d}（最低{lo_s//60}:{lo_s%60:02d}）→ ナレーションを増補（目安 総字数{int((lo_s-est)*6.8)}字以上追加）")
+    if hi_s and est > hi_s:
+        fail(f"推定尺 {int(est//60)}:{int(est%60):02d}（上限{hi_s//60}:{hi_s%60:02d}）→ 1枚1論点に削る（目安 総字数{int((est-hi_s)*6.8)}字以上削除）")
     if not FAILS:
         ok(f"問いかけ{n_q} / 逆接因果{n_b} / そして系{n_s} / 推定尺 {int(est//60)}:{int(est%60):02d}")
 
@@ -132,7 +141,7 @@ def check_steps(html):
             if b - a > 15:
                 fail(f"S{sid}: {b - a:.0f}秒の無変化区間")
     if len(FAILS) == n0:
-        ok(f"全18枚OK（総STEP {len(steps)}個）")
+        ok(f"全{len(meta)}枚OK（総STEP {len(steps)}個）")
 
 
 def check_accent(html):
@@ -282,6 +291,7 @@ if __name__ == "__main__":
     EP = sys.argv[1].rstrip("/")
     no_browser = "--no-browser" in sys.argv
     md, html, md_narr, h_narr = load()
+    PROF_NAME, PROF = episode_profile(html)
     check_counts(md, html, md_narr, h_narr)
     check_match(md_narr, h_narr)
     check_quality(md_narr)

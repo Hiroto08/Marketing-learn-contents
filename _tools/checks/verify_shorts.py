@@ -27,8 +27,12 @@ import os
 import re
 import sys
 
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+from profiles import shorts_profile  # noqa: E402  standard / s2(シーズン2)
+
 FAILS = []
 DIR = None
+PROF_NAME, PROF = "standard", None
 
 
 def section(name):
@@ -108,41 +112,44 @@ def _meta(html):
 
 
 def check_duration(html):
-    section("3) 尺（15〜30秒）")
+    lo, hi = PROF["dur"]
+    section(f"3) 尺（{lo}〜{hi}秒・profile {PROF_NAME}）")
     meta = _meta(html)
     if not meta:
         fail("SLIDES_META が見つからない")
         return
     total = max(float(e) for _, _, e in meta)
-    if not (15 <= total <= 30):
-        fail(f"尺 {total:.1f}秒（15〜30秒の範囲外。長いShortsはスキップされる）")
+    if not (lo <= total <= hi):
+        fail(f"尺 {total:.1f}秒（{lo}〜{hi}秒の範囲外。長いShortsはスキップされる）")
     else:
         ok(f"尺 {total:.1f}秒")
 
 
 def check_slide_count(html):
-    section("4) スライド枚数（4〜6）")
+    lo, hi = PROF["slides"]
+    section(f"4) スライド枚数（{lo}〜{hi}）")
     n = len(_meta(html))
-    if not (4 <= n <= 6):
-        fail(f"{n}枚（4〜6枚の範囲外）")
+    if not (lo <= n <= hi):
+        fail(f"{n}枚（{lo}〜{hi}枚の範囲外）")
     else:
         ok(f"{n}枚")
 
 
 def check_length(html):
-    section("5) ナレーション文字数（合計≤150字・各≤35字目安）")
+    cap, scap = PROF["chars"], PROF["slide_chars"]
+    section(f"5) ナレーション文字数（合計≤{cap}字・各≤{scap}字）")
     narr = _narrations(html)
     if not narr:
         fail("ナレーションが空")
         return
     total = sum(len(n) for n in narr)
     longest = max((len(n), i + 1) for i, n in enumerate(narr))
-    if total > 150:
-        fail(f"合計{total}字（上限150字。冗長表現を削って短くする）")
+    if total > cap:
+        fail(f"合計{total}字（上限{cap}字。冗長表現を削って短くする）")
     else:
         ok(f"合計{total}字")
-    if longest[0] > 45:
-        fail(f"S{longest[1]}が{longest[0]}字（1スライド35字目安・45字上限。1文に削る）")
+    if longest[0] > scap:
+        fail(f"S{longest[1]}が{longest[0]}字（1スライド{scap}字上限。1文に削る）")
     else:
         ok(f"最長スライド{longest[0]}字")
 
@@ -215,7 +222,7 @@ def check_browser(html_path):
           document.querySelectorAll('section.slide').forEach(sec=>{
             sec.style.display='flex';
             sec.querySelectorAll('*').forEach(e=>{e.style.opacity='1';e.style.transform='none';});
-            sec.querySelectorAll('.k-num,.k-line,.k-sub,.k-tag,.caption').forEach(e=>{
+            sec.querySelectorAll('.k-num,.k-line,.k-sub,.k-tag,.caption,.k-card,.k-kicker,.k-src,.cf-head').forEach(e=>{
               const r=e.getBoundingClientRect();
               if(r.width && (r.top<SAFE.top-2||r.bottom>SAFE.bottom+2||r.left<SAFE.left-2||r.right>SAFE.right+2))
                 over.push(sec.id+':'+(e.className||e.id));
@@ -257,6 +264,7 @@ if __name__ == "__main__":
     DIR = sys.argv[1].rstrip("/")
     no_browser = "--no-browser" in sys.argv
     md, html = load()
+    PROF_NAME, PROF = shorts_profile(html)
     check_engine(html)
     check_match(md, html)
     check_duration(html)
