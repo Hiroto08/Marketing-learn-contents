@@ -32,6 +32,7 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 | 指示の種類 | 使うもの |
 |---|---|
 | 新規エピソード制作・リニューアル（創作） | `episode-production` スキル（ロール分担表が入口） |
+| 全24話の後（シーズン2「売れる仕組みの裏側」）の企画・方針 | `docs/post-series-strategy.md`（v0.2・作戦）／`docs/season2-briefs.md`（各回ブリーフ CF/EX/T） |
 | ビルド・動画化・アップロード（製造） | `.claude/skills/episode-production/pipeline.md` の2コマンド：`bash _tools/pipeline/run_episode.sh <ep_dir> [--upload]` / `bash _tools/pipeline/run_shorts.sh <ep_dir> [--upload]` |
 | 個別作業（読み監査だけ・サムネだけ等） | 該当する `yt-*` ロールスキル |
 | ツールの部品表 | `_tools/README.md` |
