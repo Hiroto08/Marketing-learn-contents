@@ -107,6 +107,11 @@ def main(ep):
                    + header(spec, i, n)
                    + f'  <div class="cf-body {body_cls}">\n{sl["html"].strip()}\n  </div>\n  </section>\n')
         st = sl["steps"]
+        # STEPS に載っていない .se 要素（キッカー等）は、そのスライドの最初のSTEPと一緒に出す
+        # （載せ忘れると録画で永久に不可視になる。2026-11-02 CF01で実害）
+        stepped = {e for e, _ in st}
+        orphans = [m.group(1) for m in re.finditer(
+            r'<[a-z]+[^>]*class="[^"]*\bse\b[^"]*"[^>]*\bid="([^"]+)"', sl["html"]) if m.group(1) not in stepped]
         for j, (eid, anim) in enumerate(st):
             if anim not in ANIMS:
                 sys.exit(f"NG: {sid} の anim '{anim}' は未定義（{sorted(ANIMS)}）")
@@ -114,7 +119,8 @@ def main(ep):
                 sys.exit(f"NG: {sid} の STEP id '{eid}' が html に無い")
             if re.search(rf"^#{re.escape(eid)}\b", base_css, re.M):
                 sys.exit(f"NG: id '{eid}' はベースCSSにID指定があり見た目が崩れる。別名にする（例 s1-head）")
-            steps.append((i, t + dur * j / max(len(st), 1), eid, anim))
+            ids = (orphans + [eid]) if j == 0 else [eid]
+            steps.append((i, t + dur * j / max(len(st), 1), ids, anim))
         t += dur
     stage = '  <div id="flash"></div>\n' + "".join(out)
     html, k = re.subn(r'  <div id="flash"></div>.*?(</div><!-- /stage -->)',
@@ -122,7 +128,8 @@ def main(ep):
     assert k == 1, "ステージ領域が見つからない"
 
     # 4) JSデータ配列
-    steps_js = "\n".join(f"  {{si:{si}, t:{st:.1f}, ids:['{eid}'], anim:'{an}'}}," for si, st, eid, an in steps)
+    steps_js = "\n".join(f"  {{si:{si}, t:{st:.1f}, ids:[{', '.join(repr(x) for x in ids)}], anim:'{an}'}},"
+                          for si, st, ids, an in steps)
     meta_js = "\n".join(f"  {{id:'{sid}', start:{a:.1f}, end:{b:.1f}, dotContainerId:'sd{k + 1}'}},"
                         for k, (sid, a, b) in enumerate(meta))
     narr_js = "\n".join(f"  `{x}`," for x in narr)
