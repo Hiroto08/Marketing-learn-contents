@@ -148,7 +148,7 @@ def main():
 
     from playwright.sync_api import sync_playwright
     with sync_playwright() as p:
-        b = p.chromium.launch()
+        b = p.chromium.launch(executable_path='/opt/pw-browsers/chromium')
         page = b.new_page(viewport={"width": W, "height": H})
         for f, main_t, sub_t, out in jobs:
             render_png(page, f, main_t, sub_t, out)
