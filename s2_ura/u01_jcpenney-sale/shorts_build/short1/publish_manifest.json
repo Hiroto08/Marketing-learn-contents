@@ -6,6 +6,11 @@
     "publishAt": null,
     "thumbSha256": null,
     "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T01:00:25Z"
+    "uploadedAt": "2026-11-05T01:00:25Z",
+    "driveFileId": "1wnBXeNeWyjmxA00a1HpcxMSNr3X2LHDu",
+    "driveSha256": "571fd30be31f12deeb2df508a282b892c3f136be0deb0102e839205cda5afddd",
+    "driveRev": 1,
+    "driveName": "u01_「いつでも安い」にしたら売上25%減。客が本当に買っていたもの【価格の心理】.mp4",
+    "driveForVideoId": "UyjnGDTON3U"
   }
 }
