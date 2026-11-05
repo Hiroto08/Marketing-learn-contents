@@ -113,7 +113,47 @@ def s2_section(snap, prev):
         import statistics
         o.append("\n公開7日以上の Shorts の再生（中央値）：" + "／".join(
             f"{k} {statistics.median(vs):.0f}（{len(vs)}本）" for k, vs in sorted(groups.items())) + "（作戦 v0.2 §5.1 の時事と古典の比較）\n")
+        o += traffic_by_freshness(snap, today)
+    o += insert_slot_log()
     return o
+
+
+def traffic_by_freshness(snap, today):
+    """Issue #1 の注文：時事と古典の比較では流入経路（Shorts フィード＝おすすめ／検索ほか）も見る。Analytics の動画別・流入元別の再生"""
+    try:
+        from fetch_analytics import _query, _rows
+        tok = token()
+        agg = {}
+        for vid, v in snap.get("s2", {}).items():
+            if v["kind"] != "short" or v["privacy"] != "public":
+                continue
+            pub = (v.get("publishAt") or v.get("publishedAt") or "")[:10]
+            if not pub or (today - datetime.date.fromisoformat(pub)).days < 7:
+                continue
+            fr = (_freshness(v["id"]).split("（")[0]) or "不明"
+            for src, n in _rows(_query(tok, {"ids": "channel==MINE", "startDate": pub, "endDate": snap["date"], "metrics": "views",
+                                              "dimensions": "insightTrafficSourceType", "filters": f"video=={vid}"})):
+                k = "Shortsフィード" if src == "SHORTS" else ("検索" if src == "YT_SEARCH" else "その他")
+                agg.setdefault(fr, {}).setdefault(k, 0)
+                agg[fr][k] += int(n)
+        if not agg:
+            return []
+        line = []
+        for fr, d in sorted(agg.items()):
+            tot = sum(d.values()) or 1
+            line.append(f"{fr}：" + "・".join(f"{k}{d.get(k, 0) * 100 // tot}%" for k in ("Shortsフィード", "検索", "その他")))
+        return ["流入経路（公開7日以上の Shorts）：" + "／".join(line) + "\n"]
+    except BaseException as e:  # noqa: BLE001  統計は非致命
+        return [f"流入経路：取得失敗（{str(e)[:60]}）\n"]
+
+
+def insert_slot_log():
+    """Issue #1 の指示3：差し込み枠の採否と理由（s2_ura/insert-slot-log.md の直近3行）を週次分析に残す"""
+    p = f"{S.S2_DIR}/insert-slot-log.md"
+    if not os.path.exists(p):
+        return []
+    rows = [l for l in open(p, encoding="utf-8").read().splitlines() if l.startswith("| 20")]
+    return (["\n差し込み枠（直近）：\n\n| 週 | 採否 | 理由・題材 |\n|---|---|---|\n"] + [r + "\n" for r in rows[-3:]]) if rows else []
 
 
 def _freshness(item_id):

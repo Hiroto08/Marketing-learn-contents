@@ -1,6 +1,6 @@
 # 売れる仕組みの裏側｜公開状態（自動生成）
 
-> 生成 2026-11-05 17:12 JST・`python3 _tools/publish/ura_schedule.py`。予定は `s2_ura/schedule.json`、公開予約は `--apply`。Shorts＝毎日、ケースファイル（本編）＝週1。同じ種類の中で飛び級しない。
+> 生成 2026-11-06 00:14 JST・`python3 _tools/publish/ura_schedule.py`。予定は `s2_ura/schedule.json`、公開予約は `--apply`。Shorts＝毎日、ケースファイル（本編）＝週1。同じ種類の中で飛び級しない。
 
 - 再生リスト：未作成（--playlist）
 
@@ -23,4 +23,4 @@
 | 11/28(土) | Short u14 | `u14_followers-shirts` | — | 未アップ | — |
 | 11/28(土) | 本編 c02 | `c02_meeting-300k-hours` | `g40ebSUJmD8` | 非公開 | 0 |
 
-公開のたびに Studio で各 Short の「関連動画」に、同じ話のケースファイル（無ければ最新のケースファイル）を設定する（API なし）。
+関連動画（各 Short → 同じ話のケースファイル）は、本編の公開後に統合運営側（チャツネ）がブラウザで代行する（Issue #1。ここでの手動設定は不要）。動画を差し替えたときは Issue #2 で新旧の videoId を報告する。

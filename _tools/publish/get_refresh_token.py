@@ -16,6 +16,12 @@
   YT_CLIENT_ID / YT_CLIENT_SECRET / YT_REFRESH_TOKEN
 
 トークンはリポジトリ・チャットに貼らないこと。
+
+レビュー便（Google Drive へ mp4 を上げる・Issue #2）用のトークン:
+  python3 get_refresh_token.py <CLIENT_ID> <CLIENT_SECRET> --drive
+  → 共有フォルダ「マーケラボ レビュー便」を共有された Google アカウント（運営アカウント）で許可し、
+    表示されたトークンを環境変数 DRIVE_REFRESH_TOKEN に登録する。
+    事前に同じ Google Cloud プロジェクトで「Google Drive API」を有効化しておく。
 """
 import http.server
 import secrets
@@ -31,6 +37,8 @@ SCOPE = ("https://www.googleapis.com/auth/youtube.upload "
          "https://www.googleapis.com/auth/youtube.force-ssl "
          # 公開後のCTR・維持率・流入元を取得して改善ループを閉じるため
          "https://www.googleapis.com/auth/yt-analytics.readonly")
+# --drive：レビュー便用（共有フォルダに mp4 を上げる。他人が作ったフォルダへ書き込むため drive スコープが要る）
+DRIVE_SCOPE = "https://www.googleapis.com/auth/drive"
 PORT = 8765
 
 
@@ -40,15 +48,18 @@ class _ReusableServer(http.server.HTTPServer):
 
 
 def main():
-    if len(sys.argv) != 3:
+    drive = "--drive" in sys.argv
+    argv = [a for a in sys.argv[1:] if a != "--drive"]
+    if len(argv) != 2:
         sys.exit(__doc__)
-    cid, csec = sys.argv[1], sys.argv[2]
+    cid, csec = argv
+    scope = DRIVE_SCOPE if drive else SCOPE
     state = secrets.token_urlsafe(16)
     redirect = f"http://localhost:{PORT}"
     auth_url = ("https://accounts.google.com/o/oauth2/v2/auth?" +
                 urllib.parse.urlencode({
                     "client_id": cid, "redirect_uri": redirect,
-                    "response_type": "code", "scope": SCOPE,
+                    "response_type": "code", "scope": scope,
                     "access_type": "offline", "prompt": "consent",
                     "state": state}))
     code_holder = {}
@@ -102,6 +113,10 @@ def main():
     if not rt:
         sys.exit("refresh_tokenが返らなかった（既存の許可を myaccount.google.com/permissions で"
                  "取り消してから prompt=consent で再実行）")
+    if drive:
+        print("\n=== 環境変数に登録する1つ（レビュー便・Drive 用）===")
+        print(f"DRIVE_REFRESH_TOKEN={rt}")
+        return
     print("\n=== 環境Secretsに登録する3つ ===")
     print(f"YT_CLIENT_ID={cid}")
     print(f"YT_CLIENT_SECRET={csec}")

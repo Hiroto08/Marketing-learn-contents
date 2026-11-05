@@ -502,10 +502,23 @@ def main():
                                        "uploadedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
         save_manifest(dkey, man)
         if "short" in dkey:
-            checklist.append(f"[ ] Studio: short{dkey[-1]} (video {vid}) に「関連動画」→本編を設定")
+            if S.s2_item(re.sub(r"/shorts_build/short\d+$", "", dkey)):
+                pass  # 第2シリーズの関連動画は統合運営側がブラウザで代行（Issue #1・本編の公開後）
+            else:
+                checklist.append(f"[ ] Studio: short{dkey[-1]} (video {vid}) に「関連動画」→本編を設定")
         else:
             checklist.append(f"[ ] Studio: 本編 {vid} のエンドスクリーン/カード確認")
 
+    # レビュー便（Issue #2）：第2シリーズの回は、非公開アップと同じタイミングで Drive の共有フォルダにも上げる（失敗しても止めない）
+    s2_dirs = sorted({re.sub(r"/shorts_build/short\d+$", "", dkey) for dkey, _, _ in jobs
+                      if S.s2_item(re.sub(r"/shorts_build/short\d+$", "", dkey))})
+    if s2_dirs and (S.CFG.get("review") or {}).get("drive_folder_id"):
+        import subprocess
+        r = subprocess.run([sys.executable, os.path.join(os.path.dirname(os.path.abspath(__file__)), "upload_review_drive.py"), *s2_dirs],
+                           capture_output=True, text=True)
+        print((r.stdout + r.stderr).strip() or "レビュー便：出力なし")
+        if r.returncode != 0:
+            checklist.append("[ ] レビュー便（Drive）へ送れていない → upload_review_drive.py を再実行（DRIVE_REFRESH_TOKEN を確認）")
     if checklist:
         print("\n── 残る手動作業（APIで自動化不可）──")
         print("\n".join(checklist))

@@ -120,7 +120,37 @@ def state(v):
     return {"public": "公開済み", "private": "非公開", "unlisted": "限定公開"}.get(p, p)
 
 
+def superseded_ids():
+    """差し替えで旧版になった videoId（manifest の supersededVideoId）。Issue #2：旧動画は削除せず非公開のまま残す"""
+    out = set()
+    for p in glob.glob(f"{ROOT}/*/publish_manifest.json") + glob.glob(f"{ROOT}/*/shorts_build/short*/publish_manifest.json"):
+        for v in json.load(open(p, encoding="utf-8")).values():
+            if isinstance(v, dict) and v.get("supersededVideoId"):
+                out.add(v["supersededVideoId"])
+    return out
+
+
+def unschedule_superseded(tok, dry):
+    """旧版に公開予約（publishAt）が残っていると、差し替えたのに旧版も公開されてしまう → 予約だけ外して非公開のまま残す"""
+    old = superseded_ids()
+    if not old:
+        return
+    for vid, v in fetch(tok, list(old)).items():
+        st = v["status"]
+        if st["privacyStatus"] == "private" and st.get("publishAt"):
+            body = {"id": vid, "status": {"privacyStatus": "private", "selfDeclaredMadeForKids": st.get("selfDeclaredMadeForKids", False),
+                                          "license": st.get("license", "youtube"), "embeddable": st.get("embeddable", True),
+                                          "publicStatsViewable": st.get("publicStatsViewable", True)}}
+            if dry:
+                print(f"  [dry] 旧版 {vid} の公開予約を外す（非公開のまま残す）")
+                continue
+            urllib.request.urlopen(urllib.request.Request(f"{API}/videos?part=status", data=json.dumps(body).encode(), method="PUT",
+                                                          headers={"Authorization": "Bearer " + tok, "Content-Type": "application/json"}), timeout=30)
+            print(f"  旧版 {vid} の公開予約を外した（非公開のまま残す。Issue #2 でチャツネへ新旧の videoId を報告する）")
+
+
 def apply(tok, rows, vs, dry):
+    unschedule_superseded(tok, dry)
     blocked = {"u": False, "c": False}
     for r in sorted(rows, key=lambda r: (r["kind"], r["no"])):
         v = vs.get(r["vid"])
@@ -197,7 +227,8 @@ def write_status(rows, vs, sc):
         o.append(f"| {r['at']:%m/%d}({wd[r['at'].weekday()]}) | {'Short' if r['kind'] == 'u' else '本編'} {r['id']} | "
                  f"`{os.path.basename(r['dir']) if r['dir'] else '（未作成）'}` | {'`' + r['vid'] + '`' if r['vid'] else '—'} | "
                  f"{state(v)} | {views} |\n")
-    o.append("\n公開のたびに Studio で各 Short の「関連動画」に、同じ話のケースファイル（無ければ最新のケースファイル）を設定する（API なし）。\n")
+    o.append("\n関連動画（各 Short → 同じ話のケースファイル）は、本編の公開後に統合運営側（チャツネ）がブラウザで代行する（Issue #1。ここでの手動設定は不要）。"
+             "動画を差し替えたときは Issue #2 で新旧の videoId を報告する。\n")
     open(f"{ROOT}/STATUS.md", "w", encoding="utf-8").write("".join(o))
 
 
