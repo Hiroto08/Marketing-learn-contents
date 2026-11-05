@@ -45,38 +45,94 @@ python3 -c "import playwright" >/dev/null 2>&1 || {
   pip3 install --quiet playwright
 }
 export PLAYWRIGHT_BROWSERS_PATH="$PWB"
-# The base image ships a cached chromium build (e.g. chromium-1194) but the
-# installed playwright may expect a different revision number, and the official
-# browser download CDN is blocked here. Bridge the gap by symlinking the cached
-# build to whatever revision the current playwright asks for.
-if ! python3 - <<'PY' >/dev/null 2>&1
+# The base image ships a cached chromium build (e.g. chromium-1243) but the
+# installed playwright may expect a different revision (e.g. 1.56 -> 1194), and
+# the official browser download CDN is blocked here. Bridge the gap by asking
+# playwright for the exact executable paths it expects and symlinking each one
+# to a real binary from another cached revision.
+#
+# Binary layouts differ by revision, so never derive the path ourselves:
+#   old: chromium-N/chrome-linux/chrome
+#        chromium_headless_shell-N/chrome-linux/headless_shell
+#   new: chromium-N/chrome-linux64/chrome
+#        chromium_headless_shell-N/chrome-headless-shell-linux64/chrome-headless-shell
+
+pw_launch_ok() {
+  python3 - <<'PY' >/dev/null 2>&1
 from playwright.sync_api import sync_playwright
 with sync_playwright() as p:
     b = p.chromium.launch(); b.close()
 PY
-then
-  want=$(python3 - <<'PY' 2>&1
+}
+
+# Print the paths playwright wants: line 1 = full chromium, line 2 = whatever
+# launch() reported missing (normally the headless shell). Either may be empty.
+pw_wanted_paths() {
+  python3 - <<'PY' 2>/dev/null
+import re
 from playwright.sync_api import sync_playwright
-try:
-    with sync_playwright() as p:
-        p.chromium.launch()
-except Exception as e:
-    print(e)
+with sync_playwright() as p:
+    print(p.chromium.executable_path)
+    try:
+        p.chromium.launch().close()
+        print("")
+    except Exception as e:
+        m = re.search(r"Executable doesn't exist at (\S+)", str(e))
+        print(m.group(1) if m else "")
 PY
-)
-  cbase=$(ls -d "$PWB"/chromium-[0-9]* 2>/dev/null | grep -E 'chromium-[0-9]+$' | head -1)
-  hbase=$(ls -d "$PWB"/chromium_headless_shell-[0-9]* 2>/dev/null | head -1)
-  wver=$(echo "$want" | grep -oE 'chromium(_headless_shell)?-[0-9]+' | grep -oE '[0-9]+' | head -1)
-  if [ -n "$wver" ] && [ -n "$cbase" ]; then
-    log "symlink chromium $cbase -> rev $wver"
-    ln -sf "$cbase" "$PWB/chromium-$wver"
-    if [ -n "$hbase" ]; then
-      mkdir -p "$PWB/chromium_headless_shell-$wver/chrome-headless-shell-linux64"
-      ln -sf "$hbase/chrome-linux/headless_shell" \
-        "$PWB/chromium_headless_shell-$wver/chrome-headless-shell-linux64/chrome-headless-shell"
-    fi
+}
+
+# pw_source <kind> <wanted_path>: newest cached binary of <kind> (chromium |
+# headless) that really exists and does not live in the wanted revision dir.
+pw_source() {
+  local kind=$1 want=$2 wdir cand real
+  wdir=$(echo "$want" | sed -E "s#^($PWB/[^/]+)/.*#\1#")
+  if [ "$kind" = headless ]; then
+    cands=$(ls -d "$PWB"/chromium_headless_shell-[0-9]*/chrome-headless-shell-linux64/chrome-headless-shell \
+                  "$PWB"/chromium_headless_shell-[0-9]*/chrome-linux/headless_shell 2>/dev/null)
   else
-    log "WARN: could not resolve chromium revision; trying 'playwright install'"
+    cands=$(ls -d "$PWB"/chromium-[0-9]*/chrome-linux64/chrome \
+                  "$PWB"/chromium-[0-9]*/chrome-linux/chrome 2>/dev/null)
+  fi
+  for cand in $(echo "$cands" | sort -V -r); do
+    case "$cand" in "$wdir"/*) continue ;; esac
+    [ -L "$cand" ] && continue            # a bridge we made earlier, not a real build
+    real=$(readlink -f "$cand") || continue
+    case "$real" in "$wdir"/*) continue ;; esac
+    [ -f "$real" ] && [ -x "$real" ] && { echo "$cand"; return 0; }
+  done
+  return 1
+}
+
+# pw_bridge <kind> <wanted_path>
+pw_bridge() {
+  local kind=$1 want=$2 src
+  [ -n "$want" ] || return 0
+  [ -x "$want" ] && return 0
+  if src=$(pw_source "$kind" "$want"); then
+    log "symlink $kind $want -> $src"
+    mkdir -p "$(dirname "$want")"
+    ln -sfn "$src" "$want"
+  else
+    log "WARN: no cached $kind binary to bridge $want"
+  fi
+}
+
+if ! pw_launch_ok; then
+  mapfile -t wanted < <(pw_wanted_paths)
+  want_full=${wanted[0]:-}
+  want_missing=${wanted[1]:-}
+  pw_bridge chromium "$want_full"
+  if [ -n "$want_missing" ] && [ "$want_missing" != "$want_full" ]; then
+    case "$want_missing" in
+      */chromium_headless_shell-*) pw_bridge headless "$want_missing" ;;
+      *)                           pw_bridge chromium "$want_missing" ;;
+    esac
+  fi
+  if pw_launch_ok; then
+    log "playwright chromium OK (bridged)"
+  else
+    log "WARN: chromium still not launchable; trying 'playwright install'"
     python3 -m playwright install chromium >/dev/null 2>&1 || true
   fi
 else
