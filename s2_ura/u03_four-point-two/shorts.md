@@ -3,6 +3,7 @@
 shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦型1080x1920・5スライド。
 型：見る人の違和感（高評価ほど売れるはずでは？）→ 犯人（完璧すぎる評価は疑われる）→ 数字（購入率のピークは星4.2〜4.5）。
 
+**鮮度：** 古典（2017）
 **ハッシュタグ：** #口コミ #レビュー
 **出典：**
 - Spiegel Research Center（ノースウェスタン大学）× PowerReviews「How Online Reviews Influence Sales」— 購入の可能性は平均評価4.2〜4.5で最大、星5.0は「良すぎて信じられない」と見られる（日用消費財のデータ） — [PowerReviews 発表](https://www.powerreviews.com/powerreviews-partners-with-northwestern/)・[Spiegel Research Center 資料（PDF）](https://spiegel.medill.northwestern.edu/wp-content/uploads/sites/2/2021/04/Spiegel-research-reveals-4.5-stars-are-better-than-5-The-Medill-IMC-Spiegel-Research-Center.pdf)

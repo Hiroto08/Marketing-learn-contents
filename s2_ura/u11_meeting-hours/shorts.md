@@ -3,6 +3,7 @@
 shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦型1080x1920・5スライド。
 型：見る人の違和感（会議ばかりで仕事が進まない）→ 犯人（1つの会議が、下に準備の会議を生む）→ 数字（年30万時間・会議そのものは7,000時間）。
 
+**鮮度：** 古典（2014）
 **ハッシュタグ：** #会議 #働き方
 **出典：**
 - Bain & Company と VoloMetrix の調査（大企業17社・Harvard Business Review 2014年「Your Scarcest Resource」）：ある企業の週1回の役員会議は、出席者の時間が年約7,000時間、その準備の会議などを含めると組織全体で年約30万時間を使っていた（個人の準備作業は含まない） — [Bain「The $300,000-Hour Meeting」](https://www.bain.com/insights/the-300000-hour-meeting-fm-blog/)・[Bain プレスリリース 2014](https://www.bain.com/about/media-center/press-releases/germany/2014/your-scarcest-resource/)

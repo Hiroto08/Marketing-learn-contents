@@ -3,6 +3,7 @@
 shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦型1080x1920・5スライド。
 型：見る人の違和感（行列の店につい並んでしまう）→ 犯人（迷った人は、他の人の選択をまねる）→ 数字（注文13〜20%増）。
 
+**鮮度：** 古典（2009）
 **ハッシュタグ：** #社会的証明 #行動経済学
 **出典：**
 - Cai, Chen & Fang (2009) "Observational Learning: Evidence from a Randomized Natural Field Experiment", American Economic Review 99(3), 864–882 — 北京のレストランで、直近の売れ筋上位5品を示した卓では、その5品の注文が13〜20%増（作業論文版は13〜18%）。普段来ない客ほど効果が大きい — [EconPapers](https://econpapers.repec.org/RePEc:aea:aecrev:v:99:y:2009:i:3:p:864-82)・[Yale ISPS](https://isps.yale.edu/node/19842)

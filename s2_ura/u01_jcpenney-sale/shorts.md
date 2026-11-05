@@ -5,6 +5,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。約
 続きは 11/21 のケースファイル c01（定価とセールの心理を深掘り）。
 
 **続きの本編：** c01
+**鮮度：** 古典（2012）
 **ハッシュタグ：** #価格戦略 #行動経済学
 **出典：**
 - J.C. Penney 2012年度決算（2013年2月発表）：既存店売上 −25.2%、総売上 −24.8%（129.85億ドル）、純損失9.85億ドル — [JCK Online「J.C. Penney Lost Nearly $1 Billion in 2012」](https://www.jckonline.com/editorial-article/jc-penney-lost-nearly-1-billion-in-2012/)

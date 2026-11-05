@@ -3,6 +3,7 @@
 shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦型1080x1920・5スライド。
 型：見る人の違和感（フォロワーが多ければ売れるはずでは？）→ 犯人（見る人と買う人は別の数字）→ 数字（260万人・各36枚の目標に届かず）。
 
+**鮮度：** 古典（2019）
 **ハッシュタグ：** #SNS運用 #インフルエンサー
 **出典：**
 - インフルエンサーの Arii（Arianna Renee、Instagram フォロワー約260万人）が2019年に服のブランド「ERA」を立ち上げたが、最初の販売で製造元が求めた最低数（本人の説明では7商品×各36枚＝252点）に届かず、続けられなかった — [Business Insider](https://businessinsider.nl/instagrammer-arii-2-million-followers-cannot-sell-36-t-shirts-2019-5/)・[The Quint](https://www.thequint.com/news/hot-news/trolled-over-failure-instagram-influencer-takes-on-critics)

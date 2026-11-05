@@ -3,6 +3,7 @@
 shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦型1080x1920・5スライド。
 型：見る人の違和感（AIの広告は安っぽいのでは？）→ 犯人（嫌われたのは中身ではなく「AI製」という表示）→ 数字（クリック19%増／表示で約3割減）。
 
+**鮮度：** 時事（2025）
 **ハッシュタグ：** #AI広告 #生成AI
 **出典：**
 - NYU Stern・Emory 大学の研究（2025年）「The AI Advertising Paradox」— Google ディスプレイ広告の実地テストで、AIが一から作った広告のクリック率4.44%が、専門家が作った広告の3.73%を19%上回った。同じ画像に「AIで作成」と表示するとクリック率は約31.5%低下 — [NYU Stern Research Highlights](https://www.stern.nyu.edu/experience-stern/faculty-research/ai-advertising-paradox)。別の調査（Nielsen 2025）では人が作った広告の方が記憶に残るという結果もあり、結論は条件つき

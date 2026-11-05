@@ -94,16 +94,36 @@ def s2_section(snap, prev):
         return []
     pv = (prev or {}).get("s2", {})
     today = datetime.date.fromisoformat(snap["date"])
-    o = [f"\n## {S.S2_NAME}（第2シリーズ）\n\n| 回 | タイトル | 状態 | 公開から | 再生 | 前回比 | 高評価 |\n|---|---|---|---|---|---|---|\n"]
+    o = [f"\n## {S.S2_NAME}（第2シリーズ）\n\n| 回 | 鮮度 | タイトル | 状態 | 公開から | 再生 | 前回比 | 高評価 |\n|---|---|---|---|---|---|---|---|\n"]
+    groups = {}
     for vid, v in rows:
-        days = "—"
+        days, nd = "—", None
         if v["privacy"] == "public":
             pub = (v.get("publishAt") or v.get("publishedAt") or "")[:10]
-            days = f"{(today - datetime.date.fromisoformat(pub)).days}日" if pub else "—"
+            if pub:
+                nd = (today - datetime.date.fromisoformat(pub)).days
+                days = f"{nd}日"
+        fr = _freshness(v["id"])
+        if v["kind"] == "short" and nd is not None and nd >= 7:   # Shorts は7日でほぼ出尽くす（v0.2 §3-1）
+            groups.setdefault(fr.split("（")[0] or "不明", []).append(v["views"])
         d = v["views"] - pv[vid]["views"] if vid in pv else None
-        o.append(f"| {v['id']} | [{v['title'][:30]}](https://youtu.be/{vid}) | {v['privacy']} | {days} | {v['views']} | "
+        o.append(f"| {v['id']} | {fr or '—'} | [{v['title'][:30]}](https://youtu.be/{vid}) | {v['privacy']} | {days} | {v['views']} | "
                  f"{'—' if d is None else f'{d:+d}'} | {v['likes']} |\n")
+    if groups:
+        import statistics
+        o.append("\n公開7日以上の Shorts の再生（中央値）：" + "／".join(
+            f"{k} {statistics.median(vs):.0f}（{len(vs)}本）" for k, vs in sorted(groups.items())) + "（作戦 v0.2 §5.1 の時事と古典の比較）\n")
     return o
+
+
+def _freshness(item_id):
+    """s2_ura/uNN_*/shorts.md の **鮮度：** 時事（YYYY-MM）／古典（YYYY）"""
+    import re as _re
+    for p in glob.glob(f"{S.S2_DIR}/{item_id}_*/shorts.md"):
+        m = _re.search(r"\*\*鮮度：\*\*\s*(\S+)", open(p, encoding="utf-8").read())
+        if m:
+            return m.group(1)
+    return ""
 
 
 def note_section():
