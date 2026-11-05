@@ -12,5 +12,6 @@
 4. ビルドとアップ：bash _tools/pipeline/run_shorts.sh <dir> --upload（ケースファイルは case.json → build_case_slide.py → verify_episode → run_episode.sh --upload）。動画のアップは1日6本まで（17:00 JST に回復）。超えた分は send_later で翌日17:10に回す。
 5. schedule.json に {"id": "uNN", "date": "YYYY-MM-DD"} を足す → python3 _tools/publish/ura_schedule.py --apply --playlist（番号順に昇順でないと拒否される。ずれたら日付を直す）。
 6. 成果物をコミット → 基点ブランチと claude/note-articles へ push。
+6b. 題材の選び方・差し替え・保留の理由など判断したことがあれば docs/decision-log.md の「決定の記録」に追記（ユーザーに決めてほしいことは「確認待ち」へ）→ 6 と一緒にコミット。
 7. 報告（3行以内）：作った回（番号・題名・公開日）、使った事例の日付、残る手作業（公開後に関連動画を設定）。
 ```

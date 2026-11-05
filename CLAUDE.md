@@ -27,10 +27,20 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 6. クォータ超過（quotaExceeded）は翌日16時（JST）以降に同コマンド再実行で継続。ユーザーに続き時刻を伝える
 7. 途中で判断に迷う選択肢が出ても、pipeline.md・スキルに既定があるものは**質問せず既定に従う**
 
+## 記録の規約（GitHub でやりとりする。2026-11-05 ユーザー指示）
+
+- 考え・判断・提案・確認したいことは、**チャットだけで終わらせず文書にしてコミット・プッシュ**する。
+  入口は `docs/decision-log.md`（確認待ち／進行中の仮説／決定の記録）。中身が長いものは該当文書（作戦なら
+  `docs/post-series-strategy.md`、第2シリーズなら `s2_ura/README.md` 等）に書き、判断ログからリンクする。
+- 自分で判断したこと（題材の差し替え・既定値の選択など）も「私の判断」と明記して理由とともに残す。
+- 定期ジョブも、方針を変えた・判断した・ユーザーに確認したいことが出たときは判断ログに追記してコミットする。
+- 動画（mp4）はリポジトリに入れない。
+
 ## 作業の入口（迷ったらここ）
 
 | 指示の種類 | 使うもの |
 |---|---|
+| これまでの判断・確認待ち・進行中の仮説 | `docs/decision-log.md` |
 | 第2シリーズ「売れる仕組みの裏側」（Shorts単独 uNN・ケースファイル cNN） | `s2_ura/README.md`（置き場所・型・2コマンド・`ura_schedule.py`） |
 | 新規エピソード制作・リニューアル（創作） | `episode-production` スキル（ロール分担表が入口） |
 | ビルド・動画化・アップロード（製造） | `.claude/skills/episode-production/pipeline.md` の2コマンド：`bash _tools/pipeline/run_episode.sh <ep_dir> [--upload]` / `bash _tools/pipeline/run_shorts.sh <ep_dir> [--upload]` |
