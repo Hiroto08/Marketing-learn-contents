@@ -42,6 +42,9 @@
 | 題名 | 検索される言葉（「〇〇 なぜ」「〇〇 理由」＋会社名・商品名）。サムネの帯は「CASE FILE #NN」で自動表示 |
 | 最後 | 「自分の仕事で使うなら」を1つだけ示す。ハウツーはここで扱う |
 
+- **slide.html は手で書かない**。`cNN/case.json`（各スライドのステージ HTML・STEPS の要素順・ナレーション）を書き、`python3 _tools/video/build_case_slide.py <cNN>/case.json 06_case-studies/ep22_v-shaped-recovery/slide.html <cNN>/slide.html` で生成する（エンジン部分は既存本編のまま、ステージとデータだけ差し替える）。script.md のナレーションは case.json と同じ文にする（検査が文字単位で照合）。
+- note 記事・Kit メールは、ケースファイルには当面付けない（v0.2 §3-8：どちらも今は入口になっていない。工数は YouTube に寄せる）。週次分析で note→YouTube の流入が増えたら見直す。
+
 ## 3. 作る（製造）— 24話と同じ2コマンド
 
 ```bash
