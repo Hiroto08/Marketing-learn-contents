@@ -131,9 +131,9 @@ def strip_episode_prefix(title: str) -> str:
 
 
 def series_tags(ep_dir: str, short_n: int = 0) -> list:
-    """回を識別する追跡タグ（視聴者には見えない）。short_n>0 なら Shorts 用"""
-    ep = int(re.search(r"ep(\d+)", os.path.basename(ep_dir.rstrip("/"))).group(1))
-    return [S.SERIES_TAG, S.tag(ep, short_n)]
+    """回を識別する追跡タグ（視聴者には見えない）。short_n>0 なら Shorts 用。
+    第2シリーズ（s2_ura/uNN_* / cNN_*）は mlab-ura + mlab-uNN / mlab-cNN"""
+    return S.tags_for_dir(ep_dir, short_n)
 
 
 def _episode_video_url(ep_dir: str) -> str | None:
@@ -148,8 +148,41 @@ def _episode_video_url(ep_dir: str) -> str | None:
     return None
 
 
+def _s2_case_url(ep_dir: str, md: str) -> str | None:
+    """第2シリーズの Short が続く本編（shorts.md の **続きの本編：** cNN）の URL。未アップなら None"""
+    m = re.search(r"\*\*続きの本編：\*\*\s*(c\d{2})", md)
+    if not m:
+        return None
+    import glob as _g
+    for d in _g.glob(os.path.join(os.path.dirname(ep_dir.rstrip("/")), f"{m.group(1)}_*")):
+        url = _episode_video_url(d)
+        if url:
+            return url
+    return None
+
+
+def s2_shorts_metadata(ep_dir: str, md: str) -> list:
+    """第2シリーズ（売れる仕組みの裏側）の Short 1本ぶんのメタデータ"""
+    it = S.s2_item(ep_dir)
+    m = re.search(r"## Short 1[：:].*?\*\*タイトル案：\*\* (.*?)\n", md, re.S)
+    title = m.group(1).strip()
+    htags = re.findall(r"#([^\s#]+)", (re.search(r"\*\*ハッシュタグ：\*\*(.*)", md) or [None, ""])[1])
+    tags = ["Shorts", "売れる仕組み", "マーケティング"] + [t for t in htags if t not in ("Shorts", "売れる仕組み", "マーケティング")][:2]
+    case = _s2_case_url(ep_dir, md)
+    link = (f"▶ この話の続き（本編・約5分）\n{case}\n\n" if case
+            else "▶ 続きの本編は、この画面の関連動画リンクから\n\n")
+    desc = (f"{title}\n\n"
+            f"「{S.S2_NAME} #{it[1]:02d}」— 買い物・職場・SNSの「なんで？」の犯人を、実在の事例と数字1つで種明かし。毎日{S.S2_HOUR}時に公開。\n\n"
+            f"{link}"
+            f"{S.VOICE_CREDIT}\n\n"
+            + " ".join(f"#{t}" for t in tags))
+    return [{"n": 1, "title": title[:100], "description": desc, "tags": tags + series_tags(ep_dir)}]
+
+
 def shorts_metadata(ep_dir: str) -> list:
     md = open(f"{ep_dir}/shorts.md", encoding="utf-8").read()
+    if S.s2_item(ep_dir):
+        return s2_shorts_metadata(ep_dir, md)
     ep_title_m = re.search(r"— (.+)$", md.splitlines()[0])
     ep_title = strip_episode_prefix(ep_title_m.group(1).strip()) if ep_title_m else ""
     # エピソード固有のハッシュタグを description.md から流用（ニッチタグの補強）

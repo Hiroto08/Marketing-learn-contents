@@ -31,6 +31,7 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 
 | 指示の種類 | 使うもの |
 |---|---|
+| 第2シリーズ「売れる仕組みの裏側」（Shorts単独 uNN・ケースファイル cNN） | `s2_ura/README.md`（置き場所・型・2コマンド・`ura_schedule.py`） |
 | 新規エピソード制作・リニューアル（創作） | `episode-production` スキル（ロール分担表が入口） |
 | ビルド・動画化・アップロード（製造） | `.claude/skills/episode-production/pipeline.md` の2コマンド：`bash _tools/pipeline/run_episode.sh <ep_dir> [--upload]` / `bash _tools/pipeline/run_shorts.sh <ep_dir> [--upload]` |
 | 個別作業（読み監査だけ・サムネだけ等） | 該当する `yt-*` ロールスキル |
@@ -44,7 +45,9 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 2. **エンジンを編集しない**——slide.html/stage.html の keyframes・rv-*・`.se`・`#__heartbeat`。
    Shortsの見た目は spec.py だけを編集し gen_stage.py で再生成する
 3. **アップロードは常にprivate**。公開は `publish_episode.py`（`--schedule-all` の週次予約連鎖 or `--episode`）経由でのみ行い、
-   **EP番号の昇順・本編＋同回Shorts同時**を厳守（飛び級厳禁。docs/autonomous-operation.md §3.1）
+   **EP番号の昇順・本編＋同回Shorts同時**を厳守（飛び級厳禁。docs/autonomous-operation.md §3.1）。
+   例外：第2シリーズ「売れる仕組みの裏側」（`s2_ura/`）は Shorts 毎日・本編週1で、同時公開は求めない（2026-11-04 承認）。
+   公開は `ura_schedule.py --apply` 経由のみ・同じ種類（uNN/cNN）の中で番号順・飛び級厳禁（`s2_ura/README.md`）
 4. mp4はコミットしない（gitignore済み）。spec.py / stage.html / thumbnail.png /
    publish_manifest.json / タイムスタンプ修正は**コミットする**
 5. ナレーション・タイムスタンプを目分量で書かない（文字一致検査と実測書き戻しがある）

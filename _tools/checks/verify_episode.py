@@ -12,6 +12,11 @@ Runs all mechanical quality gates and prints a sectioned PASS/FAIL report:
   [6] typography       (line length, explicit <br> breaks, kinsoku, spacing)
   [7] browser render   (Playwright: 0 js errors, ids exist; skipped with --no-browser)
 
+Profile: a 第2シリーズ case file (directory s2_ura/cNN_*) is checked with the
+"case" profile — 8-12 slides, estimated 3:30-5:00, S1 answers within ~10 s
+(first sentence <=68 chars and contains a number), questions >=2, connectives >=4
+(docs/post-series-strategy.md §4.1). Everything else is identical.
+
 Exit code 0 = all PASS. Any FAIL prints an actionable reason.
 Spec sources: .claude/skills/episode-production/{retention-packaging,design-system}.md
 """
@@ -22,6 +27,7 @@ import sys
 from collections import defaultdict
 
 EP = None
+CASE = False          # 第2シリーズのケースファイル（s2_ura/cNN_*）
 FAILS = []
 WARNS = []
 
@@ -62,7 +68,12 @@ def check_counts(md, html, md_narr, h_narr):
             fail(f"{f} が無い")
     n_sec = len(re.findall(r'<section class="slide[^"]*" id="s\d+"', html))
     metas = len(re.findall(r"\{id:'s\d+',\s*start:", html))
-    if not (len(md_narr) == len(h_narr) == n_sec == metas == 18):
+    if CASE:
+        if not (len(md_narr) == len(h_narr) == n_sec == metas and 8 <= n_sec <= 12):
+            fail(f"枚数: script={len(md_narr)} NARRATIONS={len(h_narr)} section={n_sec} META={metas}（ケースファイルは全て一致・8〜12枚）")
+        else:
+            ok(f"script/NARRATIONS/section/SLIDES_META = {n_sec} で一致（ケースファイル 8〜12枚）")
+    elif not (len(md_narr) == len(h_narr) == n_sec == metas == 18):
         fail(f"枚数不一致: script={len(md_narr)} NARRATIONS={len(h_narr)} section={n_sec} META={metas}（全て18のこと）")
     else:
         ok("script/NARRATIONS/section/SLIDES_META = 18 で一致")
@@ -74,7 +85,7 @@ def check_match(md_narr, h_narr):
     if bad:
         fail(f"S{bad} が script.md と slide.html で不一致")
     else:
-        ok("18/18 完全一致")
+        ok(f"{len(md_narr)}/{len(md_narr)} 完全一致")
 
 
 def check_quality(md_narr):
@@ -87,14 +98,20 @@ def check_quality(md_narr):
     n_s = len(re.findall(r"そして", all_text)) + len(re.findall(r"また、", all_text))
     if n_s > 2:
         fail(f"「そして/また、」{n_s}回（上限2）→ しかし/実は/だから 等へ")
+    min_q, min_b = (2, 4) if CASE else (3, 6)
     n_q = len(re.findall(r"(と思いますか|でしょうか|考えてみてください|ませんか)", all_text))
-    if n_q < 3:
-        fail(f"問いかけ{n_q}回（最低3）")
+    if n_q < min_q:
+        fail(f"問いかけ{n_q}回（最低{min_q}）")
     n_b = len(re.findall(r"(しかし|ところが|実は|だから|つまり|それなのに)", all_text))
-    if n_b < 6:
-        fail(f"逆接・因果接続詞{n_b}回（最低6）")
+    if n_b < min_b:
+        fail(f"逆接・因果接続詞{n_b}回（最低{min_b}）")
     if md_narr and not re.search(r"(でしょうか|と思いますか|？)", md_narr[-1]):
-        fail("S18に未解決の問い（開ループ）が無い")
+        fail("最終スライドに未解決の問い（開ループ）が無い")
+    if CASE and md_narr:
+        # Shorts から来た人は続きを期待している → 最初の約10秒（≈68字）で答えを言い切る
+        first = re.split(r"(?<=[。？！])", md_narr[0].replace("\n", ""))[0]
+        if len(first) > 68 or not re.search(r"[0-9０-９]", first):
+            fail(f"S1の最初の1文（約10秒）で答えを数字つきで言い切っていない: 「{first[:40]}…」（68字以内・数字を含む）")
     # 最低尺ゲート: 実測はナレーション推定とほぼ一致する（speed1.1・ポーズ込み）。
     # 完成動画は8:00以上が必須のため、推定495s(8:15)未満はFAILさせて増補を促す
     est = sum(
@@ -102,7 +119,10 @@ def check_quality(md_narr):
         + len([s for s in re.split(r"[。？?！]", n) if s.strip()]) * 0.28
         for n in md_narr
     )
-    if est < 495:
+    if CASE:
+        if not (210 <= est <= 300):
+            fail(f"推定尺 {int(est//60)}:{int(est%60):02d}（ケースファイルは3:30〜5:00）→ ナレーションを{'増補' if est < 210 else '削る'}")
+    elif est < 495:
         fail(f"推定尺 {int(est//60)}:{int(est%60):02d}（最低8:15）→ ナレーションを増補（目安 総字数{int((495-est)*6.8)}字以上追加）")
     if not FAILS:
         ok(f"問いかけ{n_q} / 逆接因果{n_b} / そして系{n_s} / 推定尺 {int(est//60)}:{int(est%60):02d}")
@@ -132,7 +152,7 @@ def check_steps(html):
             if b - a > 15:
                 fail(f"S{sid}: {b - a:.0f}秒の無変化区間")
     if len(FAILS) == n0:
-        ok(f"全18枚OK（総STEP {len(steps)}個）")
+        ok(f"全{len(meta)}枚OK（総STEP {len(steps)}個）")
 
 
 def check_accent(html):
@@ -280,6 +300,9 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         sys.exit(__doc__)
     EP = sys.argv[1].rstrip("/")
+    CASE = bool(re.match(r"^c\d{2}_", os.path.basename(EP)))
+    if CASE:
+        print("profile: ケースファイル（第2シリーズ本編・8〜12枚・3:30〜5:00）")
     no_browser = "--no-browser" in sys.argv
     md, html, md_narr, h_narr = load()
     check_counts(md, html, md_narr, h_narr)

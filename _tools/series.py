@@ -48,3 +48,28 @@ def tag(ep: int, short_n: int = 0) -> str:
 SERIES_TAG = f"{PREFIX}-series"
 TAG_RE = re.compile(rf"^{re.escape(PREFIX)}-ep(\d{{2}})(?:-s(\d+))?$")   # タグ → (ep, short_n)
 MARK_RE = re.compile(rf"{re.escape(PREFIX)}-ep(\d{{2}})")               # Kit の description 目印
+
+
+# ── 第2シリーズ（売れる仕組みの裏側）：Shorts単独 uNN ／ 本編ケースファイル cNN ─────────
+S2 = CFG.get("series2") or {}
+S2_NAME = S2.get("name", "")
+S2_DIR = S2.get("dir", "s2_ura")
+S2_TAG = f"{PREFIX}-{S2.get('key', 's2')}"
+S2_HOUR = int(S2.get("youtube_hour_jst", YT_HOUR))
+_S2_ITEM_RE = re.compile(rf"^({re.escape(S2.get('short_prefix', 'u'))}|{re.escape(S2.get('case_prefix', 'c'))})(\d{{2}})_")
+S2_TAG_RE = re.compile(rf"^{re.escape(PREFIX)}-([uc])(\d{{2}})$")   # タグ → (kind u/c, no)
+
+
+def s2_item(dirname: str):
+    """ディレクトリ名 u01_xxx / c01_xxx → ("u"|"c", 1)。第2シリーズでなければ None"""
+    m = _S2_ITEM_RE.match(os.path.basename(dirname.rstrip("/")))
+    return (m.group(1), int(m.group(2))) if m else None
+
+
+def tags_for_dir(dirname: str, short_n: int = 0) -> list:
+    """動画の識別タグ一式。epNN_* は従来どおり、uNN_*/cNN_* は第2シリーズのタグ"""
+    it = s2_item(dirname)
+    if it:
+        return [S2_TAG, f"{PREFIX}-{it[0]}{it[1]:02d}"]
+    ep = int(re.search(r"ep(\d+)", os.path.basename(dirname.rstrip("/"))).group(1))
+    return [SERIES_TAG, tag(ep, short_n)]

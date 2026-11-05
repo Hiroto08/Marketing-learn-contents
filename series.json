@@ -107,5 +107,17 @@
   },
   "brand": {
     "bg_color": "#0B1220"
+  },
+  "series2": {
+    "_comment": "24話の後の第2シリーズ（docs/post-series-strategy.md v0.2）。Shorts単独の回(uNN)と本編ケースファイル(cNN)。タグは <tag_prefix>-uNN / <tag_prefix>-cNN。公開予約は s2_ura/schedule.json → _tools/publish/ura_schedule.py",
+    "name": "売れる仕組みの裏側",
+    "key": "ura",
+    "dir": "s2_ura",
+    "short_prefix": "u",
+    "case_prefix": "c",
+    "youtube_hour_jst": 18,
+    "start_date": "2026-11-15",
+    "playlist_title": "売れる仕組みの裏側｜身近な「なぜ？」の犯人を数字で明かす",
+    "playlist_description": "買い物・職場・SNSで感じる「なんで？」の裏にある売れる仕組みを、実在の企業・商品と数字1つで種明かしするシリーズです。Shortsは毎日18時、続きを深掘りする本編（ケースファイル・約5分）は毎週土曜18時に公開。"
   }
 }

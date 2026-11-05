@@ -76,8 +76,14 @@ def main():
             i = int(re.search(r"(\d+)", n).group(1))
             print(f"    → 再録画: rm {out}/.work/slides/{n} して make_video.py に --slide {i} を付けて再実行")
 
-    # ── 1b. 最低尺（完成動画は8:00以上が必須） ──
-    if vd < 480.0:
+    # ── 1b. 尺（本編は8:00以上が必須。第2シリーズのケースファイル s2_ura/cNN_* は3:20〜5:10） ──
+    if re.match(r"^c\d{2}_", name):
+        if 200.0 <= vd <= 310.0:
+            print(f"✓ 尺: {int(vd//60)}:{int(vd%60):02d}（ケースファイル 3:20〜5:10）")
+        else:
+            FAILS.append("尺")
+            print(f"✗ 尺: {int(vd//60)}:{int(vd%60):02d}（ケースファイルは3:20〜5:10）→ ナレーションを調整して再ビルド")
+    elif vd < 480.0:
         FAILS.append("最低尺")
         print(f"✗ 最低尺: {int(vd//60)}:{int(vd%60):02d} < 8:00 → script.md/slide.htmlのナレーションを増補して再ビルド（verify_episodeの推定尺ゲート8:15を先に通すこと）")
     else:

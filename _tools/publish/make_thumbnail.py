@@ -37,6 +37,12 @@ def _episode_no(ep_dir: str) -> str:
     return str(int(m.group(1))) if m else "?"
 
 
+def _badge(ep_dir: str) -> str:
+    """左上の帯の文字。本編は「第N回」、第2シリーズのケースファイル（cNN_*）は「CASE FILE #NN」"""
+    m = re.match(r"^c(\d{2})_", os.path.basename(ep_dir.rstrip("/")))
+    return f"CASE FILE #{m.group(1)}" if m else f"第{_episode_no(ep_dir)}回"
+
+
 def _section(md: str, prefix: str) -> str:
     m = re.search(rf"^## {prefix}[^\n]*\n(.*?)(?=\n## |\Z)", md, re.S | re.M)
     return m.group(1) if m else ""
@@ -125,7 +131,7 @@ html,body{{width:{W}px;height:{H}px;overflow:hidden;
 .bar{{position:absolute;left:0;bottom:0;width:100%;height:14px;
   background:linear-gradient(90deg,{accent},{accent}00 82%)}}
 </style></head><body><div id="t">
-  <div class="badge">第{no}回</div>
+  <div class="badge">{no}</div>
   <div class="series">{S.NAME}</div>
   <div class="main">{main_html}</div>
   {sub_html}
@@ -148,7 +154,7 @@ def main():
         sys.exit(f"メインテキストが見つからない: {ep}/thumbnail.md を確認するか --main を指定")
     out = a.out or f"{ep}/thumbnail.png"
 
-    html = render_html(_episode_no(ep), _accent(ep), main_text, sub_text)
+    html = render_html(_badge(ep), _accent(ep), main_text, sub_text)
     tmp = f"{out}.src.html"
     open(tmp, "w", encoding="utf-8").write(html)
     from playwright.sync_api import sync_playwright
