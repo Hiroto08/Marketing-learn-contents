@@ -23,7 +23,9 @@ import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from yt_index import episode_index, token  # noqa: E402
+from yt_index import api, episode_index, token  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402
 
 MAX_CHARS = 28   # 1キューの最大文字数（スマホで2行以内）
 LEAD = 0.15      # 発話開始の微小オフセット（秒）
@@ -143,11 +145,22 @@ def main():
     idx = episode_index(tok)
     done = 0
     for d in dirs:
-        ep = int(re.search(r"ep(\d+)", os.path.basename(d))[1])
-        s = idx.get(ep, {"main": None, "shorts": {}, "items": {}})
+        it = S.s2_item(d)
+        if it:  # 第2シリーズのケースファイル（cNN）：videoId は publish_manifest.json から
+            if it[0] != "c":
+                print(f"  {d}: Short（uNN）の字幕は未対応 → スキップ"); continue
+            man = json.load(open(f"{d}/publish_manifest.json", encoding="utf-8")) if os.path.exists(f"{d}/publish_manifest.json") else {}
+            vid = next((v["videoId"] for k, v in man.items() if k.endswith("_final.mp4") and v.get("videoId")), None)
+            if not vid:
+                print(f"  {d}: 未アップ → スキップ"); continue
+            s = {"main": vid, "shorts": {}, "items": {vid: api(tok, "videos", {"part": "contentDetails", "id": vid})["items"][0]}}
+            ep = f"c{it[1]:02d}"
+        else:
+            ep = int(re.search(r"ep(\d+)", os.path.basename(d))[1])
+            s = idx.get(ep, {"main": None, "shorts": {}, "items": {}})
         jobs = []
         if s["main"] and os.path.exists(f"{d}/script.md"):
-            jobs.append((s["main"], main_cues(d), f"ep{ep:02d}_main"))
+            jobs.append((s["main"], main_cues(d), f"{ep}_main" if it else f"ep{ep:02d}_main"))
         if a.shorts and os.path.exists(f"{d}/shorts.md"):
             sc = short_cues(d)
             jobs += [(s["shorts"][n], sc[n], f"ep{ep:02d}_short{n}") for n in sorted(sc) if n in s["shorts"]]

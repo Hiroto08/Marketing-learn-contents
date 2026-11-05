@@ -16,13 +16,16 @@ import os
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from yt_index import _duration_sec, api, episode_index, privacy, token  # noqa: E402
+from yt_index import _duration_sec, api, channel_videos, episode_index, privacy, token  # noqa: E402
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+import series as S  # noqa: E402
 
 
 def main():
     tok = token()
     ch = api(tok, "channels", {"part": "statistics,snippet", "mine": "true"})["items"][0]
-    idx = episode_index(tok)
+    videos = channel_videos(tok)
+    idx = episode_index(tok, videos)
     today = datetime.date.today().isoformat()
     snap = {"date": today, "channel": {k: int(v) for k, v in ch["statistics"].items() if isinstance(v, str) and v.isdigit()}, "videos": {}}
     for ep, s in idx.items():
@@ -33,6 +36,19 @@ def main():
                 "privacy": privacy(v), "sec": _duration_sec(v["contentDetails"]["duration"]),
                 "views": int(st.get("viewCount", 0)), "likes": int(st.get("likeCount", 0)),
                 "comments": int(st.get("commentCount", 0))}
+    # 第2シリーズ（売れる仕組みの裏側）：タグ mlab-uNN / mlab-cNN
+    snap["s2"] = {}
+    for vid, v in videos.items():
+        for t in v["snippet"].get("tags", []):
+            m = S.S2_TAG_RE.match(t)
+            if m:
+                st = v.get("statistics", {})
+                snap["s2"][vid] = {"id": f"{m[1]}{m[2]}", "kind": "case" if m[1] == "c" else "short",
+                                   "title": v["snippet"]["title"], "privacy": privacy(v),
+                                   "publishAt": v["status"].get("publishAt"), "publishedAt": v["snippet"].get("publishedAt"),
+                                   "views": int(st.get("viewCount", 0)), "likes": int(st.get("likeCount", 0)),
+                                   "comments": int(st.get("commentCount", 0))}
+                break
     os.makedirs("docs/stats", exist_ok=True)
     prevs = sorted(p for p in glob.glob("docs/stats/*.json") if not p.endswith(f"{today}.json"))
     prev = json.load(open(prevs[-1], encoding="utf-8")) if prevs else None
@@ -62,13 +78,32 @@ def main():
             dv = d(vid, "views")
             o.append(f"| EP{v['ep']:02d} | [{v['title'][:30]}](https://youtu.be/{vid}) | {v['views']} | "
                      f"{'—' if dv is None else f'{dv:+d}'} | {v['likes']} | {v['comments']} |\n")
-    o += note_section() + kit_section()
+    o += s2_section(snap, prev) + note_section() + kit_section()
     open("docs/weekly-stats.md", "w", encoding="utf-8").write("".join(o))
     print(f"saved docs/stats/{today}.json  subs={c.get('subscriberCount')} views={c.get('viewCount')}"
           f"  prev={prev['date'] if prev else None}")
 
 
 CA = "/root/.ccr/ca-bundle.crt"
+
+
+def s2_section(snap, prev):
+    """第2シリーズの回ごとの再生。Shorts は公開7日でほぼ出尽くす（v0.2 §3-1）ので「公開からの日数」を添える"""
+    rows = sorted(snap.get("s2", {}).items(), key=lambda t: t[1]["id"])
+    if not rows:
+        return []
+    pv = (prev or {}).get("s2", {})
+    today = datetime.date.fromisoformat(snap["date"])
+    o = [f"\n## {S.S2_NAME}（第2シリーズ）\n\n| 回 | タイトル | 状態 | 公開から | 再生 | 前回比 | 高評価 |\n|---|---|---|---|---|---|---|\n"]
+    for vid, v in rows:
+        days = "—"
+        if v["privacy"] == "public":
+            pub = (v.get("publishAt") or v.get("publishedAt") or "")[:10]
+            days = f"{(today - datetime.date.fromisoformat(pub)).days}日" if pub else "—"
+        d = v["views"] - pv[vid]["views"] if vid in pv else None
+        o.append(f"| {v['id']} | [{v['title'][:30]}](https://youtu.be/{vid}) | {v['privacy']} | {days} | {v['views']} | "
+                 f"{'—' if d is None else f'{d:+d}'} | {v['likes']} |\n")
+    return o
 
 
 def note_section():
