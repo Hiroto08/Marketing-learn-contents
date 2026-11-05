@@ -10,7 +10,7 @@ upload_review_drive.py — 完成 mp4 を Google Drive の共有フォルダ「�
 
 - フォルダ ID は series.json の review.drive_folder_id。
 - ファイル名は「u01_<タイトル>.mp4」（回の番号とタイトルが分かる形）。
-- 冪等：publish_manifest.json の同じ mp4 の項目に driveFileId と driveSha256 を記録し、同じ中身なら上げ直さない。
+- 冪等：publish_manifest.json の同じ mp4 の項目に driveFileId と送付時の videoId を記録し、同じ動画（videoId が同じ）なら上げ直さない。
   中身が変わった（差し替え）場合は「…_r2.mp4」のように別名で上げる（古い方は統合運営側が整理する）。
 - 認証：DRIVE_REFRESH_TOKEN（フォルダを共有された Google アカウントで get_refresh_token.py --drive を実行して取得）。
   無ければ YT_REFRESH_TOKEN を試す（そのトークンに Drive の権限が含まれていれば使える）。
@@ -113,8 +113,10 @@ def main():
             key = os.path.basename(mp4)
             ent = man.get(key, {})
             digest = sha256(mp4)
-            if ent.get("driveFileId") and ent.get("driveSha256") == digest:
-                print(f"skip（同じ中身はレビュー便に送付済み {ent['driveFileId']}）: {mp4}")
+            # 送付済みかは「YouTube の videoId」で判定する（同じ動画を別の環境で作り直すと mp4 のバイトは変わるため）。
+            # 中身を差し替えて新しい videoId になったときだけ、もう一度（_r2 などの名前で）送る
+            if ent.get("driveFileId") and (ent.get("driveForVideoId") == ent.get("videoId") or ent.get("driveSha256") == digest):
+                print(f"skip（この動画はレビュー便に送付済み {ent['driveFileId']}）: {mp4}")
                 continue
             rev = ent.get("driveRev", 0) + 1
             iid = os.path.basename(d.rstrip("/")).split("_")[0]
@@ -124,7 +126,8 @@ def main():
             except urllib.error.HTTPError as e:
                 print(f"FAIL {e.code} {e.read().decode()[:200]}: {mp4}")
                 continue
-            ent.update({"driveFileId": fid, "driveSha256": digest, "driveRev": rev, "driveName": name})
+            ent.update({"driveFileId": fid, "driveSha256": digest, "driveRev": rev, "driveName": name,
+                        "driveForVideoId": ent.get("videoId")})
             man[key] = ent
             json.dump(man, open(manp, "w", encoding="utf-8"), ensure_ascii=False, indent=2)
             print(f"レビュー便へ送付: {name} → https://drive.google.com/file/d/{fid}/view")
