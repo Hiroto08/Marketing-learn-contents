@@ -42,7 +42,7 @@ fi
 # ── 2. playwright (pip) + chromium browser ──
 python3 -c "import playwright" >/dev/null 2>&1 || {
   log "pip install playwright"
-  pip3 install --quiet playwright
+  python3 -m pip install --quiet "playwright==1.56.0"   # 同梱 chromium-1194 と合う版に固定。pip3 は別の python を指すことがある（2026-11）
 }
 export PLAYWRIGHT_BROWSERS_PATH="$PWB"
 # The base image ships a cached chromium build (e.g. chromium-1194) but the
@@ -70,6 +70,12 @@ PY
   if [ -n "$wver" ] && [ -n "$cbase" ]; then
     log "symlink chromium $cbase -> rev $wver"
     ln -sf "$cbase" "$PWB/chromium-$wver"
+    # 録画（make_video）は playwright 同梱の ffmpeg も要る。期待リビジョンが無ければ手元の版へつなぐ
+    fwant=$(python3 -c "import json,glob,os,playwright;d=os.path.dirname(playwright.__file__);print(next((b['revision'] for b in json.load(open(glob.glob(d+'/driver/package/browsers.json')[0]))['browsers'] if b['name']=='ffmpeg'),''))" 2>/dev/null)
+    fbase=$(ls -d "$PWB"/ffmpeg-[0-9]* 2>/dev/null | head -1)
+    if [ -n "$fwant" ] && [ -n "$fbase" ] && [ ! -e "$PWB/ffmpeg-$fwant" ]; then
+      log "symlink ffmpeg $fbase -> rev $fwant"; ln -sfn "$fbase" "$PWB/ffmpeg-$fwant"
+    fi
     if [ -n "$hbase" ]; then
       mkdir -p "$PWB/chromium_headless_shell-$wver/chrome-headless-shell-linux64"
       ln -sf "$hbase/chrome-linux/headless_shell" \
