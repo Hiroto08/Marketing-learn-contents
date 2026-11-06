@@ -50,7 +50,8 @@ def main(spec_path, out_path):
     for i, sl in enumerate(spec["slides"], 1):
         stage.write(f'<section class="slide" id="s{i}">\n  <div class="card">\n')
         for el in sl["els"]:
-            stage.write(f'    <div class="se {el["cls"]}" id="{el["id"]}">{el["html"]}</div>\n')
+            st = f' style="{el["style"]}"' if el.get("style") else ""   # 文字サイズ等（テロップ同期型。エンジンの CSS は触らない）
+            stage.write(f'    <div class="se {el["cls"]}" id="{el["id"]}"{st}>{el["html"]}</div>\n')
             steps.append((i - 1, start + el["t"], el["id"], el["anim"]))
         stage.write('  </div>\n')
         if sl.get("caption"):
@@ -80,6 +81,9 @@ def main(spec_path, out_path):
                       f"const NARRATIONS = [\n{narr_js}\n];")
     tpl = tpl.replace("const TOTAL_SECS = 0;", f"const TOTAL_SECS = {total};")
 
+    if spec.get("telop"):
+        # テロップ同期型（build_telop_spec.py）の印。verify_shorts が追加の検査（S1は1文・1文1要素・文字サイズ下限）をかける
+        tpl = tpl.replace("<!-- ══ SHORTS_STAGE_START ══ -->", "<!-- ══ SHORTS_STAGE_START ══ --><!-- telop-sync -->", 1)
     open(out_path, "w", encoding="utf-8").write(tpl)
     print(f"wrote {out_path}  slides={len(meta)} steps={len(steps)} total={total}s")
 

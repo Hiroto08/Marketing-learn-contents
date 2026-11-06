@@ -2,6 +2,7 @@
  "title": "同じクッキーなのに、残り2枚の瓶の方がおいしく感じる理由【希少性】",
  "accent": "#E11D48",
  "glow": "rgba(225,29,72,.25)",
+ "telop": 1,
  "slides": [
   {
    "end": 5.1,
@@ -11,90 +12,94 @@
      "cls": "k-tag",
      "html": "売れる仕組みの裏側 #02",
      "anim": "rv-fade",
-     "t": 0.0
+     "t": 0.0,
+     "style": "font-size:48px"
     },
     {
-     "id": "s1-e1",
-     "cls": "k-sub",
-     "html": "同じクッキーなのに",
-     "anim": "rv-up",
-     "t": 0.1
-    },
-    {
-     "id": "s1-e2",
+     "id": "s1-t1",
      "cls": "k-line",
-     "html": "残り<span class=\"hi\">2枚</span>の瓶の方が<br>おいしく感じる",
-     "anim": "rv-scale",
-     "t": 1.2
+     "html": "同じクッキーでも、<br>残り<span class=\"hi\">2枚</span>の瓶の方が、<br>おいしく感じる",
+     "anim": "rv-up",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "中身は、まったく同じ"
+   ]
   },
   {
    "end": 9.1,
    "els": [
     {
-     "id": "s2-e1",
+     "id": "s2-t1",
      "cls": "k-line",
-     "html": "<span class=\"hi\">1975年</span><br>心理学の実験",
+     "html": "<span class=\"hi\">1975年</span>、<br>アメリカの<br>心理学の実験です",
      "anim": "rv-left",
-     "t": 0.2
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "実際にあった実験"
+   ]
   },
   {
    "end": 13.4,
    "els": [
     {
-     "id": "s3-e1",
-     "cls": "k-num",
-     "html": "10 vs <span class=\"hi\">2</span>",
+     "id": "s3-t1",
+     "cls": "k-line",
+     "html": "<span class=\"hi\">10枚</span>入りの瓶と、<br><span class=\"hi\">2枚</span>だけの瓶",
      "anim": "rv-scale",
-     "t": 0.2
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s3-t2",
+     "cls": "k-line",
+     "html": "中身は同じ",
+     "anim": "rv-pop",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "中身は同じクッキー"
+   ]
   },
   {
    "end": 18.5,
    "els": [
     {
-     "id": "s4-e1",
-     "cls": "k-sub",
-     "html": "目の前で10枚→2枚に",
-     "anim": "rv-up",
-     "t": 0.0
-    },
-    {
-     "id": "s4-e2",
+     "id": "s4-t1",
      "cls": "k-line",
-     "html": "評価は<br><span class=\"hi\">さらに上がった</span>",
+     "html": "目の前で<span class=\"hi\">10枚</span>から<br><span class=\"hi\">2枚</span>に減ると、<br>評価はさらに上がった",
      "anim": "rv-pop",
-     "t": 1.6
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "減るほど、欲しくなる"
+   ]
   },
   {
    "end": 23.5,
    "els": [
     {
-     "id": "s5-e1",
+     "id": "s5-t1",
      "cls": "k-line",
-     "html": "残り<span class=\"hi\">2枚</span>のクッキーは<br>おいしく見える",
-     "anim": "rv-scale",
-     "t": 0.0
+     "html": "残り<span class=\"hi\">2枚</span>のクッキーは、<br>おいしく見える",
+     "anim": "rv-up",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     },
     {
-     "id": "s5-cta",
+     "id": "s5-t2",
+     "cls": "k-line",
+     "html": "続きは、明日",
+     "anim": "rv-left",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s5-next",
      "cls": "cta-line",
      "html": "明日：星5.0より星4.2が<br>売れるのはなぜ？",
      "anim": "rv-pop",
-     "t": 2.2
+     "t": 2.0,
+     "style": "font-size:64px"
     }
-   ],
-   "caption": "続きは<span class=\"hi\">明日</span>"
+   ]
   }
  ],
  "narrations": [

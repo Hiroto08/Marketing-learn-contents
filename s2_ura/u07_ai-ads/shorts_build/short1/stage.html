@@ -80,40 +80,34 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<!-- ══ SHORTS_STAGE_START ══ -->
+<!-- ══ SHORTS_STAGE_START ══ --><!-- telop-sync -->
 <section class="slide" id="s1">
   <div class="card">
-    <div class="se k-tag" id="s1-tag">売れる仕組みの裏側 #07</div>
-    <div class="se k-sub" id="s1-e1">AIが作った広告は</div>
-    <div class="se k-num" id="s1-e2"><span class="hi">+19%</span></div>
+    <div class="se k-tag" id="s1-tag" style="font-size:48px">売れる仕組みの裏側 #07</div>
+    <div class="se k-line" id="s1-t1" style="font-size:88px;margin:.25em 0">AIが作った広告は、<br>人が作った広告より、<br><span class="hi">19%</span>多く<br>クリックされた</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s1-cap">人より多くクリックされた</div></div>
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-e1">ニューヨーク大学など<br><span class="hi">2025年の実験</span></div>
+    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0">ニューヨーク<br>大学などが、<br><span class="hi">2025年</span>に<br>おこなった実験です</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s2-cap">実際の広告で検証</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-sub" id="s3-e1">「AIで作成」と書くと</div>
-    <div class="se k-num" id="s3-e2"><span class="hi">−3割</span></div>
+    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0">ところが、<br>AI製と書いた途端、<br>クリックは<br><span class="hi">約3割</span>減った</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s3-cap">同じ広告なのに</div></div>
 </section>
 <section class="slide" id="s4">
   <div class="card">
-    <div class="se k-line" id="s4-e1">嫌われたのは<br><span class="hi">AIという表示</span></div>
+    <div class="se k-line" id="s4-t1" style="font-size:88px;margin:.25em 0">嫌われたのは、<br>広告の中身ではなく、<br>AIという表示</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s4-cap">中身ではなかった</div></div>
 </section>
 <section class="slide" id="s5">
   <div class="card">
-    <div class="se k-line" id="s5-e1">AIの広告が勝つのは<br><span class="hi">信用</span>が追いついた日</div>
-    <div class="se cta-line" id="s5-cta">次回：解約ボタンが<br>見つからないのはなぜ？</div>
+    <div class="se k-line" id="s5-t1" style="font-size:88px;margin:.25em 0">AIの広告が<br>本当に勝つのは、<br>信用が追いついた日</div>
+    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">続きは、明日</div>
+    <div class="se cta-line" id="s5-next" style="font-size:64px">次回：解約ボタンが<br>見つからないのはなぜ？</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは<span class="hi">明日</span></div></div>
 </section>
 <!-- ══ SHORTS_STAGE_END ══ -->
 </div>
@@ -130,19 +124,13 @@ const SLIDES_META = [
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
-  {si:0, t:0.1, ids:['s1-e1'], anim:'rv-up'},
-  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
-  {si:0, t:1.6, ids:['s1-e2'], anim:'rv-scale'},
-  {si:1, t:6.3, ids:['s2-e1'], anim:'rv-left'},
-  {si:1, t:6.3, ids:['s2-cap'], anim:'rv-fade'},
-  {si:2, t:11.4, ids:['s3-e1'], anim:'rv-up'},
-  {si:2, t:11.6, ids:['s3-cap'], anim:'rv-fade'},
-  {si:2, t:12.8, ids:['s3-e2'], anim:'rv-scale'},
-  {si:3, t:16.7, ids:['s4-e1'], anim:'rv-pop'},
-  {si:3, t:16.7, ids:['s4-cap'], anim:'rv-fade'},
-  {si:4, t:21.3, ids:['s5-e1'], anim:'rv-scale'},
-  {si:4, t:21.5, ids:['s5-cap'], anim:'rv-fade'},
-  {si:4, t:23.5, ids:['s5-cta'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
+  {si:1, t:6.1, ids:['s2-t1'], anim:'rv-left'},
+  {si:2, t:11.4, ids:['s3-t1'], anim:'rv-scale'},
+  {si:3, t:16.5, ids:['s4-t1'], anim:'rv-pop'},
+  {si:4, t:21.3, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:22.3, ids:['s5-t2'], anim:'rv-left'},
+  {si:4, t:23.3, ids:['s5-next'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `AIが作った広告は、人が作った広告より、19%多くクリックされた。`,

@@ -4,6 +4,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 型：見る人の違和感（品ぞろえが多いほど売れるはずでは？）→ 犯人（選べないと、人は買わない）→ 数字（24種類で3%・6種類で30%）。
 
 **鮮度：** 古典（2000）
+**次回予告：** 次：「みんなやってます」が<br>効くのはなぜ？
 **ハッシュタグ：** #選択のパラドックス #行動経済学
 **出典：**
 - Iyengar & Lepper (2000) "When Choice is Demotivating", Journal of Personality and Social Psychology 79(6) — 米国のスーパーの試食売り場で、24種類のときは通行人の約60%が立ち寄り、試食した人の3%が購入。6種類では約40%が立ち寄り、30%が購入 — [シーナ・アイエンガー『選択の科学』（文藝春秋）](https://books.bunshun.jp/ud/book/num/1692166700000000000F)・[解説](https://thevisualcommunicationguy.com/?p=370)。後の追試（Scheibehenne ほか2010のメタ分析）では効果は条件次第とされる
@@ -51,4 +52,3 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 
 **ナレーション：**
 「選べないと、人は買わない。試食は、6種類で足りる。続きは、次で。」
-

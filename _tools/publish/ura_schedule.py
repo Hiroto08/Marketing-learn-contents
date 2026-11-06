@@ -209,6 +209,23 @@ def playlist(tok, sc, rows, dry):
         tokp = res.get("nextPageToken")
         if not tokp:
             break
+    # 差し替えで旧版になった動画は再生リストから外す（動画そのものは非公開のまま残す）
+    old = superseded_ids()
+    if old & have:
+        tokp = None
+        while True:
+            q = {"part": "id,contentDetails", "playlistId": pid, "maxResults": 50}
+            if tokp:
+                q["pageToken"] = tokp
+            res = api(tok, "playlistItems", q)
+            for it in res.get("items", []):
+                if it["contentDetails"]["videoId"] in old and not dry:
+                    urllib.request.urlopen(urllib.request.Request(f"{API}/playlistItems?id={it['id']}", method="DELETE",
+                                                                  headers=hdr), timeout=30)
+                    print(f"  再生リストから外した（旧版）{it['contentDetails']['videoId']}")
+            tokp = res.get("nextPageToken")
+            if not tokp:
+                break
     for r in sorted(rows, key=lambda r: (r["at"], r["kind"] == "c")):
         if r["vid"] and r["vid"] not in have:
             if dry:

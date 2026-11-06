@@ -80,41 +80,36 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<!-- ══ SHORTS_STAGE_START ══ -->
+<!-- ══ SHORTS_STAGE_START ══ --><!-- telop-sync -->
 <section class="slide" id="s1">
   <div class="card">
-    <div class="se k-tag" id="s1-tag">売れる仕組みの裏側 #05</div>
-    <div class="se k-sub" id="s1-e1">ポイントカードの狙いは</div>
-    <div class="se k-line" id="s1-e2"><span class="hi">ポイントではない</span></div>
+    <div class="se k-tag" id="s1-tag" style="font-size:48px">売れる仕組みの裏側 #05</div>
+    <div class="se k-line" id="s1-t1" style="font-size:88px;margin:.25em 0">ポイントカードの<br>本当の狙いは、<br>ポイントではない</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s1-cap">では、何？</div></div>
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-e1">英国スーパー <span class="hi">テスコ</span></div>
-    <div class="se k-sub" id="s2-e2">1994年・9店舗で3か月</div>
+    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0"><span class="hi">1994年</span>、<br>イギリスのスーパー、<br>テスコ</div>
+    <div class="se k-line" id="s2-t2" style="font-size:88px;margin:.25em 0"><span class="hi">9店舗</span>で<span class="hi">3か月</span>、<br>カードを試した</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s2-cap">カードを試した</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-line" id="s3-e1"><span class="hi">誰が・いつ・何を</span><br>買ったか</div>
+    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0">誰が、いつ、<br>何を買ったかが、<br>全部わかった</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s3-cap">全部、わかった</div></div>
 </section>
 <section class="slide" id="s4">
   <div class="card">
-    <div class="se k-sub" id="s4-e1">当時の会長</div>
-    <div class="se k-line" id="s4-e2">「<span class="hi">3か月</span>で<br>30年分より客を知った」</div>
+    <div class="se k-line" id="s4-t1" style="font-size:88px;margin:.25em 0">会長は<br>言ったとされます</div>
+    <div class="se k-line" id="s4-t2" style="font-size:88px;margin:.25em 0"><span class="hi">3か月</span>で、<br><span class="hi">30年</span>分より<br>客を知った、と</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s4-cap">と、語ったとされる</div></div>
 </section>
 <section class="slide" id="s5">
   <div class="card">
-    <div class="se k-line" id="s5-e1">ポイントは<br><span class="hi">データを買う代金</span></div>
-    <div class="se cta-line" id="s5-cta">明日：「人気TOP5」を<br>貼ると売れるのはなぜ？</div>
+    <div class="se k-line" id="s5-t1" style="font-size:88px;margin:.25em 0">ポイントは、<br>客のデータを<br>買う代金だ</div>
+    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">続きは、明日</div>
+    <div class="se cta-line" id="s5-next" style="font-size:64px">明日：「人気TOP5」を<br>貼ると売れるのはなぜ？</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは<span class="hi">明日</span></div></div>
 </section>
 <!-- ══ SHORTS_STAGE_END ══ -->
 </div>
@@ -131,20 +126,15 @@ const SLIDES_META = [
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
-  {si:0, t:0.1, ids:['s1-e1'], anim:'rv-up'},
-  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
-  {si:0, t:1.2, ids:['s1-e2'], anim:'rv-scale'},
-  {si:1, t:4.9, ids:['s2-e1'], anim:'rv-left'},
-  {si:1, t:4.9, ids:['s2-cap'], anim:'rv-fade'},
-  {si:1, t:6.7, ids:['s2-e2'], anim:'rv-fade'},
-  {si:2, t:11.4, ids:['s3-e1'], anim:'rv-scale'},
-  {si:2, t:11.4, ids:['s3-cap'], anim:'rv-fade'},
-  {si:3, t:15.4, ids:['s4-e1'], anim:'rv-fade'},
-  {si:3, t:15.6, ids:['s4-cap'], anim:'rv-fade'},
-  {si:3, t:16.8, ids:['s4-e2'], anim:'rv-pop'},
-  {si:4, t:21.1, ids:['s5-e1'], anim:'rv-scale'},
-  {si:4, t:21.3, ids:['s5-cap'], anim:'rv-fade'},
-  {si:4, t:23.3, ids:['s5-cta'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
+  {si:1, t:4.7, ids:['s2-t1'], anim:'rv-left'},
+  {si:1, t:5.7, ids:['s2-t2'], anim:'rv-scale'},
+  {si:2, t:11.2, ids:['s3-t1'], anim:'rv-scale'},
+  {si:3, t:15.4, ids:['s4-t1'], anim:'rv-pop'},
+  {si:3, t:16.4, ids:['s4-t2'], anim:'rv-up'},
+  {si:4, t:21.1, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:22.1, ids:['s5-t2'], anim:'rv-left'},
+  {si:4, t:23.1, ids:['s5-next'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `ポイントカードの本当の狙いは、ポイントではない。`,

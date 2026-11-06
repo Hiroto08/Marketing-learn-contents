@@ -4,6 +4,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 型：見る人の違和感（物価が上がっても値上げしないのはなぜ？）→ 犯人（ホットドッグは「また来る理由」、儲けは年会費）→ 数字（1985年から1.5ドル・物価換算で約4.6ドル）。
 
 **鮮度：** 時事（2025）
+**次回予告：** 次：「No.1」の数字は<br>何を数えている？
 **ハッシュタグ：** #コストコ #価格戦略
 **出典：**
 - コストコのホットドッグとドリンクのセットは1985年の発売から1.50ドルのまま。物価で換算すると約4.62ドル（USA Today 2025年の試算） — [Fortune](https://www.fortune.com/article/costco-promises-hot-dog-drink-combo-will-always-be-1-50)・[The Hustle](https://thehustle.co/07152022-costco-hot-dog-combo)
@@ -53,4 +54,3 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 
 **ナレーション：**
 「1.5ドルのホットドッグが、年会費を売っている。続きは、次で。」
-

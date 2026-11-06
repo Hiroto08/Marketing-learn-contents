@@ -17,7 +17,8 @@ Checks:
   [7] CTA present        (last slide points to the related-video link /
                           長編リンク etc. — see shorts-production.md §4.5)
   [8] loop echo          (first and last slide share a >=3-char token)
-  [9] safe-area render   (Playwright: 0 js errors, no element outside the
+  [10] telop sync (telop-sync specs only: S1 = 1 sentence, 1 sentence = 1 element, no summary caption)
+  [9] safe-area render (+ font size >= 48px)   (Playwright: 0 js errors, no element outside the
                           192/400/48px safe area; skipped with --no-browser)
 
 Spec: .claude/skills/episode-production/shorts-production.md
@@ -195,6 +196,31 @@ def check_loop(html):
         fail("冒頭と末尾に共通語が無い（ナラティブループになっていない可能性）")
 
 
+def check_telop(html):
+    """テロップ同期型（第2シリーズ）の追加検査 — 社長フィードバック #1（Issue #2、2026-11-06）
+    S1 は1文だけ／各スライドの本文要素（k-line）の数＝そのスライドの文の数（1文＝1要素で、読み始めに出る）"""
+    if "telop-sync" not in html:
+        return
+    section("10) テロップ同期（S1は1文・1文＝1要素）")
+    narr = _narrations(html)
+    n0 = len(FAILS)
+    if narr and len(re.findall(r"[。！？]", narr[0])) > 1:
+        fail("S1 のナレーションが2文以上（S1 は最初のフレームから全部見えるため、読み上げより先に文字が出る）")
+    secs = re.findall(r'<section class="slide" id="s(\d+)">(.*?)</section>', html, re.S)
+    for sid, body in secs:
+        i = int(sid) - 1
+        if i >= len(narr):
+            continue
+        n_sent = len([x for x in re.split(r"(?<=[。！？])", narr[i]) if x.strip()])
+        n_line = len(re.findall(r'class="se k-line"', body))
+        if n_line != n_sent:
+            fail(f"S{sid}: 本文の要素 {n_line} 個 ≠ 文の数 {n_sent}（1文＝1要素にする）")
+        if re.search(r'class="se caption"', body):
+            fail(f"S{sid}: 下部の要約テロップがある（読み上げと違う文字は出さない）")
+    if len(FAILS) == n0:
+        ok("S1は1文・全スライド1文＝1要素・要約テロップなし")
+
+
 def check_browser(html_path):
     section("9) セーフエリア描画（Playwright）")
     try:
@@ -211,14 +237,17 @@ def check_browser(html_path):
         pg.wait_for_load_state("networkidle")
         r = pg.evaluate("""()=>{
           const SAFE={top:192,bottom:1920-400,left:48,right:1080-48};
-          const over=[], hang=[];
+          const over=[], hang=[], small=[];
           document.querySelectorAll('section.slide').forEach(sec=>{
             sec.style.display='flex';
             sec.querySelectorAll('*').forEach(e=>{e.style.opacity='1';e.style.transform='none';});
-            sec.querySelectorAll('.k-num,.k-line,.k-sub,.k-tag,.caption').forEach(e=>{
+            sec.querySelectorAll('.k-num,.k-line,.k-sub,.k-tag,.caption,.cta-line').forEach(e=>{
               const r=e.getBoundingClientRect();
               if(r.width && (r.top<SAFE.top-2||r.bottom>SAFE.bottom+2||r.left<SAFE.left-2||r.right>SAFE.right+2))
                 over.push(sec.id+':'+(e.className||e.id));
+              // 文字サイズの下限（社長FB #1：小さすぎる文字をなくす）
+              const fs=parseFloat(getComputedStyle(e).fontSize);
+              if(fs<48) small.push(sec.id+':'+(e.className||e.id)+'('+fs+'px)');
               // hanging-line check: group text-run rects into visual LINES by their
               // top position (inline <span> splits a single line into multiple rects,
               // so we must group — not count raw rects). If the element wraps to >=2
@@ -237,7 +266,7 @@ def check_browser(html_path):
             });
             sec.style.display='';
           });
-          return {over:over.slice(0,10), hang:hang.slice(0,10),
+          return {over:over.slice(0,10), hang:hang.slice(0,10), small:small.slice(0,10),
                   n:document.querySelectorAll('section.slide').length};
         }""")
         b.close()
@@ -247,7 +276,9 @@ def check_browser(html_path):
         fail(f"セーフエリア外にはみ出し: {r['over']}")
     if r["hang"]:
         fail(f"1〜2文字だけの行末ぶら下がり（<br>で意味の切れ目に改行を）: {r['hang']}")
-    if not errs and not r["over"] and not r["hang"]:
+    if r.get("small"):
+        fail(f"文字が小さすぎる（48px 未満）: {r['small']}")
+    if not errs and not r["over"] and not r["hang"] and not r.get("small"):
         ok(f"JSエラー0・{r['n']}枚・セーフエリア内・ぶら下がり無し")
 
 
@@ -265,6 +296,7 @@ if __name__ == "__main__":
     check_hook(html)
     check_cta(html)
     check_loop(html)
+    check_telop(html)
     if not no_browser:
         check_browser(f"{DIR}/stage.html")
     print("\n" + "=" * 50)

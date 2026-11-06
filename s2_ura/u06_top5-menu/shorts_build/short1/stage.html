@@ -80,39 +80,34 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<!-- ══ SHORTS_STAGE_START ══ -->
+<!-- ══ SHORTS_STAGE_START ══ --><!-- telop-sync -->
 <section class="slide" id="s1">
   <div class="card">
-    <div class="se k-tag" id="s1-tag">売れる仕組みの裏側 #06</div>
-    <div class="se k-sub" id="s1-e1">人気TOP5を貼っただけで</div>
-    <div class="se k-num" id="s1-e2"><span class="hi">+20%</span></div>
+    <div class="se k-tag" id="s1-tag" style="font-size:48px">売れる仕組みの裏側 #06</div>
+    <div class="se k-line" id="s1-t1" style="font-size:88px;margin:.25em 0">メニューに<br>人気TOP<span class="hi">5</span>を<br>貼っただけで、<br>その料理の注文が<br>最大<span class="hi">2割</span>増えた</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s1-cap">その料理の注文が増えた</div></div>
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-e1">北京のレストランで<br><span class="hi">実際に試した</span></div>
+    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0">北京のレストランで<br>行われた、<br>経済学の実験です</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s2-cap">2009年に発表</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-line" id="s3-e1">迷った客は<br><span class="hi">ほかの客</span>をまねる</div>
+    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0">迷った客は、<br>ほかの客が<br>選んだものを選ぶ</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s3-cap">初めての客ほど効く</div></div>
 </section>
 <section class="slide" id="s4">
   <div class="card">
-    <div class="se k-line" id="s4-e1"><span class="hi">行列</span>に並びたくなる<br>のも同じ</div>
+    <div class="se k-line" id="s4-t1" style="font-size:88px;margin:.25em 0">行列ができる店に<br>並びたくなるのも、<br>同じ理由</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s4-cap">みんなの選択が、目印</div></div>
 </section>
 <section class="slide" id="s5">
   <div class="card">
-    <div class="se k-line" id="s5-e1">人気TOP5は<br><span class="hi">見える行列</span></div>
-    <div class="se cta-line" id="s5-cta">明日：AIが作った広告は<br>人に勝てる？</div>
+    <div class="se k-line" id="s5-t1" style="font-size:88px;margin:.25em 0">人気TOP<span class="hi">5</span>は、<br>ほかの客の選択を<br>見せる行列だ</div>
+    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">続きは、明日</div>
+    <div class="se cta-line" id="s5-next" style="font-size:64px">明日：AIが作った広告は<br>人に勝てる？</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは<span class="hi">明日</span></div></div>
 </section>
 <!-- ══ SHORTS_STAGE_END ══ -->
 </div>
@@ -129,18 +124,13 @@ const SLIDES_META = [
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
-  {si:0, t:0.1, ids:['s1-e1'], anim:'rv-up'},
-  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
-  {si:0, t:2.0, ids:['s1-e2'], anim:'rv-scale'},
-  {si:1, t:6.6, ids:['s2-e1'], anim:'rv-left'},
-  {si:1, t:6.6, ids:['s2-cap'], anim:'rv-fade'},
-  {si:2, t:11.1, ids:['s3-e1'], anim:'rv-scale'},
-  {si:2, t:11.1, ids:['s3-cap'], anim:'rv-fade'},
-  {si:3, t:15.1, ids:['s4-e1'], anim:'rv-pop'},
-  {si:3, t:15.1, ids:['s4-cap'], anim:'rv-fade'},
-  {si:4, t:19.2, ids:['s5-e1'], anim:'rv-scale'},
-  {si:4, t:19.4, ids:['s5-cap'], anim:'rv-fade'},
-  {si:4, t:21.4, ids:['s5-cta'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
+  {si:1, t:6.4, ids:['s2-t1'], anim:'rv-left'},
+  {si:2, t:10.9, ids:['s3-t1'], anim:'rv-scale'},
+  {si:3, t:14.9, ids:['s4-t1'], anim:'rv-pop'},
+  {si:4, t:19.2, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:20.2, ids:['s5-t2'], anim:'rv-left'},
+  {si:4, t:21.2, ids:['s5-next'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `メニューに人気TOP5を貼っただけで、その料理の注文が最大2割増えた。`,

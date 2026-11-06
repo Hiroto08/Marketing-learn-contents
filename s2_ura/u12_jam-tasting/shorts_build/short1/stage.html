@@ -80,41 +80,36 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<!-- ══ SHORTS_STAGE_START ══ -->
+<!-- ══ SHORTS_STAGE_START ══ --><!-- telop-sync -->
 <section class="slide" id="s1">
   <div class="card">
-    <div class="se k-tag" id="s1-tag">売れる仕組みの裏側 #12</div>
-    <div class="se k-sub" id="s1-e1">試食を24種類→6種類に</div>
-    <div class="se k-num" id="s1-e2"><span class="hi">10倍</span></div>
+    <div class="se k-tag" id="s1-tag" style="font-size:48px">売れる仕組みの裏側 #12</div>
+    <div class="se k-line" id="s1-t1" style="font-size:88px;margin:.25em 0">試食のジャムを<br><span class="hi">24種類</span>から<br><span class="hi">6種類</span>に減らしたら、<br>買う人の割合が<br><span class="hi">10倍</span>になった</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s1-cap">買う人の割合が増えた</div></div>
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-e1">米国のスーパー<br><span class="hi">ジャムの試食</span></div>
+    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0">アメリカの<br>スーパーで行われた、<br>有名な実験です</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s2-cap">2000年に発表</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-sub" id="s3-e1">24種類の売り場</div>
-    <div class="se k-num" id="s3-e2"><span class="hi">3%</span></div>
+    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0"><span class="hi">24種類</span>の売り場には、<br>人が集まった</div>
+    <div class="se k-line" id="s3-t2" style="font-size:88px;margin:.25em 0">でも、買ったのは<span class="hi">3%</span></div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s3-cap">人は集まったのに</div></div>
 </section>
 <section class="slide" id="s4">
   <div class="card">
-    <div class="se k-sub" id="s4-e1">6種類の売り場</div>
-    <div class="se k-num" id="s4-e2"><span class="hi">30%</span></div>
+    <div class="se k-line" id="s4-t1" style="font-size:88px;margin:.25em 0"><span class="hi">6種類</span>の売り場では、<br>試食した人の<br><span class="hi">30%</span>が買った</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s4-cap">選べたから、買った</div></div>
 </section>
 <section class="slide" id="s5">
   <div class="card">
-    <div class="se k-line" id="s5-e1">選べないと<br><span class="hi">人は買わない</span></div>
-    <div class="se cta-line" id="s5-cta">次：「みんなやってます」が<br>効くのはなぜ？</div>
+    <div class="se k-line" id="s5-t1" style="font-size:88px;margin:.25em 0">選べないと、<br>人は買わない</div>
+    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">試食は、<br><span class="hi">6種類</span>で足りる</div>
+    <div class="se k-line" id="s5-t3" style="font-size:88px;margin:.25em 0">続きは、次で</div>
+    <div class="se cta-line" id="s5-next" style="font-size:64px">次：「みんなやってます」が<br>効くのはなぜ？</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは<span class="hi">次の回</span></div></div>
 </section>
 <!-- ══ SHORTS_STAGE_END ══ -->
 </div>
@@ -131,20 +126,15 @@ const SLIDES_META = [
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
-  {si:0, t:0.1, ids:['s1-e1'], anim:'rv-up'},
-  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
-  {si:0, t:2.0, ids:['s1-e2'], anim:'rv-scale'},
-  {si:1, t:7.0, ids:['s2-e1'], anim:'rv-left'},
-  {si:1, t:7.0, ids:['s2-cap'], anim:'rv-fade'},
-  {si:2, t:11.3, ids:['s3-e1'], anim:'rv-fade'},
-  {si:2, t:11.5, ids:['s3-cap'], anim:'rv-fade'},
-  {si:2, t:12.9, ids:['s3-e2'], anim:'rv-scale'},
-  {si:3, t:16.7, ids:['s4-e1'], anim:'rv-fade'},
-  {si:3, t:16.9, ids:['s4-cap'], anim:'rv-fade'},
-  {si:3, t:17.9, ids:['s4-e2'], anim:'rv-pop'},
-  {si:4, t:21.4, ids:['s5-e1'], anim:'rv-scale'},
-  {si:4, t:21.6, ids:['s5-cap'], anim:'rv-fade'},
-  {si:4, t:23.6, ids:['s5-cta'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
+  {si:1, t:6.8, ids:['s2-t1'], anim:'rv-left'},
+  {si:2, t:11.3, ids:['s3-t1'], anim:'rv-scale'},
+  {si:2, t:12.3, ids:['s3-t2'], anim:'rv-pop'},
+  {si:3, t:16.7, ids:['s4-t1'], anim:'rv-pop'},
+  {si:4, t:21.4, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:22.4, ids:['s5-t2'], anim:'rv-left'},
+  {si:4, t:23.4, ids:['s5-t3'], anim:'rv-scale'},
+  {si:4, t:23.4, ids:['s5-next'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `試食のジャムを24種類から6種類に減らしたら、買う人の割合が10倍になった。`,

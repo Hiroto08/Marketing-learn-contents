@@ -2,6 +2,7 @@
  "title": "解約しにくい画面のせいで、アマゾンが25億ドルを払うことになった話【サブスク】",
  "accent": "#E11D48",
  "glow": "rgba(225,29,72,.25)",
+ "telop": 1,
  "slides": [
   {
    "end": 6.1,
@@ -11,90 +12,86 @@
      "cls": "k-tag",
      "html": "売れる仕組みの裏側 #08",
      "anim": "rv-fade",
-     "t": 0.0
+     "t": 0.0,
+     "style": "font-size:48px"
     },
     {
-     "id": "s1-e1",
-     "cls": "k-sub",
-     "html": "解約しにくい画面のせいで",
+     "id": "s1-t1",
+     "cls": "k-line",
+     "html": "解約しにくい<br>画面のせいで、<br>アマゾンは<br><span class=\"hi\">25億ドル</span>を<br>払うことになった",
      "anim": "rv-up",
-     "t": 0.1
-    },
-    {
-     "id": "s1-e2",
-     "cls": "k-num",
-     "html": "<span class=\"hi\">25億ドル</span>",
-     "anim": "rv-scale",
-     "t": 1.8
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "を払うことになった"
+   ]
   },
   {
    "end": 10.9,
    "els": [
     {
-     "id": "s2-e1",
+     "id": "s2-t1",
      "cls": "k-line",
-     "html": "2025年<br><span class=\"hi\">米FTCと和解</span>",
+     "html": "<span class=\"hi\">2025年</span>、<br>アメリカの<br>連邦取引委員会との<br>和解です",
      "anim": "rv-left",
-     "t": 0.2
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "プライム会員の解約"
+   ]
   },
   {
    "end": 15.9,
    "els": [
     {
-     "id": "s3-e1",
+     "id": "s3-t1",
      "cls": "k-line",
-     "html": "<span class=\"hi\">4ページ・6クリック</span><br>選択肢は15個",
+     "html": "解約の手順は、<br><span class=\"hi\">4</span>ページ、<br><span class=\"hi\">6</span>クリック、<br>選択肢は<span class=\"hi\">15</span>個",
      "anim": "rv-scale",
-     "t": 0.2
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "やめるまでが長い"
+   ]
   },
   {
    "end": 20.9,
    "els": [
     {
-     "id": "s4-e1",
-     "cls": "k-sub",
-     "html": "社内の呼び名は",
-     "anim": "rv-fade",
-     "t": 0.0
-    },
-    {
-     "id": "s4-e2",
+     "id": "s4-t1",
      "cls": "k-line",
-     "html": "<span class=\"hi\">「イリアス」</span>",
+     "html": "社内では、<br>長い叙事詩の名前、<br>イリアスと<br>呼ばれていた",
      "anim": "rv-pop",
-     "t": 1.2
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "長い長い物語"
+   ]
   },
   {
    "end": 26.0,
    "els": [
     {
-     "id": "s5-e1",
+     "id": "s5-t1",
      "cls": "k-line",
-     "html": "解約しにくい画面は<br><span class=\"hi\">一番高くつく</span>",
-     "anim": "rv-scale",
-     "t": 0.0
+     "html": "解約しにくい画面は、<br>いつか一番高くつく",
+     "anim": "rv-up",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     },
     {
-     "id": "s5-cta",
+     "id": "s5-t2",
+     "cls": "k-line",
+     "html": "続きは、次回",
+     "anim": "rv-left",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s5-next",
      "cls": "cta-line",
      "html": "次回：40年値上げしない<br>ホットドッグの謎",
      "anim": "rv-pop",
-     "t": 2.2
+     "t": 2.0,
+     "style": "font-size:64px"
     }
-   ],
-   "caption": "続きは<span class=\"hi\">次回</span>"
+   ]
   }
  ],
  "narrations": [

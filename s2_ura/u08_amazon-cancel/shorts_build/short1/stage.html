@@ -80,40 +80,34 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<!-- ══ SHORTS_STAGE_START ══ -->
+<!-- ══ SHORTS_STAGE_START ══ --><!-- telop-sync -->
 <section class="slide" id="s1">
   <div class="card">
-    <div class="se k-tag" id="s1-tag">売れる仕組みの裏側 #08</div>
-    <div class="se k-sub" id="s1-e1">解約しにくい画面のせいで</div>
-    <div class="se k-num" id="s1-e2"><span class="hi">25億ドル</span></div>
+    <div class="se k-tag" id="s1-tag" style="font-size:48px">売れる仕組みの裏側 #08</div>
+    <div class="se k-line" id="s1-t1" style="font-size:88px;margin:.25em 0">解約しにくい<br>画面のせいで、<br>アマゾンは<br><span class="hi">25億ドル</span>を<br>払うことになった</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s1-cap">を払うことになった</div></div>
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-e1">2025年<br><span class="hi">米FTCと和解</span></div>
+    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0"><span class="hi">2025年</span>、<br>アメリカの<br>連邦取引委員会との<br>和解です</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s2-cap">プライム会員の解約</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-line" id="s3-e1"><span class="hi">4ページ・6クリック</span><br>選択肢は15個</div>
+    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0">解約の手順は、<br><span class="hi">4</span>ページ、<br><span class="hi">6</span>クリック、<br>選択肢は<span class="hi">15</span>個</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s3-cap">やめるまでが長い</div></div>
 </section>
 <section class="slide" id="s4">
   <div class="card">
-    <div class="se k-sub" id="s4-e1">社内の呼び名は</div>
-    <div class="se k-line" id="s4-e2"><span class="hi">「イリアス」</span></div>
+    <div class="se k-line" id="s4-t1" style="font-size:88px;margin:.25em 0">社内では、<br>長い叙事詩の名前、<br>イリアスと<br>呼ばれていた</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s4-cap">長い長い物語</div></div>
 </section>
 <section class="slide" id="s5">
   <div class="card">
-    <div class="se k-line" id="s5-e1">解約しにくい画面は<br><span class="hi">一番高くつく</span></div>
-    <div class="se cta-line" id="s5-cta">次回：40年値上げしない<br>ホットドッグの謎</div>
+    <div class="se k-line" id="s5-t1" style="font-size:88px;margin:.25em 0">解約しにくい画面は、<br>いつか一番高くつく</div>
+    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">続きは、次回</div>
+    <div class="se cta-line" id="s5-next" style="font-size:64px">次回：40年値上げしない<br>ホットドッグの謎</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは<span class="hi">次回</span></div></div>
 </section>
 <!-- ══ SHORTS_STAGE_END ══ -->
 </div>
@@ -130,19 +124,13 @@ const SLIDES_META = [
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
-  {si:0, t:0.1, ids:['s1-e1'], anim:'rv-up'},
-  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
-  {si:0, t:1.8, ids:['s1-e2'], anim:'rv-scale'},
-  {si:1, t:6.3, ids:['s2-e1'], anim:'rv-left'},
-  {si:1, t:6.3, ids:['s2-cap'], anim:'rv-fade'},
-  {si:2, t:11.1, ids:['s3-e1'], anim:'rv-scale'},
-  {si:2, t:11.1, ids:['s3-cap'], anim:'rv-fade'},
-  {si:3, t:15.9, ids:['s4-e1'], anim:'rv-fade'},
-  {si:3, t:16.1, ids:['s4-cap'], anim:'rv-fade'},
-  {si:3, t:17.1, ids:['s4-e2'], anim:'rv-pop'},
-  {si:4, t:20.9, ids:['s5-e1'], anim:'rv-scale'},
-  {si:4, t:21.1, ids:['s5-cap'], anim:'rv-fade'},
-  {si:4, t:23.1, ids:['s5-cta'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
+  {si:1, t:6.1, ids:['s2-t1'], anim:'rv-left'},
+  {si:2, t:10.9, ids:['s3-t1'], anim:'rv-scale'},
+  {si:3, t:15.9, ids:['s4-t1'], anim:'rv-pop'},
+  {si:4, t:20.9, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:21.9, ids:['s5-t2'], anim:'rv-left'},
+  {si:4, t:22.9, ids:['s5-next'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `解約しにくい画面のせいで、アマゾンは25億ドルを払うことになった。`,

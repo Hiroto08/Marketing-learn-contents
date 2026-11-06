@@ -4,6 +4,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 型：見る人の違和感（サブスクの解約ボタンが見つからない）→ 犯人（わざと長くした解約の手順）→ 数字（25億ドル・4ページ・6クリック・15の選択肢）。
 
 **鮮度：** 時事（2025-09）
+**次回予告：** 次回：40年値上げしない<br>ホットドッグの謎
 **ハッシュタグ：** #サブスク #ダークパターン
 **出典：**
 - 米連邦取引委員会（FTC）とアマゾンの和解（2025年9月25日）：民事制裁金10億ドル＋返金15億ドルの計25億ドル。FTC の訴状は Prime の解約手順を「4ページ・6クリック・15の選択肢」と記載し、社内での呼び名は「Iliad（イリアス）」 — [eMarketer](https://www.emarketer.com/content/amazon-ftc-prime-settlement-2-5-billion)・[PC Gamer](https://www.pcgamer.com/gaming-industry/ftc-settles-with-amazon-for-a-whopping-usd2-5-billion-over-alleged-deceptive-practices-a-record-breaking-monumental-win-for-the-millions-of-americans-who-are-tired-of-deceptive-subscriptions-that-feel-impossible-to-cancel)。アマゾンは不正を認めていない
@@ -51,4 +52,3 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 
 **ナレーション：**
 「解約しにくい画面は、いつか一番高くつく。続きは、次回。」
-

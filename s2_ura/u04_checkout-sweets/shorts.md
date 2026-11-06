@@ -4,6 +4,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 型：見る人の違和感（レジに並ぶと、なぜか1つ足してしまう）→ 犯人（レジ横は予定外の物を買わせる場所）→ 数字（17%減・1年後も15%減）。
 
 **鮮度：** 古典（2018）
+**次回予告：** 明日：ポイントカードで<br>店が集めているものは？
 **ハッシュタグ：** #衝動買い #売り場づくり
 **出典：**
 - Ejlerskov et al. (2018) "Supermarket policies on less-healthy food at checkouts", PLOS Medicine（DOI 10.1371/journal.pmed.1002712）— イギリスのスーパーで、レジ横の菓子・チョコ・ポテチをやめる方針の導入直後に持ち帰り購入の小袋が17%減、1年後も15%減。無作為化試験ではないため因果は断定できない（著者注） — [ケンブリッジ大学の発表](https://www.cam.ac.uk/research/news/removing-sweets-and-crisps-from-supermarket-checkouts-linked-to-dramatic-fall-in-unhealthy-snack)・[ScienceDaily](https://www.sciencedaily.com/releases/2018/12/181218171553.htm)
@@ -51,4 +52,3 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 
 **ナレーション：**
 「並んでいる間に、レジ横のお菓子は手に取られる。続きは、明日。」
-

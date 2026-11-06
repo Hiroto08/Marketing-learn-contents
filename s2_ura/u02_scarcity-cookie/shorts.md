@@ -4,6 +4,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 型：見る人の違和感（「残りわずか」につい手が伸びる）→ 犯人（少ないこと自体が価値に見える）→ 数字（10枚と2枚・中身は同じ）。
 
 **鮮度：** 古典（1975）
+**次回予告：** 明日：星5.0より星4.2が<br>売れるのはなぜ？
 **ハッシュタグ：** #希少性 #行動経済学
 **出典：**
 - Worchel, Lee & Adewole (1975) "Effects of supply and demand on ratings of object value", Journal of Personality and Social Psychology 32(5), 906–914 — 10枚の瓶と2枚の瓶の同じクッキーで、2枚の瓶の方が魅力的・高価と評価。途中で10枚→2枚に減らされた条件は、さらに高く評価 — [文献情報](https://stafforini.com/works/worchel-1975-effects-supply-demand/)・[解説](https://www.neurosciencemarketing.com/blog/articles/scarcity-effect.htm)
@@ -51,4 +52,3 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 
 **ナレーション：**
 「残り2枚のクッキーは、おいしく見える。続きは、明日。」
-

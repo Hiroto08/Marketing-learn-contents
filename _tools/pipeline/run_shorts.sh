@@ -38,10 +38,12 @@ for spec in "${specs[@]}"; do
   step "$name 2/4 QA (verify_shorts 9項目)"
   python3 _tools/checks/verify_shorts.py "$d"
 
-  step "$name 3/4 縦型ビルド (1080x1920)"
+  # テロップ同期型（第2シリーズ・build_telop_spec.py）は文を読み始める瞬間に出す（社長FB #1：先に出すぎない）。旧型は従来どおり 1.2 秒先行
+  LEAD=1.2; grep -q "telop-sync" "$d/stage.html" && LEAD=0.15
+  step "$name 3/4 縦型ビルド (1080x1920・lead $LEAD)"
   python3 _tools/video/make_video.py "$d/stage.html" \
     --out "$d" --speaker 11 --speed 1.15 \
-    --lead 1.2 --intro 0.3 --outro 0.5 --final-outro 1.2 \
+    --lead "$LEAD" --intro 0.3 --outro 0.5 --final-outro 1.2 \
     --width 1080 --height 1920 \
     --bgm _assets/audio/bgm_calm_loop.wav --sfx-dir _assets/audio
 

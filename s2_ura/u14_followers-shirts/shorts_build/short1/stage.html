@@ -80,40 +80,37 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <body>
 <div id="__heartbeat"></div>
 <div id="stage-wrap">
-<!-- ══ SHORTS_STAGE_START ══ -->
+<!-- ══ SHORTS_STAGE_START ══ --><!-- telop-sync -->
 <section class="slide" id="s1">
   <div class="card">
-    <div class="se k-tag" id="s1-tag">売れる仕組みの裏側 #14</div>
-    <div class="se k-sub" id="s1-e1">フォロワー</div>
-    <div class="se k-num" id="s1-e2"><span class="hi">260万人</span></div>
+    <div class="se k-tag" id="s1-tag" style="font-size:48px">売れる仕組みの裏側 #14</div>
+    <div class="se k-line" id="s1-t1" style="font-size:88px;margin:.25em 0">フォロワー<span class="hi">260万人</span></div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s1-cap">なのに、売れなかった</div></div>
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-e1">2019年・米国の<br><span class="hi">インフルエンサー</span></div>
+    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0">なのに、<br>Tシャツが<br>売れなかった</div>
+    <div class="se k-line" id="s2-t2" style="font-size:88px;margin:.25em 0"><span class="hi">2019年</span>、<br>アメリカの<br>インフルエンサー、<br>アリーの話です</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s2-cap">自分の服ブランド</div></div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-sub" id="s3-e1">最初の目標は各商品</div>
-    <div class="se k-num" id="s3-e2"><span class="hi">36枚</span></div>
+    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0">最初の販売の目標は、<br>各商品<span class="hi">36枚</span></div>
+    <div class="se k-line" id="s3-t2" style="font-size:88px;margin:.25em 0">それに届かなかった</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s3-cap">届かなかった</div></div>
 </section>
 <section class="slide" id="s4">
   <div class="card">
-    <div class="se k-line" id="s4-e1">見に来る人と<br><span class="hi">買いに来る人</span>は別</div>
+    <div class="se k-line" id="s4-t1" style="font-size:88px;margin:.25em 0">フォロワーは、<br>見に来る人</div>
+    <div class="se k-line" id="s4-t2" style="font-size:88px;margin:.25em 0">買いに来る人とは、<br>別の数字</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s4-cap">フォロワーは、観客</div></div>
 </section>
 <section class="slide" id="s5">
   <div class="card">
-    <div class="se k-line" id="s5-e1">260万人より<br><span class="hi">買ってくれる36人</span></div>
-    <div class="se cta-line" id="s5-cta">来週も毎日18時<br>次の「なぜ？」へ</div>
+    <div class="se k-line" id="s5-t1" style="font-size:88px;margin:.25em 0"><span class="hi">260万人</span>の<br>フォロワーより、<br>買ってくれる<span class="hi">36人</span></div>
+    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">続きは、来週</div>
+    <div class="se cta-line" id="s5-next" style="font-size:64px">来週も毎日18時<br>次の「なぜ？」へ</div>
   </div>
-  <div class="caption-zone"><div class="se caption" id="s5-cap">続きは<span class="hi">来週</span></div></div>
 </section>
 <!-- ══ SHORTS_STAGE_END ══ -->
 </div>
@@ -122,36 +119,33 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
    yt-shorts-designer が SLIDES_META / STEPS / NARRATIONS / TOTAL_SECS を実データに差し替える。
    再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
 const SLIDES_META = [
-  {id:'s1', start:0.0, end:5.1},
-  {id:'s2', start:5.1, end:10.4},
-  {id:'s3', start:10.4, end:15.5},
-  {id:'s4', start:15.5, end:20.6},
-  {id:'s5', start:20.6, end:26.3},
+  {id:'s1', start:0.0, end:3.2},
+  {id:'s2', start:3.2, end:11.0},
+  {id:'s3', start:11.0, end:16.1},
+  {id:'s4', start:16.1, end:21.2},
+  {id:'s5', start:21.2, end:26.9},
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
-  {si:0, t:0.1, ids:['s1-e1'], anim:'rv-up'},
-  {si:0, t:0.2, ids:['s1-cap'], anim:'rv-fade'},
-  {si:0, t:0.9, ids:['s1-e2'], anim:'rv-scale'},
-  {si:1, t:5.3, ids:['s2-e1'], anim:'rv-left'},
-  {si:1, t:5.3, ids:['s2-cap'], anim:'rv-fade'},
-  {si:2, t:10.4, ids:['s3-e1'], anim:'rv-fade'},
-  {si:2, t:10.6, ids:['s3-cap'], anim:'rv-fade'},
-  {si:2, t:11.6, ids:['s3-e2'], anim:'rv-scale'},
-  {si:3, t:15.7, ids:['s4-e1'], anim:'rv-pop'},
-  {si:3, t:15.7, ids:['s4-cap'], anim:'rv-fade'},
-  {si:4, t:20.6, ids:['s5-e1'], anim:'rv-scale'},
-  {si:4, t:20.8, ids:['s5-cap'], anim:'rv-fade'},
-  {si:4, t:22.8, ids:['s5-cta'], anim:'rv-pop'},
+  {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
+  {si:1, t:3.2, ids:['s2-t1'], anim:'rv-left'},
+  {si:1, t:4.2, ids:['s2-t2'], anim:'rv-scale'},
+  {si:2, t:11.0, ids:['s3-t1'], anim:'rv-scale'},
+  {si:2, t:12.0, ids:['s3-t2'], anim:'rv-pop'},
+  {si:3, t:16.1, ids:['s4-t1'], anim:'rv-pop'},
+  {si:3, t:17.1, ids:['s4-t2'], anim:'rv-up'},
+  {si:4, t:21.2, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:22.2, ids:['s5-t2'], anim:'rv-left'},
+  {si:4, t:23.2, ids:['s5-next'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
-  `フォロワー260万人。なのに、Tシャツが売れなかった。`,
-  `2019年、アメリカのインフルエンサー、アリーの話です。`,
+  `フォロワー260万人。`,
+  `なのに、Tシャツが売れなかった。2019年、アメリカのインフルエンサー、アリーの話です。`,
   `最初の販売の目標は、各商品36枚。それに届かなかった。`,
   `フォロワーは、見に来る人。買いに来る人とは、別の数字。`,
   `260万人のフォロワーより、買ってくれる36人。続きは、来週。`,
 ];
-const TOTAL_SECS = 26.3;
+const TOTAL_SECS = 26.9;
 </script>
 </body>
 </html>

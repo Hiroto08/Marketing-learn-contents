@@ -4,6 +4,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 型：見る人の違和感（ポイントを配って店は損しないの？）→ 犯人（集めているのは客のデータ）→ 数字（9店舗・3か月・30年）。
 
 **鮮度：** 古典（1994）
+**次回予告：** 明日：「人気TOP5」を<br>貼ると売れるのはなぜ？
 **ハッシュタグ：** #ポイントカード #顧客データ
 **出典：**
 - テスコ（英）と dunnhumby のクラブカード：1994年に9店舗・3か月で試験導入し、1995年に全国展開。試験結果の報告を受けた当時の会長マクローリン卿が「3か月で、私が30年かけて知ったより多く、私の客のことを知った」と語ったとされる（記録ではなく関係者の回想として伝わる） — [Wikipedia: Dunnhumby](https://en.wikipedia.org/wiki/Dunnhumby)・[Computer Weekly「Clubcard at 30」](https://www.computerweekly.com/feature/Clubcard-at-30-the-evolution-of-retail-loyalty)・[Enterprise Nation（Edwina Dunn）](https://www.enterprisenation.com/learn-something/business-success-story-edwina-dunn)
@@ -51,4 +52,3 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 
 **ナレーション：**
 「ポイントは、客のデータを買う代金だ。続きは、明日。」
-

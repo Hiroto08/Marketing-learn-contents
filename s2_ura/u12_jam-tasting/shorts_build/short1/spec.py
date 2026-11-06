@@ -2,6 +2,7 @@
  "title": "試食のジャムを24種類から6種類に減らしたら、買う人の割合が10倍になった話",
  "accent": "#E11D48",
  "glow": "rgba(225,29,72,.25)",
+ "telop": 1,
  "slides": [
   {
    "end": 6.8,
@@ -11,97 +12,102 @@
      "cls": "k-tag",
      "html": "売れる仕組みの裏側 #12",
      "anim": "rv-fade",
-     "t": 0.0
+     "t": 0.0,
+     "style": "font-size:48px"
     },
     {
-     "id": "s1-e1",
-     "cls": "k-sub",
-     "html": "試食を24種類→6種類に",
+     "id": "s1-t1",
+     "cls": "k-line",
+     "html": "試食のジャムを<br><span class=\"hi\">24種類</span>から<br><span class=\"hi\">6種類</span>に減らしたら、<br>買う人の割合が<br><span class=\"hi\">10倍</span>になった",
      "anim": "rv-up",
-     "t": 0.1
-    },
-    {
-     "id": "s1-e2",
-     "cls": "k-num",
-     "html": "<span class=\"hi\">10倍</span>",
-     "anim": "rv-scale",
-     "t": 2.0
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "買う人の割合が増えた"
+   ]
   },
   {
    "end": 11.3,
    "els": [
     {
-     "id": "s2-e1",
+     "id": "s2-t1",
      "cls": "k-line",
-     "html": "米国のスーパー<br><span class=\"hi\">ジャムの試食</span>",
+     "html": "アメリカの<br>スーパーで行われた、<br>有名な実験です",
      "anim": "rv-left",
-     "t": 0.2
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "2000年に発表"
+   ]
   },
   {
    "end": 16.7,
    "els": [
     {
-     "id": "s3-e1",
-     "cls": "k-sub",
-     "html": "24種類の売り場",
-     "anim": "rv-fade",
-     "t": 0.0
+     "id": "s3-t1",
+     "cls": "k-line",
+     "html": "<span class=\"hi\">24種類</span>の売り場には、<br>人が集まった",
+     "anim": "rv-scale",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     },
     {
-     "id": "s3-e2",
-     "cls": "k-num",
-     "html": "<span class=\"hi\">3%</span>",
-     "anim": "rv-scale",
-     "t": 1.6
+     "id": "s3-t2",
+     "cls": "k-line",
+     "html": "でも、買ったのは<span class=\"hi\">3%</span>",
+     "anim": "rv-pop",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "人は集まったのに"
+   ]
   },
   {
    "end": 21.4,
    "els": [
     {
-     "id": "s4-e1",
-     "cls": "k-sub",
-     "html": "6種類の売り場",
-     "anim": "rv-fade",
-     "t": 0.0
-    },
-    {
-     "id": "s4-e2",
-     "cls": "k-num",
-     "html": "<span class=\"hi\">30%</span>",
+     "id": "s4-t1",
+     "cls": "k-line",
+     "html": "<span class=\"hi\">6種類</span>の売り場では、<br>試食した人の<br><span class=\"hi\">30%</span>が買った",
      "anim": "rv-pop",
-     "t": 1.2
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     }
-   ],
-   "caption": "選べたから、買った"
+   ]
   },
   {
    "end": 27.3,
    "els": [
     {
-     "id": "s5-e1",
+     "id": "s5-t1",
      "cls": "k-line",
-     "html": "選べないと<br><span class=\"hi\">人は買わない</span>",
-     "anim": "rv-scale",
-     "t": 0.0
+     "html": "選べないと、<br>人は買わない",
+     "anim": "rv-up",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
     },
     {
-     "id": "s5-cta",
+     "id": "s5-t2",
+     "cls": "k-line",
+     "html": "試食は、<br><span class=\"hi\">6種類</span>で足りる",
+     "anim": "rv-left",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s5-t3",
+     "cls": "k-line",
+     "html": "続きは、次で",
+     "anim": "rv-scale",
+     "t": 2.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s5-next",
      "cls": "cta-line",
      "html": "次：「みんなやってます」が<br>効くのはなぜ？",
      "anim": "rv-pop",
-     "t": 2.2
+     "t": 2.0,
+     "style": "font-size:64px"
     }
-   ],
-   "caption": "続きは<span class=\"hi\">次の回</span>"
+   ]
   }
  ],
  "narrations": [
