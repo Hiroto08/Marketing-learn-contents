@@ -6,6 +6,11 @@
     "publishAt": null,
     "thumbSha256": null,
     "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T08:12:07Z"
+    "uploadedAt": "2026-11-05T08:12:07Z",
+    "driveFileId": "1RRte25xuFB9D9PDkfMXQd4K7BZ3BoDHy",
+    "driveSha256": "321cef2b80a1fd4212995d321fe80729c4a7a2af6da9fcfd9e9103bc2fba961c",
+    "driveRev": 1,
+    "driveName": "u10_「満足度No.1」は何を数えているのか。使ってない人に聞いた1位もある【No.1表示】.mp4",
+    "driveForVideoId": "Ny86zv2YOrE"
   }
 }

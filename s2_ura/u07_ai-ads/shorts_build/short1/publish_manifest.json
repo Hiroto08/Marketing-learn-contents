@@ -6,6 +6,11 @@
     "publishAt": null,
     "thumbSha256": null,
     "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T08:11:53Z"
+    "uploadedAt": "2026-11-05T08:11:53Z",
+    "driveFileId": "1fL_aYij5OSttRI1cZdE1OjPpZ3bjdcgj",
+    "driveSha256": "588ff116e4dcf941979dd6185494179fad398e67c1f7a440f61ae31cc0ef453f",
+    "driveRev": 1,
+    "driveName": "u07_AIが作った広告は人に勝てる？ 実験の答えは「勝つ。ただし…」【AI広告】.mp4",
+    "driveForVideoId": "ghw17zHd3vc"
   }
 }

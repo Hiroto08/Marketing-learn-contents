@@ -40,7 +40,7 @@
 ## シリーズ再生リスト
 
 ```
-▶ 売れる仕組みの裏側（Shorts＋ケースファイル）：（公開後追記）
+▶ 売れる仕組みの裏側（Shorts＋ケースファイル）：https://www.youtube.com/playlist?list=PLAj-bgnY0vug
 ▶ マーケティング入門講座 全24話：https://www.youtube.com/playlist?list=PLazN5XmDSQHo
 ```
 

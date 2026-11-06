@@ -118,7 +118,8 @@
     "youtube_hour_jst": 18,
     "start_date": "2026-11-15",
     "playlist_title": "売れる仕組みの裏側｜身近な「なぜ？」の犯人を数字で明かす",
-    "playlist_description": "買い物・職場・SNSで感じる「なんで？」の裏にある売れる仕組みを、実在の企業・商品と数字1つで種明かしするシリーズです。Shortsは毎日18時、続きを深掘りする本編（ケースファイル・約5分）は毎週土曜18時に公開。"
+    "playlist_description": "買い物・職場・SNSで感じる「なんで？」の裏にある売れる仕組みを、実在の企業・商品と数字1つで種明かしするシリーズです。Shortsは毎日18時、続きを深掘りする本編（ケースファイル・約5分）は毎週土曜18時に公開。",
+    "playlist_id": "PLAj-bgnY0vug"
   },
   "review": {
     "_comment": "レビュー便（Issue #2）：完成 mp4 を YouTube へ非公開アップしたタイミングで、この Google Drive フォルダにも上げる（upload_review_drive.py）。社長が公開前に確認し、フィードバックは Issue #2 に集約される",

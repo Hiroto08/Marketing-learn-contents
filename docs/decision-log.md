@@ -20,6 +20,13 @@
 
 ## 決定の記録
 
+### 2026-11-06
+
+- **第2シリーズの最初の2週間分（16本）を全部予約した**：Shorts u01〜u14・ケースファイル c01（11/21）・c02（11/28）。いずれも18:00公開。
+  - シリーズの再生リスト「売れる仕組みの裏側」を作成：https://www.youtube.com/playlist?list=PLAj-bgnY0vug（`series.json` の series2.playlist_id）
+  - c01・c02 に日本語字幕を付けた。概要欄に再生リストの URL を入れた。
+- **レビュー便：16本すべてを Drive フォルダへ送付**し、Issue #2 に一覧を書いた。このセッションにも DRIVE_REFRESH_TOKEN が届いたので、以後は非公開アップと同時に自動で送られる。
+
 ### 2026-11-05（夜）CMO レビュー（Issue #1）とレビュー便（Issue #2）への対応
 
 - **レビュー便の試行送付に成功**：ユーザーが DRIVE_REFRESH_TOKEN を登録したので、u01 を Drive の「マーケラボ レビュー便」へ送った（`1wnBXeNeWyjmxA00a1HpcxMSNr3X2LHDu`）。Issue #2 に報告済み。

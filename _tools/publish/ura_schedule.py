@@ -196,7 +196,15 @@ def playlist(tok, sc, rows, dry):
         q = {"part": "contentDetails", "playlistId": pid, "maxResults": 50}
         if tokp:
             q["pageToken"] = tokp
-        res = api(tok, "playlistItems", q)
+        for attempt in range(6):  # 作成直後の再生リストは数十秒 404 を返すことがある
+            try:
+                res = api(tok, "playlistItems", q)
+                break
+            except urllib.error.HTTPError as e:
+                if e.code != 404 or attempt == 5:
+                    raise
+                import time
+                time.sleep(10)
         have |= {i["contentDetails"]["videoId"] for i in res.get("items", [])}
         tokp = res.get("nextPageToken")
         if not tokp:

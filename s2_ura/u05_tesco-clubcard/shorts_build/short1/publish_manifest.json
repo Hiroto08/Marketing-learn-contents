@@ -6,6 +6,11 @@
     "publishAt": null,
     "thumbSha256": null,
     "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T01:05:43Z"
+    "uploadedAt": "2026-11-05T01:05:43Z",
+    "driveFileId": "1z-4Ut05kRSQcVoHcZNr_vxJIsENzm1Mn",
+    "driveSha256": "b47011b0dff11a7287df4e3b6f50fdbea264bf2976a5605891a619dfa5957f2c",
+    "driveRev": 1,
+    "driveName": "u05_ポイントカードで、店が本当に集めているもの【顧客データ】.mp4",
+    "driveForVideoId": "aBGz2yKtNvc"
   }
 }

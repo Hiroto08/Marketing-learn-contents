@@ -6,6 +6,11 @@
     "publishAt": null,
     "thumbSha256": "0632eda8682aa99fcaa547b0f4b6f8573fd4447dcf53ed3397cbe51b0e1b6e4b",
     "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T08:11:44Z"
+    "uploadedAt": "2026-11-05T08:11:44Z",
+    "driveFileId": "1gScjzmqHWHN-9kCDLe-eV9cQXzUo1BeK",
+    "driveSha256": "e7c883d887ead3f5ceff6340c4e718c1412afad68d940fb69daee1468da35ee6",
+    "driveRev": 1,
+    "driveName": "c02_CASE FILE #02：週1回の会議が、年30万時間を食う理由。会議を減らした会社は何をした？【会議のコスト】.mp4",
+    "driveForVideoId": "g40ebSUJmD8"
   }
 }

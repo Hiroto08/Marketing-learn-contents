@@ -6,6 +6,11 @@
     "publishAt": null,
     "thumbSha256": null,
     "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T01:02:21Z"
+    "uploadedAt": "2026-11-05T01:02:21Z",
+    "driveFileId": "1t5ZVsU1djWc-KkCIi1VYW_DH3X06jlk6",
+    "driveSha256": "1e845023866baf66eb7f12c8fcad6392fba3cefa258321ef82024408aedb2e0d",
+    "driveRev": 1,
+    "driveName": "u02_同じクッキーなのに、残り2枚の瓶の方がおいしく感じる理由【希少性】.mp4",
+    "driveForVideoId": "sqXhZGnEYdM"
   }
 }

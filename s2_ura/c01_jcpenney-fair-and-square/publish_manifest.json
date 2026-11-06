@@ -6,6 +6,11 @@
     "publishAt": null,
     "thumbSha256": "0ca42ef134f5fc38d105f8e1988e085dec76ca10460e855cdc0d6f4e8ca88312",
     "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T08:11:35Z"
+    "uploadedAt": "2026-11-05T08:11:35Z",
+    "driveFileId": "1t6cXmZAwh1izLdHj97RjoIZYjmOvTEUA",
+    "driveSha256": "444e3142fc20fe2f39b4e7355c0826e6cff5484eaa1a9cdfae00ade3b0433b97",
+    "driveRev": 1,
+    "driveName": "c01_CASE FILE #01：セールをやめたら売上25%減。JCペニーの値下げはなぜ失敗した？【価格の心理】.mp4",
+    "driveForVideoId": "_fX3e3tDbrc"
   }
 }
