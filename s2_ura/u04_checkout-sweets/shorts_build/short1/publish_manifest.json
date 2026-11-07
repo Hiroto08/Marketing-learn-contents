@@ -1,16 +1,16 @@
 {
   "u04_checkout-sweets_short1_final.mp4": {
-    "videoId": "8trGwcSLHIU",
-    "sha256": "0270c00e9184edf20ecb889f835cce38196aad9988cfccc5fc7c7612612e34fc",
+    "videoId": "ZUlys9p13HY",
+    "sha256": "ae820e3c94a2efea97b5240aae4ba0b54a75e8cf134b083236aac11e1cfc595d",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T01:04:30Z",
-    "driveFileId": "1nISqsIyoky4-VzoNseHtcGwGgMg1XMJn",
-    "driveSha256": "0270c00e9184edf20ecb889f835cce38196aad9988cfccc5fc7c7612612e34fc",
-    "driveRev": 1,
-    "driveName": "u04_レジ横のお菓子をやめた店では、買われる量が17%減っていた【衝動買い】.mp4",
-    "driveForVideoId": "8trGwcSLHIU"
+    "supersededVideoId": "8trGwcSLHIU",
+    "uploadedAt": "2026-11-07T08:16:00Z",
+    "driveFileId": "1BEcucNBlUXoaVAGmDvWITq7_m-1JXbkF",
+    "driveSha256": "ae820e3c94a2efea97b5240aae4ba0b54a75e8cf134b083236aac11e1cfc595d",
+    "driveRev": 2,
+    "driveName": "u04_レジ横のお菓子をやめた店では、買われる量が17%減っていた【衝動買い】_r2.mp4",
+    "driveForVideoId": "ZUlys9p13HY"
   }
 }

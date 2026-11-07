@@ -500,6 +500,9 @@ def main():
                                        "thumbSha256": thumb_sha,
                                        "supersededVideoId": superseded,
                                        "uploadedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())}
+        # レビュー便の版番号は引き継ぐ（差し替え版を _r2・_r3 の名前で送るため）
+        if prev and prev.get("driveRev"):
+            man[os.path.basename(path)]["driveRev"] = prev["driveRev"]
         save_manifest(dkey, man)
         if "short" in dkey:
             if S.s2_item(re.sub(r"/shorts_build/short\d+$", "", dkey)):

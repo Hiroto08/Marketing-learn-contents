@@ -1,16 +1,16 @@
 {
   "u01_jcpenney-sale_short1_final.mp4": {
-    "videoId": "UyjnGDTON3U",
-    "sha256": "2f218b85c28192c72e0706be4a0b97ab0c73a291a57b51f0f13020b8641709c0",
+    "videoId": "ZJIrnlCjV7s",
+    "sha256": "891652c5dcbe9a7fc82590d70ac00785e222d23cccf0242e4c4473781cadbdb9",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T01:00:25Z",
-    "driveFileId": "1wnBXeNeWyjmxA00a1HpcxMSNr3X2LHDu",
-    "driveSha256": "571fd30be31f12deeb2df508a282b892c3f136be0deb0102e839205cda5afddd",
-    "driveRev": 1,
-    "driveName": "u01_「いつでも安い」にしたら売上25%減。客が本当に買っていたもの【価格の心理】.mp4",
-    "driveForVideoId": "UyjnGDTON3U"
+    "supersededVideoId": "UyjnGDTON3U",
+    "uploadedAt": "2026-11-07T08:14:42Z",
+    "driveFileId": "1XBon0cRunyII1gD1SwSjD2fWzCioEbKv",
+    "driveSha256": "891652c5dcbe9a7fc82590d70ac00785e222d23cccf0242e4c4473781cadbdb9",
+    "driveRev": 2,
+    "driveName": "u01_「いつでも安い」にしたら売上25%減。客が本当に買っていたもの【価格の心理】_r2.mp4",
+    "driveForVideoId": "ZJIrnlCjV7s"
   }
 }

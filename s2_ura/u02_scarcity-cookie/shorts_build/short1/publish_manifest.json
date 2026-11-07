@@ -1,16 +1,16 @@
 {
   "u02_scarcity-cookie_short1_final.mp4": {
-    "videoId": "sqXhZGnEYdM",
-    "sha256": "1e845023866baf66eb7f12c8fcad6392fba3cefa258321ef82024408aedb2e0d",
+    "videoId": "HLa75uGWaVc",
+    "sha256": "71c53abf6aad5f852e9852970f831ae7aba2ce95051f3d70177453522135a834",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T01:02:21Z",
-    "driveFileId": "1t5ZVsU1djWc-KkCIi1VYW_DH3X06jlk6",
-    "driveSha256": "1e845023866baf66eb7f12c8fcad6392fba3cefa258321ef82024408aedb2e0d",
-    "driveRev": 1,
-    "driveName": "u02_同じクッキーなのに、残り2枚の瓶の方がおいしく感じる理由【希少性】.mp4",
-    "driveForVideoId": "sqXhZGnEYdM"
+    "supersededVideoId": "sqXhZGnEYdM",
+    "uploadedAt": "2026-11-07T08:15:16Z",
+    "driveFileId": "16YRbmhyxcBonn-931M0oDpqk3pwD6KTS",
+    "driveSha256": "71c53abf6aad5f852e9852970f831ae7aba2ce95051f3d70177453522135a834",
+    "driveRev": 2,
+    "driveName": "u02_同じクッキーなのに、残り2枚の瓶の方がおいしく感じる理由【希少性】_r2.mp4",
+    "driveForVideoId": "HLa75uGWaVc"
   }
 }
