@@ -497,11 +497,24 @@ def _sync_tokens(text: str):
     return [tok for tok in _TOKEN_RE.findall(t) if tok.lower() not in _SYNC_STOP]
 
 
-def _match_score(tokens, sentence: str) -> int:
+_NORM_RE = re.compile(r"[\s、。，,．.！？!?「」『』（）()・:：]")
+
+
+def _norm(text: str) -> str:
+    return _NORM_RE.sub("", text.translate(str.maketrans("０１２３４５６７８９", "0123456789")))
+
+
+def _match_score(tokens, sentence: str, text: str = "") -> int:
     """Weighted overlap: numbers count at least 2 (a matching figure is a
-    strong signal even when short, e.g. '6年' or '2.2倍')."""
+    strong signal even when short, e.g. '6年' or '2.2倍').
+    When the on-screen text is the sentence itself (telop-sync Shorts), an
+    exact containment match wins outright — this also covers hiragana-only
+    lines such as 「続きは、次で」 that yield no keyword tokens."""
     s = sentence.translate(str.maketrans("０１２３４５６７８９", "0123456789"))
     s = s.replace(",", "").replace("，", "")
+    nt = _norm(text)
+    if len(nt) >= 3 and nt in _norm(sentence):
+        return 100 + len(nt)
     total = 0
     for tok in set(tokens):
         if tok in s:
@@ -594,7 +607,7 @@ def build_schedule(sd, audio_durs, para_durs_list, lead, step_gap,
                 toks = _sync_tokens(text)
                 best, best_score = None, 1   # require score >= 2
                 for sj in range(ptr, len(sents)):
-                    sc = _match_score(toks, sents[sj][1]) if toks else 0
+                    sc = _match_score(toks, sents[sj][1], text) if (toks or len(_norm(text)) >= 3) else 0
                     if sc > best_score:
                         best, best_score = sj, sc
                 if best is not None:
