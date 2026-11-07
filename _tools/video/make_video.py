@@ -219,6 +219,7 @@ class SlideData:
     narrations: list
     total_secs: float
     step_texts: list = None   # per-step visible text (for narration sync)
+    look_hash: dict = None    # slide id → hash of its <section> markup + all <style> (recording cache key)
 
 
 def _element_text(src: str, elem_id: str) -> str:
@@ -282,8 +283,15 @@ def extract_slide_data(html_path: str) -> SlideData:
     m = re.search(r'const TOTAL_SECS\s*=\s*([\d.]+)', src)
     total = float(m.group(1)) if m else (meta[-1].end if meta else 0)
 
+    # 録画キャッシュ用：見た目が変わったら録り直す（文言・改行・CSS の変更を拾う）
+    style_hash = hashlib.md5("".join(re.findall(r"<style[^>]*>(.*?)</style>", src, re.S)).encode()).hexdigest()
+    look_hash = {}
+    for sm in meta:
+        sec = re.search(r'<section[^>]*\bid="' + re.escape(sm.id) + r'"[^>]*>(.*?)</section>', src, re.S)
+        look_hash[sm.id] = hashlib.md5(f"{style_hash}|{sec.group(1) if sec else ''}".encode()).hexdigest()
+
     return SlideData(meta=meta, steps=steps, narrations=narrations,
-                     total_secs=total, step_texts=step_texts)
+                     total_secs=total, step_texts=step_texts, look_hash=look_hash)
 
 
 # ──────────────────────────────────────────────────────────────────────────────
@@ -903,13 +911,17 @@ class VideoBuilder:
             _concat_wavs([intro_w, narr_wav, outro_w], full_w)
 
             out_mp4 = os.path.join(self.video_dir, f'slide_{sc.si:02d}.mp4')
-            # 録画キャッシュの鍵: ナレーションハッシュ＋解像度＋前後の無音尺。
+            # 録画キャッシュの鍵: ナレーションハッシュ＋解像度＋前後の無音尺
+            # ＋スライドの見た目（<section> とCSS）＋要素の出る時刻（2026-11-07 追加：
+            # 文言・改行だけ直したとき旧録画が使われ、直したはずの改行が動画に出なかった）。
             # ファイル存在だけで再利用すると、ナレーション改稿後も旧録画が使われて
             # 完成尺が変わらない事故になる（音声側narr_XX.wavにはハッシュ検証があるが
             # 録画側に無かった）。sidecarが無い/不一致なら必ず録り直す。
             slide_key = hashlib.md5(
                 f"{_narr_hash(self.sd.narrations[ni], a.speaker, a.speed, a.sent_gap, a.para_gap)}"
                 f"|{a.width}x{a.height}|{a.intro:.2f}|{tail:.2f}|{a.lead:.2f}|{a.step_gap:.2f}"
+                f"|{(self.sd.look_hash or {}).get(self.sd.meta[sc.si].id, '')}"
+                f"|{[round(e.rel_t, 2) for e in sc.anim_events]}"
                 .encode()).hexdigest()
             slide_sidecar = out_mp4 + '.json'
             print(f"  slide {sc.si+1} ({self.sd.meta[sc.si].id})", end='', flush=True)
