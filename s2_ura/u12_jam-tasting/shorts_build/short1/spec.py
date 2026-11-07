@@ -34,7 +34,7 @@
      "html": "アメリカの<br>スーパーで行われた、<br>有名な実験です",
      "anim": "rv-left",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },
@@ -47,7 +47,7 @@
      "html": "<span class=\"hi\">24種類</span>の売り場には、<br>人が集まった",
      "anim": "rv-scale",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s3-t2",

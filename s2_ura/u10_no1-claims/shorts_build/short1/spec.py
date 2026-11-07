@@ -34,7 +34,7 @@
      "html": "サイトを見せて、<br>良さそうなのはどれ、<br>と聞く",
      "anim": "rv-left",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s2-t2",
@@ -55,7 +55,7 @@
      "html": "消費者庁は、<br>こうした<br>No.<span class=\"hi\">1</span>表示に、<br>措置命令を出してきた",
      "anim": "rv-scale",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },
@@ -68,7 +68,7 @@
      "html": "それでも、<br>買う人の約半分は、<br>この表示に影響される",
      "anim": "rv-pop",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },
@@ -81,7 +81,7 @@
      "html": "満足度No.<span class=\"hi\">1</span>は、<br>何を数えたかまで見る",
      "anim": "rv-up",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s5-t2",

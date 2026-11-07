@@ -34,7 +34,7 @@
      "html": "<span class=\"hi\">1994年</span>、<br>イギリスのスーパー、<br>テスコ",
      "anim": "rv-left",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s2-t2",

@@ -89,6 +89,10 @@ def _split_long(line):
     return _split_long(line[:best]) + _split_long(line[best:])
 
 
+def _width(line):
+    return sum(0.6 if re.match(r"[ -~]", c) else 1.0 for c in line)
+
+
 def display(sent, disp):
     s = sent
     for a, b in disp.items():
@@ -159,8 +163,10 @@ def build(d, restructure=False):
             els.append({"id": "s1-tag", "cls": "k-tag", "html": f"売れる仕組みの裏側 #{no:02d}", "anim": "rv-fade", "t": 0.0,
                         "style": "font-size:48px"})
         for j, sent in enumerate(sentences(sl["narr"])):
-            longest = max(len(re.sub(r"<[^>]+>", "", x).rstrip("、")) for x in display(sent, disp).split("<br>"))
-            fs = 88 if longest <= LINE_MAX else 80 if longest <= 11 else 72
+            # 行の幅（全角=1・半角英数=0.6）で文字サイズを決める。読点も1字ぶんの幅をとる
+            # （2026-11-07：読点込み11字を 88px で組んで 880px を超え、ブラウザが勝手に折り返した）
+            longest = max(_width(re.sub(r"<[^>]+>", "", x)) for x in display(sent, disp).split("<br>"))
+            fs = next((f for f in (88, 80, 72, 64) if longest * f <= 870), 64)
             els.append({"id": f"s{i+1}-t{j+1}", "cls": "k-line", "html": display(sent, disp),
                         "anim": ANIMS[(i + j) % len(ANIMS)], "t": 0.0 if j == 0 else 1.0 * j, "style": f"font-size:{fs}px;margin:.25em 0"})
         if i == len(slides) - 1 and nxt:

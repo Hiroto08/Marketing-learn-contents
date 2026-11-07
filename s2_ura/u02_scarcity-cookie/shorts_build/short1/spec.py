@@ -68,7 +68,7 @@
      "html": "目の前で<span class=\"hi\">10枚</span>から<br><span class=\"hi\">2枚</span>に減ると、<br>評価はさらに上がった",
      "anim": "rv-pop",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },
@@ -81,7 +81,7 @@
      "html": "残り<span class=\"hi\">2枚</span>のクッキーは、<br>おいしく見える",
      "anim": "rv-up",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s5-t2",

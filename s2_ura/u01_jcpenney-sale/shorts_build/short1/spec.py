@@ -68,7 +68,7 @@
      "html": "客が買っていたのは、<br>服より、<br>得した気分だった",
      "anim": "rv-pop",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },

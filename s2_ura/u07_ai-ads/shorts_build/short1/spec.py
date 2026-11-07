@@ -21,7 +21,7 @@
      "html": "AIが作った広告は、<br>人が作った広告より、<br><span class=\"hi\">19%</span>多く<br>クリックされた",
      "anim": "rv-up",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },
@@ -60,7 +60,7 @@
      "html": "嫌われたのは、<br>広告の中身ではなく、<br>AIという表示",
      "anim": "rv-pop",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },

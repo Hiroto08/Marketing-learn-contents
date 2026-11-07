@@ -21,7 +21,7 @@
      "html": "レジ横のお菓子を<br>やめたスーパーでは、<br>買われる量が<br><span class=\"hi\">17%</span>減っていた",
      "anim": "rv-up",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     }
    ]
   },

@@ -73,7 +73,7 @@
      "html": "解約しにくい画面は、<br>いつか一番高くつく",
      "anim": "rv-up",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s5-t2",

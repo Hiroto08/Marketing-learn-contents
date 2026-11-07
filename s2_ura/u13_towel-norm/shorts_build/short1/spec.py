@@ -60,7 +60,7 @@
      "html": "人は、正しいことより、<br>みんなが<br>していることに従う",
      "anim": "rv-pop",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:72px;margin:.25em 0"
     }
    ]
   },

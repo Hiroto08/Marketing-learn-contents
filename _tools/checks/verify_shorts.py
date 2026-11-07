@@ -237,7 +237,8 @@ def check_browser(html_path):
         pg.wait_for_load_state("networkidle")
         r = pg.evaluate("""()=>{
           const SAFE={top:192,bottom:1920-400,left:48,right:1080-48};
-          const over=[], hang=[], small=[];
+          const over=[], hang=[], small=[], wrap=[];
+          const telop=!!document.documentElement.innerHTML.match(/telop-sync/);
           document.querySelectorAll('section.slide').forEach(sec=>{
             sec.style.display='flex';
             sec.querySelectorAll('*').forEach(e=>{e.style.opacity='1';e.style.transform='none';});
@@ -259,6 +260,11 @@ def check_browser(html_path):
               rects.forEach(x=>{const k=Math.round(x.top/6)*6;
                 const g=lines[k]||(lines[k]={l:1e9,r:-1e9}); g.l=Math.min(g.l,x.left); g.r=Math.max(g.r,x.right);});
               const keys=Object.keys(lines).map(Number).sort((a,b)=>a-b);
+              // テロップ同期型：<br> で決めた行数より多く折り返したら不合格（改行位置がずれて語の途中で割れる）
+              if(telop && e.classList.contains('k-line')){
+                const want=(e.innerHTML.match(/<br\s*\/?>/g)||[]).length+1;
+                if(keys.length>want) wrap.push(sec.id+':'+(e.id||e.className)+'('+keys.length+'行/'+want+'行)');
+              }
               if(keys.length>=2){
                 const lastw=lines[keys[keys.length-1]].r-lines[keys[keys.length-1]].l;
                 if(lastw<140) hang.push(sec.id+':'+(e.className||e.id)+'('+Math.round(lastw)+'px)');
@@ -266,7 +272,7 @@ def check_browser(html_path):
             });
             sec.style.display='';
           });
-          return {over:over.slice(0,10), hang:hang.slice(0,10), small:small.slice(0,10),
+          return {over:over.slice(0,10), hang:hang.slice(0,10), small:small.slice(0,10), wrap:wrap.slice(0,10),
                   n:document.querySelectorAll('section.slide').length};
         }""")
         b.close()
@@ -278,7 +284,9 @@ def check_browser(html_path):
         fail(f"1〜2文字だけの行末ぶら下がり（<br>で意味の切れ目に改行を）: {r['hang']}")
     if r.get("small"):
         fail(f"文字が小さすぎる（48px 未満）: {r['small']}")
-    if not errs and not r["over"] and not r["hang"] and not r.get("small"):
+    if r.get("wrap"):
+        fail(f"テロップが <br> の位置以外で折り返している（1行が幅 880px を超える。文字を小さくするか改行を足す）: {r['wrap']}")
+    if not errs and not r["over"] and not r["hang"] and not r.get("small") and not r.get("wrap"):
         ok(f"JSエラー0・{r['n']}枚・セーフエリア内・ぶら下がり無し")
 
 

@@ -68,7 +68,7 @@
      "html": "安いホットドッグは、<br>また来たくなる理由",
      "anim": "rv-pop",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s4-t2",

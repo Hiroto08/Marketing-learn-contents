@@ -55,7 +55,7 @@
      "html": "最初の販売の目標は、<br>各商品<span class=\"hi\">36枚</span>",
      "anim": "rv-scale",
      "t": 0.0,
-     "style": "font-size:88px;margin:.25em 0"
+     "style": "font-size:80px;margin:.25em 0"
     },
     {
      "id": "s3-t2",
