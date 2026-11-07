@@ -262,7 +262,7 @@ def check_browser(html_path):
               const keys=Object.keys(lines).map(Number).sort((a,b)=>a-b);
               // テロップ同期型：<br> で決めた行数より多く折り返したら不合格（改行位置がずれて語の途中で割れる）
               if(telop && e.classList.contains('k-line')){
-                const want=(e.innerHTML.match(/<br\s*\/?>/g)||[]).length+1;
+                const want=e.querySelectorAll('br').length+1;
                 if(keys.length>want) wrap.push(sec.id+':'+(e.id||e.className)+'('+keys.length+'行/'+want+'行)');
               }
               if(keys.length>=2){
