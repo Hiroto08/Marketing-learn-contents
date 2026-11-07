@@ -234,6 +234,7 @@ def _element_text(src: str, elem_id: str) -> str:
     nxt = re.search(r'\sid="|<section\b', seg)
     if nxt:
         seg = seg[:nxt.start()]
+    seg = re.sub(r"<[^>]*$", " ", seg)      # 次の要素の開きタグの切れ端（<div class="..." の途中）を落とす
     seg = re.sub(r"<[^>]+>", " ", seg)
     seg = re.sub(r"&[a-z]+;", " ", seg)
     return re.sub(r"\s+", " ", seg).strip()
