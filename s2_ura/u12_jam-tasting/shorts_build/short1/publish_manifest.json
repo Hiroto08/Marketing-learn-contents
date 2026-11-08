@@ -1,16 +1,16 @@
 {
   "u12_jam-tasting_short1_final.mp4": {
-    "videoId": "8zy4isg3d-I",
-    "sha256": "f032a8216699c9a66ac96a75af25891c362889d9137c03e988c5e3f77464fad5",
+    "videoId": "BlhPCA8ijzQ",
+    "sha256": "2d359d47ea44a16087115efb09501633b3d92c9c7a77ce16c97348269139fd74",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-06T08:11:17Z",
-    "driveFileId": "106tDogAUgdHgsjaeYTt52YwBMDX5zAat",
-    "driveSha256": "f032a8216699c9a66ac96a75af25891c362889d9137c03e988c5e3f77464fad5",
-    "driveRev": 1,
-    "driveName": "u12_試食のジャムを24種類から6種類に減らしたら、買う人の割合が10倍になった話.mp4",
-    "driveForVideoId": "8zy4isg3d-I"
+    "supersededVideoId": "8zy4isg3d-I",
+    "uploadedAt": "2026-11-08T08:11:40Z",
+    "driveRev": 2,
+    "driveFileId": "1b0oIE1r8Gl5c4FkFzUq3ER1L4PoKVjxk",
+    "driveSha256": "2d359d47ea44a16087115efb09501633b3d92c9c7a77ce16c97348269139fd74",
+    "driveName": "u12_試食のジャムを24種類から6種類に減らしたら、買う人の割合が10倍になった話_r2.mp4",
+    "driveForVideoId": "BlhPCA8ijzQ"
   }
 }

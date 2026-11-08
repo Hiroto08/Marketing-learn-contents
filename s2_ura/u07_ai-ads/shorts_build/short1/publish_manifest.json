@@ -1,16 +1,16 @@
 {
   "u07_ai-ads_short1_final.mp4": {
-    "videoId": "ghw17zHd3vc",
-    "sha256": "588ff116e4dcf941979dd6185494179fad398e67c1f7a440f61ae31cc0ef453f",
+    "videoId": "Ye2HNV4nfb0",
+    "sha256": "5711e989c349ba19598ab2e28f1a9f183313453dd872811accdfdd2fa17ea81a",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T08:11:53Z",
-    "driveFileId": "1fL_aYij5OSttRI1cZdE1OjPpZ3bjdcgj",
-    "driveSha256": "588ff116e4dcf941979dd6185494179fad398e67c1f7a440f61ae31cc0ef453f",
-    "driveRev": 1,
-    "driveName": "u07_AIが作った広告は人に勝てる？ 実験の答えは「勝つ。ただし…」【AI広告】.mp4",
-    "driveForVideoId": "ghw17zHd3vc"
+    "supersededVideoId": "ghw17zHd3vc",
+    "uploadedAt": "2026-11-08T08:11:10Z",
+    "driveRev": 2,
+    "driveFileId": "1SSyaAGYINvxTvp6Ig-syY9D8k_zNmfNQ",
+    "driveSha256": "5711e989c349ba19598ab2e28f1a9f183313453dd872811accdfdd2fa17ea81a",
+    "driveName": "u07_AIが作った広告は人に勝てる？ 実験の答えは「勝つ。ただし…」【AI広告】_r2.mp4",
+    "driveForVideoId": "Ye2HNV4nfb0"
   }
 }

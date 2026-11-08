@@ -1,16 +1,16 @@
 {
   "u09_costco-hotdog_short1_final.mp4": {
-    "videoId": "yD2eMM3Gu5Y",
-    "sha256": "a75a55cfec56f61158879ccaa7419c7bfbe1fb6d2ac368f75a143849efa4a741",
+    "videoId": "HpvxH_vYAtQ",
+    "sha256": "ebf58fb82b0640875ca1099e4e0d9fc9ede07fa3816c0e1531ac8bf5bae2f0b4",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T08:12:03Z",
-    "driveFileId": "1V80PSWEURoI_VOw1tPqp2v_MbGQ9FodY",
-    "driveSha256": "a75a55cfec56f61158879ccaa7419c7bfbe1fb6d2ac368f75a143849efa4a741",
-    "driveRev": 1,
-    "driveName": "u09_40年値上げしない1.5ドルのホットドッグ。コストコが損してでも守る理由.mp4",
-    "driveForVideoId": "yD2eMM3Gu5Y"
+    "supersededVideoId": "yD2eMM3Gu5Y",
+    "uploadedAt": "2026-11-08T08:11:26Z",
+    "driveRev": 2,
+    "driveFileId": "1UKGx3C60ao86tI9LCrc0cEw-1CXGEAv7",
+    "driveSha256": "ebf58fb82b0640875ca1099e4e0d9fc9ede07fa3816c0e1531ac8bf5bae2f0b4",
+    "driveName": "u09_40年値上げしない1.5ドルのホットドッグ。コストコが損してでも守る理由_r2.mp4",
+    "driveForVideoId": "HpvxH_vYAtQ"
   }
 }

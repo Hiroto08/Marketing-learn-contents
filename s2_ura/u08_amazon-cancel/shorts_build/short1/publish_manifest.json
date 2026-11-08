@@ -1,16 +1,16 @@
 {
   "u08_amazon-cancel_short1_final.mp4": {
-    "videoId": "HFNWMwlN75o",
-    "sha256": "4a120950f0c5f4f826c2dbf27464d39ccef3cab63e9c73718a2cf4a02a53b212",
+    "videoId": "z9ke5quu01A",
+    "sha256": "ad44c10f0e8da313f58d0a81c65714f68d518d9657639d7a707af9812646b49b",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-05T08:12:00Z",
-    "driveFileId": "1VG1qHm-XcJMmDObQLYVKvwIpAPeMrLA5",
-    "driveSha256": "4a120950f0c5f4f826c2dbf27464d39ccef3cab63e9c73718a2cf4a02a53b212",
-    "driveRev": 1,
-    "driveName": "u08_解約しにくい画面のせいで、アマゾンが25億ドルを払うことになった話【サブスク】.mp4",
-    "driveForVideoId": "HFNWMwlN75o"
+    "supersededVideoId": "HFNWMwlN75o",
+    "uploadedAt": "2026-11-08T08:11:20Z",
+    "driveRev": 2,
+    "driveFileId": "15Isf1Mhvno1aNlyV4vJxssGudA4UCVa-",
+    "driveSha256": "ad44c10f0e8da313f58d0a81c65714f68d518d9657639d7a707af9812646b49b",
+    "driveName": "u08_解約しにくい画面のせいで、アマゾンが25億ドルを払うことになった話【サブスク】_r2.mp4",
+    "driveForVideoId": "z9ke5quu01A"
   }
 }

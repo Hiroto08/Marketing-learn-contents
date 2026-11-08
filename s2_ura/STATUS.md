@@ -1,6 +1,6 @@
 # 売れる仕組みの裏側｜公開状態（自動生成）
 
-> 生成 2026-11-07 17:17 JST・`python3 _tools/publish/ura_schedule.py`。予定は `s2_ura/schedule.json`、公開予約は `--apply`。Shorts＝毎日、ケースファイル（本編）＝週1。同じ種類の中で飛び級しない。
+> 生成 2026-11-08 17:12 JST・`python3 _tools/publish/ura_schedule.py`。予定は `s2_ura/schedule.json`、公開予約は `--apply`。Shorts＝毎日、ケースファイル（本編）＝週1。同じ種類の中で飛び級しない。
 
 - 再生リスト：https://www.youtube.com/playlist?list=PLAj-bgnY0vug
 
@@ -12,13 +12,13 @@
 | 11/18(水) | Short u04 | `u04_checkout-sweets` | `ZUlys9p13HY` | 予約済み | 0 |
 | 11/19(木) | Short u05 | `u05_tesco-clubcard` | `aAu2UJMSxfE` | 予約済み | 0 |
 | 11/20(金) | Short u06 | `u06_top5-menu` | `6Fu16DMh-jM` | 予約済み | 0 |
-| 11/21(土) | Short u07 | `u07_ai-ads` | `ghw17zHd3vc` | 予約済み | 0 |
+| 11/21(土) | Short u07 | `u07_ai-ads` | `Ye2HNV4nfb0` | 予約済み | 0 |
 | 11/21(土) | 本編 c01 | `c01_jcpenney-fair-and-square` | `_fX3e3tDbrc` | 予約済み | 0 |
-| 11/22(日) | Short u08 | `u08_amazon-cancel` | `HFNWMwlN75o` | 予約済み | 0 |
-| 11/25(水) | Short u09 | `u09_costco-hotdog` | `yD2eMM3Gu5Y` | 予約済み | 0 |
-| 11/25(水) | Short u10 | `u10_no1-claims` | `Ny86zv2YOrE` | 予約済み | 0 |
-| 11/25(水) | Short u11 | `u11_meeting-hours` | `cAA7IwbXNRk` | 予約済み | 0 |
-| 11/28(土) | Short u12 | `u12_jam-tasting` | `8zy4isg3d-I` | 予約済み | 0 |
+| 11/22(日) | Short u08 | `u08_amazon-cancel` | `z9ke5quu01A` | 予約済み | 0 |
+| 11/25(水) | Short u09 | `u09_costco-hotdog` | `HpvxH_vYAtQ` | 予約済み | 0 |
+| 11/25(水) | Short u10 | `u10_no1-claims` | `WSEBh4H9p7o` | 予約済み | 0 |
+| 11/25(水) | Short u11 | `u11_meeting-hours` | `TPDtkhvEfH4` | 予約済み | 0 |
+| 11/28(土) | Short u12 | `u12_jam-tasting` | `BlhPCA8ijzQ` | 予約済み | 0 |
 | 11/28(土) | Short u13 | `u13_towel-norm` | `Z20DmXHuYwA` | 予約済み | 0 |
 | 11/28(土) | Short u14 | `u14_followers-shirts` | `fqDmIYc0tEk` | 予約済み | 0 |
 | 11/28(土) | 本編 c02 | `c02_meeting-300k-hours` | `g40ebSUJmD8` | 予約済み | 0 |
