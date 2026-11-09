@@ -1,16 +1,16 @@
 {
   "u13_towel-norm_short1_final.mp4": {
-    "videoId": "Z20DmXHuYwA",
-    "sha256": "08a0f2fde88f2524551d642ec942e48b96657fbd4fe7fb5c9bb9e44224890770",
+    "videoId": "WN087bidpiE",
+    "sha256": "f48d61b3f10c5ba66189e5015f97e2c336df63964e68cdfbf4a356ea7fe4d8a8",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-06T08:11:23Z",
-    "driveFileId": "1CrrQUROSxJshMJe3mE06iOQ45HF_Ba5N",
-    "driveSha256": "08a0f2fde88f2524551d642ec942e48b96657fbd4fe7fb5c9bb9e44224890770",
-    "driveRev": 1,
-    "driveName": "u13_「多くのお客様が」と書いただけで、ホテルのタオル再利用が増えた理由【社会的証明】.mp4",
-    "driveForVideoId": "Z20DmXHuYwA"
+    "supersededVideoId": "Z20DmXHuYwA",
+    "uploadedAt": "2026-11-09T08:16:24Z",
+    "driveRev": 2,
+    "driveFileId": "1qlSe7VqIUHJKAcklHMBPOnGFf8beCIkL",
+    "driveSha256": "f48d61b3f10c5ba66189e5015f97e2c336df63964e68cdfbf4a356ea7fe4d8a8",
+    "driveName": "u13_「多くのお客様が」と書いただけで、ホテルのタオル再利用が増えた理由【社会的証明】_r2.mp4",
+    "driveForVideoId": "WN087bidpiE"
   }
 }
