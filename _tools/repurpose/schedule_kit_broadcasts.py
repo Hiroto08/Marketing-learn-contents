@@ -100,6 +100,8 @@ def main():
     ap.add_argument("--episode")
     ap.add_argument("--send-at", help="RFC3339（--episode と併用）")
     ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--refresh", action="store_true",
+                    help="登録済み・未送信のブロードキャストの件名・本文を草稿で上書きする（動画を差し替えて URL が変わったとき）")
     a = ap.parse_args()
     if a.episode:
         if not a.send_at:
@@ -123,6 +125,17 @@ def main():
     for ep in sorted(plan):
         at = plan[ep]
         label = f"EP{ep:02d} {at.astimezone(jst):%m/%d(%a) %H:%M} JST"
+        if ep in have and a.refresh and have[ep].get("status") not in ("completed", "sending"):
+            b, d = have[ep], draft(ep)
+            if d:
+                body = {"subject": d["subject"], "preview_text": d["preview_text"], "content": d["content"],
+                        "send_at": at.isoformat(), "published_at": at.isoformat()}
+                if a.dry_run:
+                    print(f"[dry] {label}: 本文を更新（id={b['id']}）「{d['subject']}」")
+                else:
+                    r = kit("PUT", f"broadcasts/{b['id']}", body)["broadcast"]
+                    print(f"{label}: 本文を更新 id={r['id']} send_at={r.get('send_at')}「{d['subject']}」")
+                continue
         if ep in have:
             b = have[ep]
             sa = b.get("send_at")
