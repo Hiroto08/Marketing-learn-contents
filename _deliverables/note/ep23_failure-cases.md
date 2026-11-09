@@ -54,7 +54,7 @@
 
 この記事は「AI時代のマーケティング・ラボ 第23回」の内容を、読み物として再構成したものです。図解つきの動画版もあります👇
 
-🎬 動画で見る：https://youtu.be/oC1oCzRBxpA
+🎬 動画で見る：https://youtu.be/zA4P9czo8BM
 📺 チャンネル（全話）：https://www.youtube.com/channel/UCZm9m37ivzDN0ZGvQAhBDpw
 ✉️ 全話の要点をまとめた無料チートシートをプレゼント中👉 https://witty-composer-9473.kit.com/ac0f4ce77b
 

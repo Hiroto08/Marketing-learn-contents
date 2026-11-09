@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-11-09 10:56 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
+> 自動生成：2026-11-09 15:29 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
 > 生成：`python3 _tools/publish/gen_upload_status.py`。他セッション・ルーティンはこのファイルで到達点を確認する。
 
 凡例：public=公開済 / private=非公開 / 予約=公開予約済 / 未UP=未アップロード / —=対象物なし
@@ -29,8 +29,8 @@
 | EP20 | `ep20_growth-hack` | `O3ANMg1Fdb8` | public | `l3FUvHcNYEc` `JV1lzXzxx7c` `-o5X_JSyQY4` | public |
 | EP21 | `ep21_hit-products` | `K_VbaZCL1zE` | public | `oM4-5LikyTo` `gySkRFXZ-bs` `5bwru3XThg4` | public |
 | EP22 | `ep22_v-shaped-recovery` | `qCVqPmcoJZE` | public | `npVdcb6WkX0` `70U5I68Df1U` `BIGlUgljaWw` | public |
-| EP23 | `ep23_failure-cases` | `oC1oCzRBxpA` | 予約 2026-11-11 09:00 | `_yrnwzZNvKs` `7GPZiMWNk1s` `l6WZ8BV_aHo` | 予約 2026-11-11 09:00 |
-| EP24 | `ep24_future-marketer` | `fUwzpA76OUw` | 予約 2026-11-14 09:00 | `iI2YMYYHQVk` `OmlvDbc0CjU` `A_vq8EUYT8U` | 予約 2026-11-14 09:00 |
+| EP23 | `ep23_failure-cases` | `zA4P9czo8BM` | 予約 2026-11-11 09:00 | `_yrnwzZNvKs` `7GPZiMWNk1s` `l6WZ8BV_aHo` | 予約 2026-11-11 09:00 |
+| EP24 | `ep24_future-marketer` | `v6ywp-obN_U` | 予約 2026-11-14 09:00 | `iI2YMYYHQVk` `OmlvDbc0CjU` `A_vq8EUYT8U` | 予約 2026-11-14 09:00 |
 
 **集計**：追跡 96本中 public=88 / private=8 / unlisted=0
 

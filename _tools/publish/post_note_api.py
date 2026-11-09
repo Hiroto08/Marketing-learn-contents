@@ -31,6 +31,8 @@
 import argparse
 import datetime as dt
 import html as htmlmod
+import glob
+import json
 import os
 import re
 import sys
@@ -287,6 +289,11 @@ def with_cta(s, d, ep, body, notes):
     """本文に YouTube 導線（冒頭の動画埋め込み・章の時刻リンク・末尾の回遊リンク）を差し込む（note_cta.py）"""
     import note_cta
     vid, st = note_cta.video_row(ep)
+    # 動画を作り直して videoId が変わった回：下書きに残る旧 URL を新しい URL に置き換える（2026-11-09 読み修正で EP23/24 を差し替え）
+    for mp in glob.glob(f"0*/ep{ep:02d}_*/publish_manifest.json"):
+        for v in json.load(open(mp, encoding="utf-8")).values():
+            if v.get("supersededVideoId") and v.get("videoId"):
+                body = body.replace(v["supersededVideoId"], v["videoId"])
     if not vid or st != "public":
         print(f"  （EP{ep:02d} の動画が public でないため導線の差し込みは省略）")
         return body

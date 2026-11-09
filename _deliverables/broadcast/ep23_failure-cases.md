@@ -12,7 +12,7 @@
 
 続きは動画でどうぞ（約9分・図解つき）👇
 
-🎬 https://youtu.be/oC1oCzRBxpA
+🎬 https://youtu.be/zA4P9czo8BM
 
 ━━━━━━━━━━
 ＜まだの方へ＞ 全20話の要点を1枚にまとめた無料チートシート（PDF）を配布中です。
