@@ -14,7 +14,8 @@ description: YouTube動画制作の音声演出役。VOICEVOXでナレーショ�
 ## 手順
 1. `.claude/skills/episode-production/narration-rules.md` を読む（確定済み誤読リスト・priority=10と長音の注意・検査コマンド）
 2. VOICEVOX起動確認：`curl -s http://127.0.0.1:50021/version`。落ちていれば `/opt/voicevox_engine/linux-cpu-x64/run --host 127.0.0.1 --port 50021` をnohupで起動し待機
-3. **全文kanaスキャン**：NARRATIONSの各文のうち「数字・英字・固有名詞・複合語」を含む文を `clean_for_tts` →`/audio_query` に通し、kana出力を目視監査（過去の実施例はこのリポジトリのgit履歴参照。`seed_user_dict()` を先に呼ぶこと）
+3. **読み検査（機械）**：`python3 _tools/checks/check_readings.py <ep_dir> --review` を実行（人名の辞書登録・カタカナ語の分割・既知の誤読を自動判定。run_episode.sh/run_shorts.sh もビルド前に必ず実行する）。`reading_review.txt` の ★ 行（固有名詞）を目視する。
+3b. **全文kanaスキャン**：NARRATIONSの各文のうち「数字・英字・固有名詞・複合語」を含む文を `clean_for_tts` →`/audio_query` に通し、kana出力を目視監査（過去の実施例はこのリポジトリのgit履歴参照。`seed_user_dict()` を先に呼ぶこと）
 4. 誤読が見つかったら：
    - 英字略語・カタカナ読み指定 → `_tools/video/make_video.py` の `ABBR_MAP` に追加
    - 漢字複合語の読み・アクセント → `COMPOUND_DICT` に追加（**priority=10で登録される。長音は「ー」でなく母音字（コウ/ヒン）で書く**）

@@ -25,6 +25,8 @@ if ! curl -s -m3 http://127.0.0.1:50021/version >/dev/null; then
 fi
 curl -s -m3 http://127.0.0.1:50021/version || { echo "FAIL: VOICEVOXが起動しない"; exit 1; }
 
+step "読み検査（人名・カタカナ語・既知の誤読。2026-11-09〜）"
+python3 _tools/checks/check_readings.py "$EP"
 specs=("$EP"/shorts_build/short*/spec.py)
 [ -e "${specs[0]}" ] || { echo "FAIL: $EP/shorts_build/short*/spec.py が無い（yt-shorts-designer工程が未了）"; exit 1; }
 

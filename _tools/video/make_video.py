@@ -152,6 +152,20 @@ COMPOUND_DICT = {
     "森岡さん":            ("モリオカサン", 0),             # 同上の呼称（EP24）
     "西口一希":            ("ニシグチカズキ", 5),           # マーケター（VOICEVOX既定読みで正しいが1語化のため登録。EP24）
     "西口さん":            ("ニシグチサン", 0),             # 同上の呼称（EP24）
+    # ── 2026-11-09 読み監査（ユーザー指摘「名前の読み間違え」）で見つけた誤読・分割読み ──
+    "ディズニーシー":      ("ディズニーシー", 5),           # ×ディズニースィー（EP22）
+    "ノースウェスタン":    ("ノースウェスタン", 4),         # ×ノース／ウェスタンの2分割（u03）
+    "ハーバード":          ("ハーバード", 3),               # ×ハー／バードの2分割（c02）
+    "アンカリング":        ("アンカリング", 0),             # ×アンカ／リングの2分割（c01）
+    "ルーレット":          ("ルーレット", 3),               # ×ルー／レットの2分割（c01）
+    "オーバービュー":      ("オーバービュー", 3),           # ×オーバー／ビューの2分割（EP24）
+    "エスエヌエス":        ("エスエヌエス", 5),             # SNS（×エ／スエヌエス の分割。EP23）
+    "直しかた":            ("ナオシカタ", 0),               # ×チョクシカタ（EP23）
+    "立つ人":              ("タツヒト", 1),                 # 「立つ人がいない」×タツ／ジンガイ（人外）ナイ（EP23）
+    "今マーケティング":    ("イママーケティング", 1),       # ×コンマーケティング（EP24）
+    "異を唱えた":          ("イヲトナエタ", 1),             # ×コトヲトナエタ（EP24）
+    "並べて":              ("ナラベテ", 0),                 # ×ナベテ（c01）
+    "ベインアンドカンパニー": ("ベインアンドカンパニー", 5),  # ベイン・アンド・カンパニー（×ベイン／アンドカンパニーの分割。c02）
 }
 
 MARU_MAP = {
@@ -319,12 +333,13 @@ def seed_user_dict(url: str) -> None:
     """Register COMPOUND_DICT terms into the VOICEVOX user dictionary so each
     is tokenized as a single morpheme = a single accent phrase. Idempotent:
     removes any prior entries for the same surfaces, then re-registers."""
-    managed = set(COMPOUND_DICT)
     try:
         with urllib.request.urlopen(f'{url}/user_dict', timeout=10) as r:
             current = json.load(r)
+        # エンジンの辞書を COMPOUND_DICT と完全に一致させる（前の実行で登録した語が残ると、
+        # 辞書から外した語の読みが検査とビルドで食い違う。2026-11-09）
         for uid, word in current.items():
-            if word.get('surface') in managed:
+            if True:
                 urllib.request.urlopen(urllib.request.Request(
                     f'{url}/user_dict_word/{uid}', method='DELETE'), timeout=10)
     except Exception as e:

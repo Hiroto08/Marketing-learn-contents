@@ -28,6 +28,8 @@ curl -s -m3 http://127.0.0.1:50021/version || { echo "FAIL: VOICEVOXが起動し
 
 step "1/5 QA (verify_episode)"
 python3 _tools/checks/verify_episode.py "$EP"
+echo "── 読み検査（人名・カタカナ語・既知の誤読。2026-11-09〜） ──"
+python3 _tools/checks/check_readings.py "$EP" --review
 
 step "2/5 ビルド (make_video: BGM+SFXミックス込みのシリーズ標準)"
 python3 _tools/video/make_video.py "$EP/slide.html" \

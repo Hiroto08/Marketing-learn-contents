@@ -5,3 +5,4 @@ video_out/
 .claude/worktrees/
 **/video_build/**/*.mp4
 **/shorts_build/**/*.mp4
+reading_review.txt
