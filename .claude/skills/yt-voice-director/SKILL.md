@@ -12,19 +12,27 @@ description: YouTube動画制作の音声演出役。VOICEVOXでナレーショ�
 - 対象エピソードの slide.html（NARRATIONS＝確定原稿）
 
 ## 手順
-1. `.claude/skills/episode-production/narration-rules.md` を読む（確定済み誤読リスト・priority=10と長音の注意・検査コマンド）
-2. VOICEVOX起動確認：`curl -s http://127.0.0.1:50021/version`。落ちていれば `/opt/voicevox_engine/linux-cpu-x64/run --host 127.0.0.1 --port 50021` をnohupで起動し待機
-3. **読み検査（機械）**：`python3 _tools/checks/check_readings.py <ep_dir> --review` を実行（人名の辞書登録・カタカナ語の分割・既知の誤読を自動判定。run_episode.sh/run_shorts.sh もビルド前に必ず実行する）。`reading_review.txt` の ★ 行（固有名詞）を目視する。
-3b. **全文kanaスキャン**：NARRATIONSの各文のうち「数字・英字・固有名詞・複合語」を含む文を `clean_for_tts` →`/audio_query` に通し、kana出力を目視監査（過去の実施例はこのリポジトリのgit履歴参照。`seed_user_dict()` を先に呼ぶこと）
-4. 誤読が見つかったら：
-   - 英字略語・カタカナ読み指定 → `_tools/video/make_video.py` の `ABBR_MAP` に追加
-   - 漢字複合語の読み・アクセント → `COMPOUND_DICT` に追加（**priority=10で登録される。長音は「ー」でなく母音字（コウ/ヒン）で書く**）
-   - 追加後に再スキャンして修正を確認
-5. 修正した語を `narration-rules.md` の**確定済み誤読リストに追記**（表記/誤読/正しい読み/登録先/初出EP）
+1. `.claude/skills/episode-production/quality-gates.md` §1（R1〜R10）と `narration-rules.md` の「確定済み誤読リスト」を読む
+2. VOICEVOX 起動確認：`curl -s http://127.0.0.1:50021/version`。落ちていれば `bash _tools/setup_env.sh`（これ以外の起動方法は使わない）
+3. **読み検査（機械）**：
+   ```bash
+   python3 _tools/checks/check_readings.py <ep_dir> --main --review     # 本編・ケースファイル
+   python3 _tools/checks/check_readings.py <ep_dir>/shorts_build/shortN  # Short 1本
+   ```
+   - R1 固有名詞が台帳に無い → yt-researcher に戻す（読みを一次ソースで確かめて台帳へ）。確認できない名前は脚本家に戻して消す
+   - R3 人名が辞書に無い → `_tools/video/make_video.py` の `COMPOUND_DICT` に登録（**長音は「ー」でなく母音字（コウ/ヒン）で書く**。アクセント型は narration-rules.md）
+   - R4・R5・R8 読みが違う・途中で切れる → `COMPOUND_DICT`（複合語・人名）／`ABBR_MAP`（英字）／`READING_MAP`（辞書で直らない読みを、合成の直前にかなへ開く）で直す。**画面の文字は変えない**
+   - R7 英字の読みが未定 → `ABBR_MAP` に登録
+   - R10 別の辞書と読みが食い違う → 1語ずつ読みを確かめる。VOICEVOX が正しければ `_tools/checks/reading_confirmed.txt` に「表記・読み・確かめた根拠」を足す。間違っていれば辞書で直す
+4. `<ep_dir>/reading_review.txt`（全文の読み。★＝固有名詞を含む行）を上から読み、★の行の読みが台帳と同じことを確かめる
+5. 新しい誤読を直したら、3か所に書く：辞書（make_video.py）／`check_readings.py` の `BAD`（型）／`narration-rules.md` の確定済み誤読リスト（表記・誤読・正しい読み・登録先・初出）
+6. **ビルド後の照合**（yt-video-editor がビルドした後）：`python3 _tools/checks/check_readings.py <dir> --built` が PASS（R9：実際に音声になった読みが、今の原稿・台帳と一致）。run_episode.sh／run_shorts.sh は自動で実行する
 
 ## 完了条件（全て）
-- [ ] 対象文すべてのkanaが正しい（スキャン結果を報告に含める）
-- [ ] 辞書追加があれば make_video.py と再発防止リストの両方に反映
+- [ ] `check_readings.py` が RESULT: PASS（ビルド前。R1〜R8・R10）
+- [ ] ビルド後に `check_readings.py --built` が RESULT: PASS（R9）
+- [ ] 辞書を足したときは、make_video.py・BAD・narration-rules.md の3か所に反映
+- [ ] 抑揚・間（V1〜V4）は判定しない（AI は音声を聞けない。レビュー便で聞いた人が `quality_record.md` に記入する）
 
 ## 引き継ぎ
 → **yt-video-editor**（読み監査済みの状態でビルドへ）

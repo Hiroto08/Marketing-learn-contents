@@ -6,7 +6,7 @@ description: YouTube動画制作の映像編集役。make_video.pyでのビル�
 # 映像編集（エディター・レンダリング）
 
 実世界の対応役割：映像編集者・レンダリング担当。
-原則：**ユーザーが明示的に動画化を指示した時だけビルドする。ゲートは機械検査（postbuild_episode.py）に任せ、独自の品質判断をしない**。
+原則：**ビルドするのは、CLAUDE.md の「短い指示の解釈規約」に当たる指示（EPNNを作って／ビルドして／アップまで）と、定期ジョブの手順に書かれたときだけ。ゲートは機械検査（verify_episode・check_readings・check_facts・check_style・postbuild_episode）に任せ、独自の品質判断をしない**。
 
 ## 標準手順（これだけでよい）
 
@@ -15,8 +15,8 @@ bash _tools/pipeline/run_episode.sh <episode_dir>            # ビルド〜検�
 bash _tools/pipeline/run_episode.sh <episode_dir> --upload   # アップロードまで（yt-uploader工程込み）
 ```
 
-- VOICEVOX起動確認・verify_episode・BGM/SFXミックスビルド・A/V検証・LUFS・
-  タイムスタンプ実測修正・mp4ステージング・サムネ生成まで**全部この1コマンドに入っている**
+- VOICEVOX起動確認・verify_episode・読み検査（ビルド前）・数字の確認・AI臭さ検査・BGM/SFXミックスビルド・A/V検証・LUFS・
+  タイムスタンプ実測修正・読み検査（ビルド後の音声の照合）・mp4ステージング・サムネ生成・実施記録（quality_record.md）まで**全部この1コマンドに入っている**
 - ビルドは重い（30分前後）ので**バックグラウンド実行**し、Monitor/通知で完了を待つ
 - FAILしたら出力の指示に従う（対処表: `.claude/skills/episode-production/pipeline.md` のプレイブック）
 
@@ -41,7 +41,8 @@ A/V合格基準（postbuildに実装済み・変更しない）: 合計差≤0.2
 ## 完了条件（全て）
 - [ ] postbuild_episode.py が `POSTBUILD PASS`（A/V・LUFSの数値を報告）
 - [ ] script.md / description.md のタイムスタンプが実測値（postbuildが自動更新。コミットする）
-- [ ] mp4をSendUserFileでユーザーへ送付済み（尺・A/V差を添えて）
+- [ ] `quality_record.md` の末尾が「機械検査の結果：PASS」。`video_build/out/built_readings.json` と一緒にコミットする
+- [ ] 納品：24話は mp4 を SendUserFile でユーザーへ（尺・A/V差を添えて）。第2シリーズはレビュー便（Drive。upload_youtube.py が自動で送る）
 - [ ] mp4はコミットしない（gitignore済み）
 
 ## 引き継ぎ

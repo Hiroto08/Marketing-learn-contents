@@ -43,10 +43,13 @@
   3. **文字サイズの下限**：本文は 76〜88px、シリーズ名の帯は 48px、次回予告は 64px。48px 未満は `verify_shorts` が不合格にする。改行は読点と助詞の後で入れ、1行10〜11字に収める。語の途中・数字と単位の間では割らない。
   4. **冒頭の入り**：S1 は最初の1文だけにし、その文に数字・問い・否定のいずれかを入れる（エンジンは S1 の文字を最初のフレームから全部出すため、2文目を置くと読み上げより先に見えてしまう）。
   - 手順：shorts.md にナレーションと `**次回予告：**` を書き、`python3 _tools/shorts_template/build_telop_spec.py <uNN>` を実行する（S1 に2文以上あるときは `--restructure`）。これで spec.py ができるので、`gen_stage.py` → `verify_shorts.py`（追加検査 10「テロップ同期」）→ `run_shorts.sh` と進める。spec.py は手で書かない。
-- **読みの確認（2026-11-09 ユーザー指示「特に固有名詞は読み方が正しいか必ずチェック」）**：ビルドの前に `check_readings.py` が自動で走る（run_shorts.sh / run_episode.sh）。
-  - 人名（「〇〇さん」など）は、出典で読みを確かめて `_tools/video/make_video.py` の COMPOUND_DICT に登録しないと不合格。
-  - カタカナの社名・地名などが途中で切れて読まれたら不合格（1語で登録する）。
-  - 手作業でも `python3 _tools/checks/check_readings.py <dir> --review` で全文の読みを出し、★（固有名詞）の行を目で確かめる。表記を変えずに辞書で直すのが基本（画面の文字は変えない）。
+- **品質ゲート（2026-11-10 社長指示・Issue #2。合否の基準は `.claude/skills/episode-production/quality-gates.md`）**：ビルドの前後に自動で走る。1つでも不合格ならビルドしない。
+  - **固有名詞の読み（R）**：人名・企業名・商品名・地名は、`docs/proper-nouns.md`（台帳）に読みと確認ソースを書いてから使う。`python3 _tools/checks/proper_nouns.py --verify` で確認日が入る。確認できない名前は使わない（例：u14 は名前を出さず「あるインフルエンサー」）。
+  - **数字（F）**：shorts.md／script.md に `## 数字の確認` の表（数字｜何の数字か｜ソース1｜ソース2）を書く。2つ以上の別のサイトで一致した数字だけを使う。
+  - **文章（A）**：同じ接続詞で始まる文は Shorts で1回まで・ケースファイルで3回まで。過去の回と同じ文（10字以上）を使わない。ケースファイルは、語尾の連続3文まで・「のです」10%以下・1文80字以内。
+  - **テロップ（T）**：画面の数字はナレーションにもある数字だけ。画面の文字は `build_telop_spec.py`／`build_case_slide.py` が作る。
+  - **記録**：`<回のフォルダ>/quality_record.md` が自動で書かれる。コミットする。耳で確かめる項目（V1〜V4）は、レビュー便で聞いた人が記入する。
+  - 手作業で全部走らせる：`python3 _tools/checks/quality_record.py s2_ura/uNN_<slug>`
 - **S1 の最初の要素**に、シリーズ名の帯 `{"cls":"k-tag","html":"売れる仕組みの裏側 #NN"}` を置く（t=0.0）。
 - **最終スライド**：
   - ナレーションは「冒頭のループの一文」＋「続きは、明日。」にする。CTA 検査は「続きは」で通る。
@@ -79,7 +82,7 @@ bash _tools/pipeline/run_shorts.sh  s2_ura/u01_<slug> --upload     # Short 1本�
 bash _tools/pipeline/run_episode.sh s2_ura/c01_<slug> --upload     # ケースファイル（約15分）
 ```
 
-- アップロードは常に private。1日6本まで（16:00 JST に回復）。
+- アップロードは常に private。1日6本まで（太平洋時間0時に回復＝日本時間で夏16時・冬17時）。
 - 成果物（spec.py・stage.html・shorts.md・publish_manifest.json・thumbnail.png）はコミットする。mp4 はコミットしない。
 
 ## 4. 公開予約
@@ -112,3 +115,4 @@ python3 _tools/publish/ura_schedule.py --playlist          # シリーズの再�
   2. `upload_youtube.py` で新しく非公開アップする。新しい videoId になる。旧版の videoId は manifest の supersededVideoId に残る。`--replace-old` は付けない（旧版は削除しない）。
   3. `ura_schedule.py --apply` を実行する。新版に公開予約を付け直し、旧版の公開予約は外して非公開のまま残す。
   4. Issue #2 に新旧の videoId を報告する。関連動画の代行は videoId を見て設定するので、報告が要る。
+- **差し替えの決まり（社長決裁 2026-11-10）**：公開済みの動画は差し替えない。公開前の動画の差し替えは、修正版をレビュー便に置き、Issue #2 で承認を受けてから行う。

@@ -8,6 +8,9 @@ when_to_use: "Triggers: EPNNのnote記事を作って, note記事を仕上げて
 
 実世界の対応役割：オウンドメディアの**編集長／デスク**。個々の執筆・校正はロールに委ね、監督は「角度の決定・進行・校了判定」を担う。
 原則：**下書きは機械生成（make_note_article.py）で用意し、人手ロールが読み物に引き上げる。校了は verify_note.py の RESULT: PASS が唯一の合否**。感覚的な「良くなった」で公開しない。
+品質の決まりは `episode-production/quality-gates.md` §6（N1〜N7）：書き手は「自分」（「自社」と書かない）／タイトルに数字／対象読者を絞る／冒頭（無料で読める部分）で価値が伝わる／定型句なし／語尾の連続なし／動画に無い数字を足さない。
+
+> **対象の note**：このリポジトリで作っているのは「AI時代のマーケティング・ラボ」の note（24話の記事）。別の note（例：「アプリ収益化の実験ノート」）の記事をここで作るときも、同じ N1〜N7 を適用する（`python3 _tools/checks/verify_note.py <file>`）。その note の下書きの置き場所が決まったら、この欄に書く。
 
 ## 作業開始時の同期（必須・複数セッション／ルーティンの衝突防止 2026-10-17）
 
@@ -50,7 +53,7 @@ git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude
 2. `note-writer` → `note-packager` → `note-proofreader` を順に実行。各ロールの完了条件を満たさないまま次へ進まない。
 3. `note-qa` を実行し `python3 _tools/checks/verify_note.py <file>` が **RESULT: PASS**。
 4. PASS後にコミット（`_deliverables/note/` のみ。下書きの再生成で上書きしないよう、以後の編集は生成物への直接編集で行う）。
-5. **note下書き自動保存（任意・要 note 認証）**：`docs/monetization-strategy.md` の「非公開投稿」原則に沿い、校了記事を note に**下書き（非公開）**として保存する。**公開は人間**。方式は実行環境で選ぶ：
+5. **note下書き保存と公開**：校了記事を note に下書き（非公開）として保存する。**公開は、毎日19:55の「note 毎日公開ジョブ」が、動画の公開後に `post_note_api.py --publish-ep NN` で行う**（手で公開ボタンを押さない。状態表が正）。方式は実行環境で選ぶ：
    - **自動化（Routine／このコンテナ内）＝ requests版**（ブラウザはこの環境で外部に出られないため）：
      ```bash
      python3 _tools/publish/post_note_api.py --file _deliverables/note/ep<NN>_*.md --dry-run   # 形の確認
@@ -64,7 +67,8 @@ git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude
 
 1. **検査は1コマンド**：`python3 _tools/checks/verify_note.py <file>` が唯一の合否。PASSまで校了と言わない
 2. **動画と矛盾させない**：数字・固有名詞・主張は動画（script.md）と一致。記事で新しい事実を足すなら出典を確認
-3. **YouTube語を残さない**：「この動画では」「スライド」「さっそく始めましょう」「チャンネル登録」等は本文から除去（CTAブロックを除く）
+3. **書き手は「自分」**：「自社」「弊社」「当社」を使わない（読者の会社は「あなたの会社」「自分の会社」。N1）
+3b. **YouTube語を残さない**：「この動画では」「スライド」「さっそく始めましょう」「チャンネル登録」等は本文から除去（CTAブロックを除く）
 4. **生成物＝下書き、編集後が正**：一度リライトした記事を make_note_article.py で再生成して上書きしない（編集が消える）
 5. **1記事＝1テーマ**：note読者は検索/回遊で来る。詰め込みすぎない
 
@@ -74,4 +78,4 @@ git fetch origin claude/build-upload-bqpddd && git merge --no-edit origin/claude
 - [ ] `_deliverables/note/ep<NN>_*.md` をコミット
 
 ## 引き継ぎ
-→ ユーザー（note.comへ貼り付け・見出し画像設定・公開）。公開後の反応は収益化戦略§5-2の第二戦線として観測。
+→ 毎日19:55の公開ジョブ（下書き保存済み・動画が公開済みの回を、予定日に自動で公開する）。公開後の反応は収益化戦略§5-2の第二戦線として観測。

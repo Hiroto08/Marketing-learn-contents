@@ -20,19 +20,19 @@ when_to_use: "Triggers: 新しいエピソードを作って, EPNNを作成, EPN
 | # | ロール | スキル | 担当 | 主な成果物 |
 |---|--------|--------|------|-----------|
 | 1 | プロデューサー | `yt-producer` | 企画・パッケージング・GO判定 | パッケージング表 |
-| 2 | リサーチャー | `yt-researcher` | 事例調査・出典検証・ファクトチェック | 事例＋出典リスト |
+| 2 | リサーチャー | `yt-researcher` | 事例調査・数字の2ソース確認・固有名詞の読みの確認（台帳） | 事例＋出典リスト＋「数字の確認」の表＋台帳 |
 | 3 | 脚本家 | `yt-scriptwriter` | ストーリー設計・台本・機械検査§3 | script.md |
-| 4 | 音声演出 | `yt-voice-director` | VOICEVOX読み監査・辞書更新 | 読み修正 |
+| 4 | 音声演出 | `yt-voice-director` | 読み検査 R1〜R10（ビルド前）・辞書更新・ビルド後の音声の照合 | 読み修正＋reading_review |
 | 5 | スライドデザイナー | `yt-slide-designer` | slide.html・STEPS密度§4・Playwright | slide.html |
 | 6 | パブリッシャー | `yt-publisher` | 概要欄SEO・サムネ・Shorts・公開チェックリスト | description/thumbnail/shorts |
-| 7 | QA | `yt-qa` | 全検査の独立再実行（最終ゲート） | PASS/FAILレポート |
+| 7 | QA | `yt-qa` | 全検査の独立再実行（最終ゲート。品質ゲート quality-gates.md を含む） | PASS/FAILレポート＋quality_record.md |
 | 8 | 映像編集 | `yt-video-editor` | ビルド・A/V検証・実測タイムスタンプ | final.mp4 |
 | 9 | アナリスト | `yt-analyst` | 公開後KPI分析・スキルへの学び書き戻し | 改善提案＋§7追記 |
 | 10 | 配信オペレーター | `yt-uploader` | YouTube非公開アップロード・メタデータ設定・公開予約（要 YT_* Secrets） | privateの動画＋publish_manifest.json |
 
 ## Shorts専用ロール（5つ・本編完成後に実行）
 
-Shorts制作は本編と目的・規格が異なる（縦型9:16・30〜45秒・発見装置）ため専用ロールに分離。
+Shorts制作は本編と目的・規格が異なる（縦型9:16・15〜30秒・発見装置）ため専用ロールに分離。
 根拠と数値基準は [shorts-production.md](shorts-production.md)。
 
 | # | ロール | スキル | 担当 | 主な成果物 |
@@ -92,7 +92,8 @@ L3はフローAと同じ工程＋パッケージング先行＋機械検査（�
 - [retention-packaging.md](retention-packaging.md) — **維持率・パッケージング仕様v2**（タイトル/サムネ/検索KW先行、コールドオープン、ナレーション機械検査、STEPS密度基準、Shorts）。根拠は `docs/youtube-reform-plan.md`
 - [story-writing.md](story-writing.md) — **ストーリー設計ガイド**（事例リサーチ→ワークシート→文体ルール→10点ルーブリック採点。台本前の必須工程）
 - [design-system.md](design-system.md) — CSS/HTML/JSの構造（big styleコンポーネント、ページ番号markup、SLIDES_META/NARRATIONS形状）
-- [narration-rules.md](narration-rules.md) — VOICEVOX訓読み対策・ABBR_MAP・尺の計算式
+- [quality-gates.md](quality-gates.md) — **品質ゲート（合否チェックリスト）**：固有名詞の読み R・数字の2ソース F・文章のAI臭さ A・テロップ T・耳で確かめる V・note N・公開と差し替え P。全ロールがこの番号を参照する
+- [narration-rules.md](narration-rules.md) — VOICEVOX訓読み対策・ABBR_MAP・READING_MAP・確定済み誤読リスト・尺の計算式
 - [templates.md](templates.md) — `script.md`/`description.md` の正確なテンプレートと記入例
 - 完成済みの実例として **`02_intermediate/ep08_usp-differentiation/`** をHTML構造のお手本にする（※台本構成のお手本としては旧式。**台本の構成・ナレーションの書き方は retention-packaging.md の v2 仕様が最優先**）
 

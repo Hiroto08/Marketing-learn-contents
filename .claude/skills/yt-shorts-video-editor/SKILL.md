@@ -18,8 +18,9 @@ bash _tools/pipeline/run_shorts.sh <episode_dir>            # 全Short: 生成�
 bash _tools/pipeline/run_shorts.sh <episode_dir> --upload   # アップロードまで（クォータ: 1日6本）
 ```
 
-- spec→stage生成、verify_shorts（9項目）、縦型ビルド（--speed 1.15・詰めパディング）、
-  A/V差≤0.1s・尺15〜30s・全スライドvideo+audioストリーム検査まで**全部この1コマンド**
+- spec→stage生成、verify_shorts、読み検査（ビルド前）、数字の確認、AI臭さ検査、縦型ビルド（--speed 1.15・詰めパディング）、
+  A/V差≤0.1s・尺15〜30s・全スライドvideo+audioストリーム検査、読み検査（ビルド後の音声の照合）、実施記録（quality_record.md）まで**全部この1コマンド**
+- テロップを出す時刻は自動で決まる：テロップ同期型（第2シリーズ）は文を読み始める0.15秒前、24話の Shorts は1.2秒前（run_shorts.sh が stage.html を見て切り替える）
 - 1本あたり2〜4分。複数本はバックグラウンド実行で待つ
 - FAILの対処は `.claude/skills/episode-production/pipeline.md` のプレイブック参照
 
@@ -29,6 +30,7 @@ bash _tools/pipeline/run_shorts.sh <episode_dir> --upload   # アップロード
 python3 _tools/video/make_video.py <dir>/stage.html \
   --out <dir> --speaker 11 --speed 1.15 \
   --lead 1.2 --intro 0.3 --outro 0.5 --final-outro 1.2 \
+  # ↑ 第2シリーズ（テロップ同期型）は --lead 0.15
   --width 1080 --height 1920 \
   --bgm _assets/audio/bgm_calm_loop.wav --sfx-dir _assets/audio
 ```
@@ -39,7 +41,9 @@ stage.htmlに`#__heartbeat`が残っているか確認（specから生成して�
 
 ## 完了条件
 - [ ] run_shorts.sh が `SHORTS PIPELINE PASS`（各本の尺・A/V差を報告）
-- [ ] ループ接続の目視確認（最初と最後の数秒を切り出して連続再生）
+- [ ] `quality_record.md` の末尾が「機械検査の結果：PASS」。コミットする（`built_readings.json` も）
+- [ ] 最初・中盤・最後のフレームを切り出し、画面の文字が spec.py の改行どおりであることを確かめる（録画の使い回しで古い文字が残っていないか）
+- [ ] 第2シリーズ：mp4 がレビュー便（Drive）に送られている（upload_youtube.py が自動で送る）
 - [ ] mp4は`shorts_build/`配下に保存（gitignore対象。コミットしない）
 
 ## 引き継ぎ

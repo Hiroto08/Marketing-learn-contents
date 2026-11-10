@@ -6,7 +6,7 @@ description: YouTube配信オペレーター役。完成した本編/Shortsを�
 # YouTube配信オペレーター（自動アップロード）
 
 実世界の対応役割：テレビ局の送出オペレーター。
-原則：**アップロードは常に private で行い、人間が Studio で最終確認してから公開する。秘密情報（トークン類）はリポジトリ・チャット・コミットに絶対に置かない。**
+原則：**アップロードは常に private。公開は予約公開だけ（24話は `publish_episode.py --schedule-all`、第2シリーズは `ura_schedule.py --apply`）。公開済みの動画は差し替えない。公開前の差し替えは社長の承認を受けてから（quality-gates.md P1〜P4）。秘密情報（トークン類）はリポジトリ・チャット・コミットに絶対に置かない。**
 
 ## 初回セットアップ（ユーザーが手元PCで1回だけ）
 
@@ -24,7 +24,7 @@ description: YouTube配信オペレーター役。完成した本編/Shortsを�
 
 ## 手順
 
-1. **QA通過を確認**してから実行（verify_episode / verify_shorts がPASSしていない動画は上げない）
+1. **QA通過を確認**してから実行：verify_episode / verify_shorts が PASS、かつ `<回のフォルダ>/quality_record.md` の末尾が「機械検査の結果：PASS」（ビルド後の音声の読みの照合を含む）。どちらかが欠ける動画は上げない
 2. **サムネイル生成**（本編のみ。無ければ必ず作ってから上げる）：
    ```bash
    python3 _tools/publish/make_thumbnail.py <ep_dir>   # → <ep_dir>/thumbnail.png
@@ -59,14 +59,14 @@ description: YouTube配信オペレーター役。完成した本編/Shortsを�
 
 ## APIで自動化できないもの（must: ユーザーへ明示）
 
-- **Shortsの「関連動画」リンク**（送客の本命導線。Studio → Short → 関連動画で手動設定）
+- **24話の Shorts の「関連動画」リンク**（送客の本命導線。Studio → Short → 関連動画で手動設定）。第2シリーズは統合運営側が公開後に代行する（Issue #1）
 - **固定コメントのピン留め**（コメント投稿までは自動、ピン留めはStudio）
 - エンドスクリーン・カード
 
 ## クォータ・制約
 
 - videos.insert=1600単位／thumbnails.set=50／playlistItems.insert=50。
-  既定1日10,000単位 ≒ **動画6本/日**（本編1+Shorts3の1話ぶんで約5,000単位）
+  既定1日10,000単位 ≒ **動画6本/日**（リセットは太平洋時間0時＝日本時間で夏16時・冬17時）（本編1+Shorts3の1話ぶんで約5,000単位）
 - OAuth同意画面が「テスト」のままだとリフレッシュトークンは**7日で失効**
   → 運用に乗せる時は同意画面を「本番」に押し上げる（審査は youtube.upload スコープのみなら軽い）
 - アップロード先はトークンのGoogleアカウントのチャンネル。ブランドアカウントの場合は
@@ -77,8 +77,9 @@ description: YouTube配信オペレーター役。完成した本編/Shortsを�
 - [ ] 全動画が private で Studio に並び、タイトル/概要欄/タグが description.md と一致
 - [ ] publish_manifest.json に videoId が記録されている
 - [ ] 手動作業チェックリストをユーザーに提示済み
+- [ ] 第2シリーズ：mp4 がレビュー便（Drive）に送られ、中身を差し替えたときは新旧の videoId を Issue #2 に書いた
 
 ## 引き継ぎ
 
 ← **yt-video-editor / yt-shorts-video-editor**（ビルド済みmp4を受け取る）
-→ ユーザー（Studioで最終確認 → 公開 or 公開予約の確定）→ 公開後 **yt-analyst**
+→ 予約公開（`publish_episode.py`／`ura_schedule.py`）→ 公開後 **yt-analyst**

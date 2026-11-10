@@ -9,7 +9,7 @@
 0b. GitHub の Issue を確認：#2（レビュー便）に新しい差し替え指示があれば README §5 の手順で先に対応し、Issue #2 に結果を書く。#1 などに CMO の「題材候補」があれば topic-pool に入れる。
 1. 題材の補充：s2_ura/topic-pool.md の候補が10本未満なら、README §2 の4種類の情報源（企業の公式発表・決算／規制当局／業界メディア／SNS の先行バズ→要裏取り）から直近3〜6か月の実例を探して足す（各候補に：冒頭の問い・事例・数字・情報源2つ以上のURL・日付・3条件の判定）。数字が2つの情報源で一致しないものは「保留」にする。
 2. 作る枠を決める：s2_ura/schedule.json を見て、2026-11-29 以降で「今日＋5日」までの日付のうち Short が入っていない日を埋める（1日1本、18時）。ただし金曜は差し込み枠：月曜のジョブは空けておき、木曜のジョブが速報題材（無ければプール上位）で埋めて s2_ura/insert-slot-log.md に採否と理由を1行書く。土曜にケースファイルが無い週は、月曜のジョブで前の週の公開7日後の再生が最も多い Short の続きを cNN として作る。埋める枠が無ければ 1 だけで終了し、通知しない。
-3. 各枠：topic-pool から1本選ぶ（同じ会社・同じ研究を2週以内に使わない）→ uNN（次の番号）で shorts.md（**鮮度：** 時事（YYYY-MM）・新事例型／ハイブリッド（…）を書く。3条件を満たさない新事例はハイブリッド型）と spec.py → gen_stage → verify_shorts PASS → VOICEVOX の読み確認（audio_query の kana）→ 使った候補を topic-pool から「使用済み」に移す。
+3. 各枠：topic-pool から1本選ぶ（同じ会社・同じ研究を2週以内に使わない）→ uNN（次の番号）で shorts.md（**鮮度：** 時事（YYYY-MM）・新事例型／ハイブリッド（…）を書く。3条件を満たさない新事例はハイブリッド型）と spec.py → 固有名詞を docs/proper-nouns.md に足して proper_nouns.py --verify（確認できない名前は使わない）→ shorts.md に「## 数字の確認」の表（各数字2サイト）→ build_telop_spec.py → gen_stage → verify_shorts PASS → python3 _tools/checks/quality_record.py <dir> が PASS（読み R・数字 F・文章 A・テロップ T。基準は quality-gates.md）→ 使った候補を topic-pool から「使用済み」に移す。
 4. ビルドとアップ：bash _tools/pipeline/run_shorts.sh <dir> --upload（ケースファイルは case.json → build_case_slide.py → verify_episode → run_episode.sh --upload）。動画のアップは1日6本まで（17:00 JST に回復）。超えた分は send_later で翌日17:10に回す。
 5. schedule.json に {"id": "uNN", "date": "YYYY-MM-DD"} を足す → python3 _tools/publish/ura_schedule.py --apply --playlist（番号順に昇順でないと拒否される。ずれたら日付を直す）。
 6. 成果物をコミット → 基点ブランチと claude/note-articles へ push。

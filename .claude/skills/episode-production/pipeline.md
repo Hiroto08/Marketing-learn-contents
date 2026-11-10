@@ -31,9 +31,9 @@ FAILしたら出力に修正指示が出る。自分で品質判断を発明し�
 4. mp4・サムネは SendUserFile で納品する。**Shortsは1エピソードずつ（3本単位）で送り、
    captionに各本のタイトル（shorts.mdのタイトル案）を番号付きで列挙**して識別できるようにする
    （ファイル名は `<episode>_short<N>_final.mp4` でエピソードと番号は自明。captionで各本の中身を補う）
-5. 完了報告の定型: Studio URL／尺／A/V差／LUFS／残る手動作業（公開ボタン・関連動画リンク・
+5. 完了報告の定型: Studio URL／尺／A/V差／LUFS／品質検査の結果（quality_record.md の末尾）／残る手動作業（24話の Shorts の関連動画リンク・
    エンドスクリーン）。FAILで止まった場合は、どのゲートで何を直せば良いかを報告
-6. quotaExceeded は「翌日16時(JST)に同コマンド再実行」で継続し、その旨をユーザーに伝える
+6. quotaExceeded は「翌日のリセット時刻（太平洋時間0時＝日本時間で夏は16時・冬は17時）以降に同コマンド再実行」で継続し、その旨をユーザーに伝える
 7. このファイルとスキルに既定がある事項は**ユーザーに質問せず既定に従う**
 
 ## 製造フェーズの実行手順（コピペで順に）
@@ -57,7 +57,7 @@ git add <ep_dir> && git commit -m "EPNN: build+upload (videoId等をメッセー
 ビルドは重いので、対話セッションでは `run_in_background` で実行し Monitor/通知で待つのが正しい。
 `--upload` を外せばアップロード以外を実行する（クォータ節約・検品だけしたい時）。
 
-## クォータ（YouTube Data API・1日10,000単位、太平洋時間0時=日本時間16時リセット）
+## クォータ（YouTube Data API・1日10,000単位、太平洋時間0時にリセット＝日本時間で夏時間16時・冬時間17時）
 
 | 操作 | 単位 | 備考 |
 |---|---|---|
@@ -79,10 +79,14 @@ publish_manifest.json による冪等化があるので**同じコマンドの�
 | verify_episode / verify_shorts FAIL | 出力の✗行が具体的な修正対象。該当ファイルを直して再実行（ナレーション不一致→NARRATIONS/spec.pyをmdに合わせる、セーフエリア侵犯→`<br>`位置や文言短縮） |
 | verify「推定尺 < 8:15」/ postbuild「最低尺 < 8:00」 | 本編は**最低8分**（水増しでなく内容で増補：事例の具体描写・数字の根拠・適用手順の細分化）。script.mdとNARRATIONSを同時に増補（文字一致維持）→verify PASS→再ビルド。narration-rules.md「尺の目安」参照 |
 | postbuild「A/V 単体超過」 | 表示されたコマンド通り該当slide_NN.mp4を消して `--slide N` 付きで再ビルド→postbuild再実行 |
-| スライドの**見た目だけ**変えた（ナレーション不変） | 録画キャッシュはナレーションハッシュ鍵のため自動では再録画されない。`video_build/out/.work/slides/slide_NN.mp4`（と`.json`）を削除してから run_episode.sh 再実行 |
+| スライドの**見た目だけ**変えた（ナレーション不変） | 自動で録り直される（録画キャッシュの鍵に、スライドの見た目と要素の出る時刻を含めた。2026-11-07）。録り直されないときは `built_readings.json` と mp4 の時刻を確かめる |
 | postbuild「LUFS帯外」 | ビルドコマンドの `--bgm/--sfx-dir` 指定漏れが典型。run_episode.sh経由なら起きない |
 | Shortsのvideoストリーム欠落 | エンジンが3回まで自動再録画する。それでも残ればverify出力の指示通り`--slide N`で再録画。stage.htmlの`#__heartbeat`を消していないか確認 |
-| アップロードで`quotaExceeded` | 本日分終了。翌日16時（JST）以降に同じコマンドを再実行（冪等なので安全） |
+| アップロードで`quotaExceeded` | 本日分終了。翌日のリセット時刻（夏16時・冬17時 JST）以降に同じコマンドを再実行（冪等なので安全） |
+| 読み検査 `check_readings.py` FAIL | 出力の番号（R1〜R10）ごとに quality-gates.md §1 の「直し方」に従う。R1＝台帳に足す or 名前を消す／R2＝`proper_nouns.py --verify`／R3〜R8＝make_video.py の辞書／R9＝ビルドし直す／R10＝読みを確かめて reading_confirmed.txt か辞書 |
+| 数字の確認 `check_facts.py` FAIL | 台本の `## 数字の確認` の表に行を足す（F1・F3）。情報源が1サイトしか無い数字は、2つめを探すか、その数字を使わない（F2） |
+| AI臭さ検査 `check_style.py` FAIL | 出力の番号（A1〜A7・T1〜T2）の文を書き直す。ナレーションを直したら script.md／case.json／shorts.md と NARRATIONS を同じ文にする |
+| `quality_record.py` FAIL | `<回のフォルダ>/quality_record.md` の ✗ の行を直して、同じコマンドを再実行 |
 | トークン更新失敗 | Secrets（YT_CLIENT_ID/SECRET/REFRESH_TOKEN）未設定か、OAuth同意画面がテストのまま7日失効。yt-uploader SKILL.md参照 |
 | ディスク`no space left` | 大きい不要物を消す: `/tmp/vv_layer.tgz`、過去EPの `video_build/out/.work` |
 
@@ -90,13 +94,15 @@ publish_manifest.json による冪等化があるので**同じコマンドの�
 
 - `vertical_template.html`・stage.htmlの**エンジン部分**（keyframes / rv-* / `.se` / `#__heartbeat`）を編集しない。Shortsの見た目は**spec.pyだけ**をいじって`gen_stage.py`で再生成する
 - mp4をコミットしない（gitignore済み）。stage.html / spec.py / thumbnail.png / publish_manifest.json は**コミットする**
-- `--privacy public` にしない。公開は人間がStudioで押す
+- `--privacy public` にしない。公開は `publish_episode.py`（24話）／`ura_schedule.py`（第2シリーズ）の予約公開だけ
+- 公開済みの動画を差し替えない。公開前の動画の差し替えは、社長の承認を受けてから（quality-gates.md P1・P2）
+- 品質検査（check_readings／check_facts／check_style）を、`style_legacy.txt` や `reading_confirmed.txt` に行を足して通さない。足してよい条件は各ファイルの冒頭に書いてある
 - NARRATIONSやタイムスタンプを目分量で書かない（前者はshorts.mdと文字一致、後者はpostbuildが実測で書く）
 - クォータの日次上限を超えて連投しない（quotaExceededを見てからでよい）
 
 ## 公開前の手動作業（APIで不可能・ユーザーに引き渡す定型リスト）
 
-- [ ] Studioで各動画の最終確認 → 公開 or 公開予約
-- [ ] **各Shortの「関連動画」に本編を設定**（唯一のクリック可能な送客導線）
+- [ ] **24話の各Shortの「関連動画」に本編を設定**（唯一のクリック可能な送客導線）。第2シリーズは統合運営側が公開後に代行する（Issue #1）ので不要
 - [ ] 固定コメントのピン留め／エンドスクリーン・カード
-- [ ] AI音声（VOICEVOX）利用の開示申告
+- [ ] レビュー便（Drive）で聞いた人が、`quality_record.md` の「耳で確かめる項目」V1〜V4 を記入
+- 公開ボタン・公開予約は手動ではない（`publish_episode.py`／`ura_schedule.py` が予約する）。AI音声の開示申告も、アップロード時に自動で付く

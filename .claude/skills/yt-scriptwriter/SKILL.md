@@ -20,11 +20,15 @@ description: YouTube動画制作の脚本家役。ストーリー設計ワーク
 6. **ルーブリック§5で自己採点**：10項目×1点、各項目に1行根拠を制作メモに記録。**8点未満の項目は書き直して再採点**
 7. **機械検査**：`python3 _tools/checks/verify_episode.py <episode_dir> --no-browser` の「3) ナレーション品質」をPASSさせる（冒頭禁止句/そして≤2/問いかけ≥3/逆接因果≥6/S18開ループ）
 8. 読みルール適用：`.claude/skills/episode-production/narration-rules.md` の訓読み置換（〜方→かた等）・略語チェック
+9. **固有名詞は台帳にあるものだけを使う**（`docs/proper-nouns.md`。yt-researcher が読みを確かめた行）。台帳に無い名前を書いたら、リサーチャーに戻すか、名前を出さない表現にする
+10. **AI臭さ検査**：`python3 _tools/checks/check_style.py <episode_dir>` を PASS させる（quality-gates.md A1〜A7：語尾の連続・「のです」10%以下・同じ接続詞3回まで・過去の回と同じ文を使わない・1文80字以内・「ではなく」3回まで・定型句なし）。**構成の型は使ってよいが、型を示す文（「ここで1つ問題が残ります」等）を過去の回から写さない**
 
 ## 完了条件（全て）
 - [ ] script.md完成（パッケージング表・ワークシート・18枚・制作メモ・実在出典）
 - [ ] ルーブリック≥8/10（採点表が制作メモにある）
 - [ ] §3機械検査PASS（出力を報告に含める）
+- [ ] `check_style.py` が RESULT: PASS（A1〜A7・T1〜T2。実測値を制作メモに貼る）
+- [ ] `check_facts.py` が RESULT: PASS（ナレーションの数字・西暦がすべて「## 数字の確認」の表にある）
 
 ## 引き継ぎ
-→ **yt-voice-director**（新出の英字略語・固有名詞リストを渡す）→ **yt-slide-designer**
+→ **yt-voice-director**（固有名詞は台帳に入っている状態で渡す。新出の英字略語を伝える）→ **yt-slide-designer**
