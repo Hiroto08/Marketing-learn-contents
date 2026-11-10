@@ -3,6 +3,7 @@
 # run_shorts.sh — エピソードのShortsを「生成→QA→縦型ビルド→A/V検証→(アップロード)」まで一気通貫。
 #
 #   bash _tools/pipeline/run_shorts.sh <episode_dir> [--upload]
+#   ONLY=short2 bash _tools/pipeline/run_shorts.sh <episode_dir>     # その1本だけ作り直す（他の Short の mp4 は変えない）
 #
 # 前提: <episode_dir>/shorts_build/shortN/spec.py が存在すること（Nは1〜）。
 #       spec.py の書き方は _tools/shorts_template/gen_stage.py 冒頭のdocstring参照。
@@ -31,6 +32,9 @@ specs=("$EP"/shorts_build/short*/spec.py)
 for spec in "${specs[@]}"; do
   d="$(dirname "$spec")"
   name="$(basename "$d")"
+  # ONLY=short2 のように指定したら、その1本だけを作り直す。作り直した mp4 はバイトが変わり、
+  # アップロードで「中身が変わった」と判定されるので、直す必要のない Short まで差し替えないため
+  if [ -n "${ONLY:-}" ] && [ "$name" != "$ONLY" ]; then echo "（$name は対象外：ONLY=$ONLY）"; continue; fi
 
   step "$name 1/4 stage生成 (gen_stage)"
   python3 _tools/shorts_template/gen_stage.py "$spec" "$d/stage.html"
