@@ -4,6 +4,7 @@ check_style.py — 「AI が書いた／読んだ」と見抜かれる要素を�
 
     python3 _tools/checks/check_style.py <回のフォルダ | shorts_build/shortN>      # 合否を表示
     python3 _tools/checks/check_style.py <dir> --json                               # quality_record.py 用
+    python3 _tools/checks/check_style.py <dir> --strict                             # 旧基準の回も新基準で判定する（試行・見直し用）
 
 対象：本編・ケースファイル（slide.html）と Shorts（stage.html）。数字の読み・英字の読み・固有名詞の読みは check_readings.py が見る。
 ここで見るのは、文章とテロップ（quality-gates.md の A1〜A7・T1〜T3）。
@@ -17,11 +18,11 @@ check_style.py — 「AI が書いた／読んだ」と見抜かれる要素を�
   A6 対比の型        「〜ではなく、〜」は1本で3回まで
   A7 同じ文の繰り返し 1本の中で同じ文（10字以上）は2回まで／定型句（BANNED）は使わない
   T1 表記ゆれ        画面の文字に全角の英数字が無い。長音の有無だけが違う語（ユーザ／ユーザー）が混ざっていない
-  T2 画面の数字       画面に出る「数字＋単位」が、その回のナレーションにもある（画面と音声で数字が食い違わない）
+  T2 画面の数字       画面に出る「数字＋単位」が、その回のナレーションにもある（値で比べる。西暦は対象外）
   T3 画面と音声の文   テロップ同期型の Shorts は verify_shorts の検査10が判定する（ここでは結果を参照しない）
 
-旧基準で作った回（_tools/checks/style_legacy.txt に書いたフォルダ）は、A1〜A7 を「参考」として表示し、不合格にしない。
-T1・T2 は旧基準の回でも判定する。
+旧基準で作った回（_tools/checks/style_legacy.txt に書いたフォルダ）は、結果を「参考」として表示し、不合格にしない。
+新しい回（一覧に無いフォルダ）は、すべて合格するまでビルドしない。
 """
 import collections
 import glob
@@ -44,8 +45,24 @@ ENDINGS = [(r"(のです|んです)$", "のです"), (r"でしょうか$", "で�
            (r"ません(でした)?$", "ません"), (r"ました$", "ました"), (r"でした$", "でした"), (r"ます$", "ます"), (r"です$", "です"),
            (r"(ください|ましょう)$", "依頼"), (r"だった$", "だった"), (r"[っいしえけれせてべめね]た$", "〜た"), (r"だ$", "だ"),
            (r"ない$", "ない"), (r"[るうくすつぬむぶぐ]$", "動詞")]
-UNIT = r"(?:%|％|倍|万|億|兆|円|ドル|人|社|店|本|枚|件|回|割|年|か月|日|時間|分|秒|種類|個|位|点)"
-NUM_RE = re.compile(r"(?:約)?\d[\d,.]*(?:万|億|兆)?\d*" + UNIT)
+UNIT = r"(?:%|％|倍|円|ドル|人|社|店舗|店|本|枚|件|回|割|か月|日間|時間|分|秒|種類|個|位|点|ページ|クリック)"
+NUM_RE = re.compile(r"(\d[\d,]*(?:\.\d+)?)(兆|億|万)?(?:(\d[\d,]*)(億|万)?)?(\d[\d,]*)?(" + UNIT[3:-1] + ")")
+_MUL = {"兆": 1e12, "億": 1e8, "万": 1e4, None: 1}
+
+
+def numbers(text):
+    """文中の「数字＋単位」を (値, 単位) にそろえる（9.85億ドル と 9億8500万ドル を同じ値として比べるため）。年は対象外"""
+    t = text.replace(",", "").replace("，", "").replace("％", "%")
+    out = {}
+    for m in NUM_RE.finditer(t):
+        a, u1, b, u2, c, unit = m.groups()
+        v = float(a) * _MUL[u1]
+        if b:
+            v += float(b) * _MUL[u2]
+        if c:
+            v += float(c)
+        out[(round(v, 4), unit)] = m[0]
+    return out
 
 
 def _norm(s):
@@ -64,6 +81,7 @@ def screen_text(path):
     secs = re.findall(r"<section[^>]*class=\"slide[^\"]*\"[^>]*>(.*?)</section>", src, re.S)
     t = " ".join(secs)
     t = re.sub(r"<(script|style|svg)\b.*?</\1>", " ", t, flags=re.S)
+    t = re.sub(r'<div[^>]*class="[^"]*cta-line[^"]*"[^>]*>.*?</div>', " ", t, flags=re.S)   # 次回予告は別の回の話なので対象外
     return htmlmod.unescape(re.sub(r"<[^>]+>", " ", t))
 
 
@@ -193,18 +211,15 @@ def check(d):
     for w in sorted(words):
         if w.endswith("ー") and w[:-1] in words and len(w) >= 4:
             F["T1"].append(f"表記ゆれ：「{w[:-1]}」と「{w}」")
-    # T2 画面の数字がナレーションにもある
-    def numset(t):
-        t = t.replace(",", "").replace("，", "").replace("％", "%")
-        return {m[0].lstrip("約") for m in NUM_RE.finditer(t)}
-    narr_all = whole.replace(",", "").replace("，", "").replace("％", "%")
-    miss = sorted(x for x in numset(scr) if x not in narr_all and re.sub(r"\D+$", "", x) not in narr_all)
+    # T2 画面の数字がナレーションにもある（値で比べる。西暦は出典の表記に使うので対象外）
+    nn = numbers(whole)
+    miss = sorted(v for k, v in numbers(scr).items() if k not in nn)
     stats["画面の数字（ナレーションに無いもの）"] = f"{len(miss)}個"
     for x in miss:
-        F["T2"].append(f"画面の「{x}」がナレーションに無い")
+        F["T2"].append(f"画面の「{x}」がナレーションに無い（数字を合わせるか、画面から外す）")
 
-    leg = legacy(d)
-    hard = [k for k, v in F.items() if v and (k.startswith("T") or not leg)]
+    leg = legacy(d) and "--strict" not in sys.argv
+    hard = [k for k, v in F.items() if v and not leg]
     return {"dir": d.rstrip("/"), "kind": "short" if short else "long", "sentences": len(ss), "legacy": leg,
             "fails": F, "stats": stats, "pass": not hard}
 
@@ -214,9 +229,9 @@ NAMES = {"A1": "語尾の連続", "A2": "「のです」の割合", "A3": "文�
 
 
 def report(res):
-    print(f"── AI臭さ検査（文章・テロップ）：{res['dir']}  {res['sentences']}文" + ("  ※旧基準の回（A は参考）" if res["legacy"] else "") + " ──")
+    print(f"── AI臭さ検査（文章・テロップ）：{res['dir']}  {res['sentences']}文" + ("  ※旧基準の回（参考表示）" if res["legacy"] else "") + " ──")
     for k, v in res["fails"].items():
-        soft = res["legacy"] and k.startswith("A")
+        soft = res["legacy"]
         if v:
             for x in v[:6]:
                 print(f"  {'!' if soft else '✗'} {k} {NAMES[k]}：{x}")

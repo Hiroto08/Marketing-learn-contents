@@ -16,11 +16,24 @@ note編集現場の「校了チェック」を機械化したもの。主観的�
   5. 空セクション禁止（##直後に本文が無い）
   6. CTA：チャンネルURLがある（動画URLは任意＝未公開回は省略可）
   7. ハッシュタグ：3〜8個
+  ── 2026-11-10 追加（社長指示・Issue #2。quality-gates.md の N1〜N7）──
+  N1 自分の呼び方：本文に「自社」「弊社」「当社」が無い（書き手は「自分」。読者の会社は「あなたの会社」「自分の会社」）
+  N2 タイトルの数字：タイトルに算用数字が1つ以上ある（数字・実績が伝わる）
+  N3 対象の絞り込み：記事の末尾に <!-- 対象読者: 誰向けか｜キーワード1 キーワード2 --> があり、
+     キーワードのどれかがタイトルか冒頭300字にある
+  N4 冒頭の価値：最初の見出し（##）より前の文章に「数字＋単位」が1つ以上あり、読者の得を言う文
+     （〜がわかる・〜できる・〜の理由・〜の手順 など）がある。<!-- 有料ライン --> があるときは、それより前で判定する
+  N5 定型句：AI が書いたと見抜かれる定型句（いかがでしたか 等。check_style.py の BANNED）が無い
+  N6 語尾の連続：同じ語尾が4文以上続かない
+  N7 数字の出どころ：本文の「数字＋単位」が、対応する回の script.md のナレーションにある（記事で新しい数字を足さない）。
+     足すときは、記事の末尾に <!-- 追加の数字: 値｜URL1｜URL2 --> を書く（2ソース）
 """
 import glob
 import os
 import re
 import sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 CTA_MARKER = "この記事は動画でも見られます"
 
@@ -100,7 +113,71 @@ def check_file(path: str):
     elif body_chars > 6000:
         warns.append(f"本文が多め（{body_chars}字 / 分割検討）")
 
+    fails += quality_checks(path, md, title, body)
     return fails, warns
+
+
+def quality_checks(path, md, title, body):
+    """N1〜N7（2026-11-10 追加）"""
+    import check_style as CS
+    out = []
+    prose = "\n".join(l for l in body.splitlines() if not l.lstrip().startswith("#"))
+    prose = re.sub(r"<!--.*?-->", "", prose, flags=re.S)
+    # N1
+    for w in ("自社", "弊社", "当社"):
+        n = prose.count(w)
+        if n:
+            out.append(f"N1 「{w}」が{n}か所（書き手は「自分」、読者の会社は「あなたの会社／自分の会社」と書く）")
+    # N2
+    if not re.search(r"\d", title):
+        out.append("N2 タイトルに数字が無い（数字・実績が伝わる形にする）")
+    # N3
+    lead_all = body.split("\n## ")[0]
+    paid = md.find("<!-- 有料ライン -->")
+    free = md[:paid] if paid != -1 else lead_all
+    head300 = re.sub(r"\s", "", re.sub(r"^#\s+.+$", "", lead_all, flags=re.M))[:300]
+    m = re.search(r"<!--\s*対象読者[:：]\s*(.+?)\s*-->", md)
+    if not m or "｜" not in m[1]:
+        out.append("N3 <!-- 対象読者: 誰向けか｜キーワード --> が無い")
+    else:
+        kws = [k for k in re.split(r"[\s　、,]+", m[1].split("｜", 1)[1]) if k]
+        if not any(k in title or k in head300 for k in kws):
+            out.append(f"N3 対象読者のキーワード（{'・'.join(kws)}）が、タイトルにも冒頭300字にも無い")
+    # N4
+    free_txt = re.sub(r"^#\s+.+$", "", free, flags=re.M)
+    if not CS.numbers(free_txt):
+        out.append("N4 冒頭（無料で読める部分）に「数字＋単位」が無い")
+    if not re.search(r"わかります|分かります|わかる|分かる|できます|できる|理由|手順|方法|やり方|やりかた|コツ|ひもと", free_txt):
+        out.append("N4 冒頭（無料で読める部分）に、読者の得を言う文（〜がわかる・〜できる・理由・手順）が無い")
+    # N5
+    for b in CS.BANNED:
+        if b in prose:
+            out.append(f"N5 定型句「{b}」を使っている")
+    # N6
+    sents = [x for x in re.split(r"(?<=[。！？])\s*", re.sub(r"\n+", "", prose)) if len(x) > 3]
+
+    def cls(x):
+        x = re.sub(r"[。！？!?」』\s]+$", "", x)
+        for pat, c in CS.ENDINGS:
+            if re.search(pat, x):
+                return c
+        return "体言止め"
+    cs = [cls(x) for x in sents]
+    run = 1
+    for i in range(1, len(cs)):
+        run = run + 1 if cs[i] == cs[i - 1] else 1
+        if run == 4:
+            out.append(f"N6 語尾「{cs[i]}」が4文続く（…{sents[i][-18:]}）")
+    # N7
+    em = re.search(r"ep(\d+)_", os.path.basename(path))
+    scripts = glob.glob(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", f"0*/ep{em[1]}_*/slide.html")) if em else []
+    if scripts:
+        narr = CS.numbers("".join(CS.sents_of(scripts[0])))
+        extra = CS.numbers(" ".join(re.findall(r"<!--\s*追加の数字[:：]\s*(.+?)\s*-->", md)))
+        miss = sorted(v for k, v in CS.numbers(prose).items() if k not in narr and k not in extra)
+        if miss:
+            out.append(f"N7 動画（ナレーション）に無い数字：{miss[:6]}（消すか、<!-- 追加の数字: … --> に2ソースを書く）")
+    return out
 
 
 def main():

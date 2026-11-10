@@ -28,8 +28,12 @@ curl -s -m3 http://127.0.0.1:50021/version || { echo "FAIL: VOICEVOXが起動し
 
 step "1/5 QA (verify_episode)"
 python3 _tools/checks/verify_episode.py "$EP"
-echo "── 読み検査・ビルド前（固有名詞の台帳・確認ソース・辞書登録・数字と英字の読み。quality-gates.md R1〜R8） ──"
+echo "── 読み検査・ビルド前（固有名詞の台帳・確認ソース・辞書登録・数字と英字の読み・読みの食い違い。quality-gates.md R1〜R10） ──"
 python3 _tools/checks/check_readings.py "$EP" --main --review
+echo "── 数字の確認（2ソース。F1〜F3） ──"
+python3 _tools/checks/check_facts.py "$EP"
+echo "── AI臭さ検査（文章・テロップ。A1〜A7・T1〜T2） ──"
+python3 _tools/checks/check_style.py "$EP"
 
 step "2/5 ビルド (make_video: BGM+SFXミックス込みのシリーズ標準)"
 python3 _tools/video/make_video.py "$EP/slide.html" \
@@ -60,5 +64,7 @@ else
 fi
 
 echo
+echo "── 品質検査の実施記録（$EP/quality_record.md。コミットする） ──"
+python3 _tools/checks/quality_record.py "$EP" || { echo "FAIL: 品質検査に不合格の項目がある（$EP/quality_record.md）"; exit 1; }
 echo "EPISODE PIPELINE PASS: $EP"
 echo "残りの手作業: タイムスタンプ/サムネ/manifestのコミット・push、Studioで公開確認"

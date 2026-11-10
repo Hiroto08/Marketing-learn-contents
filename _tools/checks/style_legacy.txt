@@ -1,0 +1,24 @@
+# AI臭さ検査（check_style.py）の A1〜A7 を「参考表示」にとどめる回。2026-11-10 より前に台本を書いた回だけを書く。
+# ここに新しい回を足さない（新しい回は合格するまで直す）。公開前の回を書き直したら、その行を消す。
+01_beginner
+02_intermediate
+03_practical
+04_ai-usage
+05_advanced
+06_case-studies
+s2_ura/c01_jcpenney-fair-and-square
+s2_ura/c02_meeting-300k-hours
+s2_ura/u01_jcpenney-sale
+s2_ura/u02_scarcity-cookie
+s2_ura/u03_four-point-two
+s2_ura/u04_checkout-sweets
+s2_ura/u05_tesco-clubcard
+s2_ura/u06_top5-menu
+s2_ura/u07_ai-ads
+s2_ura/u08_amazon-cancel
+s2_ura/u09_costco-hotdog
+s2_ura/u10_no1-claims
+s2_ura/u11_meeting-hours
+s2_ura/u12_jam-tasting
+s2_ura/u13_towel-norm
+s2_ura/u14_followers-shirts

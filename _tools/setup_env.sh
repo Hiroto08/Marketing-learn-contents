@@ -44,6 +44,8 @@ python3 -c "import playwright" >/dev/null 2>&1 || {
   log "pip install playwright"
   python3 -m pip install --quiet "playwright==1.56.0"   # 同梱 chromium-1194 と合う版に固定。pip3 は別の python を指すことがある（2026-11）
 }
+# 読み検査（check_readings.py）の形態素解析。辞書同梱・純 Python
+python3 -c "import janome" >/dev/null 2>&1 || { log "pip install janome"; python3 -m pip install --quiet janome; }
 export PLAYWRIGHT_BROWSERS_PATH="$PWB"
 # The base image ships a cached chromium build (e.g. chromium-1194) but the
 # installed playwright may expect a different revision number, and the official

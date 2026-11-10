@@ -21,6 +21,9 @@ run_episode.sh / run_shorts.sh が、ビルドの前（原稿の検査）と後�
   R6 数字：西暦は4桁で読む（下2桁読みは FAIL）。①②③ は「ひとつめ・ふたつめ・みっつめ」。
   R7 英字：英字の語は ABBR_MAP（読みの指定）か台帳にある。無ければ FAIL（VOICEVOX まかせにしない）。
   R8 既知の誤読：過去に起きた誤読の型（BAD）に当たらない。新しい誤読を見つけたら BAD に足す。
+  R10 読みの食い違い：別の辞書（形態素解析 janome）の読みと VOICEVOX の読みが違う語が、確認済みリスト
+     （_tools/checks/reading_confirmed.txt）にある。無ければ FAIL。読みを確かめ、正しければリストに足し、
+     間違っていれば辞書（COMPOUND_DICT／READING_MAP）で直す。未知の誤読（例：行＝くだり、埋まらない＝うずまらない）を拾うための網。
   --built のときは加えて
   R9 音声が今の原稿のものである：built_readings.json の文が、今のナレーションの文と1文ずつ一致する。
 """
@@ -53,6 +56,15 @@ BAD = [
     (r"何(でしょう|です|の|だっ|なの)", "ナニ(デショ|デス|ノ|ダッ|ナノ)", "何（なん）でしょう・何の"),
     (r"①", "イチツメ", "①＝ひとつめ"),
     (r"TOP\s*5|トップ5", "トップゴ", "TOP5＝トップファイブ"),
+    # ── 公開済み EP01〜22 の音声を再現して見つけた型（差し替えはしない。今後のための記録。2026-11-10）──
+    (r"仕掛け人", "シカケジン", "仕掛け人（しかけにん）"),
+    (r"高品質", "タカシナ", "高品質（こうひんしつ）が人名読みになる"),
+    (r"(?<![一-龥])行(?![一-龥っきくけこいうえ])", "クダリ|ナイユキ", "行（ぎょう）。辞書では直らない。ナレーションは「ぎょう」とかなで書くか「欄」に言い換える"),
+    (r"埋まら", "ウズマラ", "埋（う）まらない"),
+    (r"一光", "カズミツ", "田中一光（いっこう）"),
+    (r"生の声", "セエノコエ", "生（なま）の声"),
+    (r"細けれ", "コマカケレ", "細（ほそ）ければ"),
+    (r"前と後", "ゼント", "前（まえ）と後（あと）"),
 ]
 KATA_RE = re.compile(r"[ァ-ヶー]{4,}")
 LATIN_RE = re.compile(r"[A-Za-z][A-Za-z0-9&'.]*")
@@ -90,6 +102,83 @@ def built_path(src):
 _TOK = None
 
 
+def confirmed():
+    """確認済みの読み {表記: {読み（照合用）}}"""
+    p = os.path.join(HERE, "reading_confirmed.txt")
+    out = {}
+    if os.path.exists(p):
+        for line in open(p, encoding="utf-8"):
+            if line.strip() and not line.startswith("#") and "\t" in line:
+                a, b = line.rstrip("\n").split("\t")[:2]
+                out.setdefault(a, set()).update({P.norm_kana(b), P.norm_kana(b, merge=True)})
+    return out
+
+
+def _jread(clean):
+    """janome の読み（トークンごと）→ [(表記, {読みの候補}) | (表記, None)]。数字・助数詞・記号・読み不明は照合しない"""
+    global _TOK
+    if _TOK is None:
+        from janome.tokenizer import Tokenizer
+        _TOK = Tokenizer()
+    out, prev_num = [], False
+    for t in _TOK.tokenize(clean):
+        pos, r, surf = t.part_of_speech, t.reading, t.surface
+        isnum = bool(re.fullmatch(r"[\d,.%０-９]+", surf)) or "名詞,数" in pos
+        if isnum or pos.startswith("記号") or "助数詞" in pos or prev_num:
+            out.append((surf, None))
+            prev_num = isnum
+            continue
+        prev_num = False
+        if r == "*":
+            r = surf if re.fullmatch(r"[ァ-ヶーぁ-ゖ]+", surf) else None
+        if not r:
+            out.append((surf, None))
+            continue
+        c = {P.norm_kana(r), P.norm_kana(r, merge=True)}
+        if pos.startswith("助詞") and surf.endswith("は"):
+            c |= {x[:-1] + "ワ" for x in list(c)}
+        if pos.startswith("助詞") and surf == "へ":
+            c.add("エ")
+        if surf in ("う", "よう", "ましょう", "でしょう", "だろう"):
+            c |= {x[:-1] + "オ" for x in list(c)}
+        if surf in ("実は", "それでは", "では", "には", "とは", "のは", "ては", "または", "あるいは", "まずは", "かたは"):
+            c |= {x[:-1] + "ワ" for x in list(c)}
+        out.append((surf, c))
+    return out
+
+
+def cross_check(sent, k):
+    """[(表記, 別辞書の読み, VOICEVOX の読み)]：2つの辞書で読みが食い違う語"""
+    eng = P.norm_kana("".join(k))
+    toks = _jread(M.clean_for_tts(sent))
+    pos, bad = 0, []
+
+    def seek(i):
+        nxt = next((x for _, x in toks[i + 1:] if x), None)
+        js = [j for j in (eng.find(v, pos) for v in (nxt or ())) if j >= 0]
+        return min(js) if js else None
+    loose = False                 # 直前が数字など（照合しない語）なら、位置の制限をゆるめる
+    for i, (surf, c) in enumerate(toks):
+        if c is None:
+            j = seek(i)
+            pos = j if j is not None else pos
+            loose = True
+            continue
+        if loose and max(len(v) for v in c) <= 1:
+            continue              # 数字の直後の1文字の語（に・は・を）は位置が定まらないので照合しない
+        hit = [(j, v) for j, v in ((eng.find(v, pos), v) for v in c) if j >= pos and (loose or j - pos <= 4)]
+        loose = False
+        if hit:
+            j, v = min(hit)
+            pos = j + len(v)
+            continue
+        j = seek(i)
+        got = eng[pos:j] if j is not None and j > pos else eng[pos:pos + len(sorted(c)[0]) + 2]
+        bad.append((surf, sorted(c)[0], got))
+        pos = j if j is not None else pos
+    return bad
+
+
 def candidates(text):
     """固有名詞らしい語（形態素解析の固有名詞／辞書に無いカタカナ語・英字）"""
     global _TOK
@@ -118,7 +207,8 @@ def check(d, built=False, review=False, main_only=False):
     abbr = set(M.ABBR_MAP)
     if not built:
         M.seed_user_dict(URL)
-    F = {k: [] for k in ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9")}
+    F = {k: [] for k in ("R1", "R2", "R3", "R4", "R5", "R6", "R7", "R8", "R9", "R10")}
+    conf = confirmed()
     used, lines, nsent = {}, [], 0
 
     for src in srcs:
@@ -175,6 +265,13 @@ def check(d, built=False, review=False, main_only=False):
             for pat, bad, label in BAD:
                 if re.search(pat, s) and re.search(bad, flat):
                     F["R8"].append(f"誤読：{label} → {'/'.join(k)}（{s[:28]}…）")
+            # R10 読みの食い違い（別辞書との照合）
+            for surf, jr, got in cross_check(s, k):
+                if got and any(x and x in got for x in conf.get(surf, ())):
+                    continue
+                if any(surf in f for f, _ in forms) or surf in M.COMPOUND_DICT:
+                    continue      # 台帳・辞書で読みを決めてある語
+                F["R10"].append(f"「{surf}」：別の辞書は {jr}、VOICEVOX は {got or '（対応なし）'}（{s[:22]}…）→ 読みを確かめて reading_confirmed.txt に足すか、辞書で直す")
             lines.append(f"{star}{s}\n    → {'/'.join(k)}")
 
     # R2 確認ソース・R3 辞書登録
@@ -200,7 +297,7 @@ def report(res):
     mode = "ビルド後・音声の読み" if res["mode"] == "built" else "ビルド前・原稿"
     print(f"── 読み検査（{mode}）：{res['dir']}  {res['sentences']}文・固有名詞 {len(res['nouns'])}件 ──")
     names = {"R1": "固有名詞の網羅", "R2": "確認ソース", "R3": "辞書登録", "R4": "読みの一致", "R5": "区切れ",
-             "R6": "数字の読み", "R7": "英字の読み", "R8": "既知の誤読", "R9": "音声と原稿の一致"}
+             "R6": "数字の読み", "R7": "英字の読み", "R8": "既知の誤読", "R9": "音声と原稿の一致", "R10": "読みの食い違い"}
     for k, v in res["fails"].items():
         if res["mode"] != "built" and k == "R9":
             continue

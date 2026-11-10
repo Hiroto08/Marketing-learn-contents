@@ -35,10 +35,13 @@ for spec in "${specs[@]}"; do
   step "$name 1/4 stage生成 (gen_stage)"
   python3 _tools/shorts_template/gen_stage.py "$spec" "$d/stage.html"
 
-  step "$name 2/4 QA (verify_shorts 9項目)"
+  step "$name 2/4 QA (verify_shorts)"
   python3 _tools/checks/verify_shorts.py "$d"
-  echo "── 読み検査・ビルド前（quality-gates.md R1〜R8） ──"
+  echo "── 読み検査・ビルド前（quality-gates.md R1〜R10） ──"
   python3 _tools/checks/check_readings.py "$d"
+  echo "── 数字の確認（F1〜F3）・AI臭さ検査（A1〜A7・T1〜T2） ──"
+  python3 _tools/checks/check_facts.py "$d"
+  python3 _tools/checks/check_style.py "$d"
 
   # テロップ同期型（第2シリーズ・build_telop_spec.py）は文を読み始める瞬間に出す（社長FB #1：先に出すぎない）。旧型は従来どおり 1.2 秒先行
   LEAD=1.2; grep -q "telop-sync" "$d/stage.html" && LEAD=0.15
@@ -86,4 +89,6 @@ else
 fi
 
 echo
+echo "── 品質検査の実施記録（$EP/quality_record.md。コミットする） ──"
+python3 _tools/checks/quality_record.py "$EP" || { echo "FAIL: 品質検査に不合格の項目がある（$EP/quality_record.md）"; exit 1; }
 echo "SHORTS PIPELINE PASS: $EP"

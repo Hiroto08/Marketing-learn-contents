@@ -46,17 +46,21 @@ def norm_kana(s, merge=False):
     merge=True なら、漢語の長音（オ段＋ウ→オオ、エ段＋イ→エエ）もそろえる（VOICEVOX は「コウコク」を「コオコク」と返す）"""
     s = "".join(chr(ord(c) + 0x60) if "ぁ" <= c <= "ゖ" else c for c in s)
     s = re.sub(r"[^ァ-ヶー]", "", s).replace("ヲ", "オ").replace("ヂ", "ジ").replace("ヅ", "ズ")
-    out = []
+    out, conv = [], False          # conv: 直前の文字が長音として置き換えたものか（続けて置き換えない。コウウン→コオウン）
     for c in s:
         prev = _V.get(out[-1]) if out else None
         if c == "ー":
             out.append(prev or "")
-        elif merge and c == "ウ" and prev == "オ":
+            conv = True
+        elif merge and not conv and c == "ウ" and prev == "オ":
             out.append("オ")
-        elif merge and c == "イ" and prev == "エ":
+            conv = True
+        elif merge and not conv and c == "イ" and prev == "エ":
             out.append("エ")
+            conv = True
         else:
             out.append(c)
+            conv = False
     return "".join(out)
 
 
