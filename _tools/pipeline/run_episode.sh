@@ -28,8 +28,8 @@ curl -s -m3 http://127.0.0.1:50021/version || { echo "FAIL: VOICEVOXが起動し
 
 step "1/5 QA (verify_episode)"
 python3 _tools/checks/verify_episode.py "$EP"
-echo "── 読み検査（人名・カタカナ語・既知の誤読。2026-11-09〜） ──"
-python3 _tools/checks/check_readings.py "$EP" --review
+echo "── 読み検査・ビルド前（固有名詞の台帳・確認ソース・辞書登録・数字と英字の読み。quality-gates.md R1〜R8） ──"
+python3 _tools/checks/check_readings.py "$EP" --main --review
 
 step "2/5 ビルド (make_video: BGM+SFXミックス込みのシリーズ標準)"
 python3 _tools/video/make_video.py "$EP/slide.html" \
@@ -38,6 +38,9 @@ python3 _tools/video/make_video.py "$EP/slide.html" \
 
 step "3/5 後処理 (A/V検証・LUFS・タイムスタンプ実測修正・ステージング)"
 python3 _tools/video/postbuild_episode.py "$EP"
+
+echo "── 読み検査・ビルド後（実際に音声になった読みを、固有名詞の台帳と照合。R4〜R9） ──"
+python3 _tools/checks/check_readings.py "$EP" --main --built
 
 step "4/5 サムネイル生成"
 if [ ! -f "$EP/thumbnail.png" ]; then

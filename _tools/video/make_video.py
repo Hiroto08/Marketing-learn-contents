@@ -31,6 +31,7 @@ Options:
 
 import argparse
 import hashlib
+import unicodedata
 import json
 import math
 import os
@@ -119,6 +120,7 @@ ABBR_MAP = {
     "Airbnb": "エアビー",    # ×エアブンブ
     "QB":   "キュービー",    # ×キュビ等の分割読み防止（QBハウス、EP02）
     "M&M's": "エムアンドエムズ",  # ×エムアンドエムエス等（EP08）
+    "TOP5": "トップファイブ",     # ×トップご（u06。2026-11-10）
 }
 
 # Compound terms read as ONE accent phrase (prevents double/triple-hump
@@ -166,10 +168,23 @@ COMPOUND_DICT = {
     "異を唱えた":          ("イヲトナエタ", 1),             # ×コトヲトナエタ（EP24）
     "並べて":              ("ナラベテ", 0),                 # ×ナベテ（c01）
     "ベインアンドカンパニー": ("ベインアンドカンパニー", 5),  # ベイン・アンド・カンパニー（×ベイン／アンドカンパニーの分割。c02）
+    # ── 2026-11-10 EP22 の公開音声の再現監査・AI臭さ点検で見つけたもの ──
+    "V字回復":             ("ブイジカイフク", 4),           # ×ブイ／ジカイフクの分割（EP22）
+    "当てはめかた":        ("アテハメカタ", 0),             # ×アテワメカタ（EP22）
 }
 
+# 読み上げ用の表記置換（画面の文字は変えない）。辞書登録では直らない読みを、合成の直前にかなへ開く。
+# 上から順に適用するので、長い表記を先に書く。追加したら narration-rules.md の表にも書く。
+READING_MAP = [
+    ("何でしょう", "なんでしょう"),   # ×ナニデショウ（EP23・EP24。辞書登録では直らなかった）
+    ("何ですか",   "なんですか"),
+    ("何です",     "なんです"),
+    ("何のため",   "なんのため"),     # ×ナニノタメ（EP24）
+    ("何の",       "なんの"),         # ×ナニノ（何の数学。EP22）
+]
+
 MARU_MAP = {
-    "①": "いちつめ、", "②": "ふたつめ、", "③": "みっつめ、",
+    "①": "ひとつめ、", "②": "ふたつめ、", "③": "みっつめ、",
     "④": "よっつめ、", "⑤": "いつつめ、", "⑥": "むっつめ、",
 }
 
@@ -183,6 +198,8 @@ def clean_for_tts(text: str) -> str:
     t = re.sub(r'(\d)\s*[〜～]\s*(\d)', r'\1から\2', t)
     for k, v in MARU_MAP.items():
         t = t.replace(k, v)
+    for k, v in READING_MAP:
+        t = t.replace(k, v)
     # ・ between katakana = foreign name separator → silent (ピーター・ドラッカー)
     # ・ elsewhere = list separator → 、 (名前・年齢・職業 → 名前、年齢、職業)
     t = re.sub(r'(?<=[ァ-ヶー])・(?=[ァ-ヶー])', '', t)
@@ -191,7 +208,8 @@ def clean_for_tts(text: str) -> str:
     # 隣接境界に読点を入れてから引用符を除去する（句読点で既に区切れる場合は影響なし）。
     t = t.replace("」「", "、").replace("』『", "、")
     t = t.replace("「", "").replace("」", "").replace("『", "").replace("』", "")
-    t = re.sub(r'\b(19|20)(\d{2})(年(?:代)?)', r'\2\3', t)
+    # 西暦は4桁のまま読ませる（2026-11-10 まで、文頭・読点直後の西暦を下2桁にする処理があり、
+    # 「2012年のことです」が「じゅうにねん」、「2001年」が「ゼロイチねん」と読まれていた。画面の文字とも食い違う）
     t = re.sub(r'[（）\(\)]', '', t)
     t = re.sub(r'\s{2,}', ' ', t)
     return t.strip()
@@ -330,22 +348,34 @@ def _tts_cache_key(text: str, speaker: int, speed: float, salt: str = "") -> str
 
 
 def seed_user_dict(url: str) -> None:
-    """Register COMPOUND_DICT terms into the VOICEVOX user dictionary so each
-    is tokenized as a single morpheme = a single accent phrase. Idempotent:
-    removes any prior entries for the same surfaces, then re-registers."""
+    """VOICEVOX のユーザー辞書を COMPOUND_DICT と同じ内容にする（1語＝1アクセント句で読ませる）。
+    すでに同じ語は触らない。足りない語を足し、余分な語・内容が違う語だけを消す。
+    （毎回ぜんぶ消して入れ直すと、同時に走っているビルドが一瞬「辞書なし」で合成してしまう。2026-11-10）"""
+    def _yomi(x):
+        return (x or "").replace("ー", "").replace("’", "")
     try:
         with urllib.request.urlopen(f'{url}/user_dict', timeout=10) as r:
             current = json.load(r)
-        # エンジンの辞書を COMPOUND_DICT と完全に一致させる（前の実行で登録した語が残ると、
-        # 辞書から外した語の読みが検査とビルドで食い違う。2026-11-09）
-        for uid, word in current.items():
-            if True:
-                urllib.request.urlopen(urllib.request.Request(
-                    f'{url}/user_dict_word/{uid}', method='DELETE'), timeout=10)
     except Exception as e:
-        print(f"  (user_dict pre-clean skipped: {e})")
+        print(f"  (user_dict read failed: {e})")
+        current = {}
+    have = {}
+    for uid, word in current.items():
+        surf = unicodedata.normalize("NFKC", word.get('surface', ''))
+        want = COMPOUND_DICT.get(surf)
+        same = want and word.get('pronunciation') == want[0] and word.get('accent_type') == want[1]
+        if same and surf not in have:
+            have[surf] = uid
+            continue
+        try:
+            urllib.request.urlopen(urllib.request.Request(
+                f'{url}/user_dict_word/{uid}', method='DELETE'), timeout=10)
+        except Exception as e:
+            print(f"  (user_dict delete failed for {surf}: {e})")
     n = 0
     for surface, (pron, accent) in COMPOUND_DICT.items():
+        if unicodedata.normalize("NFKC", surface) in have:
+            continue
         qs = urllib.parse.urlencode({
             'surface': surface, 'pronunciation': pron,
             'accent_type': accent, 'word_type': 'PROPER_NOUN', 'priority': 10})
@@ -355,8 +385,7 @@ def seed_user_dict(url: str) -> None:
             n += 1
         except Exception as e:
             print(f"  (user_dict register failed for {surface}: {e})")
-    if n:
-        print(f"  user_dict: {n} compound term(s) registered")
+    print(f"  user_dict: {len(COMPOUND_DICT)} term(s)（追加 {n}・既存 {len(have)}）")
 
 
 def _tts_sentence(text: str, out_path: str, speaker: int, speed: float, url: str):
@@ -369,6 +398,9 @@ def _tts_sentence(text: str, out_path: str, speaker: int, speed: float, url: str
         query = json.load(r)
     query['speedScale'] = speed
     query['outputSamplingRate'] = 24000
+    # この音声の読み（アクセント句ごとのカナ）を WAV の隣に残す。合成はこの query から行うので、
+    # 記録＝実際に音声になった読み。postbuild の「固有名詞リストと音声の照合」が読む（2026-11-10）
+    kana = ["".join(m["text"] for m in ap["moras"]) for ap in query.get("accent_phrases", [])]
     req = urllib.request.Request(
         f'{url}/synthesis?speaker={speaker}',
         data=json.dumps(query).encode(),
@@ -376,6 +408,8 @@ def _tts_sentence(text: str, out_path: str, speaker: int, speed: float, url: str
     with urllib.request.urlopen(req, timeout=120) as r:
         with open(out_path, 'wb') as f:
             f.write(r.read())
+    with open(out_path + '.kana.json', 'w', encoding='utf-8') as f:
+        json.dump({'text': text, 'clean': clean, 'kana': kana}, f, ensure_ascii=False)
 
 
 def _make_silence(path: str, duration: float, sr: int = 24000):
@@ -439,6 +473,7 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
         paragraphs = split_paragraphs(narration_text)
         parts = []
         para_durs = []
+        readings = []
 
         for pi, para in enumerate(paragraphs):
             sentences = split_sentences(para) or [para]
@@ -451,10 +486,13 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
                 key = _tts_cache_key(clean, speaker, speed,
                                      _compound_salt(clean))
                 cached = os.path.join(cache_dir, f'{key}.wav')
-                if not os.path.exists(cached):
+                # 読みの記録が無い古いキャッシュは使わない（何と読んだ音声か分からないため）
+                if not (os.path.exists(cached) and os.path.exists(cached + '.kana.json')):
                     _tts_sentence(sent, cached, speaker, speed, voicevox_url)
                 parts.append(cached)
                 p_dur += get_duration(cached)
+                with open(cached + '.kana.json', encoding='utf-8') as kf:
+                    readings.append(json.load(kf))
 
                 is_last_sent = (si == len(sentences) - 1)
                 is_last_para = (pi == len(paragraphs) - 1)
@@ -477,9 +515,9 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
             _make_silence(out_wav, 1.0)
 
         with open(out_wav + '.json', 'w') as f:
-            json.dump({'para_durs': para_durs,
+            json.dump({'para_durs': para_durs, 'readings': readings,
                        'hash': _narr_hash(narration_text, speaker, speed,
-                                          sent_gap, para_gap)}, f)
+                                          sent_gap, para_gap)}, f, ensure_ascii=False)
         return para_durs
     finally:
         shutil.rmtree(tmp, ignore_errors=True)
@@ -853,6 +891,7 @@ class VideoBuilder:
 
         self.audio_durs = []
         self.para_durs = []
+        self.built_readings = []
         for ni, narr in enumerate(self.sd.narrations):
             wav = os.path.join(self.audio_dir, f'narr_{ni:02d}.wav')
             sidecar = wav + '.json'
@@ -862,7 +901,7 @@ class VideoBuilder:
             if os.path.exists(wav) and os.path.exists(sidecar):
                 with open(sidecar) as f:
                     meta = json.load(f)
-            if meta is not None and meta.get('hash') == want:
+            if meta is not None and meta.get('hash') == want and 'readings' in meta:
                 dur = get_duration(wav)
                 durs = meta['para_durs']
                 print(f"  {tag} cached  {dur:.1f}s")
@@ -878,7 +917,14 @@ class VideoBuilder:
                 dur = get_duration(wav)
                 print(f" {dur:.1f}s  ({time.time()-t0:.0f}s)")
             self.audio_durs.append(dur)
+            with open(sidecar, encoding='utf-8') as f:
+                self.built_readings.append({'slide': ni + 1, 'sentences': json.load(f).get('readings', [])})
             self.para_durs.append(durs)
+        # 実際に音声になった読みの記録（コミットする。check_readings.py --built が台帳と照合する）
+        with open(os.path.join(self.out_dir, 'built_readings.json'), 'w', encoding='utf-8') as f:
+            json.dump({'source': os.path.basename(a.html) if hasattr(a, 'html') else '',
+                       'speaker': a.speaker, 'speed': a.speed, 'slides': self.built_readings},
+                      f, ensure_ascii=False, indent=1)
 
         print(f"\n  Total: {sum(self.audio_durs)/60:.1f} min")
 

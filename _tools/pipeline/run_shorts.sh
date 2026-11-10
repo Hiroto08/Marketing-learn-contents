@@ -25,8 +25,6 @@ if ! curl -s -m3 http://127.0.0.1:50021/version >/dev/null; then
 fi
 curl -s -m3 http://127.0.0.1:50021/version || { echo "FAIL: VOICEVOXが起動しない"; exit 1; }
 
-step "読み検査（人名・カタカナ語・既知の誤読。2026-11-09〜）"
-python3 _tools/checks/check_readings.py "$EP"
 specs=("$EP"/shorts_build/short*/spec.py)
 [ -e "${specs[0]}" ] || { echo "FAIL: $EP/shorts_build/short*/spec.py が無い（yt-shorts-designer工程が未了）"; exit 1; }
 
@@ -39,6 +37,8 @@ for spec in "${specs[@]}"; do
 
   step "$name 2/4 QA (verify_shorts 9項目)"
   python3 _tools/checks/verify_shorts.py "$d"
+  echo "── 読み検査・ビルド前（quality-gates.md R1〜R8） ──"
+  python3 _tools/checks/check_readings.py "$d"
 
   # テロップ同期型（第2シリーズ・build_telop_spec.py）は文を読み始める瞬間に出す（社長FB #1：先に出すぎない）。旧型は従来どおり 1.2 秒先行
   LEAD=1.2; grep -q "telop-sync" "$d/stage.html" && LEAD=0.15
@@ -72,6 +72,8 @@ assert 15 <= v <= 30, "尺が15〜30秒の外"
 assert not missing, f"videoストリーム欠落: {missing}（該当slide_NN.mp4を消して --slide N で再録画）"
 print("OK")
 PY
+  echo "── 読み検査・ビルド後（実際に音声になった読みを台帳と照合。R4〜R9） ──"
+  python3 _tools/checks/check_readings.py "$d" --built
 done
 
 if [ "$UPLOAD" = "--upload" ]; then
