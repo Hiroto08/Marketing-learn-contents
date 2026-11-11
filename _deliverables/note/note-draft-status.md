@@ -40,7 +40,7 @@ status の意味：
 | EP20 | ep20_growth-hack.md | 公開済み 2026-10-31 | 186508475 | https://editor.note.com/notes/186508475/edit | 2026-10-20 |
 | EP21 | ep21_hit-products.md | 公開済み 2026-11-04 | 187762451 | https://editor.note.com/notes/187762451/edit | 2026-10-27 |
 | EP22 | ep22_v-shaped-recovery.md | 公開済み 2026-11-07 | 187762473 | https://editor.note.com/notes/187762473/edit | 2026-10-27 |
-| EP23 | ep23_failure-cases.md | 下書き保存済み | 188989268 | https://editor.note.com/notes/188989268/edit | 2026-11-03 |
+| EP23 | ep23_failure-cases.md | 公開済み 2026-11-11 | 188989268 | https://editor.note.com/notes/188989268/edit | 2026-11-03 |
 | EP24 | ep24_future-marketer.md | 下書き保存済み | 188989290 | https://editor.note.com/notes/188989290/edit | 2026-11-03 |
 
 <!--
