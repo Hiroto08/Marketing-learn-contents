@@ -1,0 +1,67 @@
+{
+ "_note": "映像意図。plan_visuals.py の下書き → TODO を埋める → check_visual_plan.py を通す。数字・文字は台本にあるものだけ。",
+ "version": "v1",
+ "kind": "long",
+ "answer": "客はセールで、得した気分を買っていた",
+ "slides": {
+  "s1": {
+   "type": "photo",
+   "asset": "jcpenney_store",
+   "focus": "38% 50%",
+   "intent": "題名の背景に、事例の店（JCペニー）の実写を薄く置く"
+  },
+  "s2": {
+   "type": "photo",
+   "asset": "jcpenney_store",
+   "intent": "背景に実写：アップルストア",
+   "sync": "s2-key1",
+   "focus": "60% 50%"
+  },
+  "s3": {
+   "type": "dot_grid",
+   "n": 590,
+   "strike": false,
+   "intent": "背景に 590回 ぶんの点を並べる",
+   "sync": "s3-key"
+  },
+  "s4": {
+   "type": "none",
+   "intent": "売上（%）と赤字（ドル）は単位が違うので、棒で比べない。数字のカードだけで見せる"
+  },
+  "s5": {
+   "type": "bar_cells",
+   "values": [
+    25.0,
+    45.0
+   ],
+   "intent": "数字のカードの下に棒を足して、25%と45% の差を見せる"
+  },
+  "s6": {
+   "type": "bar_cells",
+   "values": [
+    2.65,
+    1.5
+   ],
+   "intent": "数字のカードの下に棒を足して、2.65ドルと1.50ドル の差を見せる"
+  },
+  "s7": {
+   "type": "none",
+   "intent": "理由の箇条書き。数字も固有名詞も無いので、絵を足さない"
+  },
+  "s8": {
+   "type": "none",
+   "intent": "持ち帰りの1枚。文字を読ませたいので、絵を足さない"
+  },
+  "s9": {
+   "type": "none",
+   "intent": "まとめ。答えの文を主役にするので、絵を足さない"
+  },
+  "s10": {
+   "type": "photo",
+   "asset": "jcpenney_store",
+   "focus": "45% 55%",
+   "intent": "締めの語りの間、事例の店の実写をゆっくり寄せる（空の画面を作らない）"
+  }
+ },
+ "answer_narration": "得した気分を買っていました"
+}

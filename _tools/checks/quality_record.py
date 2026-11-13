@@ -90,6 +90,21 @@ def main():
             body += ["", "### 4. AI臭さ検査（文章・テロップ）", ""] + marks(st["fails"], CS.NAMES, st["legacy"])
             body += ["", "実測：" + "／".join(f"{k} {v}" for k, v in st["stats"].items()), ""]
             ok = ok and pre["pass"] and (post is None or post["pass"]) and st["pass"] and fa["pass"]
+            # 表現コード v1 で作った回（expr_record.json がある）は、その検査結果と、使った素材のライセンスも記録する
+            er = f"{t}/expr_record.json"
+            if os.path.exists(er):
+                import json
+                e = json.load(open(er, encoding="utf-8"))
+                body += ["### 6. 表現コード v1（docs/expression/expression-code.md §0）", ""]
+                body += [f"- {'✓' if r['ok'] else '✗'} {r['code']} {r['text']}" for r in e["result"]]
+                vp = f"{t}/visual_plan.json"
+                used = [v.get("asset") for v in json.load(open(vp, encoding="utf-8")).get("slides", {}).values() if v.get("type") == "photo"] if os.path.exists(vp) else []
+                if used:
+                    lib = {x["id"]: x for x in json.load(open("_assets/photos/assets.json", encoding="utf-8"))}
+                    body += ["", "使った写真（ライセンス台帳 docs/expression/license-ledger.md）：", ""]
+                    body += [f"- {i}：{lib[i]['title']}（{lib[i]['license']}・{lib[i]['artist'] or '作者不明'}）{lib[i]['page']}" for i in dict.fromkeys(used) if i in lib]
+                body += [""]
+                ok = ok and e["pass"]
         out += ["## 1. 固有名詞（この動画に出たもの）", "", "| 表記 | 読み | 種別 | 確認ソース | 確認日 |", "|---|---|---|---|---|"]
         out += [f"| {n['表記']} | {n['読み']} | {n['種別']} | {n['確認ソース']} | {n['確認日'] or '—'} |" for n in nouns.values()] or ["| （固有名詞なし） | | | | |"]
         out += [""] + body

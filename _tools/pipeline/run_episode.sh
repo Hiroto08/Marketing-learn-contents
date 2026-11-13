@@ -35,10 +35,27 @@ python3 _tools/checks/check_facts.py "$EP"
 echo "── AI臭さ検査（文章・テロップ。A1〜A7・T1〜T2） ──"
 python3 _tools/checks/check_style.py "$EP"
 
-step "2/5 ビルド (make_video: BGM+SFXミックス込みのシリーズ標準)"
+# 表現コード v1 で作るか・現行の表現で作るか（社長決裁 2026-11-13。本適用は series.json の expression.apply_from から。長尺は c03 から）
+EXPR_MODE="$(python3 _tools/expression/expr_gate.py "$EP")" || { echo "FAIL: 表現コードの判定（上の理由）"; exit 1; }
+if [ "$EXPR_MODE" = "v1" ]; then
+  step "2/5 表現コード v1：映像意図の検査 → 適用 → ビルド"
+  python3 _tools/expression/check_visual_plan.py "$EP/slide.html" "$EP/visual_plan.json"
+  python3 _tools/expression/apply_expr.py "$EP/slide.html" "$EP/slide_expr.html" --plan "$EP/visual_plan.json"
+  ANS="$(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d['answer'])" "$EP/visual_plan.json")"
+  ANSN="$(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d.get('answer_narration',d['answer']))" "$EP/visual_plan.json")"
+  python3 _tools/video/make_video.py "$EP/slide_expr.html" \
+    --out "$EP/video_build/out" --speaker 11 --speed 1.1 --final-outro 3.0 \
+    --lead 0.3 --intro 0.3 --expr v1 --num-gap 0.7 --beat "$ANSN" --answer-text "$ANS"
+  # make_video は html のファイル名から mp4 の名前を決めないが、念のため最終ファイルを確かめる
+  ls "$EP"/video_build/out/*_final.mp4 >/dev/null
+  echo "── 表現コード v1 の検査（docs/expression/expression-code.md §0） ──"
+  python3 _tools/expression/check_expr.py "$EP"/video_build/out/*_final.mp4 --html "$EP/slide_expr.html" --plan "$EP/visual_plan.json" --record "$EP/expr_record.json"
+else
+step "2/5 ビルド (make_video: BGM+SFXミックス込みのシリーズ標準・現行の表現)"
 python3 _tools/video/make_video.py "$EP/slide.html" \
   --out "$EP/video_build/out" --speaker 11 --speed 1.1 --final-outro 3.0 \
   --bgm _assets/audio/bgm_calm_loop.wav --sfx-dir _assets/audio
+fi
 
 step "3/5 後処理 (A/V検証・LUFS・タイムスタンプ実測修正・ステージング)"
 python3 _tools/video/postbuild_episode.py "$EP"

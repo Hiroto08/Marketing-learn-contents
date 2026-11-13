@@ -44,6 +44,7 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 | 第2シリーズ「売れる仕組みの裏側」（Shorts単独 uNN・ケースファイル cNN） | `s2_ura/README.md`（置き場所・型・2コマンド・`ura_schedule.py`） |
 | 新規エピソード制作・リニューアル（創作） | `episode-production` スキル（ロール分担表が入口） |
 | ビルド・動画化・アップロード（製造） | `.claude/skills/episode-production/pipeline.md` の2コマンド：`bash _tools/pipeline/run_episode.sh <ep_dir> [--upload]` / `bash _tools/pipeline/run_shorts.sh <ep_dir> [--upload]` |
+| 表現（映像意図・素材・アニメーション・音）。**12/6 の週の制作バッチから標準**（Shorts は u22〜、長尺は c03〜） | `yt-expression` スキル／仕様 `docs/expression/expression-code.md`／動作確認 `bash _tools/expression/selftest.sh` |
 | 品質の合否基準（読み・数字・AI臭さ・テロップ・note・差し替え） | `.claude/skills/episode-production/quality-gates.md`／固有名詞の台帳 `docs/proper-nouns.md`／1コマンド `python3 _tools/checks/quality_record.py <dir>` |
 | 個別作業（読み監査だけ・サムネだけ等） | 該当する `yt-*` ロールスキル |
 | ツールの部品表 | `_tools/README.md` |
@@ -74,6 +75,9 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
     公開済みの回で見つけた誤りは、検査（`check_readings.py` の BAD・`check_style.py`）に型を足して、次から機械で止める
 11. **動画・記事ごとに実施記録を残す**——ビルドで `quality_record.md` が書かれる。コミットする。
     抑揚・間など耳でしか分からない項目（V1〜V4）には、AI が ✓ を付けない
+12. **表現コード v1（素材埋め込み・アニメーション）は、道具が決めた日から当てる**（社長決裁 2026-11-13）——12/6 の週の制作バッチから
+    （Shorts は u22〜、長尺は c03〜）。それより前の回・公開済み／予約済みの回は、現行の表現のまま。判定は `expr_gate.py` がする。
+    `EXPR_FORCE=1`・`expr_legacy.txt` への追記・CSS や音の数値の変更で通さない。写真は台帳（`docs/expression/license-ledger.md`）にあるものだけ
 
 ## 環境（claude.ai/code のリモートコンテナ）
 

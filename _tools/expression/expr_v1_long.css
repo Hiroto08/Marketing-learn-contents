@@ -61,3 +61,29 @@ b.c-accent,.ex-num{font-family:'Inter','Noto Sans JP','Noto Sans CJK JP',sans-se
 /* 1枚目は、録画エンジンが表示した瞬間（インラインの display:flex）から CSS の動きを始める。
    class="active" だけでは表示しない（ページの読み込み時刻に動きが始まってしまうのを防ぐ） */
 .slide.active{display:none;}
+
+/* 1枚目の数字用：最初から見えていて、拡大から着地する（テロップに穴を作らない） */
+@keyframes exHit0{from{transform:scale(1.35)}to{transform:none}}
+/* 長尺の映像：文字の後ろの層（配置は変えない）。写真は暗い重ねで、文字のコントラストを保つ */
+.ex-bg{--go:paused;position:absolute;inset:0;z-index:0;overflow:hidden;border:0;border-radius:0;background:none;animation:none;}
+.ex-bg::before{display:none;}
+.ex-bg .ex-photo{inset:-3%;animation:exKen 24s linear both;}
+.ex-bg .ex-photo-tint{background:rgba(11,18,32,.80);mix-blend-mode:normal;}
+.ex-bg.ex-vis-photo::after{display:none;}
+.ex-bg .ex-stamp{display:none;}
+.ex-bg .ex-dots{inset:13% 6% 9% 6%;width:88%;height:78%;opacity:.16;}   /* 文字の後ろの地模様として、薄く全面に */
+.pad-t,.s1-content,.ex-end{position:relative;z-index:1;}
+.ex-end{position:absolute;}
+/* 数字のカードの下の棒（同じ単位の数字を比べるとき） */
+.ex-cellbar{display:block;height:.7cqw;width:calc(var(--w) * 78%);margin:.5cqw auto 0;border-radius:1cqw;background:var(--ex-num);
+  transform-origin:left center;transform:scaleX(0);animation:exGrowL .8s .35s cubic-bezier(.2,.8,.2,1) forwards;}
+@keyframes exGrowL{to{transform:scaleX(1)}}
+.se:not([class*="rv-"]) .ex-cellbar{animation:none;}
+
+/* 締めの1枚：20秒ほど語りが続く。回の表記 → 写真が一段明るく → 線 → もう一段、の順に 0.3秒で切り替えて、止まった画面にしない。
+   ゆっくりのフェードは「動き」に数えない（check_expr M2）ので、切り替えは 0.3秒で行う */
+.ex-end small{opacity:0;animation:exRise .30s 3s cubic-bezier(.2,.8,.2,1) forwards;}
+.ex-end::after{width:24cqw;height:.8cqw;transform:scaleX(0);animation:exGrowL .5s 10s cubic-bezier(.2,.8,.2,1) forwards;}
+.ex-bg.ex-bg-end .ex-photo-tint{animation:exTint1 .3s 6.5s ease-out forwards, exTint2 .3s 14s ease-out forwards;}
+@keyframes exTint1{to{background:rgba(11,18,32,.66)}}
+@keyframes exTint2{from{background:rgba(11,18,32,.66)}to{background:rgba(11,18,32,.54)}}

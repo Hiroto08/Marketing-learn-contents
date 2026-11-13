@@ -11,3 +11,6 @@ _prototypes/expr_v1/before/
 _prototypes/expr_v1/after/
 _prototypes/expr_v1/visual/
 _prototypes/expr_v1/compare/
+_prototypes/expr_v1/pipeline_test/
+**/stage_expr.html
+**/slide_expr.html

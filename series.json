@@ -126,5 +126,20 @@
     "drive_folder_name": "マーケラボ レビュー便",
     "drive_folder_id": "1jN7VrGqZPDrpJkOTMwXn1FLvCnDZ426x",
     "feedback_issue": 2
+  },
+  "expression": {
+    "_comment": "表現コード v1（docs/expression/expression-code.md）。apply_from より前は、試作（EXPR_FORCE=1）以外は現行の表現で作る。",
+    "version": "v1",
+    "apply_from": "2026-12-06",
+    "series": {
+      "s2_ura": {
+        "name": "売れる仕組みの裏側",
+        "color": "#E11D48"
+      },
+      "default": {
+        "name": "AI時代のマーケティング・ラボ",
+        "color": "#7C6FFF"
+      }
+    }
   }
 }

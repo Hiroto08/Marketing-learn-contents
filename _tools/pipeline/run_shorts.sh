@@ -49,12 +49,29 @@ for spec in "${specs[@]}"; do
 
   # テロップ同期型（第2シリーズ・build_telop_spec.py）は文を読み始める瞬間に出す（社長FB #1：先に出すぎない）。旧型は従来どおり 1.2 秒先行
   LEAD=1.2; grep -q "telop-sync" "$d/stage.html" && LEAD=0.15
-  step "$name 3/4 縦型ビルド (1080x1920・lead $LEAD)"
+  # 表現コード v1 で作るか・現行の表現で作るか（社長決裁 2026-11-13。本適用は series.json の expression.apply_from から）
+  EXPR_MODE="$(python3 _tools/expression/expr_gate.py "$EP" --short "$name")" || { echo "FAIL: 表現コードの判定（上の理由）"; exit 1; }
+  if [ "$EXPR_MODE" = "v1" ]; then
+    step "$name 3/4 表現コード v1：映像意図の検査 → 適用 → 縦型ビルド"
+    python3 _tools/expression/check_visual_plan.py "$d/stage.html" "$d/visual_plan.json"
+    python3 _tools/expression/apply_expr.py "$d/stage.html" "$d/stage_expr.html" --plan "$d/visual_plan.json"
+    ANS="$(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d['answer'])" "$d/visual_plan.json")"
+    ANSN="$(python3 -c "import json,sys;d=json.load(open(sys.argv[1]));print(d.get('answer_narration',d['answer']))" "$d/visual_plan.json")"
+    python3 _tools/video/make_video.py "$d/stage_expr.html" \
+      --out "$d" --speaker 11 --speed 1.15 \
+      --lead 0.15 --intro 0.0 --outro 0.5 --final-outro 0.6 \
+      --width 1080 --height 1920 \
+      --expr v1 --num-gap 0.6 --beat "$ANSN" --answer-text "$ANS"
+    echo "── 表現コード v1 の検査（docs/expression/expression-code.md §0） ──"
+    python3 _tools/expression/check_expr.py "$d"/*_final.mp4 --html "$d/stage_expr.html" --plan "$d/visual_plan.json" --record "$d/expr_record.json"
+  else
+  step "$name 3/4 縦型ビルド (1080x1920・lead $LEAD・現行の表現)"
   python3 _tools/video/make_video.py "$d/stage.html" \
     --out "$d" --speaker 11 --speed 1.15 \
     --lead "$LEAD" --intro 0.3 --outro 0.5 --final-outro 1.2 \
     --width 1080 --height 1920 \
     --bgm _assets/audio/bgm_calm_loop.wav --sfx-dir _assets/audio
+  fi
 
   step "$name 4/4 A/V・ストリーム検証"
   python3 - "$d" "$name" <<'PY'

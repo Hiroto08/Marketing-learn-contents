@@ -1,7 +1,7 @@
 # ライセンス台帳（BGM・効果音・書体・画像）
 
 表現コード（`docs/expression/expression-code.md` §10）の台帳。**ここに無い素材は、動画・サムネイルに使わない。**
-写真は `_tools/expression/fetch_assets.py` が取得と同時に追記する（手で足さない）。
+写真は `_tools/expression/fetch_assets.py` が取得と同時に追記する（手で足さない）。置き場は `_assets/photos/`（記録は `_assets/photos/assets.json`）。
 
 ## 1. 常に使う素材
 
@@ -23,4 +23,4 @@
 
 | 取得日 | 使う回 | 素材ID | 種類 | 出典 | 作者 | ライセンス | 商用 | クレジット表記 |
 |---|---|---|---|---|---|---|---|---|
-| 2026-11-13 | assets_u01 | jcpenney_store | 写真 | [File:JCPenney - Governor’s Square - Tallahassee, FL.jpg](https://commons.wikimedia.org/wiki/File:JCPenney_-_Governor%E2%80%99s_Square_-_Tallahassee,_FL.jpg) | FLGALine1999 | CC0 | 可 | 不要 |
+| 2026-11-13 | u01_jcpenney-sale（試作）・c01（試作） | jcpenney_store | 写真 | [File:JCPenney - Governor’s Square - Tallahassee, FL.jpg](https://commons.wikimedia.org/wiki/File:JCPenney_-_Governor%E2%80%99s_Square_-_Tallahassee,_FL.jpg) | FLGALine1999 | CC0 | 可 | 不要 |

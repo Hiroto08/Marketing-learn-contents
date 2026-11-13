@@ -83,6 +83,9 @@ bash _tools/pipeline/run_episode.sh s2_ura/c01_<slug> --upload     # ケース�
 ```
 
 - アップロードは常に private。1日6本まで（太平洋時間0時に回復＝日本時間で夏16時・冬17時）。
+- **表現（素材埋め込み・アニメーション・音）は、12/6 の週の制作バッチから表現コード v1**（社長決裁 2026-11-13。Shorts は u22〜、ケースファイルは c03〜）。
+  その回からは、ビルドの前に `visual_plan.json`（映像意図）を作る。手順は `yt-expression` スキル。無ければ、上の2コマンドが止まって教える。
+  u21 まで・c02 までは、現行の表現のまま（何も足さない）。
 - 成果物（spec.py・stage.html・shorts.md・publish_manifest.json・thumbnail.png）はコミットする。mp4 はコミットしない。
 
 ## 4. 公開予約

@@ -18,16 +18,16 @@
 .ex-chart{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:flex-start;gap:26px;padding:36px 40px 26px;}
 .ex-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;width:205px;}
 .ex-bar{width:170px;height:320px;border-radius:14px 14px 0 0;transform-origin:bottom;}
-.ex-bar-a{background:rgba(174,182,208,.55);}
-.ex-bar-b{background:var(--ex-num);transform:scaleY(1);animation:exDrop .9s var(--d0,0s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
-@keyframes exDrop{from{transform:scaleY(1)}to{transform:scaleY(var(--after))}}
+.ex-bar-a{background:rgba(174,182,208,.55);transform:scaleY(var(--before,1));}
+.ex-bar-b{background:var(--ex-num);transform:scaleY(var(--before,1));animation:exDrop .9s var(--d0,0s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+@keyframes exDrop{from{transform:scaleY(var(--before,1))}to{transform:scaleY(var(--after))}}
 .ex-cap{font-weight:900;font-size:48px;line-height:1.4;color:var(--ex-muted);white-space:nowrap;}
 .ex-delta{position:absolute;right:30px;top:150px;font-family:'Inter',sans-serif;font-weight:900;font-size:116px;letter-spacing:-.02em;line-height:1;
   color:var(--ex-num);opacity:0;animation:exHit .30s calc(var(--d0,0s) + .55s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
 /* 締めの1枚：下がった状態から始めて、最後に元へ戻す（冒頭の1コマ目と同じ絵にして、くり返しをつなぐ） */
 .ex-chart.ex-reset .ex-bar-b{transform:scaleY(var(--after));animation:exReset .8s var(--reset-at,3s) cubic-bezier(.4,0,.2,1) forwards;animation-play-state:running;}
 .ex-chart.ex-reset .ex-delta{opacity:1;animation:exFadeOut .5s var(--reset-at,3s) forwards;animation-play-state:running;}
-@keyframes exReset{from{transform:scaleY(var(--after))}to{transform:scaleY(1)}}
+@keyframes exReset{from{transform:scaleY(var(--after))}to{transform:scaleY(var(--before,1))}}
 @keyframes exFadeOut{to{opacity:0}}
 /* 図解：点の並び（回数）→ 線で消す */
 .ex-dots{position:absolute;inset:22px 26px;width:calc(100% - 52px);height:calc(100% - 44px);}
@@ -46,3 +46,41 @@
 .ex-cut{stroke:var(--ex-series);stroke-width:12;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;
   animation:exDraw .45s 1.3s cubic-bezier(.4,0,.2,1) forwards;}
 .ex-tag-b{opacity:0;transform-box:fill-box;transform-origin:center;animation:exHit .30s 2.6s cubic-bezier(.2,.8,.2,1) forwards;}
+
+/* 図解：同じ単位の2つの数字（横棒） */
+.ex-cmp{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;gap:34px;padding:30px 44px;}
+.ex-row{display:grid;grid-template-columns:1fr;gap:10px;}
+.ex-row .ex-cap{text-align:left;}
+.ex-hbar{height:56px;border-radius:10px;width:calc(var(--w) * 62%);transform-origin:left center;transform:scaleX(0);
+  animation:exGrow .8s var(--d0,0s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+.ex-hbar-a{background:rgba(174,182,208,.55);} .ex-hbar-b{background:var(--ex-num);animation-delay:calc(var(--d0,0s) + .5s);}
+@keyframes exGrow{to{transform:scaleX(1)}}
+.ex-row{position:relative;}
+.ex-val{position:absolute;right:0;bottom:-6px;font-family:'Inter','Noto Sans JP',sans-serif;font-weight:900;font-size:76px;line-height:1;
+  color:var(--ex-num);opacity:0;animation:exHit .30s calc(var(--d0,0s) + .9s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+.ex-dots.ex-nostrike .ex-dots-g{animation:none;}
+/* 図解：年表 */
+.ex-tl{position:absolute;inset:0;}
+.ex-tl-line,.ex-tl-fill{position:absolute;left:60px;right:60px;top:300px;height:8px;border-radius:4px;background:rgba(174,182,208,.35);}
+.ex-tl-fill{background:var(--ex-series);transform-origin:left center;transform:scaleX(0);
+  animation:exTl .9s var(--d0,0s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+@keyframes exTl{to{transform:scaleX(.62)}}
+.ex-tl-dot{position:absolute;left:calc(60px + (100% - 120px) * .62 - 22px);top:282px;width:44px;height:44px;border-radius:50%;
+  background:var(--ex-ink);opacity:0;animation:exHit .30s calc(var(--d0,0s) + .8s) forwards;animation-play-state:var(--go);}
+.ex-tl-year{position:absolute;left:0;right:0;top:110px;text-align:center;font-family:'Inter',sans-serif;font-weight:900;font-size:150px;line-height:1;
+  color:var(--ex-ink);opacity:0;animation:exRise .30s calc(var(--d0,0s) + .9s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+/* 図解：記号（問い・答え・引用）。線を描く */
+.ex-sym{position:absolute;inset:40px;width:calc(100% - 80px);height:calc(100% - 80px);}
+.ex-sym path,.ex-sym circle{fill:none;stroke:var(--ex-ink);stroke-width:22;stroke-linecap:round;stroke-linejoin:round;}
+.ex-sym-q,.ex-sym-c,.ex-sym-ring{stroke-dasharray:1;stroke-dashoffset:1;animation:exDraw .9s var(--d0,0s) cubic-bezier(.4,0,.2,1) forwards;animation-play-state:var(--go);}
+.ex-sym-q{stroke:var(--ex-series) !important;}
+.ex-sym-ring{stroke:rgba(174,182,208,.5) !important;stroke-width:12 !important;}
+.ex-sym-c{stroke:var(--ex-num) !important;animation-delay:calc(var(--d0,0s) + .7s);}
+.ex-sym-dot{fill:var(--ex-series) !important;stroke:none !important;opacity:0;transform-box:fill-box;transform-origin:center;
+  animation:exHit .30s calc(var(--d0,0s) + 1.0s) forwards;animation-play-state:var(--go);}
+.ex-sym-quote path{stroke:var(--ex-series);stroke-width:26;opacity:0;animation:exRise .30s var(--d0,0s) forwards;animation-play-state:var(--go);}
+.ex-sym-quote .ex-q2{animation-delay:calc(var(--d0,0s) + 1.6s);}
+/* 2段目の変化（3秒ルール）：枠の線が、2.4秒後にシリーズの色で1回光る。どの型にも付く */
+.ex-vis::before{content:"";position:absolute;inset:0;border-radius:inherit;border:4px solid var(--ex-series);opacity:0;z-index:3;
+  animation:exPulse 1.0s calc(var(--d0,0s) + 2.6s) ease-out 1;animation-play-state:var(--go);pointer-events:none;}
+@keyframes exPulse{0%{opacity:0}30%{opacity:.9}100%{opacity:0}}

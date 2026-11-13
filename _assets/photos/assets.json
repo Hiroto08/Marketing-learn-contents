@@ -1,7 +1,7 @@
 [
  {
   "id": "jcpenney_store",
-  "file": "assets/jcpenney_store.jpg",
+  "file": "jcpenney_store.jpg",
   "source": "Wikimedia Commons",
   "title": "File:JCPenney - Governor’s Square - Tallahassee, FL.jpg",
   "page": "https://commons.wikimedia.org/wiki/File:JCPenney_-_Governor%E2%80%99s_Square_-_Tallahassee,_FL.jpg",
@@ -9,6 +9,10 @@
   "license": "CC0",
   "orig_size": "4032x3024",
   "fetched": "2026-11-13",
-  "credit": ""
+  "credit": "",
+  "used_in": [
+   "u01_jcpenney-sale",
+   "c01_jcpenney-fair-and-square"
+  ]
  }
 ]

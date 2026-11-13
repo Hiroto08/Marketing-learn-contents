@@ -257,7 +257,11 @@ def check_browser(html_path):
               const rng=document.createRange(); rng.selectNodeContents(e);
               const rects=[...rng.getClientRects()].filter(x=>x.width>1);
               const lines={};
-              rects.forEach(x=>{const k=Math.round(x.top/6)*6;
+              // 行は「縦の中心」でまとめる（数字だけ大きい行は上端がずれるので、上端では数えない）
+              const lh=fs*0.6;
+              rects.forEach(x=>{const c=(x.top+x.bottom)/2;
+                let k=Object.keys(lines).map(Number).find(q=>Math.abs(q-c)<lh);
+                if(k===undefined){k=c;}
                 const g=lines[k]||(lines[k]={l:1e9,r:-1e9}); g.l=Math.min(g.l,x.left); g.r=Math.max(g.r,x.right);});
               const keys=Object.keys(lines).map(Number).sort((a,b)=>a-b);
               // テロップ同期型：<br> で決めた行数より多く折り返したら不合格（改行位置がずれて語の途中で割れる）

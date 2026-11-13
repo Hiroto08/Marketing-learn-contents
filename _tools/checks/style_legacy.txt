@@ -22,3 +22,5 @@ s2_ura/u11_meeting-hours
 s2_ura/u12_jam-tasting
 s2_ura/u13_towel-norm
 s2_ura/u14_followers-shirts
+# ↓ 表現コード v1 の動作確認用の写し（中身は旧基準の u01・c01。公開しない。`_tools/expression/selftest.sh` が使う）
+_prototypes/expr_v1/pipeline_test

@@ -165,7 +165,8 @@ def check_accent(html):
     mine = mm[-1].upper()
     dup = []
     for root, _, files in os.walk("."):
-        if "slide.html" in files and not root.startswith("./.claude"):
+        # 試作・動作確認用の写し（_prototypes/）は、本番の回ではないので数えない
+        if "slide.html" in files and not root.startswith("./.claude") and not root.startswith("./_prototypes"):
             p = os.path.join(root, "slide.html")
             if os.path.abspath(p) == os.path.abspath(f"{EP}/slide.html"):
                 continue

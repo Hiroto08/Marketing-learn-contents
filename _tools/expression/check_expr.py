@@ -8,6 +8,7 @@
   S3 冒頭 0.0〜0.3秒に音がある（−30dB 以上）   S4 声のある所と間の音量差 10〜20dB
   S5 明瞭さの帯域（3〜6kHz）が全体比 −14dB 以上  S6 効果音の本数・間隔（expr_mix.json があれば）
   S7 Shorts：末尾0.5秒が −35dB 以上（くり返し再生のつなぎ目に無音の谷を作らない）
+  V4 Shorts（--plan があるとき）：最初のコマと最後のコマの絵が同じ（差 6.0 以下）
   M1 最初の動きが 2.0秒以内               M2 動きの無い時間の最長：長尺 12秒・Shorts 3秒 以内
 測るもの（--html があれば、画面の要素から）：
   D1 文字の最小：長尺 42px・Shorts 48px（書き出し解像度で）
@@ -91,7 +92,15 @@ def measure(mp4):
     for mv in moving:
         run = 0 if mv else run + 1
         mx = max(mx, run)
-    return {'vertical': vertical, 'dur': round(len(x) / SR, 2),
+    # ループの継ぎ目（Shorts）：映像の枠（帯の下〜文字の上）の、最初のコマと最後のコマの差
+    seam = None
+    if vertical:
+        def one(args):
+            raw = subprocess.run(['ffmpeg', '-v', 'error', *args, '-i', mp4, '-frames:v', '1', '-vf', 'scale=180:320',
+                                  '-pix_fmt', 'gray', '-f', 'rawvideo', '-'], capture_output=True).stdout
+            return np.frombuffer(raw, dtype=np.uint8).reshape(320, 180).astype(np.int16)[48:126]
+        seam = float(np.abs(one(['-ss', '0.05']) - one(['-sseof', '-0.08'])).mean())
+    return {'vertical': vertical, 'dur': round(len(x) / SR, 2), 'seam_diff': None if seam is None else round(seam, 1),
             'I': I, 'LRA': LRA, 'TP': TP, 'head_0_3': round(head3, 1), 'voice_minus_gap': round(gap, 1),
             'clarity_3_6k': round(clarity, 1), 'head_0_5': round(head5, 1), 'tail_0_5': round(tail5, 1),
             'first_motion': None if first is None else round((first + 1) / 4, 2),
@@ -133,7 +142,7 @@ console.log(JSON.stringify(out));await b.close();})();
     return rows
 
 
-def judge(m, mix=None, html_rows=None):
+def judge(m, mix=None, html_rows=None, has_plan=False):
     v = m['vertical']
     res = []
     add = lambda code, ok, text: res.append((code, bool(ok), text))
@@ -156,6 +165,9 @@ def judge(m, mix=None, html_rows=None):
     add('M1', m['first_motion'] is not None and m['first_motion'] <= 2.0, f"最初の動き {m['first_motion']}秒（基準 2.0 以内）")
     lim = 3.0 if v else 12.0
     add('M2', m['longest_still'] <= lim, f"動きの無い時間の最長 {m['longest_still']}秒（基準 {lim:.0f} 以内）")
+    if v and has_plan:
+        add('V4', m['seam_diff'] is not None and m['seam_diff'] <= 6.0,
+            f"ループの継ぎ目の絵：最初と最後のコマの差 {m['seam_diff']}（基準 6.0 以下＝同じ絵で終わる）")
     if html_rows is not None:
         floor = 48 if v else 42
         mins = [(r['min'], r['id'], r['minTxt']) for r in html_rows if r['min']]
@@ -173,14 +185,20 @@ def main():
     ap.add_argument('mp4')
     ap.add_argument('--html')
     ap.add_argument('--json', action='store_true')
+    ap.add_argument('--plan', help='visual_plan.json（あれば、ループの継ぎ目の絵 V4 も検査する）')
+    ap.add_argument('--record', help='結果を JSON で書き出す（quality_record.py が読む。コミットする）')
     a = ap.parse_args()
     m = measure(a.mp4)
     mixp = os.path.join(os.path.dirname(a.mp4), 'expr_mix.json')
     mix = json.load(open(mixp, encoding='utf-8')) if os.path.exists(mixp) else None
     rows = check_html(a.html, m['vertical']) if a.html else None
-    res = judge(m, mix, rows)
+    res = judge(m, mix, rows, has_plan=bool(a.plan))
+    if a.record:
+        json.dump({'video': os.path.basename(a.mp4), 'measure': m, 'mix': mix,
+                   'result': [{'code': c, 'ok': o, 'text': t} for c, o, t in res],
+                   'pass': all(o for _, o, _ in res)}, open(a.record, 'w', encoding='utf-8'), ensure_ascii=False, indent=1, default=float)
     if a.json:
-        print(json.dumps({'measure': m, 'result': res}, ensure_ascii=False))
+        print(json.dumps({'measure': m, 'result': res}, ensure_ascii=False, default=float))
     else:
         print(f"== 表現コード v1 検査：{os.path.basename(a.mp4)}（{m['dur']}秒・{'Shorts' if m['vertical'] else '長尺'}）")
         for code, ok, text in res:
