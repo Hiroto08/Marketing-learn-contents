@@ -93,6 +93,7 @@ python3 _tools/expression/fetch_assets.py <回> --id <素材ID> --query "<英語
 
 - 取得元は Wikimedia Commons だけ。使えるライセンスは **CC0／Public domain／CC BY** だけ（道具が検査する。CC BY-SA・NC・ND・不明は落ちる）。
 - 素材ID は英小文字と `_`（例 `jcpenney_store`）。同じID が既にあれば、取得せずに使い回す。
+- 事例の会社・店の外観は、看板が写っていても使ってよい（社長決裁 2026-11-13）。
 - 取得したら、**必ず Read で写真を見る**。次のどれかなら使わない（別の検索語でやり直すか、図解に替える）：人の顔が大きく写っている／事例と関係ない／ロゴだけ／アニメ・映画・テレビの画面／文字だらけ。
 - `haslicense:unrestricted` で見つからなければ、`haslicense:attribution -haslicense:share-alike` で CC BY を探す。CC BY を使ったら、`_assets/photos/assets.json` の `credit` の文を、概要欄（description.md）の末尾に足す。
 - **見つからなければ、写真をあきらめて図解にする。** ライセンスの分からない画像・ストックサイトの画像・作品の切り抜き（GIF を含む）は、どんな理由でも使わない。
