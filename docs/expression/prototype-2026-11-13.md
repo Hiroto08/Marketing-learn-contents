@@ -109,3 +109,16 @@ bash _prototypes/expr_v1/build_long.sh c01_jcpenney-fair-and-square "得した�
 bash _prototypes/expr_v1/make_compare.sh                   # 比較動画
 python3 _tools/expression/check_expr.py <mp4> --html <html>
 ```
+
+## 8. 追記（11/13 決裁のあと）：標準の表現での通し確認
+
+素材埋め込み・アニメーションありを標準とする決裁を受けて、本番と同じコマンド（`run_shorts.sh`／`run_episode.sh`）に組み込み、u01・c01 の写しで最後まで通した（`bash _tools/expression/selftest.sh`）。
+
+| | 結果 | 補足 |
+|---|---|---|
+| Short（u01 の写し） | 全項目 合格 | 動きの無い時間の最長 2.75秒／最初と最後のコマの差 0.6（同じ絵で終わる）／冒頭のテロップの穴は解消 |
+| 長尺（c01 の写し） | 全項目 合格 | 動きの無い時間の最長 11.0秒（基準 12秒。余裕は1秒）／最初の動き 0.5秒 |
+
+- 長尺の映像：題名・「舞台」・締めの1枚の背景に店の写真（暗く重ねて、文字の読みやすさを保つ）、590回のスライドの背景に点、同じ単位の数字のカード（25%と45%、2.65ドルと1.50ドル）の下に棒。文字の配置は変えていない。
+- 締めの1枚は、回の表記 → 写真が一段明るく → 線 → もう一段、の順に切り替わる。
+- フレーム：`evidence/after_long_c01_visuals.jpg`

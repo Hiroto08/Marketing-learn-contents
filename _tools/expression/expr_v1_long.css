@@ -87,3 +87,5 @@ b.c-accent,.ex-num{font-family:'Inter','Noto Sans JP','Noto Sans CJK JP',sans-se
 .ex-bg.ex-bg-end .ex-photo-tint{animation:exTint1 .3s 6.5s ease-out forwards, exTint2 .3s 14s ease-out forwards;}
 @keyframes exTint1{to{background:rgba(11,18,32,.66)}}
 @keyframes exTint2{from{background:rgba(11,18,32,.66)}to{background:rgba(11,18,32,.54)}}
+/* 締めの1枚：写真が明るくなっても文字が読めるよう、文字の後ろだけ暗くする */
+.ex-end{background:radial-gradient(58% 42% at 50% 50%, rgba(11,18,32,.78) 0%, rgba(11,18,32,.45) 55%, transparent 80%);}
