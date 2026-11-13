@@ -2,8 +2,8 @@
 # ──────────────────────────────────────────────────────────────────
 # 表現コード v1 の動作確認（どのモデルが作業していても、同じ結果になることを確かめる）。
 #
-#   bash _tools/expression/selftest.sh            # Short と長尺の両方（約15分）
-#   bash _tools/expression/selftest.sh short      # Short だけ（約3分）
+#   bash _tools/expression/selftest.sh            # Short 2本と長尺1本（約20分）
+#   bash _tools/expression/selftest.sh short      # Short だけ（u01・u09。約6分）
 #
 # u01（Short）と c01（長尺）の写しを _prototypes/expr_v1/pipeline_test/ に作り、
 # 保存してある映像意図（_tools/expression/selftest/）を使って、本番と同じコマンド
@@ -29,6 +29,12 @@ if [ "$WHAT" = all ] || [ "$WHAT" = short ]; then
   U=$T/u01_jcpenney-sale; rm -rf "$U"; cp -r s2_ura/u01_jcpenney-sale "$U"
   rm -rf "$U"/shorts_build/short1/{publish_manifest.json,.work,*.mp4,built_readings.json} "$U"/quality_record.md
   cp $FIX/u01_visual_plan.json "$U/shorts_build/short1/visual_plan.json"
+  EXPR_FORCE=1 bash _tools/pipeline/run_shorts.sh "$U"
+  python3 -c "import json,sys;d=json.load(open(sys.argv[1]));assert d['pass'],d" "$U/shorts_build/short1/expr_record.json"
+  echo "━━ 1b. Short（u09 の写し：写真の reset・compare_bars・quote・check。Opus の試作 2026-11-13） ━━"
+  U=$T/u09_costco-hotdog; rm -rf "$U"; cp -r s2_ura/u09_costco-hotdog "$U"
+  rm -rf "$U"/shorts_build/short1/{publish_manifest.json,.work,*.mp4,built_readings.json} "$U"/quality_record.md
+  cp $FIX/u09_visual_plan.json "$U/shorts_build/short1/visual_plan.json"
   EXPR_FORCE=1 bash _tools/pipeline/run_shorts.sh "$U"
   python3 -c "import json,sys;d=json.load(open(sys.argv[1]));assert d['pass'],d" "$U/shorts_build/short1/expr_record.json"
 fi

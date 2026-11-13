@@ -1,0 +1,42 @@
+{
+ "_note": "映像意図。plan_visuals.py の下書き → TODO を埋める → check_visual_plan.py を通す。数字・文字は台本にあるものだけ。",
+ "version": "v1",
+ "kind": "short",
+ "answer": "1.5ドルのホットドッグが、年会費を売っている",
+ "slides": {
+  "s1": {
+   "type": "photo",
+   "asset": "costco_hotdog",
+   "focus": "62% 88%",
+   "intent": "実写イメージ：コストコのホットドッグそのもの（固有名詞・主役の商品）。店内の写真は客の顔が写るので使わない"
+  },
+  "s2": {
+   "type": "compare_bars",
+   "a": 1.5,
+   "b": 4.6,
+   "a_text": "1.5ドル",
+   "b_text": "4.6ドル",
+   "a_label": "ホットドッグ",
+   "b_label": "物価で直せば",
+   "sync": "s2-t1",
+   "intent": "図解＋数字の強調：今の1.5ドルと、物価で直した4.6ドルを棒の長さで比べる"
+  },
+  "s3": {
+   "type": "quote",
+   "sync": "s3-t2",
+   "intent": "図解：創業者の発言「上げたら、許さない」を、かぎかっこで描いて強調する"
+  },
+  "s4": {
+   "type": "check",
+   "sync": "s4-t2",
+   "intent": "図解：種明かし（儲けは年会費で取る）に、チェックを描いて答えを示す"
+  },
+  "s5": {
+   "type": "photo",
+   "asset": "costco_hotdog",
+   "focus": "62% 88%",
+   "intent": "答え。冒頭と同じ店の写真に戻して、くり返しの継ぎ目をつなぐ",
+   "reset": true
+  }
+ }
+}

@@ -14,5 +14,20 @@
    "u01_jcpenney-sale",
    "c01_jcpenney-fair-and-square"
   ]
+ },
+ {
+  "id": "costco_hotdog",
+  "file": "costco_hotdog.jpg",
+  "source": "Wikimedia Commons",
+  "title": "File:20250523 192710 Costco hot dog Taichung Taiwan (horizontal).jpg",
+  "page": "https://commons.wikimedia.org/wiki/File:20250523_192710_Costco_hot_dog_Taichung_Taiwan_(horizontal).jpg",
+  "artist": "Saimmx",
+  "license": "CC0",
+  "orig_size": "4080x3060",
+  "fetched": "2026-11-13",
+  "credit": "",
+  "used_in": [
+   "u09_costco-hotdog"
+  ]
  }
 ]

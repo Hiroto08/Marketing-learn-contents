@@ -2,6 +2,8 @@
 """ライセンスが明確な写真だけを取得し、ライセンス台帳に自動で追記する。
 
   python3 _tools/expression/fetch_assets.py <回のフォルダ> --id <素材ID> --query "<英語の検索語>" [--title "File:..."] [--min-width 1600]
+  python3 _tools/expression/fetch_assets.py <回のフォルダ> --id <素材ID> --drop     # 見て使わないと決めた写真を消す
+    候補の一覧（○＝条件を満たす）が出る。最初の○を取るので、目で見て合わなければ --drop して --title で選び直す
     検索語に haslicense:unrestricted を足すと CC0／PD だけになる。
     同じ素材ID が既にあれば、取得せずに「使う回」だけを足す（同じ写真を別の回でも使える）
 
@@ -86,6 +88,7 @@ def main():
     ap.add_argument('ep_dir'); ap.add_argument('--id', required=True)
     ap.add_argument('--query', default=''); ap.add_argument('--title', default='')
     ap.add_argument('--min-width', type=int, default=1600)
+    ap.add_argument('--drop', action='store_true', help='目で見て使わないと決めた写真を、置き場・記録・台帳から消す')
     a = ap.parse_args()
     parts = os.path.normpath(os.path.abspath(a.ep_dir)).split(os.sep)
     ep = next((x for x in parts if re.match(r'^(u|c|ep)\d+_', x)), parts[-1])      # 回のフォルダ名（u01_… など）
@@ -94,6 +97,21 @@ def main():
     jp = os.path.join(adir, 'assets.json')
     data = json.load(open(jp, encoding='utf-8')) if os.path.exists(jp) else []
     have = next((d for d in data if d['id'] == a.id), None)
+    if a.drop:
+        if not have:
+            sys.exit(f'{a.id} は無い')
+        others = [u for u in have.get('used_in', []) if u != ep]
+        if others:
+            sys.exit(f'{a.id} は他の回（{"・".join(others)}）でも使っているので消さない')
+        data = [d for d in data if d['id'] != a.id]
+        json.dump(data, open(jp, 'w', encoding='utf-8'), ensure_ascii=False, indent=1)
+        f = os.path.join(adir, have['file'])
+        if os.path.exists(f):
+            os.remove(f)
+        led = open(LEDGER, encoding='utf-8').read().splitlines(keepends=True)
+        open(LEDGER, 'w', encoding='utf-8').write(''.join(l for l in led if f'| {a.id} |' not in l))
+        print(f'消した：{a.id}（{have["title"]}）。使わない理由を visual_plan.json の intent か判断ログに書く')
+        return 0
     if have:
         if ep not in have.setdefault('used_in', []):
             have['used_in'].append(ep)

@@ -55,13 +55,13 @@ bash _tools/pipeline/run_episode.sh <回>
 |---|---|---|---|
 | 1 | 最後のスライド | 1枚目と同じ型・同じ値 | 1枚目の内容を写し、`"reset": true` を足す。`sync` は書かない |
 | 2 | 「N% 減った／増えた」 | `chart_drop` | `value`（N）、増えたなら `"direction":"up"`、`before_label`・`after_label`（**ナレーションにある語**。例：「セール」「毎日安く」） |
-| 3 | 同じ単位の数字が2つ（2.65ドルと1.50ドル） | `compare_bars` | `a`・`b`（数値）、`a_text`・`b_text`（台本の表記どおり）、`a_label`・`b_label`（ナレーションにある語） |
+| 3 | 同じ単位の数字が2つ（2.65ドルと1.50ドル）。**片方が1つ前のスライドの数字でもよい**（前「1.5ドルのまま」→ 今「4.6ドルのはず」） | `compare_bars` | `a`・`b`（数値）、`a_text`・`b_text`（台本の表記どおり）、`a_label`・`b_label`（ナレーションにある語） |
 | 4 | 「N回・件・人・店・個・社」（N は 1000 まで） | `dot_grid` | `n`。「やめた・消えた」でなければ `"strike": false` |
 | 5 | 会社・店・商品・場所の名前が出る | `photo` | `asset`（素材ID）、`focus`（写真のどこを見せるか。例 `"40% 50%"`）。年を言うなら `stamp`（例 `"2012"`） |
 | 6 | 西暦だけ（数字の見せ場が無い） | `timeline` | `year` |
 | 7 | セール・値引き・定価・割引の話 | `tag_strike` | なし |
 | 8 | 「なぜ」「？」の問い | `question` | なし |
-| 9 | 「」の発言の引用 | `quote` | なし |
+| 9 | 人の発言の引用（「」が無くても、「〜は言った。」の直後の文は発言） | `quote` | なし |
 | 10 | 答え・結論を言う（最後のスライド以外） | `check` | なし |
 
 **長尺（絵は文字の後ろに入る。配置は変わらない）**
@@ -95,6 +95,12 @@ python3 _tools/expression/fetch_assets.py <回> --id <素材ID> --query "<英語
 - 素材ID は英小文字と `_`（例 `jcpenney_store`）。同じID が既にあれば、取得せずに使い回す。
 - 事例の会社・店の外観は、看板が写っていても使ってよい（社長決裁 2026-11-13）。
 - 取得したら、**必ず Read で写真を見る**。次のどれかなら使わない（別の検索語でやり直すか、図解に替える）：人の顔が大きく写っている／事例と関係ない／ロゴだけ／アニメ・映画・テレビの画面／文字だらけ。
+- 道具は候補の一覧（○＝条件を満たす）を出し、**最初の○を自動で取る**。見て合わなければ、`--drop` で消してから、一覧の別の○を `--title "File:…"` で取る：
+  ```bash
+  python3 _tools/expression/fetch_assets.py <回> --id <素材ID> --drop
+  python3 _tools/expression/fetch_assets.py <回> --id <別の素材ID> --title "File:<一覧に出た名前>"
+  ```
+- 検索語は短く（会社名＋ haslicense:unrestricted）。長いと1件も当たらない。
 - `haslicense:unrestricted` で見つからなければ、`haslicense:attribution -haslicense:share-alike` で CC BY を探す。CC BY を使ったら、`_assets/photos/assets.json` の `credit` の文を、概要欄（description.md）の末尾に足す。
 - **見つからなければ、写真をあきらめて図解にする。** ライセンスの分からない画像・ストックサイトの画像・作品の切り抜き（GIF を含む）は、どんな理由でも使わない。
 - 台帳（`docs/expression/license-ledger.md`）は、道具が追記する。手で書かない。
@@ -137,6 +143,8 @@ ffmpeg -v error -y -i $f -vf "fps=2,scale=180:-1,tile=11x5" -frames:v 1 /tmp/she
 | 文字が読める | 絵と文字が重なる・写真の上の文字が読めない |
 | 最後のコマ＝最初のコマ（Shorts） | 最後に別の絵のまま終わる |
 
+- **機械検査が全部 PASS でも、ここで見つかることがある**（2026-11-13 の Opus の試作では、PASS のあとに5つ見つかった。`docs/expression/opus-trial-2026-11-13.md`）。ここを省かない。
+- 道具の不具合（自分の visual_plan.json では直せないもの）を見つけたら、`_tools/expression/` を直し、`bash _tools/expression/selftest.sh` が PASS することを確かめてからコミットする。直したことは判断ログに書く。
 - 耳で確かめる項目（V1〜V4 と、BGM・効果音の感じ）は、AI は判定しない。レビュー便で人が書く。
 
 ## 6. やってはいけないこと

@@ -9,6 +9,9 @@
 .ex-photo{position:absolute;inset:-4%;background-size:cover;filter:grayscale(1) contrast(1.2) brightness(1.15);
   animation:exKen 6s linear both;}
 @keyframes exKen{from{transform:scale(1.0)}to{transform:scale(1.14)}}
+/* 締めの1枚（reset）：寄ったあと、最後の約1秒で元の大きさに戻す＝冒頭の1コマ目と同じ絵（ループの継ぎ目） */
+.ex-photo.ex-reset{animation:exKen 6s linear both, exKenBack .8s var(--reset-at,3s) cubic-bezier(.4,0,.2,1) forwards;}
+@keyframes exKenBack{from{transform:scale(1.14)}to{transform:scale(1.0)}}
 .ex-photo-tint{position:absolute;inset:0;background:linear-gradient(180deg,rgba(60,84,140,.55),rgba(22,33,58,.80));
   mix-blend-mode:multiply;}
 .ex-vis-photo::after{content:"";position:absolute;inset:0;background:rgba(40,70,140,.18);mix-blend-mode:screen;}
@@ -72,14 +75,17 @@
 /* 図解：記号（問い・答え・引用）。線を描く */
 .ex-sym{position:absolute;inset:40px;width:calc(100% - 80px);height:calc(100% - 80px);}
 .ex-sym path,.ex-sym circle{fill:none;stroke:var(--ex-ink);stroke-width:22;stroke-linecap:round;stroke-linejoin:round;}
-.ex-sym-q,.ex-sym-c,.ex-sym-ring{stroke-dasharray:1;stroke-dashoffset:1;animation:exDraw .9s var(--d0,0s) cubic-bezier(.4,0,.2,1) forwards;animation-play-state:var(--go);}
+/* 記号：枠を空にしないため、問い・輪・かぎかっこはスライドが出たら描く（sync を待たない）。チェックと閉じかっこだけが sync の文で入る */
+.ex-sym-q,.ex-sym-c,.ex-sym-ring{stroke-dasharray:1;stroke-dashoffset:1;animation:exDraw .9s var(--d0,.2s) cubic-bezier(.4,0,.2,1) forwards;}
+.ex-sym-c{animation-play-state:var(--go);}
 .ex-sym-q{stroke:var(--ex-series) !important;}
 .ex-sym-ring{stroke:rgba(174,182,208,.5) !important;stroke-width:12 !important;}
-.ex-sym-c{stroke:var(--ex-num) !important;animation-delay:calc(var(--d0,0s) + .7s);}
+.ex-sym-c{stroke:var(--ex-num) !important;stroke-width:28 !important;animation-delay:calc(var(--d0,0s) + .1s);}
 .ex-sym-dot{fill:var(--ex-series) !important;stroke:none !important;opacity:0;transform-box:fill-box;transform-origin:center;
-  animation:exHit .30s calc(var(--d0,0s) + 1.0s) forwards;animation-play-state:var(--go);}
-.ex-sym-quote path{stroke:var(--ex-series);stroke-width:26;opacity:0;animation:exRise .30s var(--d0,0s) forwards;animation-play-state:var(--go);}
-.ex-sym-quote .ex-q2{animation-delay:calc(var(--d0,0s) + 1.6s);}
+  animation:exHit .30s calc(var(--d0,.2s) + 1.0s) forwards;}
+.ex-sym-quote path{stroke:var(--ex-series) !important;stroke-width:26 !important;stroke-linecap:square !important;stroke-linejoin:miter !important;
+  stroke-dasharray:1;stroke-dashoffset:1;animation:exDraw .5s .2s cubic-bezier(.4,0,.2,1) forwards;}
+.ex-sym-quote .ex-q2{animation:exDraw .5s calc(var(--d0,.2s) + .2s) cubic-bezier(.4,0,.2,1) forwards;animation-play-state:var(--go);}   /* 閉じかっこは、発言の文で入る */
 /* 2段目の変化（3秒ルール）：枠の線が、2.4秒後にシリーズの色で1回光る。どの型にも付く */
 .ex-vis::before{content:"";position:absolute;inset:0;border-radius:inherit;border:4px solid var(--ex-series);opacity:0;z-index:3;
   animation:exPulse 1.0s calc(var(--d0,0s) + 2.6s) ease-out 1;animation-play-state:var(--go);pointer-events:none;}

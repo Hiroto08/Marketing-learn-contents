@@ -33,8 +33,8 @@ html,body{background:var(--ex-bg);}
 @keyframes exHit{from{opacity:0;transform:scale(1.35)}to{opacity:1;transform:none}}
 .se.rv-fade,.se.rv-up,.se.rv-left,.se.rv-right,.se.rv-scale,.se.rv-pop{
   animation:exRise .30s cubic-bezier(.2,.8,.2,1) forwards !important;}
-.se[class*="rv-"] .hi:not(.ex-year){animation:exHit .30s .12s cubic-bezier(.2,.8,.2,1) both;}
+.se[class*="rv-"] .hi:not(.ex-year){transform-origin:center;animation:exHit0 .30s .05s cubic-bezier(.2,.8,.2,1) both;}   /* 隠さない（テロップ＝ナレーション） */
 .cta-line{color:var(--ex-num);}
 
 /* 1枚目の数字用：最初から見えていて、拡大から着地する（テロップに穴を作らない） */
-@keyframes exHit0{from{transform:scale(1.35)}to{transform:none}}
+@keyframes exHit0{from{transform:scale(1.18)}to{transform:none}}

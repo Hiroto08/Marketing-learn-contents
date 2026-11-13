@@ -13,6 +13,7 @@
 測るもの（--html があれば、画面の要素から）：
   D1 文字の最小：長尺 42px・Shorts 48px（書き出し解像度で）
   D2 数字は、同じ画面の本文の 1.3 倍以上
+  D3 Shorts：表現を当てたあとも、テロップが <br> の位置以外で折り返さない（数字を大きくすると行が延びるため）
 旧来のビルド（--expr なし）にも当てられる。その場合は「現状の測定」として使う（不合格でもビルドは止めない）。
 """
 import argparse
@@ -124,7 +125,11 @@ const out=await p.evaluate(()=>{const res=[];document.querySelectorAll('section.
   const fs=parseFloat(cs.fontSize);if(fs<min){min=fs;minTxt=txt.slice(0,14);}
   const isNum=e.matches('.hi:not(.ex-year),.jv,b.c-accent,.ex-num,.k-num,.ex-delta')&&/\d/.test(txt);
   if(isNum)num=Math.max(num,fs);else if(!e.closest('.ex-band,.ex-end,.ex-vis'))body=Math.max(body,fs);}
- res.push({id:s.id,min:min===1e9?null:min,minTxt,num,body});});return res;});
+ const wrap=[];s.querySelectorAll('.k-line').forEach(e=>{const fs=parseFloat(getComputedStyle(e).fontSize),lh=fs*0.6;
+  const rg=document.createRange();rg.selectNodeContents(e);const cs=[];
+  [...rg.getClientRects()].filter(q=>q.width>1).forEach(q=>{const c=(q.top+q.bottom)/2;if(!cs.some(v=>Math.abs(v-c)<lh))cs.push(c);});
+  const want=e.querySelectorAll('br').length+1;if(cs.length>want)wrap.push((e.id||'?')+'('+cs.length+'行/'+want+'行)');});
+ res.push({id:s.id,min:min===1e9?null:min,minTxt,num,body,wrap});});return res;});
 console.log(JSON.stringify(out));await b.close();})();
 """
     w, h, scale = (1080, 1920, 1.0) if vertical else (1280, 720, 1.5)
@@ -176,6 +181,9 @@ def judge(m, mix=None, html_rows=None, has_plan=False):
         bad = [f"{r['id']}（数字 {r['num']}／本文 {r['body']}）" for r in html_rows
                if r['num'] and r['body'] and r['num'] < 1.3 * r['body'] - 0.5]
         withnum = sum(1 for r in html_rows if r['num'])
+        wraps = [w for r in html_rows for w in r.get('wrap', [])]
+        if v:
+            add('D3', not wraps, f"テロップが <br> の位置以外で折り返さない：{'・'.join(wraps) or 'なし'}")
         add('D2', withnum > 0 and not bad, f"数字が本文の1.3倍以上：数字のある {withnum}枚のうち不合格 {len(bad)}枚 {' '.join(bad[:4])}")
     return res
 

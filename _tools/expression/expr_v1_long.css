@@ -43,7 +43,7 @@ b.c-accent,.ex-num{font-family:'Inter','Noto Sans JP','Noto Sans CJK JP',sans-se
 .se.rv-fade,.se.rv-up,.se.rv-left,.se.rv-right,.se.rv-scale,.se.rv-pop{
   animation:exRise .30s cubic-bezier(.2,.8,.2,1) forwards !important;}
 .se[class*="rv-"] .jv,.se[class*="rv-"] b.c-accent,.se[class*="rv-"] .ex-num{display:inline-block;
-  animation:exHit .30s .12s cubic-bezier(.2,.8,.2,1) both;}
+  animation:exHit0 .30s .05s cubic-bezier(.2,.8,.2,1) both;}
 /* 1枚目（題名）：数字を主役に */
 #s1{background:transparent !important;}
 #s1 .ex-num{font-size:10cqw !important;}
@@ -63,7 +63,7 @@ b.c-accent,.ex-num{font-family:'Inter','Noto Sans JP','Noto Sans CJK JP',sans-se
 .slide.active{display:none;}
 
 /* 1枚目の数字用：最初から見えていて、拡大から着地する（テロップに穴を作らない） */
-@keyframes exHit0{from{transform:scale(1.35)}to{transform:none}}
+@keyframes exHit0{from{transform:scale(1.18)}to{transform:none}}
 /* 長尺の映像：文字の後ろの層（配置は変えない）。写真は暗い重ねで、文字のコントラストを保つ */
 .ex-bg{--go:paused;position:absolute;inset:0;z-index:0;overflow:hidden;border:0;border-radius:0;background:none;animation:none;}
 .ex-bg::before{display:none;}

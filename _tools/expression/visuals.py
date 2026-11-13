@@ -14,7 +14,8 @@ def _wrap(sid, inner, cls=''):
 
 def photo(sid, p):
     stamp = (f'<span class="ex-stamp">{_h.escape(p["stamp"])}</span>' if p.get('stamp') else '')
-    return _wrap(sid, f'<div class="ex-photo" style="background-image:url({p["file"]});'
+    rc = ' ex-reset' if p.get('reset') else ''      # 締めの1枚：最後に寄りを戻して、冒頭の1コマ目と同じ絵で終わる
+    return _wrap(sid, f'<div class="ex-photo{rc}" style="background-image:url({p["file"]});'
                       f'background-position:{p.get("focus", "50% 50%")}"></div><div class="ex-photo-tint"></div>{stamp}', 'ex-vis-photo')
 
 
@@ -82,7 +83,7 @@ def check(sid, p):
 
 def quote(sid, p):
     return _wrap(sid, '''<svg class="ex-sym ex-sym-quote" viewBox="0 0 600 300">
-  <path class="ex-q1" d="M70 60h110v60h-50v120" /><path class="ex-q2" d="M530 240H420v-60h50V60" /></svg>''', 'ex-vis-sym')
+  <path class="ex-q1" d="M210 50H120V200" pathLength="1"/><path class="ex-q2" d="M390 250H480V100" pathLength="1"/></svg>''', 'ex-vis-sym')
 
 
 def none(sid, p):

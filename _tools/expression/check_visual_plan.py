@@ -9,6 +9,7 @@
   P3 絵のあるスライドのうち、自作の図解が半分以上（写真だけで作らない）。Shorts の写真は2枚まで
   P4 写真は _assets/photos/assets.json にあり、ライセンスが CC0／Public domain／CC BY。docs/expression/license-ledger.md にも載っている
   P5 図に出す数字・文字（value・n・a・b・a_text・b_text・year・stamp・values）は、そのスライドのナレーションか画面の文字にある
+     （compare_bars だけは、1つ前のスライドの数字も使える。比べる相手が前のスライドに出ていることが多いため）
   P6 図に出すラベル（before_label・after_label・a_label・b_label）は、動画全体のナレーションにある語
   P7 sync の要素が、そのスライドにある（STEPS の ids）
   P8 Shorts：最後のスライドは、1枚目と同じ型・同じ値で reset=true（冒頭と同じ絵で終わる）
@@ -78,6 +79,9 @@ def check(html_path, plan_path):
         hay = norm(narr[sid]) + norm(screen[sid])
         if p.get('reset') and kind == 'short':      # 締めの1枚は、1枚目の絵をそのまま戻す（P8 が同じ値かを見る）
             hay += norm(narr[ids[0]]) + norm(screen[ids[0]])
+        i = ids.index(sid)
+        if t == 'compare_bars' and i > 0:          # 比べる相手が「1つ前のスライド」の数字のとき（例：前の1.5ドル ↔ 今の4.6ドル）
+            hay += norm(narr[ids[i - 1]]) + norm(screen[ids[i - 1]])
         for k in ('value', 'n', 'a', 'b', 'year', 'stamp', 'a_text', 'b_text'):
             if k in p:
                 v = norm(p[k]); v = v[:-2] if v.endswith('.0') else v

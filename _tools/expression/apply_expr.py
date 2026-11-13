@@ -58,6 +58,56 @@ def embed_photo(base, asset_id):
     return 'data:image/jpeg;base64,' + base64.b64encode(small).decode()
 
 
+FIT_JS = r"""
+() => {
+  const out = [];
+  document.querySelectorAll('section.slide').forEach(sec => {
+    document.querySelectorAll('section.slide').forEach(x => x.style.display = (x === sec ? 'flex' : 'none'));
+    sec.querySelectorAll('.k-line').forEach(e => {
+      const fs = parseFloat(getComputedStyle(e).fontSize), lh = fs * 0.6;
+      const rg = document.createRange(); rg.selectNodeContents(e);
+      const cs = [];
+      [...rg.getClientRects()].filter(q => q.width > 1).forEach(q => {
+        const c = (q.top + q.bottom) / 2; if (!cs.some(v => Math.abs(v - c) < lh)) cs.push(c);
+      });
+      const want = e.querySelectorAll('br').length + 1;
+      if (e.id && cs.length > want) out.push([e.id, fs, cs.length, want]);
+    });
+  });
+  return out;
+}
+"""
+
+
+def fit_telop(path, floor=64, step=4):
+    """数字を大きくした結果、テロップが <br> 以外で折り返したら、その行だけ文字を小さくする（64px まで）。
+    テロップ同期のルール（画面の文＝ナレーション・<br> 以外で折り返さない）を守るため。"""
+    from playwright.sync_api import sync_playwright
+    fixed = {}
+    with sync_playwright() as pw:
+        b = pw.chromium.launch()
+        pg = b.new_page(viewport={'width': 1080, 'height': 1920})
+        for _ in range(8):
+            pg.goto('file://' + os.path.abspath(path)); pg.wait_for_timeout(400)
+            bad = pg.evaluate(FIT_JS)
+            if not bad:
+                break
+            html = open(path, encoding='utf-8').read()
+            for eid, fs, got, want in bad:
+                nfs = fs - step
+                if nfs < floor:
+                    b.close()
+                    sys.exit(f'FAIL: テロップ {eid} が {floor}px でも折り返す（{got}行/{want}行）。台本の改行（<br>）を見直す')
+                fixed[eid] = nfs
+                rule = f'#{eid}{{font-size:{nfs:.0f}px !important}}'
+                html = re.sub(rf'#{eid}\{{font-size:[\d.]+px !important\}}\n?', '', html)
+                html = html.replace('</style>\n</head>', rule + '\n</style>\n</head>', 1)
+            open(path, 'w', encoding='utf-8').write(html)
+        b.close()
+    for eid, v in fixed.items():
+        print(f'  テロップ {eid}：数字を大きくして折り返したので {v:.0f}px に下げた')
+
+
 def apply(src, dst, plan_path, kind=None, series=None, no=None, color=None):
     html = open(src, encoding='utf-8').read()
     plan = json.load(open(plan_path, encoding='utf-8')) if plan_path else {'slides': {}}
@@ -79,6 +129,8 @@ def apply(src, dst, plan_path, kind=None, series=None, no=None, color=None):
     # 1枚目：録画エンジンは最初から全部を完成形で出す。数字の着地と、2つめ以降の要素の出現を CSS の時間で作る
     first = ids[0] if ids else None
     if first:
+        # 1枚目の映像の枠は、0秒から出しておく（Shorts のくり返しで、最後のコマ＝最初のコマにするため。枠のフェードインは継ぎ目のちらつきになる）
+        css += f'#{first} .ex-vis{{animation:none;opacity:1}}\n'
         css += (f'#{first} .hi:not(.ex-year),#{first} .ex-num{{display:inline-block;transform-origin:center;'
                 f'animation:exHit0 .30s .45s cubic-bezier(.2,.8,.2,1) both !important;}}\n')
         if kind == 'long':
@@ -141,6 +193,8 @@ def apply(src, dst, plan_path, kind=None, series=None, no=None, color=None):
     html = html.replace('</head>', f'<style id="expr-v1">\n{css}\n</style>\n</head>', 1)
     os.makedirs(os.path.dirname(os.path.abspath(dst)), exist_ok=True)
     open(dst, 'w', encoding='utf-8').write(html)
+    if kind == 'short':
+        fit_telop(dst)
     print(f'{dst}: expr v1 ({kind}) スライド {len(ids)}枚・映像 {sum(1 for v in plan.get("slides", {}).values() if v.get("type", "none") != "none")}枚')
 
 

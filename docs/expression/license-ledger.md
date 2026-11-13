@@ -24,3 +24,4 @@
 | 取得日 | 使う回 | 素材ID | 種類 | 出典 | 作者 | ライセンス | 商用 | クレジット表記 |
 |---|---|---|---|---|---|---|---|---|
 | 2026-11-13 | u01_jcpenney-sale（試作）・c01（試作） | jcpenney_store | 写真 | [File:JCPenney - Governor’s Square - Tallahassee, FL.jpg](https://commons.wikimedia.org/wiki/File:JCPenney_-_Governor%E2%80%99s_Square_-_Tallahassee,_FL.jpg) | FLGALine1999 | CC0 | 可 | 不要 |
+| 2026-11-13 | u09_costco-hotdog | costco_hotdog | 写真 | [File:20250523 192710 Costco hot dog Taichung Taiwan (horizontal).jpg](https://commons.wikimedia.org/wiki/File:20250523_192710_Costco_hot_dog_Taichung_Taiwan_(horizontal).jpg) | Saimmx | CC0 | 可 | 不要 |
