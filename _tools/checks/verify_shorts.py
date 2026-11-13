@@ -14,6 +14,7 @@ Checks:
   [4] slide count        (4-6)
   [5] narration length   (total <=150 chars, longest slide <=45 — brevity)
   [6] hook signal        (S1's first STEP text has a number/claim/question)
+  [11] 締めと流れ（新しい回だけ）：「続きは、明日／次で」を使わず「明日は、〜。」を声に出す・答えの前に問い／逆接
   [7] CTA present        (last slide points to the related-video link /
                           長編リンク etc. — see shorts-production.md §4.5)
   [8] loop echo          (first and last slide share a >=3-char token)
@@ -39,6 +40,10 @@ def section(name):
 def fail(msg):
     FAILS.append(msg)
     print(f"  ✗ {msg}")
+
+
+def warn(msg):
+    print(f"  ! {msg}")
 
 
 def ok(msg):
@@ -164,7 +169,7 @@ def check_hook(html):
         fail(f"S1に数字/断言/否定形/問いかけの信号が見当たらない: 「{first[:30]}…」")
 
 
-CTA_PAT = re.compile(r"リンクから|関連動画|下のリンク|長編リンク|固定コメント|概要欄|続きは|長編で|チャンネル登録")
+CTA_PAT = re.compile(r"リンクから|関連動画|下のリンク|長編リンク|固定コメント|概要欄|続きは|長編で|チャンネル登録|明日は")
 
 
 def check_cta(html):
@@ -178,6 +183,51 @@ def check_cta(html):
         ok("末尾に送客文言あり")
     else:
         fail(f"末尾に送客文言（固定コメント/概要欄等）が無い: 「{last[-40:]}」")
+
+
+# 締めと流れ（社長FB 2026-11-13「ストーリーが自然じゃない」「続きは次でってよくわからない」）
+VAGUE_END = re.compile(r"続きは、?(明日|次で|次回|来週|また)")
+TURN_PAT = re.compile(r"？|\?|なぜ|どうして|では、|じゃあ|でも、|なのに|ところが|しかし|ただ、|それなのに|実は")
+
+
+def check_story(html, ep_dir):
+    """新しい回（style_legacy.txt に無い回）だけ不合格にする。旧基準の回は参考表示。
+    A) 締めに「続きは、明日／次で／次回／来週」を使わない（次の回は続きではない）。
+       続きのケースファイルがある回だけ「続きは、下の長編で」。それ以外は「明日は、〜。」で次の問いを声に出す
+    B) 「明日は、〜」の中身が、画面の次回予告（**次回予告：**）と同じ話である（共通の語がある）
+    C) 答えのスライド（最後）の前に、問いか逆接の文が1つ以上ある（問い→答えの流れ）"""
+    section("11) 締めと流れ（問い→答え・明日の予告）")
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__))))
+    import check_style as CS
+    soft = CS.legacy(ep_dir)
+    say = (lambda m: warn(m + "（旧基準の回なので参考）")) if soft else fail
+    narr = _narrations(html)
+    if len(narr) < 2:
+        return
+    last = narr[-1]
+    md_p = os.path.join(ep_dir, "shorts.md")
+    md = open(md_p, encoding="utf-8").read() if os.path.exists(md_p) else ""
+    cont = re.search(r"\*\*続きの本編：\*\*\s*c\d+", md)
+    teaser = re.sub(r"<br>|明日：|次：|\s", "", (re.search(r"\*\*次回予告：\*\*\s*(.+)", md) or [None, ""])[1])
+    bad = False
+    if VAGUE_END.search(last) and not (cont and "長編" in last):
+        say(f"締めが「{VAGUE_END.search(last).group(0)}」。次の回は続きではないので使わない。「明日は、〜。」で次の問いを声に出す")
+        bad = True
+    if not cont:
+        m = re.search(r"明日は、?([^。]+)", last)
+        if not m:
+            say("締めに「明日は、〜。」（明日の問いを声に出す）が無い")
+            bad = True
+        elif teaser:
+            tk = lambda s: set(re.findall(r"[一-龥]{2,}|[ァ-ヶー]{2,}|[ぁ-ん]{3,}|[0-9]+|[A-Za-z.]{2,}", s))
+            if not (tk(m.group(1)) & tk(teaser)):
+                say(f"「明日は、{m.group(1)}」と、画面の次回予告「{teaser}」が別の話に見える（共通の語が無い）")
+                bad = True
+    if not any(TURN_PAT.search(n) for n in narr[1:-1]):
+        say("答えの前に、問いか逆接の文が無い（「では、なぜ〜か。」「でも、〜」「なのに〜」など）。事実の羅列→答え、になっている")
+        bad = True
+    if not bad:
+        ok("締めは明日の問いを声に出している・答えの前に問い／逆接がある")
 
 
 def check_loop(html):
@@ -308,6 +358,8 @@ if __name__ == "__main__":
     check_hook(html)
     check_cta(html)
     check_loop(html)
+    if os.path.basename(DIR).startswith("short") and os.path.basename(os.path.dirname(DIR)) == "shorts_build":
+        check_story(html, os.path.dirname(os.path.dirname(DIR)))
     check_telop(html)
     if not no_browser:
         check_browser(f"{DIR}/stage.html")
