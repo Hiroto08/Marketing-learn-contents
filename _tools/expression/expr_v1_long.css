@@ -1,0 +1,63 @@
+/* 表現コード v1：長尺（16:9・ステージ幅 1280px＝書き出し 1920x1080 の 2/3）。仕様は docs/expression/expression-code.md。
+   apply_expr.py が head の末尾に差し込む。エンジン（keyframes・rv-*・.se）は書き換えず、後ろから上書きする。
+   文字の大きさは cqw（ステージ幅の%）。1cqw＝書き出しで 19.2px。 */
+:root{
+  --ex-bg:#0B1220; --ex-bg2:#16213A; --ex-ink:#F4F6FB; --ex-muted:#AEB6D0;
+  --ex-num:#FFD54F; --ex-series:#E11D48;
+  --slide-bg:var(--ex-bg); --bg:var(--ex-bg); --text:var(--ex-ink);
+  --muted:var(--ex-muted); --muted2:var(--ex-muted);
+  --surf:#16213A; --surf2:#1D2A47; --border:#2A3A5E;
+  --accent:var(--ex-series); --glow-acc:transparent;
+}
+#stage{background:radial-gradient(90% 80% at 50% 45%, var(--ex-bg2) 0%, var(--ex-bg) 75%);}
+.slide{background:transparent !important;color:var(--ex-ink);}
+.slide::before,.s1-ring,.slide-num,.step-dots,.s1-dot{display:none !important;}   /* 情報を持たない飾りは出さない */
+.pad-t{padding:11% 6% 7%;gap:.5em;}
+/* 文字の階層（書き出し px）：見出し 50／本文 58／大 77／補足 42。42px 未満の文字は置かない */
+.sh{font-size:2.6cqw;color:var(--ex-muted);border-color:var(--ex-series);}
+.t-md{font-size:3.0cqw;line-height:1.4;}
+.t-lg{font-size:4.0cqw;}
+.t-sm,.t-xs,.note,.jcell .jn,.achip small{font-size:2.2cqw !important;color:var(--ex-muted) !important;}
+.hl-banner{font-size:2.7cqw;border-color:var(--ex-series);}
+/* 数字：その画面でいちばん大きく、数字の色。シリーズの色は数字に使わない */
+.jcell .jv,.jcell .jv.c-accent{font-family:'Inter','Noto Sans JP','Noto Sans CJK JP',sans-serif;
+  font-size:6.4cqw;color:var(--ex-num) !important;letter-spacing:-.01em;}
+b.c-accent,.ex-num{font-family:'Inter','Noto Sans JP','Noto Sans CJK JP',sans-serif;color:var(--ex-num) !important;
+  font-size:1.6em !important;font-weight:900;line-height:1;}
+.c-accent{color:var(--ex-ink);text-decoration:underline;text-decoration-color:var(--ex-series);
+  text-decoration-thickness:.12em;text-underline-offset:.18em;}
+.achip.on{box-shadow:none;}
+/* 番組名の帯（全スライドの左上・同じ位置）と進行バー（下端） */
+.ex-band{position:absolute;left:6%;top:4.2%;z-index:5;display:flex;align-items:center;gap:.6em;
+  font-weight:900;font-size:2.2cqw;line-height:1;color:var(--ex-ink);}
+.ex-band::before{content:"";width:.35em;height:1.1em;border-radius:2px;background:var(--ex-series);}
+.ex-band .ex-no{color:var(--ex-series);font-family:'Inter',sans-serif;}
+.ex-prog{position:absolute;left:0;right:0;bottom:0;height:.55cqw;background:rgba(244,246,251,.10);z-index:5;}
+.ex-prog i{display:block;height:100%;width:100%;transform-origin:left center;background:var(--ex-series);
+  transform:scaleX(var(--p0,0));}
+.ex-prog i{animation:exProg var(--sd,20s) linear forwards;}
+@keyframes exProg{from{transform:scaleX(var(--p0,0))}to{transform:scaleX(var(--p1,1))}}
+/* 動き：出現は1種（下から＋フェード 0.30秒）。数字だけ拡大から着地 */
+@keyframes exRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes exHit{from{opacity:0;transform:scale(1.3)}to{opacity:1;transform:none}}
+.se.rv-fade,.se.rv-up,.se.rv-left,.se.rv-right,.se.rv-scale,.se.rv-pop{
+  animation:exRise .30s cubic-bezier(.2,.8,.2,1) forwards !important;}
+.se[class*="rv-"] .jv,.se[class*="rv-"] b.c-accent,.se[class*="rv-"] .ex-num{display:inline-block;
+  animation:exHit .30s .12s cubic-bezier(.2,.8,.2,1) both;}
+/* 1枚目（題名）：数字を主役に */
+#s1{background:transparent !important;}
+#s1 .ex-num{font-size:10cqw !important;}
+#s1-badge{display:none !important;}
+/* 文字の色は 白・補足・数字の3つだけ。シリーズの色は 帯・線・枠にしか使わない */
+.jcell .jv,b.c-accent,.ex-num{text-decoration:none !important;}
+[style*="color:var(--accent)"],.achip.on,.tag.ng,.aarrow{color:var(--ex-ink) !important;}
+.achip.on,.tag.ng{border-color:var(--ex-series) !important;}
+/* 最後の1枚（締め）：番組名を中央に出す。空の画面を作らない */
+.ex-end{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5em;
+  font-weight:900;font-size:5.2cqw;color:var(--ex-ink);z-index:1;}
+.ex-end small{font-family:'Inter',sans-serif;font-size:.5em;color:var(--ex-series);letter-spacing:.04em;}
+.ex-end::after{content:"";width:12cqw;height:.5cqw;border-radius:1cqw;background:var(--ex-series);}
+#s1-num1 > span:first-child{font-size:2.3cqw !important;color:var(--ex-muted) !important;}
+/* 1枚目は、録画エンジンが表示した瞬間（インラインの display:flex）から CSS の動きを始める。
+   class="active" だけでは表示しない（ページの読み込み時刻に動きが始まってしまうのを防ぐ） */
+.slide.active{display:none;}

@@ -1,0 +1,48 @@
+/* 表現コード v1 §8：Shorts の映像（写真・図解）。apply_expr.py --visuals のときだけ差し込む。
+   --go は「同期する要素が出たら running」。図の中の動きは animation-play-state:var(--go) で待つ。 */
+.slide.ex-hasvis{justify-content:flex-start;padding-top:790px;}
+.slide.ex-hasvis .card{margin:auto;}
+.ex-vis{--go:paused;position:absolute;left:100px;right:100px;top:calc(var(--safe-top) + 96px);height:470px;
+  border-radius:28px;overflow:hidden;background:#101A2E;border:2px solid rgba(244,246,251,.10);
+  animation:exRise .30s cubic-bezier(.2,.8,.2,1) both;}
+/* 実写：紺の単色に寄せる（寄せ集めに見せない）。ゆっくり寄る */
+.ex-photo{position:absolute;inset:-4%;background-size:cover;filter:grayscale(1) contrast(1.2) brightness(1.15);
+  animation:exKen 6s linear both;}
+@keyframes exKen{from{transform:scale(1.0)}to{transform:scale(1.14)}}
+.ex-photo-tint{position:absolute;inset:0;background:linear-gradient(180deg,rgba(60,84,140,.55),rgba(22,33,58,.80));
+  mix-blend-mode:multiply;}
+.ex-vis-photo::after{content:"";position:absolute;inset:0;background:rgba(40,70,140,.18);mix-blend-mode:screen;}
+.ex-stamp{position:absolute;right:28px;bottom:22px;z-index:2;font-family:'Inter',sans-serif;font-weight:900;font-size:96px;
+  line-height:1;color:var(--ex-ink);opacity:0;animation:exRise .30s cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+/* 図解：前→後の棒 */
+.ex-chart{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:flex-start;gap:26px;padding:36px 40px 26px;}
+.ex-col{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;width:205px;}
+.ex-bar{width:170px;height:320px;border-radius:14px 14px 0 0;transform-origin:bottom;}
+.ex-bar-a{background:rgba(174,182,208,.55);}
+.ex-bar-b{background:var(--ex-num);transform:scaleY(1);animation:exDrop .9s var(--d0,0s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+@keyframes exDrop{from{transform:scaleY(1)}to{transform:scaleY(var(--after))}}
+.ex-cap{font-weight:900;font-size:48px;line-height:1.4;color:var(--ex-muted);white-space:nowrap;}
+.ex-delta{position:absolute;right:30px;top:150px;font-family:'Inter',sans-serif;font-weight:900;font-size:116px;letter-spacing:-.02em;line-height:1;
+  color:var(--ex-num);opacity:0;animation:exHit .30s calc(var(--d0,0s) + .55s) cubic-bezier(.2,.8,.2,1) forwards;animation-play-state:var(--go);}
+/* 締めの1枚：下がった状態から始めて、最後に元へ戻す（冒頭の1コマ目と同じ絵にして、くり返しをつなぐ） */
+.ex-chart.ex-reset .ex-bar-b{transform:scaleY(var(--after));animation:exReset .8s var(--reset-at,3s) cubic-bezier(.4,0,.2,1) forwards;animation-play-state:running;}
+.ex-chart.ex-reset .ex-delta{opacity:1;animation:exFadeOut .5s var(--reset-at,3s) forwards;animation-play-state:running;}
+@keyframes exReset{from{transform:scaleY(var(--after))}to{transform:scaleY(1)}}
+@keyframes exFadeOut{to{opacity:0}}
+/* 図解：点の並び（回数）→ 線で消す */
+.ex-dots{position:absolute;inset:22px 26px;width:calc(100% - 52px);height:calc(100% - 44px);}
+.ex-dots circle{fill:var(--ex-ink);opacity:0;animation:exDot .25s ease-out forwards;animation-play-state:var(--go);}
+@keyframes exDot{from{opacity:0;transform:scale(.3)}to{opacity:.9;transform:none}}
+.ex-dots circle{transform-box:fill-box;transform-origin:center;}
+.ex-dots-g{animation:exDim .5s 2.2s forwards;animation-play-state:var(--go);}
+@keyframes exDim{to{opacity:.28}}
+.ex-strike{stroke:var(--ex-series);stroke-width:16;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;
+  animation:exDraw .5s 2.0s cubic-bezier(.4,0,.2,1) forwards;animation-play-state:var(--go);}
+@keyframes exDraw{to{stroke-dashoffset:0}}
+/* 図解：値札と取り消し線 */
+.ex-tag{position:absolute;inset:30px 60px;width:calc(100% - 120px);height:calc(100% - 60px);}
+.ex-tag path{fill:#1D2A47;stroke:var(--ex-muted);stroke-width:6;}
+.ex-hole{fill:var(--ex-bg);} .ex-price{fill:var(--ex-muted);} .ex-price2{fill:var(--ex-num);}
+.ex-cut{stroke:var(--ex-series);stroke-width:12;stroke-linecap:round;stroke-dasharray:1;stroke-dashoffset:1;
+  animation:exDraw .45s 1.3s cubic-bezier(.4,0,.2,1) forwards;}
+.ex-tag-b{opacity:0;transform-box:fill-box;transform-origin:center;animation:exHit .30s 2.6s cubic-bezier(.2,.8,.2,1) forwards;}

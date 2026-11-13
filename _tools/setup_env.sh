@@ -46,6 +46,9 @@ python3 -c "import playwright" >/dev/null 2>&1 || {
 }
 # 読み検査（check_readings.py）の形態素解析。辞書同梱・純 Python
 python3 -c "import janome" >/dev/null 2>&1 || { log "pip install janome"; python3 -m pip install --quiet janome; }
+python3 -c "import numpy" >/dev/null 2>&1 || { log "pip install numpy"; python3 -m pip install --quiet numpy; }
+# 表現コード v1 の音素材（自作の合成音。wav はコミットしていないので、無ければ作る。毎回同じものができる）
+[ -f _assets/audio/v1/bgm_a_calm.wav ] || { log "synth expression v1 audio"; python3 _tools/expression/synth_v1.py >/dev/null; }
 export PLAYWRIGHT_BROWSERS_PATH="$PWB"
 # The base image ships a cached chromium build (e.g. chromium-1194) but the
 # installed playwright may expect a different revision number, and the official

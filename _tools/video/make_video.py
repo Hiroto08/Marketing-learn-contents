@@ -76,6 +76,14 @@ def parse_args():
                    help="Breath pause between sentences (。！？) (s)")
     p.add_argument("--para-gap",     type=float, default=0.45, dest="para_gap",
                    help="Pause between paragraphs (\\n) (s)")
+    p.add_argument("--expr",         default="",
+                   help="表現コードの版（v1）。指定すると音声ミックスを _tools/expression/exmix.py に切り替える")
+    p.add_argument("--num-gap",      type=float, default=0.0, dest="num_gap",
+                   help="数字の見せ場・答えの文の直前に置く間（秒）。0 で無効（既定）")
+    p.add_argument("--beat",         action="append", default=[], dest="beats",
+                   help="この文字列を含む文の直前に --num-gap の間を置く（答えの文の指定。複数可）")
+    p.add_argument("--answer-text",  default="", dest="answer_text",
+                   help="画面の要素にこの文字列があれば「答え」の効果音を鳴らす（--expr v1）")
     p.add_argument("--slide",        type=int,   action="append", dest="only_slides",
                    help="Only process this slide index (may repeat)")
     p.add_argument("--no-record",    action="store_true")
@@ -222,6 +230,35 @@ def clean_for_tts(text: str) -> str:
     t = re.sub(r'[（）\(\)]', '', t)
     t = re.sub(r'\s{2,}', ' ', t)
     return t.strip()
+
+
+# 表現コード v1：数字の見せ場・答えの文の直前の「間」（--num-gap。0 なら何もしない）
+BEAT = {"gap": 0.0, "texts": []}
+_BEAT_NUM_RE = re.compile(r'[0-9０-９][0-9０-９,\.]*\s*(?:%|％|パーセント|倍|円|ドル|億|万|人|件|回|時間|か月|ヶ月|日|割|店|社|秒|分|個|本|点)')
+
+
+def beat_flags(sentences: list, first_slide: bool = False) -> list:
+    """1枚ぶんの文の並び → 各文の直前に「間」を置くか。
+    指定の文（--beat）は必ず。数字＋単位の文は、その1枚で最初の1つだけ。
+    動画の最初の1枚の1文目には置かない（冒頭は 0 秒から始める）。"""
+    if BEAT["gap"] <= 0:
+        return [False] * len(sentences)
+    flags, used = [], False
+    for i, s in enumerate(sentences):
+        n = re.sub(r'[\s、。，,！？]', '', s)
+        ok = i > 0 or not first_slide
+        if ok and any(b and re.sub(r'[\s、。，,！？]', '', b) in n for b in BEAT["texts"]):
+            flags.append(True)
+        elif ok and not used and _BEAT_NUM_RE.search(s):
+            flags.append(True); used = True
+        else:
+            flags.append(False)
+    return flags
+
+
+def _all_sentences(narration_text: str) -> list:
+    return [s for para in split_paragraphs(narration_text)
+            for s in (split_sentences(para) or [para]) if clean_for_tts(s)]
 
 
 def split_sentences(text: str) -> list:
@@ -464,7 +501,7 @@ def _concat_wavs(parts: list, out_path: str):
 
 
 def gen_narration_audio(narration_text, out_wav, cache_dir,
-                        speaker, speed, voicevox_url, sent_gap, para_gap):
+                        speaker, speed, voicevox_url, sent_gap, para_gap, first_slide=False):
     """
     Synthesize one slide's narration with natural breath pauses.
 
@@ -483,6 +520,8 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
         parts = []
         para_durs = []
         readings = []
+        flags = beat_flags(_all_sentences(narration_text), first_slide)
+        fi = 0
 
         for pi, para in enumerate(paragraphs):
             sentences = split_sentences(para) or [para]
@@ -491,6 +530,12 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
                 clean = clean_for_tts(sent)
                 if not clean:
                     continue
+                if flags[fi]:
+                    g = os.path.join(tmp, f'beat{fi}.wav')
+                    _make_silence(g, BEAT["gap"])
+                    parts.append(g)
+                    p_dur += BEAT["gap"]
+                fi += 1
 
                 key = _tts_cache_key(clean, speaker, speed,
                                      _compound_salt(clean))
@@ -533,16 +578,21 @@ def gen_narration_audio(narration_text, out_wav, cache_dir,
 
 
 def compute_sent_starts(narration_text, cache_dir, speaker, speed,
-                        sent_gap, para_gap):
+                        sent_gap, para_gap, first_slide=False):
     """Start time and raw text of every sentence in one narration, mirroring
     gen_narration_audio's exact gap layout. Requires the sentence WAVs to be
     cached already (call after gen_tts). Returns [(start_sec, sentence), ...]."""
     out, t = [], 0.0
     paragraphs = split_paragraphs(narration_text)
+    flags = beat_flags(_all_sentences(narration_text), first_slide)
+    fi = 0
     for pi, para in enumerate(paragraphs):
         sentences = split_sentences(para) or [para]
         real = [s for s in sentences if clean_for_tts(s)]
         for si, sent in enumerate(real):
+            if flags[fi]:
+                t += BEAT["gap"]
+            fi += 1
             clean = clean_for_tts(sent)
             key = _tts_cache_key(clean, speaker, speed, _compound_salt(clean))
             cached = os.path.join(cache_dir, f'{key}.wav')
@@ -598,6 +648,8 @@ def _narr_hash(text, speaker, speed, sent_gap, para_gap) -> str:
     salt = _compound_salt(clean)
     # "nk2" suffix invalidates cache for narrations with ・ (v2: katakana→silent, others→、)
     nakaten_salt = "nk2" if "・" in text else ""
+    if BEAT["gap"] > 0:   # 「間」を入れる設定のときだけキーが変わる（既定のビルドのキャッシュはそのまま）
+        nakaten_salt += f'|beat2{BEAT["gap"]:.2f}|' + '|'.join(BEAT["texts"])
     return hashlib.md5(
         f'{text}|{speaker}|{speed:.3f}|{sent_gap:.3f}|{para_gap:.3f}|{salt}|{nakaten_salt}'.encode()
     ).hexdigest()
@@ -865,6 +917,8 @@ def _record_slide(record_html, audio_path, schedule, out_video, W, H):
 class VideoBuilder:
     def __init__(self, args):
         self.a = args
+        BEAT["gap"] = max(0.0, getattr(args, "num_gap", 0.0) or 0.0)
+        BEAT["texts"] = list(getattr(args, "beats", []) or [])
         self.slide_html = os.path.abspath(args.slide_html)
         self.out_dir    = os.path.abspath(args.out)
         self.work       = os.path.join(self.out_dir, '.work')
@@ -922,7 +976,7 @@ class VideoBuilder:
                     cache_dir=self.tts_cache,
                     speaker=a.speaker, speed=a.speed,
                     voicevox_url=a.voicevox_url,
-                    sent_gap=a.sent_gap, para_gap=a.para_gap)
+                    sent_gap=a.sent_gap, para_gap=a.para_gap, first_slide=(ni == 0))
                 dur = get_duration(wav)
                 print(f" {dur:.1f}s  ({time.time()-t0:.0f}s)")
             self.audio_durs.append(dur)
@@ -942,8 +996,8 @@ class VideoBuilder:
         # sentence start times (cached WAVs exist after gen_tts) for
         # content-matched narration sync
         sent_starts = [compute_sent_starts(n, self.tts_cache, a.speaker,
-                                           a.speed, a.sent_gap, a.para_gap)
-                       for n in self.sd.narrations]
+                                           a.speed, a.sent_gap, a.para_gap, first_slide=(i == 0))
+                       for i, n in enumerate(self.sd.narrations)]
         self.schedules = build_schedule(
             self.sd, self.audio_durs, self.para_durs,
             lead=a.lead, step_gap=a.step_gap,
@@ -1052,7 +1106,7 @@ class VideoBuilder:
         else:
             ep = p.name
         out_mp4 = os.path.join(self.out_dir, f'{ep}_final.mp4')
-        mixing = bool(self.a.bgm or self.a.sfx_dir)
+        mixing = bool(self.a.bgm or self.a.sfx_dir or self.a.expr)
         concat_out = out_mp4 + '.premix.mp4' if mixing else out_mp4
         # 連結は映像を再エンコードする（-c copy は per-slide AACのプライミング間隙が
         # 積もってA/Vが0.8秒ほどズレるため不可）。品質はCRF18で実質ロスレス。
@@ -1062,11 +1116,38 @@ class VideoBuilder:
              '-c:v', 'libx264', '-crf', str(self.a.crf), '-preset', 'fast',
              '-c:a', 'aac', '-b:a', '192k', '-movflags', '+faststart', concat_out],
             check=True)
-        if mixing:
+        if self.a.expr:
+            self.mix_expr(concat_out, out_mp4, slides, ep)
+            os.remove(concat_out)
+        elif mixing:
             self.mix_audio(concat_out, out_mp4, slides)
             os.remove(concat_out)
         dur = get_duration(out_mp4)
         print(f"\nFinal: {out_mp4}  ({dur/60:.1f} min)")
+
+    def mix_expr(self, src, dst, slide_order, ep_key):
+        """表現コード v1 のミックス（docs/expression/expression-code.md）。意味に対応した効果音だけを鳴らす。"""
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'expression'))
+        import exmix
+        total = get_duration(src)
+        offsets, cum = {}, 0.0
+        for si in slide_order:
+            offsets[si] = cum
+            cum += get_duration(os.path.join(self.video_dir, f'slide_{si:02d}.mp4'))
+        step_events = []
+        for sc in self.schedules:
+            off = offsets.get(sc.si)
+            if off is None:
+                continue
+            for k, ev in enumerate(sc.anim_events):
+                text = (self.sd.step_texts[ev.step_idx]
+                        if self.sd.step_texts and ev.step_idx < len(self.sd.step_texts) else "")
+                step_events.append((off + ev.rel_t, sc.si, k, text))
+        vertical = self.a.height > self.a.width
+        events = exmix.plan_events(step_events, [offsets[si] for si in slide_order], total,
+                                   vertical, re.sub(r'\s', '', self.a.answer_text))
+        exmix.mix(src, dst, total, events, ep_key, vertical,
+                  report=os.path.join(self.out_dir, 'expr_mix.json'))
 
     def mix_audio(self, src, dst, slide_order):
         """Post-mix BGM (looped, faded) and SFX (slide whooshes + reveal pops)

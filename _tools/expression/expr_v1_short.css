@@ -1,0 +1,37 @@
+/* 表現コード v1：Shorts（1080x1920・テロップ同期型）。仕様は docs/expression/expression-code.md。
+   apply_expr.py が head の末尾に差し込む。エンジン（keyframes・rv-*・.se・#__heartbeat）は書き換えず、後ろから上書きする。 */
+:root{
+  --ex-bg:#0B1220; --ex-bg2:#16213A; --ex-ink:#F4F6FB; --ex-muted:#AEB6D0;
+  --ex-num:#FFD54F;                 /* 数字の色（全シリーズ共通・数字にしか使わない） */
+  --ex-series:#E11D48;              /* シリーズの色（帯・進行バーだけ）。apply_expr.py が上書きする */
+  --key:var(--ex-num);
+}
+html,body{background:var(--ex-bg);}
+.slide{background:radial-gradient(120% 55% at 50% 40%, var(--ex-bg2) 0%, var(--ex-bg) 72%);
+  padding-top:calc(var(--safe-top) + 120px);}
+.k-line{color:var(--ex-ink);}
+/* 数字：周りの文字の 1.4 倍・数字の色。その画面でいちばん大きい */
+.k-line .hi{display:inline-block;font-size:1.4em;line-height:1.05;color:var(--ex-num);
+  font-family:'Inter','Noto Sans JP','Noto Sans CJK JP',sans-serif;font-weight:900;letter-spacing:-.01em;}
+.k-line .hi.ex-year{font-size:1em;color:var(--ex-ink);}       /* 西暦は見せ場の数字ではない */
+/* 番組名の帯（全スライドの同じ位置。ナレーションの対象外） */
+.k-tag{display:none !important;}
+.ex-band{position:absolute;left:var(--safe-x);right:var(--safe-x);top:var(--safe-top);
+  display:flex;align-items:center;justify-content:center;gap:20px;
+  font-weight:900;font-size:48px;line-height:1;color:var(--ex-ink);}
+.ex-band::before{content:"";width:14px;height:48px;border-radius:4px;background:var(--ex-series);}
+.ex-band .ex-no{color:var(--ex-series);font-family:'Inter',sans-serif;}
+/* 進行バー（下のセーフエリアの直上） */
+.ex-prog{position:absolute;left:100px;right:100px;bottom:calc(var(--safe-bottom) - 8px);height:8px;
+  border-radius:4px;background:rgba(244,246,251,.14);overflow:hidden;}
+.ex-prog i{display:block;height:100%;width:100%;transform-origin:left center;background:var(--ex-series);
+  transform:scaleX(var(--p0,0));}
+.ex-prog i{animation:exProg var(--sd,4s) linear forwards;}
+@keyframes exProg{from{transform:scaleX(var(--p0,0))}to{transform:scaleX(var(--p1,1))}}
+/* 動き：出現は「下から 18px＋フェード・0.30秒」の1種だけ。数字だけ 1.35倍→等倍で着地（行き過ぎない） */
+@keyframes exRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes exHit{from{opacity:0;transform:scale(1.35)}to{opacity:1;transform:none}}
+.se.rv-fade,.se.rv-up,.se.rv-left,.se.rv-right,.se.rv-scale,.se.rv-pop{
+  animation:exRise .30s cubic-bezier(.2,.8,.2,1) forwards !important;}
+.se[class*="rv-"] .hi:not(.ex-year){animation:exHit .30s .12s cubic-bezier(.2,.8,.2,1) both;}
+.cta-line{color:var(--ex-num);}

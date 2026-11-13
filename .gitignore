@@ -6,3 +6,8 @@ video_out/
 **/video_build/**/*.mp4
 **/shorts_build/**/*.mp4
 reading_review.txt
+_assets/audio/v1/*.wav
+_prototypes/expr_v1/before/
+_prototypes/expr_v1/after/
+_prototypes/expr_v1/visual/
+_prototypes/expr_v1/compare/

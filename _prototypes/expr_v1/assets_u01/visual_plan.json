@@ -1,0 +1,38 @@
+{
+ "_note": "映像意図（Fable が台本の各スライドに付与。u01 試作）。数字・文字は台本にあるものだけ。",
+ "slides": {
+  "s1": {
+   "type": "chart_drop",
+   "intent": "図解アニメ＋数字の強調：売上が25%減った",
+   "value": 25,
+   "before_label": "セール",
+   "after_label": "毎日安く"
+  },
+  "s2": {
+   "type": "photo",
+   "intent": "実写イメージ：JCペニーの店（固有名詞に同期）。2012年は写真の上に出す",
+   "asset": "jcpenney_store",
+   "focus": "38% 50%",
+   "stamp": "2012",
+   "sync": "s2-t2"
+  },
+  "s3": {
+   "type": "dot_grid",
+   "intent": "図解アニメ＋数字の強調：590回のセールを点で並べ、線で消す",
+   "n": 590,
+   "sync": "s3-t1"
+  },
+  "s4": {
+   "type": "tag_strike",
+   "intent": "図解：値札の取り消し線＝得した気分"
+  },
+  "s5": {
+   "type": "chart_drop",
+   "intent": "答え。冒頭と同じ図に戻して、くり返しの継ぎ目をつなぐ",
+   "value": 25,
+   "before_label": "セール",
+   "after_label": "毎日安く",
+   "reset": true
+  }
+ }
+}
