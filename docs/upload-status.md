@@ -1,6 +1,6 @@
 # アップロード状況（AI時代のマーケティング・ラボ）
 
-> 自動生成：2026-11-13 11:45 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
+> 自動生成：2026-11-14 10:56 UTC ／ ソース＝YouTube実体（タグ mlab-epNN で回を判定）＋ローカル manifest で補完
 > 生成：`python3 _tools/publish/gen_upload_status.py`。他セッション・ルーティンはこのファイルで到達点を確認する。
 
 凡例：public=公開済 / private=非公開 / 予約=公開予約済 / 未UP=未アップロード / —=対象物なし
@@ -30,16 +30,16 @@
 | EP21 | `ep21_hit-products` | `K_VbaZCL1zE` | public | `oM4-5LikyTo` `gySkRFXZ-bs` `5bwru3XThg4` | public |
 | EP22 | `ep22_v-shaped-recovery` | `qCVqPmcoJZE` | public | `npVdcb6WkX0` `70U5I68Df1U` `BIGlUgljaWw` | public |
 | EP23 | `ep23_failure-cases` | `60uvA_rvVFo` | public | `_yrnwzZNvKs` `Pwu_q692S5Q` `l6WZ8BV_aHo` | public |
-| EP24 | `ep24_future-marketer` | `v6ywp-obN_U` | 予約 2026-11-14 09:00 | `iI2YMYYHQVk` `OmlvDbc0CjU` `A_vq8EUYT8U` | 予約 2026-11-14 09:00 |
+| EP24 | `ep24_future-marketer` | `v6ywp-obN_U` | public | `iI2YMYYHQVk` `OmlvDbc0CjU` `A_vq8EUYT8U` | public |
 
-**集計**：追跡 96本中 public=92 / private=4 / unlisted=0
+**集計**：追跡 96本中 public=96 / private=0 / unlisted=0
 
 ## 公開順序（絶対則：飛び級厳禁）
-- 現在 public 済みの最大EP＝**EP23**／次に公開してよいのは**EP24のみ**（`python3 _tools/publish/publish_episode.py --episode <dir>` で本編＋Shortsを同時公開）。
+- 現在 public 済みの最大EP＝**EP24**／次に公開してよいのは**EP25のみ**（`python3 _tools/publish/publish_episode.py --episode <dir>` で本編＋Shortsを同時公開）。
 - 本編は必ずEP番号の昇順で公開。先のEPが非公開UP済みでも飛ばさない（docs/autonomous-operation.md §3.1）。
 
 ## 公開予約カレンダー（本編＋同回Shortsが同時刻）
-- EP24：2026-11-14 (Sat) 18:00 JST
+- なし
 - 延長・組み直し：`python3 _tools/publish/publish_episode.py --schedule-all [--start <RFC3339>]`（予約不可の回は TIMED と表示 → その時刻に即時公開する単発スケジュールで対応）
 
 ## 残作業
