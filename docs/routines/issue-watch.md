@@ -7,7 +7,8 @@
 
 ## 手順
 
-0. `cd /home/user/Marketing-learn-contents`（無ければ clone）→ `git checkout claude/build-upload-bqpddd && git pull`。
+0. `cd /home/user/Marketing-learn-contents`（無ければ clone）→ `git fetch origin claude/build-upload-bqpddd && git checkout -B claude/build-upload-bqpddd origin/claude/build-upload-bqpddd`。
+   （コンテナが作り直されると、別のブランチだけの新しい clone になっていて、`git checkout claude/build-upload-bqpddd` が失敗する。2026-11-16 の初回で起きた）
 1. 前回の確認時刻を読む：`docs/routines/issue-watch-state.json` の `last_checked`（UTC）と `handled`（対応済みのコメント・Issue の id）。
 2. **open の Issue をすべて**一覧にし（`mcp__github__list_issues`）、各 Issue の本文とコメントを読む（`mcp__github__issue_read get_comments`。古い順・全ページ）。
 3. 「新しい指示」を選ぶ。次の**すべて**を満たすものだけ：
