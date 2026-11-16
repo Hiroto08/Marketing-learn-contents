@@ -41,6 +41,7 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 | 指示の種類 | 使うもの |
 |---|---|
 | これまでの判断・確認待ち・進行中の仮説 | `docs/decision-log.md` |
+| GitHub Issue の定期確認（3時間ごと・新しい指示に着手・決裁が要るものは「決裁待ち」で止める） | `docs/routines/issue-watch.md`（状態は `issue-watch-state.json`） |
 | 第2シリーズ「売れる仕組みの裏側」（Shorts単独 uNN・ケースファイル cNN） | `s2_ura/README.md`（置き場所・型・2コマンド・`ura_schedule.py`） |
 | 新規エピソード制作・リニューアル（創作） | `episode-production` スキル（ロール分担表が入口） |
 | ビルド・動画化・アップロード（製造） | `.claude/skills/episode-production/pipeline.md` の2コマンド：`bash _tools/pipeline/run_episode.sh <ep_dir> [--upload]` / `bash _tools/pipeline/run_shorts.sh <ep_dir> [--upload]` |
