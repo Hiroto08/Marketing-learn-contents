@@ -2,6 +2,9 @@
 
 社長指示（チャット・2026-11-16）。このリポジトリ（Hiroto08/Marketing-learn-contents）の Issue を3時間ごとに確認し、新しい指示があれば着手して、進捗と結果を該当の Issue にコメントで返す。
 
+- 動かし方：このプロジェクトの作業セッションに3時間ごとに届く定期タスク（毎時01分起点・0時・3時…の1分台。JST では 18:01・21:01・0:01 …）。
+  **新しいセッションで動かす方式は使えなかった**（2026-11-16 に試した。新しいセッションにはリポジトリも GitHub の道具も付かず、Issue を読めなかった）。
+
 ## 手順
 
 0. `cd /home/user/Marketing-learn-contents`（無ければ clone）→ `git checkout claude/build-upload-bqpddd && git pull`。
