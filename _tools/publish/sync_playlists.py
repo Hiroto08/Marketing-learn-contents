@@ -27,7 +27,8 @@ from yt_index import API, api, episode_index, token  # noqa: E402
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
 import series as S  # noqa: E402  シリーズ固有の値（series.json）
 
-SUFFIX = f"\n\n▼無料特典：{S.LEAD_MAGNET}\n{S.OPTIN_URL}\n\n{S.VOICE_CREDIT}"
+# メルマガ登録の導線（無料特典・Kit の URL）は外した（社長決裁 2026-11-18・Issue #2）。再設計は12月の新フォーマット仕様で
+SUFFIX = f"\n\n{S.VOICE_CREDIT}"
 
 # 再生リスト（タイトル・説明・対象EP範囲・本編/Shorts）は series.json の youtube.playlists
 PLAYLISTS = [(p["title"], p["description"], range(p["episodes"][0], p["episodes"][1] + 1), p["kind"])
