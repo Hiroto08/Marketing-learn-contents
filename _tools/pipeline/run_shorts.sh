@@ -92,7 +92,11 @@ missing = [os.path.basename(s) for s in sorted(glob.glob(f"{d}/.work/slides/slid
                "-of","csv=p=0",s],capture_output=True,text=True).stdout.split()) < {"video","audio"}]
 print(f"dur={v:.2f}s av_diff={abs(v-a):.3f}s missing={missing}")
 assert abs(v-a) <= 0.1, "A/V差>0.1s"
-assert 15 <= v <= 30, "尺が15〜30秒の外"
+sys.path.insert(0, "_tools")
+import re as _re, series as S
+_it = S.s2_item(_re.sub(r"/shorts_build/short\d+/?$", "", d))
+hi = S.S2_TREND.get("max_sec", 75) if _it and _it[0] == S.S2_TREND_PREFIX else 30   # トレンド連動 tNN は series.json の上限（社長決裁 2026-11-21）
+assert 15 <= v <= hi, f"尺が15〜{hi}秒の外"
 assert not missing, f"videoストリーム欠落: {missing}（該当slide_NN.mp4を消して --slide N で再録画）"
 print("OK")
 PY
