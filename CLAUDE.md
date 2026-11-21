@@ -23,7 +23,7 @@ thumbnail.md / shorts.md / shorts_build/shortN/spec.py が1話ぶんの成果物
 2. FAILは `.claude/skills/episode-production/pipeline.md` のプレイブック表の対処のみ。解決したら同じコマンドを再実行
 3. 工程が終わるたびに**成果物をコミット・プッシュ**（mp4以外。コミットメッセージにvideoId等の要点）
 4. mp4/サムネ等の完成物は SendUserFile で納品（第2シリーズは Drive のレビュー便へ自動送付）
-5. 完了報告は「Studio URL・尺・A/V差・LUFS・品質検査の結果（quality_record.md）・残る手動作業（24話の Shorts の関連動画リンク等）」を定型で
+5. 完了報告は「Studio URL・**確認用の完成ファイル（Drive レビュー便のリンク）か限定公開URL**・尺・A/V差・LUFS・品質検査の結果（quality_record.md）・残る手動作業（24話の Shorts の関連動画リンク等）」を定型で。第2シリーズは**チャツネの完成チェックが通ってから公開予約**（指示文に「公開後チェック」とある回を除く。`s2_ura/README.md` §5）
 6. クォータ超過（quotaExceeded）は翌日のリセット時刻（太平洋時間0時＝日本時間で夏16時・冬17時）以降に同コマンド再実行で継続。ユーザーに続き時刻を伝える
 7. 途中で判断に迷う選択肢が出ても、pipeline.md・スキルに既定があるものは**質問せず既定に従う**
 

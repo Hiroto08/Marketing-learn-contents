@@ -121,6 +121,13 @@ python3 _tools/publish/ura_schedule.py --playlist          # シリーズの再�
 
 ## 5. レビュー便と差し替え（Issue #2）
 
+- **完成チェック（社長指示 2026-11-21・Issue #2）**：完成した動画が指示どおりかを、チャツネが公開前に確認する。
+  1. **完了報告に、確認用の完成ファイル（Drive「マーケラボ レビュー便」のリンク）か限定公開 URL を必ず入れる**。Drive のリンクは `upload_youtube.py` が出す「レビュー便へ送付: … → https://drive.google.com/…」の行。
+  2. **原則、チェックが通ってから公開予約する**：`schedule.json` に足すときは `"check": "pending"` を付ける。`ura_schedule.py --apply` は pending の回（とその後ろの同じ種類）を予約しない。Issue #2 でチャツネが「OK」を出したら `"check": "ok"` に直して `--apply`。
+     指示文に「公開後チェック」とある回だけ `"check": "after"`（予約してよい。公開直後に確認される）。11/21 より前に作った回（check 欄なし）は従来どおり。
+  3. チェック観点：タイトル／冒頭フックの文言／一言コアと命名／使用数字の範囲／素材と出典表示／留保事項／締めの問い／固有名詞の読みと字幕／尺と形式。完了報告では、指示からの変更点をこの観点ごとに書く。
+  4. **素材の指示を肯定形で書かれたら必須**（例：「商品写真を組み込む」）。公式素材の利用条件が確認できない等で組み込めないときは、作ってから事後に申告せず、**着手報告の時点で** Issue に書いて判断を仰ぐ（t01 で画像なしのまま完成・公開したため追加された決まり）。
+
 - **送付**：完成 mp4 を YouTube へ非公開アップしたら、同じタイミングで Google Drive の共有フォルダ「マーケラボ レビュー便」にも上げる。第2シリーズの回は `upload_youtube.py` が自動で `upload_review_drive.py` を呼ぶ。手動でも実行できる：`python3 _tools/publish/upload_review_drive.py <回のディレクトリ>`。
   - フォルダ ID は series.json の review。ファイル名は `u01_<タイトル>.mp4`。
   - 認証は DRIVE_REFRESH_TOKEN（`get_refresh_token.py --drive`）。

@@ -11,10 +11,10 @@
 2. 作る枠を決める：s2_ura/schedule.json を見て、2026-11-29 以降で「今日＋5日」までの日付のうち Short が入っていない日を埋める（1日1本、18時）。ただし金曜は差し込み枠：月曜のジョブは空けておき、木曜のジョブが速報題材（無ければプール上位）で埋めて s2_ura/insert-slot-log.md に採否と理由を1行書く。土曜にケースファイルが無い週は、月曜のジョブで前の週の公開7日後の再生が最も多い Short の続きを cNN として作る。埋める枠が無ければ 1 だけで終了し、通知しない。
 3. 各枠：topic-pool から1本選ぶ（同じ会社・同じ研究を2週以内に使わない）→ uNN（次の番号）で shorts.md（**鮮度：** 時事（YYYY-MM）・新事例型／ハイブリッド（…）を書く。3条件を満たさない新事例はハイブリッド型）と spec.py → 固有名詞を docs/proper-nouns.md に足して proper_nouns.py --verify（確認できない名前は使わない）→ shorts.md に「## 数字の確認」の表（各数字2サイト）→ build_telop_spec.py → gen_stage → verify_shorts PASS → python3 _tools/checks/quality_record.py <dir> が PASS（読み R・数字 F・文章 A・テロップ T。基準は quality-gates.md）→ 使った候補を topic-pool から「使用済み」に移す。
 4. ビルドとアップ：bash _tools/pipeline/run_shorts.sh <dir> --upload（ケースファイルは case.json → build_case_slide.py → verify_episode → run_episode.sh --upload）。動画のアップは1日6本まで（17:00 JST に回復）。超えた分は send_later で翌日17:10に回す。
-5. schedule.json に {"id": "uNN", "date": "YYYY-MM-DD"} を足す → python3 _tools/publish/ura_schedule.py --apply --playlist（番号順に昇順でないと拒否される。ずれたら日付を直す）。
+5. schedule.json に {"id": "uNN", "date": "YYYY-MM-DD", "check": "pending"} を足す（完成チェック：社長指示 2026-11-21。s2_ura/README.md §5）→ python3 _tools/publish/ura_schedule.py --playlist。公開予約（--apply）は、Issue #2 でチャツネの完成チェックが通って "check": "ok" に直してから（番号順に昇順でないと拒否される。ずれたら日付を直す）。
 6. 成果物をコミット → 基点ブランチと claude/note-articles へ push。
 6b. 題材の選び方・差し替え・保留の理由など判断したことがあれば docs/decision-log.md の「決定の記録」に追記（ユーザーに決めてほしいことは「確認待ち」へ）→ 6 と一緒にコミット。
-7. 報告（3行以内）：作った回（番号・題名・公開日）、使った事例の日付、残る手作業（公開後に関連動画を設定）。
+7. 報告（3行以内）：作った回（番号・題名・公開予定日）、使った事例の日付、残る手作業。あわせて Issue #2 に完了報告（各回の Drive「レビュー便」リンク・videoId・公開予定日・チェック観点ごとの指示からの変更点）を書き、完成チェックを依頼する。
 ```
 
 ## 表現コード v1（2026-12-06 の週の制作バッチから）

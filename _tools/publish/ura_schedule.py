@@ -14,6 +14,10 @@ ura_schedule.py — 第2シリーズ「売れる仕組みの裏側」の公開�
   python3 _tools/publish/ura_schedule.py --playlist   # シリーズの再生リストを作成し、予定順に追加（冪等）
 
 schedule.json の形式: {"playlist_id": null, "items": [{"id": "u01", "date": "2026-11-15"}, ...]}
+  完成チェック（社長指示 2026-11-21・Issue #2）：{"id": "u15", "date": …, "check": "pending"} の回は、
+  チャツネの完成チェックが通るまで公開予約しない（その回から後ろの同じ種類も保留＝飛び級しない）。
+  通ったら "check": "ok" に直して --apply。"check" が無い回は従来どおり（11/21 より前に作った回）。
+  指示文に「公開後チェック」とある回は "check": "after"（予約してよい。公開直後にチャツネが確認する）。
   時刻は series.json の series2.youtube_hour_jst（既定18時）。
 動画の判定は publish_manifest.json の videoId（uNN は shorts_build/short1/ 内、cNN は直下）。
 """
@@ -68,7 +72,7 @@ def load():
     for it in sc["items"]:
         d = item_dir(it["id"])
         rows.append({"id": it["id"], "kind": it["id"][0], "no": int(it["id"][1:]), "date": it["date"],
-                     "at": slot(it["date"]), "dir": d, "vid": video_id(d)})
+                     "at": slot(it["date"]), "dir": d, "vid": video_id(d), "check": it.get("check")})
     return sc, rows
 
 
@@ -161,6 +165,10 @@ def apply(tok, rows, vs, dry):
             continue
         if not v:
             print(f"  {tag}: 未アップ → 以降の同種の回は保留")
+            blocked[r["kind"]] = True
+            continue
+        if r.get("check") == "pending" and v["status"]["privacyStatus"] != "public":
+            print(f"  {tag}: 完成チェック待ち（Issue #2。通ったら schedule.json の check を ok に）→ 以降の同種の回も保留")
             blocked[r["kind"]] = True
             continue
         if v["status"]["privacyStatus"] == "public":
