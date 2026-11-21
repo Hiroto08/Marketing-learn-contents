@@ -8,10 +8,20 @@
 |---|---|---|---|
 | Short（毎日1本） | `s2_ura/uNN_<slug>/` | `shorts.md`（`## Short 1` 1本だけ）・`shorts_build/short1/spec.py`・`stage.html`・`publish_manifest.json` | `mlab-ura` `mlab-uNN` |
 | ケースファイル（本編・週1本） | `s2_ura/cNN_<slug>/` | `script.md`・`slide.html`・`description.md`・`thumbnail.md`・`thumbnail.png`・`publish_manifest.json` | `mlab-ura` `mlab-cNN` |
+| トレンド連動 Short（随時） | `s2_ura/tNN_<slug>/` | uNN と同じ（`shorts.md`・`shorts_build/short1/`） | `mlab-ura` `mlab-tNN` |
 | 公開予定 | `s2_ura/schedule.json` | `{"id": "u01", "date": "2026-11-15"}` の並び | — |
 | 状態表 | `s2_ura/STATUS.md` | 自動生成（`ura_schedule.py`） | — |
 
 タグが `mlab-epNN` ではないので、24話側の公開ガード・状態表（`publish_episode.py`・`gen_upload_status.py`）には影響しない。
+
+## 1b. トレンド連動の Short（tNN）— 社長決裁 2026-11-21（Issue #2）
+
+- 時事の話題を、毎日の枠（uNN）とは別に先行公開する種類。番号は t01, t02, … で、t の中だけで番号順を守る（u・c の番号順には影響しない）。
+- 構成は社長の指示に従う（例：t01 は「フック → 異常な数字 → 対照例 → 特殊性 → 設計 → 一言コア → 締めの問い」）。
+- 検査は uNN と同じ。違うのは次の3点だけ（`series.json` の `series2.trend`）：尺 15〜75秒・合計480字・1スライド110字・4〜9枚。締めは「明日は、〜」ではなく見る人への問い（「あなたは〜か？」）。帯は「売れる仕組みの裏側 トレンド速報」。
+- 概要欄には `shorts.md` の `**出典：**` の一覧が自動で入る（`upload_youtube.py`）。
+- 公開は `schedule.json` に `{"id": "t01", "date": …}` を足して `ura_schedule.py --apply`（uNN と同じ経路）。
+- 判断の記録：`docs/decision-log.md` 2026-11-21。
 
 ## 2. 作る（創作）
 
