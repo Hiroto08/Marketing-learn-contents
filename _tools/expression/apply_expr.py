@@ -32,11 +32,11 @@ def series_of(path):
     """html のパス → (番組名, 色, 回の表記)。series.json の expression.series から引く。"""
     cfg = json.load(open(os.path.join(ROOT, 'series.json'), encoding='utf-8')).get('expression', {}).get('series', {})
     parts = os.path.abspath(path).split(os.sep)
-    key = 's2_ura' if any(re.match(r'^[uc]\d+_', x) for x in parts) else 'default'
+    key = 's2_ura' if any(re.match(r'^[uct]\d+_', x) for x in parts) else 'default'
     s = cfg.get(key) or {'name': '', 'color': '#E11D48'}
     no = ''
     for x in parts:
-        m = re.match(r'^([uc])(\d+)_', x) or re.match(r'^(ep)(\d+)_', x)
+        m = re.match(r'^([uct])(\d+)_', x) or re.match(r'^(ep)(\d+)_', x)
         if m:
             no = {'u': f'#{m.group(2)}', 'c': f'CASE FILE #{m.group(2)}', 'ep': f'第{int(m.group(2))}回'}[m.group(1)]
     return s['name'], s['color'], no

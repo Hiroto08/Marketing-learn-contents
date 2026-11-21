@@ -10,7 +10,7 @@ slide.html built from _tools/shorts_template/vertical_template.html).
 Checks:
   [1] engine integrity   (heartbeat + rv-* + keyframes not stripped)
   [2] narration match    (shorts.md ⇔ stage.html NARRATIONS, char-for-char)
-  [3] duration           (15-30s from SLIDES_META — long Shorts get skipped)
+  [3] duration           (15-30s from SLIDES_META — long Shorts get skipped; trend tNN: series.json series2.trend)
   [4] slide count        (4-6)
   [5] narration length   (total <=150 chars, longest slide <=45 — brevity)
   [6] hook signal        (S1's first STEP text has a number/claim/question)
@@ -109,46 +109,63 @@ def check_match(md, html):
         ok(f"{len(md_narr)}/{len(md_narr)} 完全一致")
 
 
+def _trend():
+    """トレンド連動の Short（s2_ura/tNN_*）なら series.json の上限（尺・文字数・枚数）を返す。それ以外は None。
+    社長決裁 2026-11-21（Issue #2）：社長指定の構成（フック5秒＋種明かし4段＋締めの問い）が入る大きさ。ほかの検査は同じ"""
+    d = DIR.rstrip("/")
+    item = re.sub(r"/shorts_build/short\d+$", "", d)
+    sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."))
+    import series as S
+    it = S.s2_item(item)
+    return S.S2_TREND if it and it[0] == S.S2_TREND_PREFIX else None
+
+
 def _meta(html):
     return re.findall(r"\{id:'s(\d+)',\s*start:([\d.]+),\s*end:([\d.]+)", html)
 
 
 def check_duration(html):
-    section("3) 尺（15〜30秒）")
+    tr = _trend()
+    hi = tr.get("max_sec", 60) if tr else 30
+    section(f"3) 尺（15〜{hi}秒）" + ("・トレンド連動" if tr else ""))
     meta = _meta(html)
     if not meta:
         fail("SLIDES_META が見つからない")
         return
     total = max(float(e) for _, _, e in meta)
-    if not (15 <= total <= 30):
-        fail(f"尺 {total:.1f}秒（15〜30秒の範囲外。長いShortsはスキップされる）")
+    if not (15 <= total <= hi):
+        fail(f"尺 {total:.1f}秒（15〜{hi}秒の範囲外。長いShortsはスキップされる）")
     else:
         ok(f"尺 {total:.1f}秒")
 
 
 def check_slide_count(html):
-    section("4) スライド枚数（4〜6）")
+    tr = _trend()
+    lo, hi = tr.get("slides", [4, 9]) if tr else (4, 6)
+    section(f"4) スライド枚数（{lo}〜{hi}）")
     n = len(_meta(html))
-    if not (4 <= n <= 6):
-        fail(f"{n}枚（4〜6枚の範囲外）")
+    if not (lo <= n <= hi):
+        fail(f"{n}枚（{lo}〜{hi}枚の範囲外）")
     else:
         ok(f"{n}枚")
 
 
 def check_length(html):
-    section("5) ナレーション文字数（合計≤150字・各≤35字目安）")
+    tr = _trend()
+    cap, cap1 = (tr.get("max_chars", 420), tr.get("max_slide_chars", 110)) if tr else (150, 45)
+    section(f"5) ナレーション文字数（合計≤{cap}字・各≤{cap1}字）")
     narr = _narrations(html)
     if not narr:
         fail("ナレーションが空")
         return
     total = sum(len(n) for n in narr)
     longest = max((len(n), i + 1) for i, n in enumerate(narr))
-    if total > 150:
-        fail(f"合計{total}字（上限150字。冗長表現を削って短くする）")
+    if total > cap:
+        fail(f"合計{total}字（上限{cap}字。冗長表現を削って短くする）")
     else:
         ok(f"合計{total}字")
-    if longest[0] > 45:
-        fail(f"S{longest[1]}が{longest[0]}字（1スライド35字目安・45字上限。1文に削る）")
+    if longest[0] > cap1:
+        fail(f"S{longest[1]}が{longest[0]}字（1スライド{cap1}字上限。1文に削る）")
     else:
         ok(f"最長スライド{longest[0]}字")
 
@@ -179,7 +196,9 @@ def check_cta(html):
         fail("ナレーションが空")
         return
     last = narr[-1]
-    if CTA_PAT.search(last):
+    if _trend() and re.search(r"あなた.*[？?]$", last):
+        ok("末尾は見る人への問い（トレンド連動の締め）")
+    elif CTA_PAT.search(last):
         ok("末尾に送客文言あり")
     else:
         fail(f"末尾に送客文言（固定コメント/概要欄等）が無い: 「{last[-40:]}」")
@@ -213,7 +232,11 @@ def check_story(html, ep_dir):
     if VAGUE_END.search(last) and not (cont and "長編" in last):
         say(f"締めが「{VAGUE_END.search(last).group(0)}」。次の回は続きではないので使わない。「明日は、〜。」で次の問いを声に出す")
         bad = True
-    if not cont:
+    if _trend():
+        if not re.search(r"あなた.*[？?]$", last):
+            say("トレンド連動の締めは、見る人への問い（「あなたは〜か？」）で終える")
+            bad = True
+    elif not cont:
         m = re.search(r"明日は、?([^。]+)", last)
         if not m:
             say("締めに「明日は、〜。」（明日の問いを声に出す）が無い")

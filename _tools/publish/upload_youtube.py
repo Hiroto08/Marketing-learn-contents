@@ -171,6 +171,15 @@ def s2_shorts_metadata(ep_dir: str, md: str) -> list:
     case = _s2_case_url(ep_dir, md)
     link = (f"▶ この話の続き（本編・約5分）\n{case}\n\n" if case
             else "▶ 続きの本編は、この画面の関連動画リンクから\n\n")
+    if it[0] == S.S2_TREND_PREFIX:   # トレンド連動（tNN）：今の話題の裏の仕組み＋出典の一覧（社長指示 2026-11-21）
+        src = (re.search(r"\*\*出典：\*\*\n(.*?)\n\n", md, re.S) or [None, ""])[1]
+        src = re.sub(r"\[([^\]]+)\]\((https?://[^)]+)\)", r"\1 \2", src)
+        desc = (f"{title}\n\n"
+                f"「{S.S2_NAME} {S.S2_TREND.get('label', 'トレンド速報')}」— いま話題のできごとの裏にある「売れる仕組み」を、数字で種明かし。\n\n"
+                f"▼ 出典（数字・事実）\n{src.strip()}\n\n"
+                f"{S.VOICE_CREDIT}\n\n"
+                + " ".join(f"#{t}" for t in tags))
+        return [{"n": 1, "title": title[:100], "description": desc, "tags": tags + series_tags(ep_dir)}]
     desc = (f"{title}\n\n"
             f"「{S.S2_NAME} #{it[1]:02d}」— 買い物・職場・SNSの「なんで？」の犯人を、実在の事例と数字1つで種明かし。毎日{S.S2_HOUR}時に公開。\n\n"
             f"{link}"

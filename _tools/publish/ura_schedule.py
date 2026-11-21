@@ -45,7 +45,7 @@ def video_id(d):
     if not d:
         return None
     kind = os.path.basename(d)[0]
-    p = f"{d}/shorts_build/short1/publish_manifest.json" if kind == "u" else f"{d}/publish_manifest.json"
+    p = f"{d}/shorts_build/short1/publish_manifest.json" if kind in S.S2_SHORT_KINDS else f"{d}/publish_manifest.json"
     if not os.path.exists(p):
         return None
     for k, v in json.load(open(p, encoding="utf-8")).items():
@@ -74,7 +74,7 @@ def load():
 
 def check_order(rows):
     errs = []
-    for kind in "uc":
+    for kind in "uct":   # u＝毎日の Short・c＝ケースファイル・t＝トレンド連動（種類ごとに番号順）
         ks = sorted([r for r in rows if r["kind"] == kind], key=lambda r: r["no"])
         for a, b in zip(ks, ks[1:]):
             if a["at"] > b["at"]:   # 同じ日にまとめて出すのは可（§4.6 の2週目）。番号が後の回を先にしない
@@ -151,7 +151,7 @@ def unschedule_superseded(tok, dry):
 
 def apply(tok, rows, vs, dry):
     unschedule_superseded(tok, dry)
-    blocked = {"u": False, "c": False}
+    blocked = {"u": False, "c": False, "t": False}
     for r in sorted(rows, key=lambda r: (r["kind"], r["no"])):
         v = vs.get(r["vid"])
         want = iso(r["at"])
@@ -249,7 +249,7 @@ def write_status(rows, vs, sc):
     for r in sorted(rows, key=lambda r: (r["at"], r["kind"] == "c")):
         v = vs.get(r["vid"])
         views = v.get("statistics", {}).get("viewCount", "—") if v else "—"
-        o.append(f"| {r['at']:%m/%d}({wd[r['at'].weekday()]}) | {'Short' if r['kind'] == 'u' else '本編'} {r['id']} | "
+        o.append(f"| {r['at']:%m/%d}({wd[r['at'].weekday()]}) | {'本編' if r['kind'] == 'c' else ('Short（トレンド）' if r['kind'] == 't' else 'Short')} {r['id']} | "
                  f"`{os.path.basename(r['dir']) if r['dir'] else '（未作成）'}` | {'`' + r['vid'] + '`' if r['vid'] else '—'} | "
                  f"{state(v)} | {views} |\n")
     o.append("\n関連動画（各 Short → 同じ話のケースファイル）は、本編の公開後に統合運営側（チャツネ）がブラウザで代行する（Issue #1。ここでの手動設定は不要）。"

@@ -115,6 +115,15 @@
     "dir": "s2_ura",
     "short_prefix": "u",
     "case_prefix": "c",
+    "trend_prefix": "t",
+    "trend": {
+     "_comment": "トレンド連動の Short（tNN）。社長決裁 2026-11-21（Issue #2）。uNN の番号順・毎日枠とは別に、時事の話題を先行公開する。尺・文字数の上限は社長指定の構成（フック5秒＋種明かし4段＋締めの問い）が入る大きさ。ほかの品質ゲートは uNN と同じ",
+     "label": "トレンド速報",
+     "max_sec": 75,
+     "max_chars": 480,
+     "max_slide_chars": 110,
+     "slides": [4, 9]
+    },
     "youtube_hour_jst": 18,
     "start_date": "2026-11-15",
     "playlist_title": "売れる仕組みの裏側｜身近な「なぜ？」の犯人を数字で明かす",

@@ -120,6 +120,8 @@ def display(sent, disp):
         merged.append(carry)
     s = "\n".join(merged)
     s = NUM_RE.sub(lambda m: f'<span class="hi">{m[0]}</span>', s)
+    # 「1万」「1000円」のように1つの数が2つの強調に分かれたら、1つにまとめる（画面の数字＝ナレーションの数字。t01 2026-11-21）
+    s = s.replace('</span><span class="hi">', '')
     return s.replace("\n", "<br>")
 
 
@@ -160,7 +162,7 @@ def build(d, restructure=False):
     for i, sl in enumerate(slides):
         els = []
         if i == 0:
-            els.append({"id": "s1-tag", "cls": "k-tag", "html": f"売れる仕組みの裏側 #{no:02d}", "anim": "rv-fade", "t": 0.0,
+            els.append({"id": "s1-tag", "cls": "k-tag", "html": (f"売れる仕組みの裏側 {S.S2_TREND.get('label', 'トレンド速報')}" if it and it[0] == S.S2_TREND_PREFIX else f"売れる仕組みの裏側 #{no:02d}"), "anim": "rv-fade", "t": 0.0,
                         "style": "font-size:48px"})
         for j, sent in enumerate(sentences(sl["narr"])):
             # 行の幅（全角=1・半角英数=0.6）で文字サイズを決める。読点も1字ぶんの幅をとる

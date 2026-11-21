@@ -101,7 +101,7 @@ def others(path):
     """比べる相手：同じ種類（本編どうし・ケースファイルどうし・Shorts どうし）で、自分以外のナレーション"""
     me = os.path.abspath(path)
     if is_short(path):
-        pool = glob.glob(os.path.join(ROOT, "s2_ura/u*/shorts_build/short*/stage.html")) + glob.glob(os.path.join(ROOT, "0*/ep*/shorts_build/short*/stage.html"))
+        pool = glob.glob(os.path.join(ROOT, "s2_ura/[ut]*/shorts_build/short*/stage.html")) + glob.glob(os.path.join(ROOT, "0*/ep*/shorts_build/short*/stage.html"))
     elif "/s2_ura/" in me:
         pool = glob.glob(os.path.join(ROOT, "s2_ura/c*/slide.html"))
     else:

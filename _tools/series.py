@@ -56,12 +56,15 @@ S2_NAME = S2.get("name", "")
 S2_DIR = S2.get("dir", "s2_ura")
 S2_TAG = f"{PREFIX}-{S2.get('key', 's2')}"
 S2_HOUR = int(S2.get("youtube_hour_jst", YT_HOUR))
-_S2_ITEM_RE = re.compile(rf"^({re.escape(S2.get('short_prefix', 'u'))}|{re.escape(S2.get('case_prefix', 'c'))})(\d{{2}})_")
-S2_TAG_RE = re.compile(rf"^{re.escape(PREFIX)}-([uc])(\d{{2}})$")   # タグ → (kind u/c, no)
+S2_TREND = S2.get("trend") or {}
+S2_TREND_PREFIX = S2.get("trend_prefix", "t")
+_S2_ITEM_RE = re.compile(rf"^({re.escape(S2.get('short_prefix', 'u'))}|{re.escape(S2.get('case_prefix', 'c'))}|{re.escape(S2_TREND_PREFIX)})(\d{{2}})_")
+S2_TAG_RE = re.compile(rf"^{re.escape(PREFIX)}-([uct])(\d{{2}})$")   # タグ → (kind u/c/t, no)
+S2_SHORT_KINDS = (S2.get("short_prefix", "u"), S2_TREND_PREFIX)    # Short として作る種類（u＝毎日の回・t＝トレンド連動）
 
 
 def s2_item(dirname: str):
-    """ディレクトリ名 u01_xxx / c01_xxx → ("u"|"c", 1)。第2シリーズでなければ None"""
+    """ディレクトリ名 u01_xxx / c01_xxx / t01_xxx → ("u"|"c"|"t", 1)。第2シリーズでなければ None"""
     m = _S2_ITEM_RE.match(os.path.basename(dirname.rstrip("/")))
     return (m.group(1), int(m.group(2))) if m else None
 
