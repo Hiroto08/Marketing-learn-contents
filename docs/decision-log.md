@@ -422,3 +422,5 @@
 - 名前を出さないで済むものは出さなかった（坂崎千春さん・Pensta・新キャラクターの名前）。ドン・キホーテは「ドンペン」だけにした。台帳に足したのは JR東日本・JR・Suica・ドンペン・トロピカーナ（`docs/proper-nouns.md`、`proper_nouns.py --verify` PASS）。「ドンペン」は VOICEVOX が「ドン／ペン」に割って読むので、1語で読む辞書登録をした。
 - 所有権の移転（著作権を握れる新キャラへの付け替え）の仮説は、この動画では扱わなかった（尺に入らない。断定のおそれもなくなる）。
 - 公開：`schedule.json` に t01 を足し、`ura_schedule.py --apply` で公開予約を付ける（公開はこの経路だけ。CLAUDE.md 絶対則3）。
+- 結果：videoId `blhMbKHc-Do`（private で上げ、`ura_schedule.py --apply` で **2026-11-21 18:00 JST に公開予約**）。尺 69.3秒・A/V差 0.010秒・−14.9 LUFS・読み検査（ビルド後）PASS・quality_record PASS。再生リストにも追加。レビュー便（Drive）にも自動で送付された（確認は省略の指示どおり、公開は待たない）。
+- `run_shorts.sh` の尺の検査（15〜30秒）も t の上限に合わせた（最初のビルドがここで止まった）。
