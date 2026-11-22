@@ -164,6 +164,20 @@ def build(d, restructure=False):
         if i == 0:
             els.append({"id": "s1-tag", "cls": "k-tag", "html": (f"売れる仕組みの裏側 {S.S2_TREND.get('label', 'トレンド速報')}" if it and it[0] == S.S2_TREND_PREFIX else f"売れる仕組みの裏側 #{no:02d}"), "anim": "rv-fade", "t": 0.0,
                         "style": "font-size:48px"})
+        # 公式素材の画像と出典の小さな表示（トレンド連動 t02〜。社長指示 2026-11-22：画像を使う場面は画面端に出典を小さく）
+        #   スライド内容に [画像: <回のフォルダからの相対パス> | <画像の出典表示>] と [出典: <数字の出典>] を書く
+        img = re.search(r"\[画像:\s*([^|\]]+?)\s*(?:\|\s*([^\]]+?))?\s*\]", sl["desc"])
+        src = re.search(r"\[出典:\s*([^\]]+?)\s*\]", sl["desc"])
+        if img:
+            ip = os.path.join(d, img[1])
+            if not os.path.exists(ip):
+                sys.exit(f"{d}: S{i+1} の画像 {img[1]} が無い（利用条件を確かめた公式素材だけを置く）")
+            import base64
+            mime = "image/png" if ip.lower().endswith(".png") else "image/jpeg"
+            uri = f"data:{mime};base64," + base64.b64encode(open(ip, "rb").read()).decode()
+            els.append({"id": f"s{i+1}-img", "cls": "k-sub", "html": f'<img src="{uri}" alt="" style="display:block;margin:0 auto;max-width:820px;max-height:560px;border-radius:24px">',
+                        "anim": "rv-fade", "t": 0.0, "style": "margin:.2em 0"})
+        notes = [x for x in ((img[2] if img and img[2] else None), (src[1] if src else None)) if x]
         for j, sent in enumerate(sentences(sl["narr"])):
             # 行の幅（全角=1・半角英数=0.6）で文字サイズを決める。読点も1字ぶんの幅をとる
             # （2026-11-07：読点込み11字を 88px で組んで 880px を超え、ブラウザが勝手に折り返した）
@@ -171,6 +185,9 @@ def build(d, restructure=False):
             fs = next((f for f in (88, 80, 72, 64) if longest * f <= 870), 64)
             els.append({"id": f"s{i+1}-t{j+1}", "cls": "k-line", "html": display(sent, disp),
                         "anim": ANIMS[(i + j) % len(ANIMS)], "t": 0.0 if j == 0 else 1.0 * j, "style": f"font-size:{fs}px;margin:.25em 0"})
+        if notes:
+            els.append({"id": f"s{i+1}-src", "cls": "k-sub", "html": "　".join(notes), "anim": "rv-fade", "t": 0.0,
+                        "style": "font-size:48px;opacity:.75;margin-top:.6em"})
         if i == len(slides) - 1 and nxt:
             els.append({"id": f"s{i+1}-next", "cls": "cta-line", "html": nxt, "anim": "rv-pop", "t": 2.0, "style": "font-size:64px"})
         out_slides.append({"end": sl["end"], "els": els})
