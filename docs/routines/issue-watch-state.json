@@ -1,10 +1,13 @@
 {
  "_note": "GitHub Issue の定期確認（docs/routines/issue-watch.md）の状態。last_checked より後の、Hiroto08 のフッター無しの書き込みを新しい指示として扱う。handled は対応済みの Issue／コメントの id。",
- "last_checked": "2026-11-23T00:15:53Z",
+ "last_checked": "2026-11-23T03:15:19Z",
  "handled": [
   6965148564,
   7057425754,
   7063507912,
-  7077097609
+  7077097609,
+  7089060197,
+  7089178685,
+  7089280411
  ]
 }
