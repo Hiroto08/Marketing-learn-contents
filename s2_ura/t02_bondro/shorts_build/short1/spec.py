@@ -55,7 +55,7 @@
     {
      "id": "s2-t1",
      "cls": "k-line",
-     "html": "偽物が作られるのは、<br>“本物より<br>高く売れるも<br>の”だけです",
+     "html": "偽物が作られるのは、<br>“本物より<br>高く売れるもの”<br>だけです",
      "anim": "rv-left",
      "t": 0.0,
      "style": "font-size:80px;margin:.25em 0"
@@ -63,7 +63,7 @@
     {
      "id": "s2-t2",
      "cls": "k-line",
-     "html": "ボンボンドロ<br>ップシール、<br>通称ボンドロ",
+     "html": "ボンボン<br>ドロップシール、<br>通称ボンドロ",
      "anim": "rv-scale",
      "t": 1.0,
      "style": "font-size:88px;margin:.25em 0"
@@ -266,7 +266,7 @@
     {
      "id": "s9-t1",
      "cls": "k-line",
-     "html": "ボンドロは<br>シールじゃなくて“<br>通貨”なんです",
+     "html": "ボンドロは<br>シールじゃなくて<br>“通貨”なんです",
      "anim": "rv-up",
      "t": 0.0,
      "style": "font-size:88px;margin:.25em 0"

@@ -44,7 +44,7 @@ def parse_md(md):
         for pair in re.split(r"[、,]", dm[1]):
             if "=" in pair:
                 a, b = pair.split("=", 1)
-                disp[a.strip()] = b.strip()
+                disp[a.strip()] = b.strip().replace("<br>", "\n")   # <br> で改行位置を指定できる（語の途中で割らないため。t02）
     title = re.search(r"\*\*タイトル案：\*\*\s*(.+)", md)[1].strip()
     return head, body, slides, (nxt[1].strip() if nxt else ""), disp, title
 
