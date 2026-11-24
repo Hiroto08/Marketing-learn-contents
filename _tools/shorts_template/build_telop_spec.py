@@ -166,7 +166,7 @@ def build(d, restructure=False):
                         "style": "font-size:48px"})
         # 公式素材の画像と出典の小さな表示（トレンド連動 t02〜。社長指示 2026-11-22：画像を使う場面は画面端に出典を小さく）
         #   スライド内容に [画像: <回のフォルダからの相対パス> | <画像の出典表示>] と [出典: <数字の出典>] を書く
-        img = re.search(r"\[画像:\s*([^|\]]+?)\s*(?:\|\s*([^\]]+?))?\s*\]", sl["desc"])
+        img = re.search(r"\[画像:\s*([^|\]]+?)\s*(?:\|\s*([^|\]]+?))?\s*(?:\|\s*h=(\d+))?\s*\]", sl["desc"])
         src = re.search(r"\[出典:\s*([^\]]+?)\s*\]", sl["desc"])
         if img:
             ip = os.path.join(d, img[1])
@@ -175,7 +175,7 @@ def build(d, restructure=False):
             import base64
             mime = "image/png" if ip.lower().endswith(".png") else "image/jpeg"
             uri = f"data:{mime};base64," + base64.b64encode(open(ip, "rb").read()).decode()
-            els.append({"id": f"s{i+1}-img", "cls": "k-sub", "html": f'<img src="{uri}" alt="" style="display:block;margin:0 auto;max-width:820px;max-height:560px;border-radius:24px">',
+            els.append({"id": f"s{i+1}-img", "cls": "k-sub", "html": f'<img src="{uri}" alt="" style="display:block;margin:0 auto;max-width:820px;max-height:{img[3] or 560}px;border-radius:24px">',
                         "anim": "rv-fade", "t": 0.0, "style": "margin:.2em 0"})
         notes = [x for x in ((img[2] if img and img[2] else None), (src[1] if src else None)) if x]
         for j, sent in enumerate(sentences(sl["narr"])):
