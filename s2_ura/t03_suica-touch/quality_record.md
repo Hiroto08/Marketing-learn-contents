@@ -1,6 +1,6 @@
 # 品質検査の実施記録：t03_suica-touch
 
-- 実施日：2026-11-25（ツールの版 a73b1c7）
+- 実施日：2026-11-25（ツールの版 7b9a93c）
 - 検査の定義：`.claude/skills/episode-production/quality-gates.md`
 
 ## 1. 固有名詞（この動画に出たもの）
