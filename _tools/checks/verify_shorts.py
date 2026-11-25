@@ -180,6 +180,10 @@ def check_hook(html):
         fail("ナレーションが空")
         return
     first = narr[0]
+    if _trend() and not HOOK_PAT.search(first):
+        # トレンド連動は、冒頭フックを社長が逐語で指定する（Issue #2）。指定の文は変えられないので参考表示にとどめる（2026-11-25 t03）
+        warn(f"S1に数字/断言/否定形/問いかけの信号が無い（トレンド連動の逐語フックなので参考）: 「{first[:30]}…」")
+        return
     if HOOK_PAT.search(first):
         ok(f"S1に数字/断言/否定形/問いかけの信号あり: 「{first[:30]}…」")
     else:
@@ -196,7 +200,7 @@ def check_cta(html):
         fail("ナレーションが空")
         return
     last = narr[-1]
-    if _trend() and re.search(r"あなた.*[？?]$", last):
+    if _trend() and re.search(r"[？?]$", last):
         ok("末尾は見る人への問い（トレンド連動の締め）")
     elif CTA_PAT.search(last):
         ok("末尾に送客文言あり")
@@ -233,8 +237,8 @@ def check_story(html, ep_dir):
         say(f"締めが「{VAGUE_END.search(last).group(0)}」。次の回は続きではないので使わない。「明日は、〜。」で次の問いを声に出す")
         bad = True
     if _trend():
-        if not re.search(r"あなた.*[？?]$", last):
-            say("トレンド連動の締めは、見る人への問い（「あなたは〜か？」）で終える")
+        if not re.search(r"[？?]$", last):
+            say("トレンド連動の締めは、見る人への問い（「〜か？」）で終える")
             bad = True
     elif not cont:
         m = re.search(r"明日は、?([^。]+)", last)
