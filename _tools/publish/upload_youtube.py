@@ -178,7 +178,7 @@ def s2_shorts_metadata(ep_dir: str, md: str) -> list:
                 f"「{S.S2_NAME} {S.S2_TREND.get('label', 'トレンド速報')}」— いま話題のできごとの裏にある「売れる仕組み」を、数字で種明かし。\n\n"
                 f"▼ 出典（数字・事実）\n{src.strip()}\n\n"
                 + ("一部のカットにAI生成イラストを使用しています。\n\n" if "**AI生成イラスト：**" in md else "")
-                f"{S.VOICE_CREDIT}\n\n"
+                + f"{S.VOICE_CREDIT}\n\n"
                 + " ".join(f"#{t}" for t in tags))
         return [{"n": 1, "title": title[:100], "description": desc, "tags": tags + series_tags(ep_dir)}]
     desc = (f"{title}\n\n"
