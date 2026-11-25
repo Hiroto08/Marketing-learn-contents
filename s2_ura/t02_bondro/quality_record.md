@@ -1,6 +1,6 @@
 # 品質検査の実施記録：t02_bondro
 
-- 実施日：2026-11-25（ツールの版 ba60126）
+- 実施日：2026-11-25（ツールの版 83d0661）
 - 検査の定義：`.claude/skills/episode-production/quality-gates.md`
 
 ## 1. 固有名詞（この動画に出たもの）
