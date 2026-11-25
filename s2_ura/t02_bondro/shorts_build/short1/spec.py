@@ -237,7 +237,7 @@
     {
      "id": "s8-t2",
      "cls": "k-line",
-     "html": "これが“シール<br>通貨”です",
+     "html": "これが<br>“シール通貨”です",
      "anim": "rv-up",
      "t": 1.0,
      "style": "font-size:88px;margin:.25em 0"
