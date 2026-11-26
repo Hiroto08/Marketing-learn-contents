@@ -89,7 +89,7 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 </section>
 <section class="slide" id="s2">
   <div class="card">
-    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0"><span class="hi">2026年5</span>月、<br>ネットフリックスの<br>発表です</div>
+    <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0"><span class="hi">2026年5</span>月、<br>ネットフリックスが<br>発表しました</div>
   </div>
 </section>
 <section class="slide" id="s3">
@@ -119,31 +119,31 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
    再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
 const SLIDES_META = [
   {id:'s1', start:0.0, end:3.9},
-  {id:'s2', start:3.9, end:8.2},
-  {id:'s3', start:8.2, end:14.6},
-  {id:'s4', start:14.6, end:21.1},
-  {id:'s5', start:21.1, end:27.6},
+  {id:'s2', start:3.9, end:8.6},
+  {id:'s3', start:8.6, end:15.0},
+  {id:'s4', start:15.0, end:21.5},
+  {id:'s5', start:21.5, end:28.0},
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
   {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
   {si:1, t:3.9, ids:['s2-t1'], anim:'rv-left'},
-  {si:2, t:8.2, ids:['s3-t1'], anim:'rv-scale'},
-  {si:2, t:9.2, ids:['s3-t2'], anim:'rv-pop'},
-  {si:3, t:14.6, ids:['s4-t1'], anim:'rv-pop'},
-  {si:3, t:15.6, ids:['s4-t2'], anim:'rv-up'},
-  {si:4, t:21.1, ids:['s5-t1'], anim:'rv-up'},
-  {si:4, t:22.1, ids:['s5-t2'], anim:'rv-left'},
-  {si:4, t:23.1, ids:['s5-next'], anim:'rv-pop'},
+  {si:2, t:8.6, ids:['s3-t1'], anim:'rv-scale'},
+  {si:2, t:9.6, ids:['s3-t2'], anim:'rv-pop'},
+  {si:3, t:15.0, ids:['s4-t1'], anim:'rv-pop'},
+  {si:3, t:16.0, ids:['s4-t2'], anim:'rv-up'},
+  {si:4, t:21.5, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:22.5, ids:['s5-t2'], anim:'rv-left'},
+  {si:4, t:23.5, ids:['s5-next'], anim:'rv-pop'},
 ];
 const NARRATIONS = [
   `新規の6割が、安い広告付きを選びます。`,
-  `2026年5月、ネットフリックスの発表です。`,
+  `2026年5月、ネットフリックスが発表しました。`,
   `見る人は月2億5000万人。広告売上は今年、30億ドルへ倍増の見込み。`,
   `でも、安いのに、なぜ儲かるのか。月額と広告費、2つのお金が入るからです。`,
   `安い広告付きは、見る人にも広告主にも売れる。明日は、なぜ動画で買うのか。`,
 ];
-const TOTAL_SECS = 27.6;
+const TOTAL_SECS = 28.0;
 </script>
 </body>
 </html>
