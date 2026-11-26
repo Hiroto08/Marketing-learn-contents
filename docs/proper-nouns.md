@@ -38,6 +38,10 @@
 | トレンドマイクロ | トレンドマイクロ | 企業（二次） | https://ja.wikipedia.org/wiki/トレンドマイクロ | トレンドマイクロ | 2026-11-26 | t02 |
 | イオン | イオン | 企業 | https://www.aeon.info/ | イオン | 2026-11-26 | t02 |
 | サントリー | サントリー | 企業 | https://prtimes.jp/main/html/rd/p/000000043.000119510.html | サントリー | 2026-11-26 | t04 |
+| デュオリンゴ／Duolingo | デュオリンゴ | 企業・アプリ | https://prtimes.jp/main/html/rd/p/000000088.000069537.html | デュオリンゴ | 2026-11-26 | u15 |
+| ネットフリックス／Netflix | ネットフリックス | 企業・サービス | https://help.netflix.com/ja | ネットフリックス | 2026-11-26 | u16 |
+| TikTok Shop | ティックトックショップ | サービス | https://newsroom.tiktok.com/tiktok-shop?lang=ja-JP | TikTok Shop | 2026-11-26 | u17 |
+| TikTok | ティックトック | サービス | https://newsroom.tiktok.com/ja-jp | ティックトック | 2026-11-26 | u17 |
 | ボジョレー | ボジョレー | 商品・地名（二次） | https://prtimes.jp/main/html/rd/p/000000043.000119510.html | ボジョレー | 2026-11-26 | t04 |
 | テスコ | テスコ | 企業（海外・二次） | https://ja.wikipedia.org/wiki/テスコ | テスコ | 2026-11-26 | u05 |
 | アマゾン | アマゾン | 企業 | https://www.aboutamazon.jp/ | アマゾン | 2026-11-26 | u08・c02 |

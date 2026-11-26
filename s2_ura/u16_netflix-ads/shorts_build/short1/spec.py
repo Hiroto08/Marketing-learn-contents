@@ -1,0 +1,120 @@
+{
+ "title": "6割が安い広告付きプランを選ぶのに、ネットフリックスが儲かる理由【サブスク】",
+ "accent": "#E11D48",
+ "glow": "rgba(225,29,72,.25)",
+ "telop": 1,
+ "slides": [
+  {
+   "end": 3.9,
+   "els": [
+    {
+     "id": "s1-tag",
+     "cls": "k-tag",
+     "html": "売れる仕組みの裏側 #16",
+     "anim": "rv-fade",
+     "t": 0.0,
+     "style": "font-size:48px"
+    },
+    {
+     "id": "s1-t1",
+     "cls": "k-line",
+     "html": "新規の<span class=\"hi\">6割</span>が、<br>安い広告付きを<br>選びます",
+     "anim": "rv-up",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
+    }
+   ]
+  },
+  {
+   "end": 8.2,
+   "els": [
+    {
+     "id": "s2-t1",
+     "cls": "k-line",
+     "html": "<span class=\"hi\">2026年5</span>月、<br>ネットフリックスの<br>発表です",
+     "anim": "rv-left",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
+    }
+   ]
+  },
+  {
+   "end": 14.6,
+   "els": [
+    {
+     "id": "s3-t1",
+     "cls": "k-line",
+     "html": "見る人は<br>月<span class=\"hi\">2億5000万</span>人",
+     "anim": "rv-scale",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s3-t2",
+     "cls": "k-line",
+     "html": "広告売上は今年、<br><span class=\"hi\">30億ドル</span>へ<br>倍増の見込み",
+     "anim": "rv-pop",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
+    }
+   ]
+  },
+  {
+   "end": 21.1,
+   "els": [
+    {
+     "id": "s4-t1",
+     "cls": "k-line",
+     "html": "でも、安いのに、<br>なぜ儲かるのか",
+     "anim": "rv-pop",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s4-t2",
+     "cls": "k-line",
+     "html": "月額と広告費、<br><span class=\"hi\">2</span>つのお金が<br>入るからです",
+     "anim": "rv-up",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
+    }
+   ]
+  },
+  {
+   "end": 27.6,
+   "els": [
+    {
+     "id": "s5-t1",
+     "cls": "k-line",
+     "html": "安い広告付きは、<br>見る人にも<br>広告主にも売れる",
+     "anim": "rv-up",
+     "t": 0.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s5-t2",
+     "cls": "k-line",
+     "html": "明日は、<br>なぜ動画で買うのか",
+     "anim": "rv-left",
+     "t": 1.0,
+     "style": "font-size:88px;margin:.25em 0"
+    },
+    {
+     "id": "s5-next",
+     "cls": "cta-line",
+     "html": "明日：探していないのに<br>動画で買うのはなぜ？",
+     "anim": "rv-pop",
+     "t": 2.0,
+     "style": "font-size:64px"
+    }
+   ]
+  }
+ ],
+ "narrations": [
+  "新規の6割が、安い広告付きを選びます。",
+  "2026年5月、ネットフリックスの発表です。",
+  "見る人は月2億5000万人。広告売上は今年、30億ドルへ倍増の見込み。",
+  "でも、安いのに、なぜ儲かるのか。月額と広告費、2つのお金が入るからです。",
+  "安い広告付きは、見る人にも広告主にも売れる。明日は、なぜ動画で買うのか。"
+ ]
+}

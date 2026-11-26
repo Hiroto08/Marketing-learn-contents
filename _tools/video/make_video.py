@@ -129,6 +129,7 @@ ABBR_MAP = {
     "QB":   "キュービー",    # ×キュビ等の分割読み防止（QBハウス、EP02）
     "M&M's": "エムアンドエムズ",  # ×エムアンドエムエス等（EP08）
     "TOP5": "トップファイブ",     # ×トップご（u06。2026-11-10）
+    "TikTok": "ティックトック",   # ×ティクトック（u17。公式表記「TikTok（ティックトック）」）
 }
 
 # Compound terms read as ONE accent phrase (prevents double/triple-hump
