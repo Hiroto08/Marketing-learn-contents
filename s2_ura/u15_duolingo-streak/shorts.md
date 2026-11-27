@@ -1,7 +1,7 @@
 # Shorts台本（1本）— 売れる仕組みの裏側 #15：途切れた記録を1540万人が取り戻した
 
 shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦型1080x1920・5スライド。
-型：見る人の違和感（やめたアプリに、人は戻ってくるのか）→ 犯人（失ったものを取り戻したい気持ちは、得をしたい気持ちより強い＝損失回避）→ 数字（1540万人・うち800万人は記録ゼロ・毎日の利用者 +23%）。
+型：見る人の違和感（やめたアプリに、人は戻ってくるのか）→ 犯人（失ったものを取り戻したい気持ちは、得をしたい気持ちより強い＝損失回避）→ 数字（1540万人・うち約800万人は記録ゼロ・毎日の利用者 +23%）。
 
 **鮮度：** 時事（2026-06）・新事例型
 **次回予告：** 明日：安い広告付きプランが<br>儲かるのはなぜ？
@@ -16,7 +16,7 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 |---|---|---|---|
 | 1540万人 | 連続記録を戻した人（15.4 million） | https://duolingo.gcs-web.com/static-files/3c8277ee-bc94-4f5d-9b77-0db3e46f88b8 | https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/ |
 | 3回 | 記録を戻す条件のレッスン数 | https://duolingo.gcs-web.com/static-files/3c8277ee-bc94-4f5d-9b77-0db3e46f88b8 | https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/ |
-| 800万人 | そのうち、開始時に連続記録が無かった人（nearly 8 million） | https://duolingo.gcs-web.com/static-files/3c8277ee-bc94-4f5d-9b77-0db3e46f88b8 | https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/ |
+| 約800万人 | そのうち、開始時に連続記録が無かった人（nearly 8 million） | https://duolingo.gcs-web.com/static-files/3c8277ee-bc94-4f5d-9b77-0db3e46f88b8 | https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/ |
 | 23% | 4〜6月の毎日の利用者（DAU）の伸び（前年比） | https://www.sec.gov/Archives/edgar/data/0001562088/000162828026053603/duol-20260630.htm | https://pulse2.com/duolingo-daily-active-users-reach-58-7-million-as-retention-hits-record-84-and-social-accounts-top-1-billion-organic-impressions/ |
 
 ---
@@ -44,10 +44,10 @@ shorts-production.md 準拠＋s2_ura/README.md（第2シリーズの型）。縦
 
 ### S3（数字・10.3〜15.7秒）
 
-**スライド内容：** 「800万人は記録ゼロだった人」「毎日の利用者 23%増」
+**スライド内容：** 「約800万人は記録ゼロから復活」「毎日の利用者 23%増」
 
 **ナレーション：**
-「800万人は、記録ゼロからの復活。毎日の利用者は23%増。」
+「約800万人は、記録ゼロから復活。毎日の利用者は23%増。」
 
 ### S4（問い＋種明かし・15.7〜21.8秒）
 
