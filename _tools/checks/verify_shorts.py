@@ -109,6 +109,14 @@ def check_match(md, html):
         ok(f"{len(md_narr)}/{len(md_narr)} 完全一致")
 
 
+def _closing_q():
+    """締めの問いで終える回か（社長決裁 2026-11-27・Issue #2 コメント 7212528219）。
+    Shorts の次回予告（「明日は〜」）を廃止し、締めの問いに統一。第2シリーズの u15 以降と、トレンド連動（tNN）"""
+    d = re.sub(r"/shorts_build/short\d+$", "", DIR.rstrip("/"))
+    m = re.match(r"u(\d+)_", os.path.basename(d))
+    return bool(_trend()) or bool(m and int(m.group(1)) >= 15 and "s2_ura" in d)
+
+
 def _trend():
     """トレンド連動の Short（s2_ura/tNN_*）なら series.json の上限（尺・文字数・枚数）を返す。それ以外は None。
     社長決裁 2026-11-21（Issue #2）：社長指定の構成（フック5秒＋種明かし4段＋締めの問い）が入る大きさ。ほかの検査は同じ"""
@@ -200,8 +208,11 @@ def check_cta(html):
         fail("ナレーションが空")
         return
     last = narr[-1]
-    if _trend() and re.search(r"[？?]$", last):
-        ok("末尾は見る人への問い（トレンド連動の締め）")
+    if _closing_q():
+        if re.search(r"[？?]$", last) and not re.search(r"明日は|次は、", last):
+            ok("末尾は見る人への問い（締めの問い）")
+        else:
+            fail(f"締めは見る人への問い（「〜か？」）で終える。次回予告（明日は〜）は入れない（社長決裁 2026-11-27）: 「{last[-40:]}」")
     elif CTA_PAT.search(last):
         ok("末尾に送客文言あり")
     else:
@@ -236,9 +247,12 @@ def check_story(html, ep_dir):
     if VAGUE_END.search(last) and not (cont and "長編" in last):
         say(f"締めが「{VAGUE_END.search(last).group(0)}」。次の回は続きではないので使わない。「明日は、〜。」で次の問いを声に出す")
         bad = True
-    if _trend():
+    if _closing_q():
         if not re.search(r"[？?]$", last):
-            say("トレンド連動の締めは、見る人への問い（「〜か？」）で終える")
+            say("締めは、見る人への問い（「〜か？」）で終える（社長決裁 2026-11-27：次回予告は廃止）")
+            bad = True
+        if re.search(r"明日は|次は、", last) or re.search(r"\*\*次回予告：\*\*", md):
+            say("次回予告（「明日は〜」・**次回予告：**）は廃止（社長決裁 2026-11-27）。締めの問いで終える")
             bad = True
     elif not cont:
         m = re.search(r"明日は、?([^。]+)", last)
@@ -254,7 +268,7 @@ def check_story(html, ep_dir):
         say("答えの前に、問いか逆接の文が無い（「では、なぜ〜か。」「でも、〜」「なのに〜」など）。事実の羅列→答え、になっている")
         bad = True
     if not bad:
-        ok("締めは明日の問いを声に出している・答えの前に問い／逆接がある")
+        ok("締めの形（問い／明日の予告）が型どおり・答えの前に問い／逆接がある")
 
 
 def check_loop(html):
@@ -325,7 +339,11 @@ def check_browser(html_path):
                 over.push(sec.id+':'+(e.className||e.id));
               // 文字サイズの下限（社長FB #1：小さすぎる文字をなくす）
               const fs=parseFloat(getComputedStyle(e).fontSize);
-              if(fs<48) small.push(sec.id+':'+(e.className||e.id)+'('+fs+'px)');
+              // 出典・AI生成の注釈（.k-note）は本文の半分以下（社長決裁 2026-11-27）。下限は 28px
+              const isNote=e.classList.contains('k-note');
+              if(fs<(isNote?28:48)) small.push(sec.id+':'+(e.className||e.id)+'('+fs+'px)');
+              if(isNote){const body=[...sec.querySelectorAll('.k-line,.k-num')].map(x=>parseFloat(getComputedStyle(x).fontSize));
+                if(body.length && fs>Math.min(...body)/2) small.push(sec.id+':k-note が本文の半分より大きい('+fs+'px)');}
               // hanging-line check: group text-run rects into visual LINES by their
               // top position (inline <span> splits a single line into multiple rects,
               // so we must group — not count raw rects). If the element wraps to >=2
@@ -364,7 +382,7 @@ def check_browser(html_path):
     if r["hang"]:
         fail(f"1〜2文字だけの行末ぶら下がり（<br>で意味の切れ目に改行を）: {r['hang']}")
     if r.get("small"):
-        fail(f"文字が小さすぎる（48px 未満）: {r['small']}")
+        fail(f"文字サイズが基準外（本文は48px以上／出典・AI生成の注釈は28px以上で本文の半分以下）: {r['small']}")
     if r.get("wrap"):
         fail(f"テロップが <br> の位置以外で折り返している（1行が幅 880px を超える。文字を小さくするか改行を足す）: {r['wrap']}")
     if not errs and not r["over"] and not r["hang"] and not r.get("small") and not r.get("wrap"):

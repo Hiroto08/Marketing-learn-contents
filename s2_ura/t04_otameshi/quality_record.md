@@ -1,6 +1,6 @@
 # 品質検査の実施記録：t04_otameshi
 
-- 実施日：2026-11-26（ツールの版 ba43617）
+- 実施日：2026-11-27（ツールの版 fd92a45）
 - 検査の定義：`.claude/skills/episode-production/quality-gates.md`
 
 ## 1. 固有名詞（この動画に出たもの）

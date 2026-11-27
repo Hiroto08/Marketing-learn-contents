@@ -1,16 +1,16 @@
 {
   "u16_netflix-ads_short1_final.mp4": {
-    "videoId": "n_H4Fya_0ao",
-    "sha256": "2007d8d61427298a339c17558f5ef9b84b73f0cf210a675d4da52d69d2bf46d6",
+    "videoId": "5TdfSkQZ4pw",
+    "sha256": "c1a59a729332ad917b3fc923cb23d5739064c0928c12e5c15dc2c5cef177dd96",
     "privacy": "private",
     "publishAt": null,
     "thumbSha256": null,
-    "supersededVideoId": null,
-    "uploadedAt": "2026-11-26T01:59:45Z",
-    "driveFileId": "1RBT6dufda1-O88xv5zlbGsmuP0y8ImyP",
-    "driveSha256": "2007d8d61427298a339c17558f5ef9b84b73f0cf210a675d4da52d69d2bf46d6",
-    "driveRev": 1,
-    "driveName": "u16_6割が安い広告付きプランを選ぶのに、ネットフリックスが儲かる理由【サブスク】.mp4",
-    "driveForVideoId": "n_H4Fya_0ao"
+    "supersededVideoId": "n_H4Fya_0ao",
+    "uploadedAt": "2026-11-27T07:42:30Z",
+    "driveRev": 2,
+    "driveFileId": "1_kQTkQCaUupZPJYXd727Z-BUzflOZYpU",
+    "driveSha256": "c1a59a729332ad917b3fc923cb23d5739064c0928c12e5c15dc2c5cef177dd96",
+    "driveName": "u16_6割が安い広告付きプランを選ぶのに、ネットフリックスが儲かる理由【サブスク】_r2.mp4",
+    "driveForVideoId": "5TdfSkQZ4pw"
   }
 }

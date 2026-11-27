@@ -90,12 +90,12 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <section class="slide" id="s2">
   <div class="card">
     <div class="se k-line" id="s2-t1" style="font-size:88px;margin:.25em 0">語学アプリの<br>デュオリンゴ</div>
-    <div class="se k-line" id="s2-t2" style="font-size:80px;margin:.25em 0"><span class="hi">3回</span>のレッスンで、<br>最長記録に戻せる企画</div>
+    <div class="se k-line" id="s2-t2" style="font-size:80px;margin:.25em 0">レッスン<span class="hi">3回</span>で、<br>最長記録に戻せる企画</div>
   </div>
 </section>
 <section class="slide" id="s3">
   <div class="card">
-    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0"><span class="hi">約800万人</span>は、<br>記録ゼロから復活</div>
+    <div class="se k-line" id="s3-t1" style="font-size:88px;margin:.25em 0"><span class="hi">約800万人</span>は、<br>ゼロから復活</div>
     <div class="se k-line" id="s3-t2" style="font-size:88px;margin:.25em 0">毎日の利用者は<br><span class="hi">23%</span>増</div>
   </div>
 </section>
@@ -108,8 +108,7 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
 <section class="slide" id="s5">
   <div class="card">
     <div class="se k-line" id="s5-t1" style="font-size:88px;margin:.25em 0">失った記録が、<br>人を呼び戻す</div>
-    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">明日は、<br>安い広告付きが、<br>なぜ儲かるのか</div>
-    <div class="se cta-line" id="s5-next" style="font-size:64px">明日：安い広告付きプランが<br>儲かるのはなぜ？</div>
+    <div class="se k-line" id="s5-t2" style="font-size:88px;margin:.25em 0">あなたが<br>途切れさせたくない<br>記録は、<br>何ですか？</div>
   </div>
 </section>
 <!-- ══ SHORTS_STAGE_END ══ -->
@@ -120,32 +119,31 @@ html,body{margin:0;padding:0;background:var(--bg);width:1080px;height:1920px;ove
    再生ロジック自体は make_video.py の record() 内 page.evaluate が担うため、ここには書かない。 */
 const SLIDES_META = [
   {id:'s1', start:0.0, end:4.2},
-  {id:'s2', start:4.2, end:10.3},
-  {id:'s3', start:10.3, end:15.7},
-  {id:'s4', start:15.7, end:21.8},
-  {id:'s5', start:21.8, end:28.0},
+  {id:'s2', start:4.2, end:10.1},
+  {id:'s3', start:10.1, end:15.2},
+  {id:'s4', start:15.2, end:21.3},
+  {id:'s5', start:21.3, end:27.8},
 ];
 const STEPS = [
   {si:0, t:0.0, ids:['s1-tag'], anim:'rv-fade'},
   {si:0, t:0.0, ids:['s1-t1'], anim:'rv-up'},
   {si:1, t:4.2, ids:['s2-t1'], anim:'rv-left'},
   {si:1, t:5.2, ids:['s2-t2'], anim:'rv-scale'},
-  {si:2, t:10.3, ids:['s3-t1'], anim:'rv-scale'},
-  {si:2, t:11.3, ids:['s3-t2'], anim:'rv-pop'},
-  {si:3, t:15.7, ids:['s4-t1'], anim:'rv-pop'},
-  {si:3, t:16.7, ids:['s4-t2'], anim:'rv-up'},
-  {si:4, t:21.8, ids:['s5-t1'], anim:'rv-up'},
-  {si:4, t:22.8, ids:['s5-t2'], anim:'rv-left'},
-  {si:4, t:23.8, ids:['s5-next'], anim:'rv-pop'},
+  {si:2, t:10.1, ids:['s3-t1'], anim:'rv-scale'},
+  {si:2, t:11.1, ids:['s3-t2'], anim:'rv-pop'},
+  {si:3, t:15.2, ids:['s4-t1'], anim:'rv-pop'},
+  {si:3, t:16.2, ids:['s4-t2'], anim:'rv-up'},
+  {si:4, t:21.3, ids:['s5-t1'], anim:'rv-up'},
+  {si:4, t:22.3, ids:['s5-t2'], anim:'rv-left'},
 ];
 const NARRATIONS = [
   `途切れた記録を、1540万人が取り戻した。`,
-  `語学アプリのデュオリンゴ。3回のレッスンで、最長記録に戻せる企画。`,
-  `約800万人は、記録ゼロから復活。毎日の利用者は23%増。`,
+  `語学アプリのデュオリンゴ。レッスン3回で、最長記録に戻せる企画。`,
+  `約800万人は、ゼロから復活。毎日の利用者は23%増。`,
   `では、なぜ戻ったのか。人は、得より、失った記録を取り戻したいから。`,
-  `失った記録が、人を呼び戻す。明日は、安い広告付きが、なぜ儲かるのか。`,
+  `失った記録が、人を呼び戻す。あなたが途切れさせたくない記録は、何ですか？`,
 ];
-const TOTAL_SECS = 28.0;
+const TOTAL_SECS = 27.8;
 </script>
 </body>
 </html>

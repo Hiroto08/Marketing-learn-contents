@@ -42,6 +42,9 @@ def parse_md(md):
     dm = re.search(r"\*\*表示置換：\*\*\s*(.+)", md)
     if dm:
         for pair in re.split(r"[、,]", dm[1]):
+            if pair.strip() and "=" not in pair:
+                # キーや値に「、」が入ると、区切りで割れて表示が壊れる（u17 で「では、では」になった。2026-11-27）
+                sys.exit(f"表示置換の書式エラー：「{pair.strip()}」に = が無い。キーと値に「、」を入れない（「、」は区切り）")
             if "=" in pair:
                 a, b = pair.split("=", 1)
                 disp[a.strip()] = b.strip().replace("<br>", "\n")   # <br> で改行位置を指定できる（語の途中で割らないため。t02）
@@ -186,8 +189,9 @@ def build(d, restructure=False):
             els.append({"id": f"s{i+1}-t{j+1}", "cls": "k-line", "html": display(sent, disp),
                         "anim": ANIMS[(i + j) % len(ANIMS)], "t": 0.0 if j == 0 else 1.0 * j, "style": f"font-size:{fs}px;margin:.25em 0"})
         if notes:
-            els.append({"id": f"s{i+1}-src", "cls": "k-sub", "html": "　".join(notes), "anim": "rv-fade", "t": 0.0,
-                        "style": "font-size:48px;opacity:.75;margin-top:.6em"})
+            # 出典・AI生成の注釈は本文テロップの半分以下（社長決裁 2026-11-27・Issue #2 コメント 7212407404。全動画の標準）
+            els.append({"id": f"s{i+1}-src", "cls": "k-sub k-note", "html": "<br>".join(notes), "anim": "rv-fade", "t": 0.0,
+                        "style": "font-size:30px;opacity:.75;margin-top:.6em"})
         if i == len(slides) - 1 and nxt:
             els.append({"id": f"s{i+1}-next", "cls": "cta-line", "html": nxt, "anim": "rv-pop", "t": 2.0, "style": "font-size:64px"})
         out_slides.append({"end": sl["end"], "els": els})
